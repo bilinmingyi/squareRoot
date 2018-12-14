@@ -1,15 +1,27 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
 
 Vue.use(Router)
 
 export default new Router({
+  scrollBehavior (to, from, savedPosition) {
+    return { x: 0, y: 0 }
+  },
   routes: [
     {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      path:'/',
+      redirect:'/root'
+    },
+    {
+      path: '/root',
+      name: 'root',
+      components: {
+        Left:() => import('@/page/rootLeft.vue'),
+        Middle: () =>import('@/page/rootMiddle.vue'),
+        Right: ()=>import('@/page/rootRight.vue')
+      }
+
     }
+
   ]
 })
