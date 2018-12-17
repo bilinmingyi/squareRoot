@@ -6,7 +6,9 @@ import getters from '@/store/getters.js'
 import mutations from '@/store/mutations.js'
 
 Vue.use(Vuex)
-const state = {};
+const state = {
+  recipeList:[],
+};
 if (module.hot) {
   // 使 action 和 mutation 成为可热重载模块
   module.hot.accept(['./mutations'], () => {
