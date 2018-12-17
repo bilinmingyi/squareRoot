@@ -3,17 +3,23 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import iView from 'iview'
-import 'iview/dist/styles/iview.css'
+import filters from './assets/js/filters'
+import components from './assets/js/components'
+import 'iview/dist/styles/iview.css';
 
-Vue.use(iView);
 
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
+Object.keys(components).forEach(key => {
+  Vue.component(key,components[key])
+})
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
-  components: { App },
+  components: {App},
   template: '<App/>'
 })

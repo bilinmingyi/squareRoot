@@ -1,5 +1,7 @@
 <template>
-    <div>这是左边</div>
+    <div>这是左边
+      <test-input></test-input>
+    </div>
 </template>
 
 <script>

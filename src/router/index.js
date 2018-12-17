@@ -20,8 +20,8 @@ export default new Router({
         Middle: () =>import('@/page/rootMiddle.vue'),
         Right: ()=>import('@/page/rootRight.vue')
       }
-
     }
+
 
   ]
 })
