@@ -39,7 +39,6 @@
   .middle{
     flex: 54;
     margin-right: 1rem;
-    background: #08bac6;
   }
   .right{
     flex: 25;

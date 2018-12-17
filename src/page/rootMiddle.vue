@@ -1,6 +1,8 @@
 <template>
   <div>
-    这是中间
+    <ul v-for="recipe in recipeList">
+      <li>{{recipe.type|recipeType}}</li>
+    </ul>
   </div>
 </template>
 
@@ -14,7 +16,8 @@
     },
     computed: {
       ...mapState({
-        recipeList: state => state.recipeList
+        recipeList: state => state.recipeList,
+        currRecipe: state => state.currRecipe
       })
     },
     created(){
