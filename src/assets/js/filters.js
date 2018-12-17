@@ -97,7 +97,7 @@ const priceFormat = (price, currency, decimals) => {
 const recipeType = val => {
   var typeList=[
     {code:1,name:"中药"},
-    {code:2,name:"成药"},
+    {code:2,name:"中成药西药"},
     {code:3,name:"产品"},
     {code:4,name:"项目"},
     {code:5,name:"附加服务"},
