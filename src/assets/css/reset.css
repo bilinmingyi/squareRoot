@@ -325,6 +325,14 @@ input {
   padding-right: 1.25rem;
 }
 
+.pr30 {
+  padding-right: 1.875rem;
+}
+
+.pr50 {
+  padding-right: 3.125rem;
+}
+
 /* padding-top */
 .pt5 {
   padding-top: 0.3125rem;
@@ -574,4 +582,17 @@ input {
 
 .mb56 {
   margin-bottom: 3.5rem;
+}
+
+.e-p-i-content-item .ivu-input,
+.e-p-i-content-item .ivu-select-selection {
+  height: 2.5rem;
+  border: 1px solid #5096e0;
+  font-size: 1rem;
+}
+
+.e-p-i-content-item .ivu-select-selection .ivu-select-selected-value {
+  height: 2.5rem;
+  line-height: 2.5rem;
+  font-size: 1rem;
 }
