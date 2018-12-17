@@ -1,6 +1,8 @@
 <template>
   <div>
-    这是中间
+    <ul class="recipe_tab">
+      <li v-for="(recipe,index) in recipeList" :class="{'currentLi':index === currRecipe}" @click.stop="change_curr_tab(index)">{{recipe.type|recipeType}}</li>
+    </ul>
   </div>
 </template>
 
@@ -14,7 +16,8 @@
     },
     computed: {
       ...mapState({
-        recipeList: state => state.recipeList
+        recipeList: state => state.recipeList,
+        currRecipe: state => state.currRecipe
       })
     },
     created(){
@@ -23,7 +26,8 @@
     },
     methods: {
       ...mapActions([
-        'add_new_recipt'
+        'add_new_recipt',
+        'change_curr_tab'
       ]),
       addNewRecipt(type) {
         let item = {};
@@ -105,5 +109,24 @@
 </script>
 
 <style scoped>
-
+  .recipe_tab{
+    display: flex;
+  }
+  .recipe_tab li{
+    background:rgba(225,225,225,1);
+    border-radius:0.5rem 0.5rem 0rem 0rem;
+    width:7.5rem;
+    height:2.19rem;
+    border-right: 0.0625rem solid #FFFFFF;
+    font-size:1rem;
+    font-weight:400;
+    color:rgba(140,140,140,1);
+    line-height:2.19rem;
+    text-align: center;
+  }
+  .recipe_tab .currentLi{
+    background:rgba(77,188,137,1);
+    color:rgba(255,255,255,1);
+    font-weight:600;
+  }
 </style>

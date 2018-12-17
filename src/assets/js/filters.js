@@ -94,8 +94,25 @@ const priceFormat = (price, currency, decimals) => {
   return sign + currency + head + mid + _float;
 };
 
-module.exports={
+const recipeType = val => {
+  var typeList=[
+    {code:1,name:"中药"},
+    {code:2,name:"成药"},
+    {code:3,name:"产品"},
+    {code:4,name:"项目"},
+    {code:5,name:"附加服务"},
+    {code:6,name:"材料"},
+    {code:7,name:"检验"}
+  ];
+  var result=typeList.filter(item => {
+    return item.code===val
+  });
+  return result[0].name;
+}
+
+module.exports = {
   fullTime,
+  recipeType,
   calcAge,
   parseSex,
   priceFormat
