@@ -65,7 +65,6 @@
       addNewRecipt(type) {
         this.add_new_recipt(type)
       }
-
     }
   }
 </script>
