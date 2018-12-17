@@ -7,13 +7,14 @@ import filters from './assets/js/filters'
 import components from './assets/js/components'
 import store from './store/index'
 
-import { Button, Input} from 'iview'
 
 import 'iview/dist/styles/iview.css';
 
-Vue.component('Button', Button)
-Vue.component('Input', Input)
 
+import iView from '../node_modules/iview';
+import 'iview/dist/styles/iview.css';
+
+Vue.use(iView);
 
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])

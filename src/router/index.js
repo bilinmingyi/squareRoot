@@ -16,7 +16,7 @@ export default new Router({
       path: '/root',
       name: 'root',
       components: {
-        Left:() => import('@/page/rootLeft.vue'),
+        Left:() => import('@/page/rootLeft/rootLeft.vue'),
         Middle: () =>import('@/page/rootMiddle.vue'),
         Right: ()=>import('@/page/rootRight.vue')
       }
