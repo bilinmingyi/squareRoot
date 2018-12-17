@@ -1,6 +1,6 @@
 <template>
     <div>
-      这是中间
+      这是右边
     </div>
 </template>
 
