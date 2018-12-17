@@ -18,23 +18,33 @@
         </Dropdown>
       </li>
     </ul>
-
+    <component :is="componentList[Number(recipeList[currRecipe].type)-1]"></component>
   </div>
 </template>
 
 <script>
   import {mapActions, mapState} from 'vuex'
+  import herbalRecipe from '@/components/herbalRecipe.vue'
+  import westernRecipe from '@/components/westernRecipe.vue'
+  import therapyRecipe from '@/components/therapyRecipe.vue'
+  import materialRecipe from '@/components/materialRecipe.vue'
   import {Dropdown, DropdownMenu, DropdownItem} from 'iview'
 
   export default {
     name: "rootMiddle",
     data() {
-      return {}
+      return {
+        componentList:['herbalRecipe','westernRecipe','','therapyRecipe','','materialRecipe']
+      }
     },
     components: {
       Dropdown,
       DropdownMenu,
-      DropdownItem
+      DropdownItem,
+      herbalRecipe,
+      westernRecipe,
+      therapyRecipe,
+      materialRecipe
     },
     computed: {
       ...mapState({
