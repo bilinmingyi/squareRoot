@@ -8,7 +8,7 @@ import mutations from '@/store/mutations.js'
 Vue.use(Vuex)
 const state = {
   recipeList:[],
-  currRecipe:-1
+  currRecipe:0
 };
 if (module.hot) {
   // 使 action 和 mutation 成为可热重载模块
