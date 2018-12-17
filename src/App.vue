@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <f-header></f-header>
-    <div class="content">
+    <div class="page_content">
       <router-view class="left" name="Left"/>
       <router-view class="middle" name="Middle"/>
       <router-view class="right" name="Right"/>
@@ -27,17 +27,23 @@
     margin-top: 3.75rem;
     padding: 1.25rem;
   }
-  .content{
+  .page_content{
     display: flex;
+    min-height:calc( 100vh - 8.6rem);
   }
   .left{
     flex: 21;
+    margin-right: 1rem;
+    background: #5096e0;
   }
   .middle{
     flex: 54;
+    margin-right: 1rem;
+    background: #08bac6;
   }
   .right{
     flex: 25;
+    background: #4DBC89;
   }
 
 </style>
