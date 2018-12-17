@@ -1,11 +1,20 @@
 <template>
-  <div>这是左边</div>
+  <div>
+    <patient-detail></patient-detail>
+    <treat-history></treat-history>
+  </div>
 </template>
 
 <script>
   import {getHerbalList} from '@/fetch/api.js'
+  import patientDetail from './patientDetail';
+  import treatHistory from './treatHistory';
   export default {
     name: "rootPage",
+    components: {
+      patientDetail,
+      treatHistory
+    },
     data(){
       return {
 
