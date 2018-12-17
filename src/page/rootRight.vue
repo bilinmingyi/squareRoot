@@ -1,6 +1,8 @@
 <template>
     <div style="margin-top: 2rem;">
+        <div>
         <div class="prescript_title">病历模板</div>
+        </div>
         <div class="mt5 ml6 mr6 mb5" style="position:relative;">
             <Input style="width:75%;" placeholder="药品名称/拼音简码" />
             <Button @click="showSearch" style="width:20%;float:right;" type="primary" class="ml8">搜索</Button>
@@ -10,7 +12,9 @@
         </div>
         <div class="mt5 ml6 mr6 mb5">
             <div class="prescript_list">添加模板</div>
-            <div class="prescript_list" v-for="item in prescript_list" :key='item'>{{item}}</div>
+            <div>
+                <div class="prescript_list" v-for="(item,index) in prescript_list" :key='index'>{{item}}</div>
+            </div>
         </div>
         <div v-show="prescript_list.length<1" >没有相关处方模板</div>
         <div style="text-align: center;">
