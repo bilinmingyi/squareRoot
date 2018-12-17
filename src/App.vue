@@ -39,10 +39,11 @@
   .middle{
     flex: 54;
     margin-right: 1rem;
+    background: #FFFFFF;
   }
   .right{
     flex: 25;
-    background: #4DBC89;
+    background: white;
   }
 
 </style>
