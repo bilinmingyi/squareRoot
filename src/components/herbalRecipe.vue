@@ -34,7 +34,7 @@
           <td>柴胡</td>
           <td>1克</td>
           <td>
-            <Input v-model="value2" style="width:3.125rem" />
+            <Input style="width:3.125rem" />
           </td>
           <td>1</td>
           <td>
@@ -55,6 +55,7 @@
 <script>
   import {RadioGroup, Radio,Select,Option,Input} from 'iview'
   import {mapActions, mapState} from 'vuex'
+  import {herbalMedUsages, herbalRpUsages} from '@/assets/js/mapType'
 
   export default {
     name: "herbalRecipe",
