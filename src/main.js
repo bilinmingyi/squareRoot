@@ -10,10 +10,6 @@ import 'babel-polyfill'
 
 import 'iview/dist/styles/iview.css';
 
-
-import iView from '../node_modules/iview';
-import 'iview/dist/styles/iview.css';
-
 Vue.use(iView);
 
 Object.keys(filters).forEach(key => {
