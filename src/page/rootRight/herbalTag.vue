@@ -3,22 +3,23 @@
     <div style="display: flex;">
       <div
         style="flex: 1;"
-        :class="['prescript_title',{'current_tab':in_first_tab}]"
+        :class="['prescript-title',{'current-tab':in_first_tab}]"
         @click.stop="in_first"
       >药品搜索</div>
       <div
         style="flex: 1;"
-        :class="['prescript_title',{'current_tab':in_second_tab}]"
+        :class="['prescript-title',{'current-tab':in_second_tab}]"
         @click.stop="in_second"
       >处方模板</div>
     </div>
     <div v-show="in_first_tab" class="mt5 ml6 mr6 mb5">
-      <Input style="width:75%;" placeholder="药品名称/拼音简码" v-model="searchName"/>
-      <Button style="width:20%;float:right;" type="primary" class="ml8" @click="herbalSearch()">搜索</Button>
-
-      <div class="search_result">
+      <div class="mb6" style="width:100%;display:flex;height:2rem;">
+        <input class="search-input" placeholder="药品名称/拼音简码" v-model="searchName"/>
+        <button class="search-btn" @click="herbalSearch()">搜索</button>
+      </div>
+      <div class="search-result">
         <div
-          class="search_result_li"
+          class="search-result-li"
           v-for="(item,index) in searchHerbalList"
           :key="index"
           @click.stop="selectHerbalItem(item)"
@@ -36,7 +37,7 @@
       <div class="prescript_list">添加模板</div>
       <div style="min-height:20rem;max-height:45rem;overflow:auto;">
         <div
-          class="prescript_list"
+          class="prescript-list"
           v-for="(item,index) in tplSearchList"
           :key="index"
           @click.stop="tplShow(item)"
@@ -44,15 +45,15 @@
         <div v-show="tplSearchList.length<1">没有相关处方模板</div>
 
         <div class="tpl-show mt5" v-show="showTpl">
-          <Button type="warning" long @click.stop="tplHide()">返回</Button>
+          <div class="prescription_detail_btn">返回</div>
           <div class="ml16 mr16 mt16">
             <span style="font-weight:900;">处方模板：</span>
             <span>{{tplData.tplName}}</span>
-            <span v-show="tplData.scope==0" style="float:right;">共享模板</span>
+            <span v-show="tplData.scope==0">共享模板</span>
             <span v-show="tplData.scope==1" style="float:right;">个人模板</span>
           </div>
-          <div class="item_list mt16">
-            <div class="item_list_li" v-for="(item,index) in tplData.items" :key="index">
+          <div class="item-list mt16">
+            <div class="item-list-li" v-for="(item,index) in tplData.items" :key="index">
               {{item.name}}
               <br>
               （{{item.num}}{{item.unit}}）
@@ -66,22 +67,27 @@
             <span>医嘱： </span>
             <span>{{tplData.doctor_remark}}</span>
           </div>
-          <div class="btn mt10 ml16">
-              <Button type="primary" shape="circle" ghost @click.stop="useTplShow()">使用模板</Button>
-              <Button type="primary" shape="circle" ghost>编辑模板</Button>
-              <Button type="error" shape="circle" ghost>删除模板</Button>
+          <div>
+              <button class="prescription_detail_save mr2" @click.stop="useTplShow()">使用模板</button>
+              <button class="prescription_detail_save" @click.stop="editTplShow()">编辑模板</button>
+              <button class="prescription_detail_del">删除模板</button>
           </div>
           <div v-show="showUseTpl" class="alert-back">
               <div class="use-tpl">
-                  <div style="text-align:center;padding-top:1rem;font-width:bold;font-size:1rem;color: #5f95da;">确定使用[{{tplData.tplName}}]模板？</div>
-                  <div style="margin:1rem 0 0 2rem;">使用模板将覆盖之前所编辑之信息</div>
-                  <div class="item-list mt10">
-                      <div class="item-list-li" v-for="(item,index) in tplData.items" :key="index">{{item.name}}  {{item.num}}{{item.unit}}/{{item.usage}}</div>
+                  <div style="text-align:center;padding-top:1rem;font-weight:900;font-size:1rem;color: #5f95da;">确定使用[{{tplData.tplName}}]模板？</div>
+                  <div style="margin:1rem 0 0 2rem;font-weight:900;">使用模板将覆盖之前所编辑之信息</div>
+                  <div class="use-list mt10">
+                      <div class="use-list-li" v-for="(item,index) in tplData.items" :key="index">{{item.name}}  ({{item.num}}{{item.unit}}/{{item.usage}})</div>
                   </div>
-                  <div style="text-align:center;margin-top:3rem;">
-                      <Button type="primary" shape="circle">确定</Button>
-                      <Button type="primary" shape="circle" ghost @click.stop="useTplHide()">取消</Button>
+                  <div style="text-align:center;margin-top:2rem;">
+                      <button class="saveBtn mr20">确认</button>
+                      <button class="saveBtn cancelBtn" @click.stop="useTplHide()">取消</button>
                   </div>
+              </div>
+          </div>
+          <div v-show="showEditTpl" class="alert-back">
+              <div class="edit-tpl">
+                  <div class="mt16" style="height:2.75rem;width:100%;text-align:center;font-weight:900;font-size:1.125rem;border-bottom:1px solid #cccccc;">编辑模板</div>
               </div>
           </div>
         </div>
@@ -89,13 +95,13 @@
     </div>
   </div>
 </template>
-
 <script>
 import axios from "axios";
 import { Input, Button } from "iview";
 export default {
   data() {
     return {
+      showEditTpl: false,
       showUseTpl: false,
       category: 1,
       searchName: "",
@@ -119,8 +125,7 @@ export default {
     Button
   },
   created(){
-      this.tplSearch();
-      this.herbalSearch();
+      this.firstSearch();
   },
   watch: {
     searchHerbalList: {
@@ -128,7 +133,6 @@ export default {
       deep: true
     }
   },
-
   methods: {
     in_first: function() {
       this.in_first_tab = true;
@@ -143,6 +147,27 @@ export default {
     },
     selectRecipePrescript: function(item) {
       alert(item);
+    },
+    firstSearch: function() {
+        var self = this;
+      axios.post("/doctreat/herbal/recent", {
+          medicine_name: self.searchName,
+          category: this.category
+        })
+        .then(
+          function(response) {
+            var res = response.data;
+            if (res.code == 1000) {
+              if (self.in_first_tab) {
+                self.searchHerbalList = res.data;
+              }
+            }
+          },
+          function(error) {
+            console.log(error);
+          }
+        );
+        self.tplSearch();
     },
     herbalSearch: function() {
       var self = this;
@@ -205,13 +230,18 @@ export default {
     },
     useTplHide: function() {
         this.showUseTpl=false;
+    },
+    editTplShow: function() {
+        this.showEditTpl=true;
+    },
+    editTplHide: function() {
+        this.showEditTpl=false;
     }
   }
 };
 </script>
-
 <style scoped>
-.prescript_title {
+.prescript-title {
   height: 2rem;
   background: rgba(225, 225, 225, 1);
   color: rgba(140, 140, 140, 1);
@@ -221,11 +251,11 @@ export default {
   text-align: center;
   line-height: 2rem;
 }
-.current_tab {
+.current-tab {
   background: rgba(77, 188, 137, 1);
   color: rgba(255, 255, 255, 1);
 }
-.prescript_list {
+.prescript-list {
   margin: 0.3125rem 0;
   text-align: center;
   line-height: 2rem;
@@ -235,21 +265,21 @@ export default {
   height: 2rem;
   font-size: 1rem;
 }
-.search_result {
-  display: flex;
-  flex-wrap: wrap;
-  max-height: 35rem;
-  overflow: auto;
-}
-.search_result .search_result_li {
-  width: 30%;
-  text-align: center;
-  border: 1px solid #5096e0;
-  border-radius: 0.25rem;
-  margin: 0.25rem 0.25rem;
-  font-size: 1rem;
-}
 
+.search-result .search-result-li {
+    width: 31.5%;
+    height: 3.75rem;
+    border: #5096e0 solid 1px;
+    border-radius: 0.25rem;
+    float: left;
+    margin-right: 1%;
+    margin-bottom: 0.25rem;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+}
 .tpl-show {
   position: absolute;
   width: 100%;
@@ -262,19 +292,25 @@ export default {
 .tpl-show span {
   font-size: 1rem;
 }
-.item_list {
-  display: flex;
-  flex-wrap: wrap;
-  max-height: 35rem;
+.tpl-show .item-list {
+  margin-left: 2%;
+  max-height: 15rem;
   overflow: auto;
 }
-.item_list .item_list_li {
-  width: 30%;
-  text-align: center;
-  border: 1px solid #5096e0;
-  border-radius: 0.25rem;
-  margin: 0.25rem 0.25rem;
-  font-size: 1rem;
+.tpl-show .item-list .item-list-li {
+    width: 31.5%;
+    height: 3.75rem;
+    border: #5096e0 solid 1px;
+    border-radius: 0.25rem;
+    float: left;
+    margin-right: 1%;
+    margin-bottom: 0.25rem;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+    font-weight:900;
 }
 .alert-back{
     width:100%;
@@ -299,12 +335,98 @@ export default {
     font-size: 1rem;
     overflow: auto;
 }
-.use-tpl .item-list{
+.alert-back .edit-tpl{
+    background: #FFFFFF;
+    box-shadow: 0 0.25rem 1rem 0.25rem rgba(0,0,0,0.20);
+    border-radius: 0.25rem;
+    z-index: 1050;
+    margin: 0 auto;
+    position: relative;
+    top:15%;
+    width:80%;
+    min-height: 15rem;
+    max-height: 40rem;
+    font-size: 1rem;
+    overflow: auto;
+}
+.use-tpl .use-list{
     display:flex;
     flex-wrap: wrap;
     margin-left: 2rem;
+    font-size: 1rem;
 }
-.use-tpl .item-list .item-list-li{
-    width:33%;
+.use-tpl .use-list .use-list-li{
+    width:33.3%;
+    font-size: 1rem
+}
+.search-btn{
+    width: 20%;
+    height: 2rem;
+    background: #5096E0;
+    border-radius: 0.25rem;
+    color: #fff;
+    display: block;
+    text-align: center;
+    font-size: 1rem;
+    line-height: 2rem;
+}
+.search-input{
+    width: 75%;
+    height: 2rem;
+    border: #5096e0 solid 1px;
+    border-radius: 0.25rem;
+    margin-right: 0.25rem;
+    text-indent: 0.625rem;
+    outline: none;
+}
+.prescription_detail_save {
+    margin-left: 2%;
+    width: 30%;
+    height:2rem;
+    border: #5096E0 solid 1px;
+    border-radius: 1.875rem;
+    text-align: center;
+    color: #5096e0;
+    float: left;
+    background-color: transparent;
+    font-size: 1rem;
+}
+.prescription_detail_del {
+    margin-left: 2%;
+    width: 30%;
+    height:2rem;
+    border: #FC3B3B solid 1px;
+    border-radius: 1.875rem;
+    text-align: center;
+    color: #FC3B3B;
+    float: left;
+    background-color: transparent;
+    font-size: 1rem;
+}
+.prescription_detail_btn {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    font-size: 15px;
+    text-align: center;
+    border-radius: 4px;
+    color: #fff;
+    background: #EEAE1D;
+}
+.saveBtn {
+    font-size: 16px;
+    color: #FFFFFF;
+    font-weight: bold;
+    width: 140px;
+    text-align: center;
+    padding: 9px 0;
+    background: #5096E0;
+    border-radius: 100px;
+    border: none;
+}
+.cancelBtn {
+    background: #FFFFFF;
+    border: 1px solid #5096E0;
+    color: #5096E0;
 }
 </style>

@@ -35,6 +35,8 @@
     flex: 21;
     margin-right: 1rem;
     background: #f2f2f2;
+    display: flex;
+    flex-direction: column;
   }
   .middle{
     flex: 54;

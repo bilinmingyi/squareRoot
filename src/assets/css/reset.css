@@ -508,6 +508,33 @@ input {
   margin-bottom: 3.5rem;
 }
 
+/* font-size */
+.font-12 {
+  font-size: 0.75rem;
+}
+
+.font-13 {
+  font-size: 0.8125rem;
+}
+
+.font-14 {
+  font-size: 0.875rem;
+}
+
+.font-15 {
+  font-size: 0.9375rem;
+}
+
+.font-16 {
+  font-size: 1rem;
+}
+
+/* font-weight */
+.font-bold {
+  font-weight: bold;
+}
+
+
 .e-p-i-content-item .ivu-input,
 .e-p-i-content-item .ivu-select-selection {
   height: 2.5rem;
