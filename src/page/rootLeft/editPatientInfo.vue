@@ -3,7 +3,7 @@
     <div class="e-p-i-container">
       <div class="e-p-i-header">
         <span class="e-p-i-title">编辑患者资料</span>
-        <Icon type="ios-close-circle-outline" class="e-p-i-close-icon"/>
+        <Icon @click="closeModal" type="ios-close-circle-outline" class="e-p-i-close-icon"/>
       </div>
       <div class="e-p-i-content">
         <div class="e-p-i-content-row">
@@ -35,9 +35,9 @@
         <div class="e-p-i-content-row">
           <div class="e-p-i-content-item pr50">
             <div class="e-p-i-content-item-key">婚姻状况</div>
-            <Select class="e-p-i-content-item-val" v-model="patientData.sex">
+            <Select class="e-p-i-content-item-val" v-model="patientData.maritalStatus">
               <Option
-                v-for="(item,index) in clinicDict.sex"
+                v-for="(item,index) in clinicDict.maritalStatus"
                 :value="item.code"
                 :key="index"
               >{{ item.name }}</Option>
@@ -47,9 +47,9 @@
         <div class="e-p-i-content-row">
           <div class="e-p-i-content-item pr50">
             <div class="e-p-i-content-item-key">ABO血型</div>
-            <Select class="e-p-i-content-item-val" v-model="patientData.sex">
+            <Select class="e-p-i-content-item-val" v-model="patientData.bloodAbo">
               <Option
-                v-for="(item,index) in clinicDict.sex"
+                v-for="(item,index) in clinicDict.bloodAbo"
                 :value="item.code"
                 :key="index"
               >{{ item.name }}</Option>
@@ -57,9 +57,9 @@
           </div>
           <div class="e-p-i-content-item">
             <div class="e-p-i-content-item-key">RH血型</div>
-            <Select class="e-p-i-content-item-val" v-model="patientData.sex">
+            <Select class="e-p-i-content-item-val" v-model="patientData.bloodRh">
               <Option
-                v-for="(item,index) in clinicDict.sex"
+                v-for="(item,index) in clinicDict.bloodRh"
                 :value="item.code"
                 :key="index"
               >{{ item.name }}</Option>
@@ -68,15 +68,22 @@
         </div>
       </div>
       <div class="e-p-i-footer">
-        <button class="e-p-i-btn mr20">确定</button>
-        <button class="e-p-i-btn light">取消</button>
+        <button class="e-p-i-btn mr20" @click="saveInfo">确定</button>
+        <button class="e-p-i-btn light" @click="closeModal">取消</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { Icon, Input, Select, DatePicker } from "iview";
 export default {
+  components: {
+    Icon,
+    Input,
+    Select,
+    DatePicker
+  },
   data() {
     return {
       patientData: {
@@ -91,7 +98,10 @@ export default {
         marital_status: 0,
         personal_history: "过敏性鼻炎；",
         family_history: "",
-        allergic_history: "头孢类；"
+        allergic_history: "头孢类；",
+        maritalStatus: 0,
+        bloodAbo: 0,
+        bloodRh: 0
       },
 
       clinicDict: {
@@ -99,9 +109,34 @@ export default {
           { code: 0, name: "保密" },
           { code: 1, name: "男" },
           { code: 2, name: "女" }
+        ],
+        maritalStatus: [
+          { code: 0, name: "保密" },
+          { code: 1, name: "已婚" },
+          { code: 2, name: "未婚" }
+        ],
+        bloodAbo: [
+          { code: 0, name: "未知" },
+          { code: 1, name: "A型" },
+          { code: 2, name: "B型" },
+          { code: 3, name: "AB型" },
+          { code: 4, name: "O型" }
+        ],
+        bloodRh: [
+          { code: 0, name: "未知" },
+          { code: 1, name: "阴性" },
+          { code: 2, name: "阳性" }
         ]
       }
     };
+  },
+  methods: {
+    closeModal() {
+      this.$emit("closeModal");
+    },
+    saveInfo() {
+      console.log("保存信息");
+    }
   }
 };
 </script>
@@ -186,6 +221,7 @@ export default {
   background: #5096e0;
   border-radius: 100px;
   border: none;
+  cursor: pointer;
 }
 .light {
   background: #ffffff;

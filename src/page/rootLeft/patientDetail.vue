@@ -44,14 +44,16 @@
         </span>
       </div>
     </div>
-    <edit-patient-info v-show="showEditPatientInfo"></edit-patient-info>
+    <edit-patient-info v-show="showEditPatientInfo" @closeModal="showEditPatientInfo = false"></edit-patient-info>
   </div>
 </template>
 
 <script>
+import {Icon} from 'iview';
 import editPatientInfo from "./editPatientInfo";
 export default {
   components: {
+    Icon,
     editPatientInfo
   },
   data() {
