@@ -31,12 +31,20 @@
         <tbody>
         <tr>
           <td>1</td>
+          <td>柴胡</td>
+          <td>1克</td>
+          <td>
+            <Input v-model="value2" style="width:3.125rem" />
+          </td>
           <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
+          <td>
+            <Select style="width:6.25rem">
+              <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+          </td>
+          <td>
+            <a>删除</a>
+          </td>
         </tr>
         </tbody>
       </table>
@@ -45,7 +53,7 @@
 </template>
 
 <script>
-  import {RadioGroup, Radio} from 'iview'
+  import {RadioGroup, Radio,Select,Option,Input} from 'iview'
   import {mapActions, mapState} from 'vuex'
 
   export default {
@@ -55,7 +63,10 @@
     },
     components: {
       RadioGroup,
-      Radio
+      Radio,
+      Select,
+      Option,
+      Input
     },
     computed:{
       ...mapState({

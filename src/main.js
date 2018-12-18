@@ -10,7 +10,6 @@ import 'babel-polyfill'
 
 import 'iview/dist/styles/iview.css';
 
-Vue.use(iView);
 
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
