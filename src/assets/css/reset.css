@@ -117,101 +117,25 @@ input {
   background: #FFFFFF;
 }
 
-/* d-table */
-.d-table {
-  border-collapse: separate;
-  border: 1px solid #08bac6;
-  border-radius: 0.25rem;
+.recipe_table{
   width: 100%;
-  table-layout: fixed;
-}
-
-.d-table td,
-.d-table th {
-  line-height: 1.3125rem;
+  font-size: 1rem;
+  color: #4C4C4C;
   text-align: center;
-  vertical-align: middle;
-  border-bottom: 1px solid #08bac6;
-  border-right: 1px solid #08bac6;
 }
-
-.d-table[data-type='1'] th,
-.d-table[data-type='1'] td {
-  height: 2.75rem;
-  font-size: 0.9375rem;
-  color: #3f3f3f;
+.recipe_table thead{
+  background: #F6FBFE;
 }
-
-.d-table[data-type='1'] th,
-.d-table .bg-medium {
-  background: #ebf8f9;
-  color: #3f3f3f;
+.recipe_table th{
+  font-weight:600;
+  padding: 0.625rem;
 }
-
-.d-table[data-type='2'] th,
-.d-table[data-type='2'] td {
-  height: 2.75rem;
-  font-size: 0.9375rem;
-  color: #3f3f3f;
+.recipe_table tbody tr{
+  border-bottom: 0.0625px solid #cccccc;
 }
-
-.d-table[data-type='2'] th,
-.d-table .bg-deep {
-  margin: 0.5rem 0;
-  background: #08bac6;
-  color: #ffffff;
-  border-right: none;
+.recipe_table tbody td{
+  padding: 0.3125rem 0;
 }
-
-.d-table .bg-light {
-  background: #fff;
-  color: #3f3f3f;
-}
-
-.d-table[data-type='2'] th > div,
-.d-table .bg-08bac6 > div {
-  line-height: 1rem;
-  width: 100%;
-  border-right: 1px solid #fff;
-}
-
-.d-table tr:nth-last-child(1) td,
-.d-table tr:nth-last-child(1) th {
-  border-bottom: none;
-}
-
-.d-table tr td:nth-last-child(1),
-.d-table tr th:nth-last-child(1),
-.d-table tr th:nth-last-child(1) > * {
-  border-right: none;
-}
-
-.d-table tr:nth-child(1) th:nth-child(1) {
-  border-top-left-radius: 0.25rem;
-}
-
-.d-table tr:nth-child(1) th:nth-last-child(1) {
-  border-top-right-radius: 0.25rem;
-}
-
-.d-table tr:nth-last-child(1) td:nth-child(1) {
-  border-bottom-left-radius: 0.25rem;
-}
-
-.d-table tr:nth-last-child(1) td:nth-last-child(1) {
-  border-bottom-right-radius: 0.25rem;
-}
-
-.d-table.h44 th,
-.d-table.h44 td {
-  height: 2.75rem;
-}
-
-.d-table.h36 th,
-.d-table.h36 td {
-  height: 2.25rem;
-}
-
 .width-100 {
   width: 6.25rem;
 }
@@ -323,6 +247,14 @@ input {
 
 .pr20 {
   padding-right: 1.25rem;
+}
+
+.pr30 {
+  padding-right: 1.875rem;
+}
+
+.pr50 {
+  padding-right: 3.125rem;
 }
 
 /* padding-top */
@@ -574,4 +506,17 @@ input {
 
 .mb56 {
   margin-bottom: 3.5rem;
+}
+
+.e-p-i-content-item .ivu-input,
+.e-p-i-content-item .ivu-select-selection {
+  height: 2.5rem;
+  border: 1px solid #5096e0;
+  font-size: 1rem;
+}
+
+.e-p-i-content-item .ivu-select-selection .ivu-select-selected-value {
+  height: 2.5rem;
+  line-height: 2.5rem;
+  font-size: 1rem;
 }

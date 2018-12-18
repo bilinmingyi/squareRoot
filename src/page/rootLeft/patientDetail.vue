@@ -16,10 +16,14 @@
         </div>
       </div>
       <div class="mt10">
-        <span class="font-bold pr10">年龄</span>
-        <span>{{patientData.birthday | calcAge }}岁</span>
-        <span class="font-bold pl20">性别</span>
-        <span>{{patientData.sex | parseSex}}</span>
+        <span class="pr20">
+          <span class="font-bold pr10">年龄</span>
+          <span>{{patientData.birthday | calcAge }}岁</span>
+        </span>
+        <span>
+          <span class="font-bold pr10">性别</span>
+          <span>{{patientData.sex | parseSex}}</span>
+        </span>
       </div>
       <div class="mt5">
         <span class="font-bold pr10">体重</span>
@@ -30,17 +34,28 @@
         <span>{{patientData.mobile}}</span>
       </div>
       <div class="mt5">
-        <span class="font-bold pr10">诊金</span>
-        <span>{{treatPrice | priceFormat}}</span>
-        <span class="font-bold pr10 pl20">总金额</span>
-        <span>{{allPrice | priceFormat}}</span>
+        <span class="pr20">
+          <span class="font-bold pr10">诊金</span>
+          <span>{{treatPrice | priceFormat}}</span>
+        </span>
+        <span>
+          <span class="font-bold pr10">总金额</span>
+          <span>{{allPrice | priceFormat}}</span>
+        </span>
       </div>
     </div>
+    <edit-patient-info v-show="showEditPatientInfo" @closeModal="showEditPatientInfo = false"></edit-patient-info>
   </div>
 </template>
 
 <script>
+import {Icon} from 'iview';
+import editPatientInfo from "./editPatientInfo";
 export default {
+  components: {
+    Icon,
+    editPatientInfo
+  },
   data() {
     return {
       // TODO: isFirst & treatPrice
@@ -53,7 +68,7 @@ export default {
         mobile: "13728089836",
         age: 14,
         birthday: 1083513600000,
-        sex: 0,
+        sex: 1,
         weight: 55,
         marital_status: 0,
         personal_history: "过敏性鼻炎；",
@@ -63,7 +78,10 @@ export default {
       // TODO:
       recipeData: {
         recipeList: []
-      }
+      },
+
+
+      showEditPatientInfo: false,   // 显示编辑患者资料
     };
   },
   computed: {
@@ -98,7 +116,7 @@ export default {
   },
   methods: {
     editPatient() {
-      console.log("编辑");
+      this.showEditPatientInfo = true;
     }
   }
 };
@@ -126,7 +144,7 @@ export default {
 .p-d-person-icon {
   color: #5096e0;
   font-size: 1.33rem;
-  padding: 0.125rem;
+  padding-bottom: 0.25rem;
 }
 .p-d-is-first {
   background: #eeae1d;
@@ -135,6 +153,11 @@ export default {
   line-height: 20px;
   height: 20px;
   padding: 0 10px;
+}
+.edit_span {
+  color: #5096e0;
+  text-decoration: underline;
+  cursor: pointer;
 }
 .display-flex {
   display: flex;

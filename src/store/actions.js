@@ -1,7 +1,7 @@
 import mutationTypes from '@/store/mutationTypes.js'
 
 const actions = {
-  add_new_recipt:({commit}, type)=>{
+  add_new_recipt:({commit,state}, type)=>{
     let item = {};
     switch (type) {
       case 1://重要处方
@@ -73,7 +73,8 @@ const actions = {
           }
         }
     }
-    commit(mutationTypes.ADD_NEW_RECIPT,item)
+    commit(mutationTypes.ADD_NEW_RECIPT,item);
+    commit(mutationTypes.CHANGE_CURR_TAB,state.recipeList.length-1);
   },
   change_curr_tab:({commit},index)=>{
     commit(mutationTypes.CHANGE_CURR_TAB,index)
