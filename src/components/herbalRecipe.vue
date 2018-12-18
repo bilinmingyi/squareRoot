@@ -16,7 +16,7 @@
       </div>
     </section>
     <section>
-      <table>
+      <table class="recipe_table">
         <thead>
         <tr>
           <th>序号</th>
@@ -30,13 +30,13 @@
         </thead>
         <tbody>
         <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
         </tr>
         </tbody>
       </table>

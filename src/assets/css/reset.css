@@ -117,8 +117,25 @@ input {
   background: #FFFFFF;
 }
 
-
-
+.recipe_table{
+  width: 100%;
+  font-size: 1rem;
+  color: #4C4C4C;
+  text-align: center;
+}
+.recipe_table thead{
+  background: #F6FBFE;
+}
+.recipe_table th{
+  font-weight:600;
+  padding: 0.625rem;
+}
+.recipe_table tbody tr{
+  border-bottom: 0.0625px solid #cccccc;
+}
+.recipe_table tbody td{
+  padding: 0.3125rem 0;
+}
 .width-100 {
   width: 6.25rem;
 }
