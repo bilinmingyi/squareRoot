@@ -1,72 +1,28 @@
 <template>
     <div style="margin-top: 2rem;">
-        <div style="display: flex;">
-            <div v-if="prescript_type===1" 
-            style="flex: 1;" class="prescript_title current_tab">病历模板</div>
-            <div v-if="prescript_type===2||prescript_type===3" 
-            style="flex: 1;" :class="['prescript_title',{'current_tab':in_first_tab}]" @click.stop="in_first">药品搜索</div>
-            <div v-if="prescript_type===4" 
-            style="flex: 1;" :class="['prescript_title',{'current_tab':in_first_tab}]" @click.stop="in_first">项目搜索</div>
-            <div v-if="prescript_type===2||prescript_type===3||prescript_type===4" 
-            style="flex: 1;" :class="['prescript_title',{'current_tab':in_second_tab}]" @click.stop="in_second">处方模板</div>
-            <div v-if="prescript_type===5" 
-            style="flex: 1;" class="prescript_title current_tab">材料搜索</div>
-            <div v-if="prescript_type===6" 
-            style="flex: 1;" class="prescript_title current_tab">附加服务</div>
-        </div>
-        <div v-show="prescript_type===2||prescript_type===3" class="mt5 ml6 mr6 mb5">
-            <Input style="width:75%;" placeholder="药品名称/拼音简码" />
-            <Button style="width:20%;float:right;" type="primary" class="ml8">搜索</Button>
-        </div>
-        <div class="search_result">
-            <div class="search_result_li" v-for="(item,index) in searchList" :key='index'>
-                {{item.name}}<br/>
-                {{item.spec}}
-            </div>
-        </div>
-        <div class="mt5 ml6 mr6 mb5">
-            <div class="prescript_list">添加模板</div>
-            <div>
-                <div class="prescript_list" v-for="(item,index) in prescript_list" :key='index'>{{item}}</div>
-            </div>
-        </div>
-        <div v-show="prescript_list.length<1" >没有相关处方模板</div>
-        <div style="text-align: center;">
-            <Button class="ml10 mr10" type="primary" shape="circle" ghost>上一页</Button>
-            <Button class="ml10 mr10" type="primary" shape="circle" ghost>下一页</Button>
-        </div>
+    <div>
+        <herbal-tag></herbal-tag>
+    </div>
     </div>
 </template>
 
 <script>
-    import {Input,Button} from 'iview'
-    export default {
-        name: "rootRight",
-        data () {
-            return {
-                in_first_tab: true,
-                in_second_tab: false,
-                prescript_type: 2,//1病历 2中药 3成药 4项目 5材料 6附加服务
-                prescript_list:["一二三四","一二三四","一二三四","一二三四","一二三四","一二三四","一二三四","一二三四","一二三四","一二三四","一二三四"],
-                searchList:[{name:'生姜',spec:'2g/包'},{name:'半夏',spec:'2g/包'},{name:'甘草',spec:'2g/包'},{name:'甘草',spec:'2g/包'},]
-            }
-        },
-        components:{
-            Input,
-            Button
-        },
+  import herbalTag from './rootRight/herbalTag.vue'
+  export default {
+    name: "rootRight",
+    components: {
+      herbalTag
+    },
+    data(){
+      return {
 
-        methods: {
-            in_first(){
-                this.in_first_tab=true;
-                this.in_second_tab=false;
-            },
-            in_second(){
-                this.in_second_tab=true;
-                this.in_first_tab=false;
-            }
-        }
+      }
+    },
+    methods:{
+      
     }
+
+  }
 </script>
 
 <style scoped>
