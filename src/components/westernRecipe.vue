@@ -62,6 +62,15 @@
         </tbody>
       </table>
     </section>
+    <section>
+      <div class="pl10 pt20">
+        <span class="input_label"> 处方金额：100元</span>
+      </div>
+      <div class="displayFlex pl10 pt10 width-620">
+        <span class="input_label pr4">医嘱：</span>
+        <Input class="flexOne" type="textarea" :autosize="{minRows: 3,maxRows: 3}" placeholder="医嘱提示" />
+      </div>
+    </section>
   </div>
 </template>
 
