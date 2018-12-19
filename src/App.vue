@@ -32,19 +32,19 @@
     min-height:calc( 100vh - 8.6rem);
   }
   .left{
-    flex: 21;
+    flex: 20;
     margin-right: 1rem;
     background: #f2f2f2;
     display: flex;
     flex-direction: column;
   }
   .middle{
-    flex: 54;
+    flex: 60;
     margin-right: 1rem;
     background: #FFFFFF;
   }
   .right{
-    flex: 25;
+    flex: 20;
     background: white;
   }
 

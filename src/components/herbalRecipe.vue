@@ -62,7 +62,7 @@
         <div class="width-240">
           <span class="input_label">频次：</span>
           <Select class="input_120">
-            <Option v-for="item in herbalMedUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
+            <Option v-for="item in medFrequency" :value="item.name" :key="item.name">{{ item.name }}</Option>
           </Select>
         </div>
         <div class="width-240">
@@ -100,12 +100,14 @@
 <script>
   import {RadioGroup, Radio, Select, Option, Input} from 'iview'
   import {mapActions, mapState} from 'vuex'
-  import {herbalMedUsages, herbalRpUsages, extraFeeTypes} from '@/assets/js/mapType'
+  import {herbalMedUsages, herbalRpUsages, extraFeeTypes,medFrequency} from '@/assets/js/mapType'
 
   export default {
     name: "herbalRecipe",
     data() {
-      return {};
+      return {
+        medFrequency:medFrequency
+      };
     },
     components: {
       RadioGroup,
