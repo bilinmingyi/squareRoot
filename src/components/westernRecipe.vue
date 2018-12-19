@@ -3,7 +3,7 @@
     <section class="herbal_head">
       <div class="herbal_head_left"></div>
       <div>
-        <button class="btn btn_cancel">删除</button>
+        <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
         <button class="btn">打印处方</button>
         <button class="btn btn_print">存为模板</button>
       </div>
@@ -76,6 +76,7 @@
 
 <script>
   import {westernMedUsages,medFrequency} from '@/assets/js/mapType'
+  import {mapActions, mapState} from 'vuex'
   import {Select, Option, Input} from 'iview'
 
   export default {
@@ -96,6 +97,23 @@
           return item.status===1;
         })
       }
+    },
+    methods:{
+      ...mapActions([
+        'cancel_recipe'
+      ]),
+      cancelRecipe(){
+        this.$Modal.confirm({
+          title: '提示',
+          content: '<p>确定删除该处方？</p>',
+          onOk: () => {
+            this.cancel_recipe();
+          },
+          onCancel: () => {
+            console.log("88")
+          }
+        });
+      },
     }
   }
 </script>
