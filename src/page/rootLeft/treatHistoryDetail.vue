@@ -269,7 +269,7 @@ export default {
 }
 .t-h-d-drug-item {
   display: inline-block;
-  padding-right: 1rem;
+  padding-right: 2rem;
 }
 .history-line-s {
   border-bottom: #ccc solid 1px;
