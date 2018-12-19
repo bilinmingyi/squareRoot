@@ -9,21 +9,21 @@
         <div class="e-p-i-content-row">
           <div class="e-p-i-content-item pr50">
             <div class="e-p-i-content-item-key">患者姓名</div>
-            <Input class="e-p-i-content-item-val" v-model="patientData.name" placeholder="必填"/>
+            <Input class="e-p-i-content-item-val" :value="patientData.name" @input="changePatientData('name', $event)" placeholder="必填"/>
           </div>
           <div class="e-p-i-content-item">
             <div class="e-p-i-content-item-key">手机号码</div>
-            <Input class="e-p-i-content-item-val" v-model="patientData.mobile" placeholder="必填"/>
+            <Input class="e-p-i-content-item-val" :value="patientData.mobile" @input="changePatientData('mobile', $event)" placeholder="必填"/>
           </div>
         </div>
         <div class="e-p-i-content-row">
           <div class="e-p-i-content-item pr50">
             <div class="e-p-i-content-item-key">出生日期</div>
-            <Date-picker class="e-p-i-content-item-val" type="date" v-model="patientData.birthday"></Date-picker>
+            <Date-picker class="e-p-i-content-item-val" type="date" :value="new Date(patientData.birthday)" @input="changePatientData('birthday', $event.getTime())"></Date-picker>
           </div>
           <div class="e-p-i-content-item">
             <div class="e-p-i-content-item-key">患者性别</div>
-            <Select class="e-p-i-content-item-val" v-model="patientData.sex">
+            <Select class="e-p-i-content-item-val" :value="patientData.sex" @input="changePatientData('sex', $event)">
               <Option
                 v-for="(item,index) in clinicDict.sex"
                 :value="item.code"
@@ -35,7 +35,7 @@
         <div class="e-p-i-content-row">
           <div class="e-p-i-content-item pr50">
             <div class="e-p-i-content-item-key">婚姻状况</div>
-            <Select class="e-p-i-content-item-val" v-model="patientData.maritalStatus">
+            <Select class="e-p-i-content-item-val" :value="patientData.marital_status" @input="changePatientData('marital_status', $event)">
               <Option
                 v-for="(item,index) in clinicDict.maritalStatus"
                 :value="item.code"
@@ -47,7 +47,7 @@
         <div class="e-p-i-content-row">
           <div class="e-p-i-content-item pr50">
             <div class="e-p-i-content-item-key">ABO血型</div>
-            <Select class="e-p-i-content-item-val" v-model="patientData.bloodAbo">
+            <Select class="e-p-i-content-item-val" :value="patientData.blood_abo" @input="changePatientData('blood_abo', $event)">
               <Option
                 v-for="(item,index) in clinicDict.bloodAbo"
                 :value="item.code"
@@ -57,7 +57,8 @@
           </div>
           <div class="e-p-i-content-item">
             <div class="e-p-i-content-item-key">RH血型</div>
-            <Select class="e-p-i-content-item-val" v-model="patientData.bloodRh">
+            <div>{{patientData.bloodRh}}</div>
+            <Select class="e-p-i-content-item-val" :value="patientData.blood_rh" @input="changePatientData('blood_rh', $event)">
               <Option
                 v-for="(item,index) in clinicDict.bloodRh"
                 :value="item.code"
@@ -76,35 +77,20 @@
 </template>
 
 <script>
-import { Icon, Input, Select, DatePicker } from "iview";
+import { Icon, Input, Select, Option, DatePicker } from "iview";
+import { mapState, mapActions} from 'vuex';
 export default {
   components: {
     Icon,
     Input,
     Select,
+    Option,
     DatePicker
   },
   data() {
     return {
-      patientData: {
-        // TODO: id
-        id: 22,
-        name: "A5",
-        mobile: "13728089836",
-        age: 14,
-        birthday: new Date(1083513600000),
-        sex: 1,
-        weight: 55,
-        marital_status: 0,
-        personal_history: "过敏性鼻炎；",
-        family_history: "",
-        allergic_history: "头孢类；",
-        maritalStatus: 0,
-        bloodAbo: 0,
-        bloodRh: 0
-      },
-
       clinicDict: {
+        // TODO: clinicDict
         sex: [
           { code: 0, name: "保密" },
           { code: 1, name: "男" },
@@ -127,15 +113,24 @@ export default {
           { code: 1, name: "阴性" },
           { code: 2, name: "阳性" }
         ]
-      }
+      },
     };
   },
+  computed: {
+    ...mapState({
+      patientData: state => state.patientData,
+    })
+  },
   methods: {
+    ...mapActions(['set_patient_info']),
     closeModal() {
       this.$emit("closeModal");
     },
     saveInfo() {
       console.log("保存信息");
+    },
+    changePatientData(key, val) {
+      this.set_patient_info({key, val});
     }
   }
 };
@@ -168,6 +163,7 @@ export default {
 .e-p-i-header {
   padding: 1.25rem;
   display: flex;
+  position: relative;
 }
 .e-p-i-title {
   flex: 1;
@@ -209,6 +205,10 @@ export default {
   font-size: 2rem;
   cursor: pointer;
   font-weight: bold;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translate(-50%, -50%);
 }
 
 .e-p-i-btn {

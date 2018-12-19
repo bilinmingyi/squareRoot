@@ -1,8 +1,5 @@
 <template>
   <div class="patient-detail">
-    <div class="p-d-title">
-      <span>患者资料</span>
-    </div>
     <div class="p-d-content">
       <div class="display-flex flex-ai-center">
         <div class="flex-1 font-16">
@@ -51,6 +48,7 @@
 <script>
 import {Icon} from 'iview';
 import editPatientInfo from "./editPatientInfo";
+import { mapState, mapActions } from "vuex";
 export default {
   components: {
     Icon,
@@ -58,24 +56,6 @@ export default {
   },
   data() {
     return {
-      // TODO: isFirst & treatPrice
-      isFirst: "1", // 是否初诊
-      treatPrice: 3, // 诊金
-      patientData: {
-        // TODO: id
-        id: 22,
-        name: "A5",
-        mobile: "13728089836",
-        age: 14,
-        birthday: 1083513600000,
-        sex: 1,
-        weight: 55,
-        marital_status: 0,
-        personal_history: "过敏性鼻炎；",
-        family_history: "",
-        allergic_history: "头孢类；"
-      },
-      // TODO:
       recipeData: {
         recipeList: []
       },
@@ -85,6 +65,12 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      // TODO: isFirst & treatPrice
+      isFirst: state => state.isFirst,
+      treatPrice: state => state.treatPrice,
+      patientData: state => state.patientData,
+    }),
     // 总金额
     allPrice() {
       let tempPrice = 0;
@@ -126,15 +112,6 @@ export default {
 .patient-detail {
   font-size: 0.9375rem;
 }
-.p-d-title {
-  background: #4dbc89;
-  color: #ffffff;
-  font-weight: bold;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  text-align: center;
-  line-height: 2.1875rem;
-}
 .p-d-content {
   padding: 10px;
   background: rgba(255, 255, 255, 1);
@@ -167,17 +144,5 @@ export default {
 }
 .flex-ai-center {
   align-items: center;
-}
-.font-16 {
-  font-size: 1rem;
-}
-.font-15 {
-  font-size: 0.9375rem;
-}
-.font-14 {
-  font-size: 0.875rem;
-}
-.font-bold {
-  font-weight: bold;
 }
 </style>

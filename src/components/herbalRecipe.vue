@@ -34,12 +34,12 @@
           <td>柴胡</td>
           <td>1克</td>
           <td>
-            <Input style="width:3.125rem" />
+            <Input style="width:3.125rem" type="text"/>
           </td>
           <td>1</td>
           <td>
             <Select style="width:6.25rem">
-              <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              <Option v-for="item in herbalMedUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
             </Select>
           </td>
           <td>
@@ -49,18 +49,65 @@
         </tbody>
       </table>
     </section>
+    <section>
+      <div class="pl10 pt20">
+        <span class="input_label"> 处方金额：100元</span>
+      </div>
+      <div class="displayFlex pl10 pr10 pt10">
+        <div class="width-240">
+          <span class="input_label"> 剂数：</span>
+          <Input type="text" class="input_120"/>
+          <span class="input_label">剂</span>
+        </div>
+        <div class="width-240">
+          <span class="input_label">频次：</span>
+          <Select class="input_120">
+            <Option v-for="item in medFrequency" :value="item.name" :key="item.name">{{ item.name }}</Option>
+          </Select>
+        </div>
+        <div class="width-240">
+          <span class="input_label"> 用法：</span>
+          <Select class="input_120">
+            <Option v-for="item in herbalRpUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
+          </Select>
+        </div>
+      </div>
+      <div class="displayFlex p10">
+        <div class="width-240">
+          <span class="input_label"> 附加：</span>
+          <Select class="input_120">
+            <Option v-for="item in extraFeeTypes" :value="item.name" :key="item.id">{{ item.name }}</Option>
+          </Select>
+        </div>
+        <div class="width-240">
+          <span class="input_label">数量：</span>
+          <Input type="text" class="input_120"/>
+        </div>
+        <div class="width-240">
+          <span class="input_label"> 用量：</span>
+          <Input type="text" class="input_120"/>
+          <span class="input_label">ml</span>
+        </div>
+      </div>
+      <div class="displayFlex pl10 pt10 width-620">
+        <span class="input_label pr4">医嘱：</span>
+        <Input class="flexOne" type="textarea" :autosize="{minRows: 3,maxRows: 3}" placeholder="医嘱提示" />
+      </div>
+    </section>
   </div>
 </template>
 
 <script>
-  import {RadioGroup, Radio,Select,Option,Input} from 'iview'
+  import {RadioGroup, Radio, Select, Option, Input} from 'iview'
   import {mapActions, mapState} from 'vuex'
-  import {herbalMedUsages, herbalRpUsages} from '@/assets/js/mapType'
+  import {herbalMedUsages, herbalRpUsages, extraFeeTypes,medFrequency} from '@/assets/js/mapType'
 
   export default {
     name: "herbalRecipe",
     data() {
-      return {};
+      return {
+        medFrequency:medFrequency
+      };
     },
     components: {
       RadioGroup,
@@ -69,22 +116,36 @@
       Option,
       Input
     },
-    computed:{
+    computed: {
       ...mapState({
         recipeList: state => state.recipeList,
         currRecipe: state => state.currRecipe
       }),
-      currentData:function () {
+      currentData: function () {
         return {...this.recipeList[this.currRecipe]}
+      },
+      herbalMedUsages: function () {
+        return herbalMedUsages.filter(item => {
+          return item.status === 1
+        })
+      },
+      herbalRpUsages: function () {
+        return herbalRpUsages.filter(item => {
+          return item.status === 1
+        })
+      },
+      extraFeeTypes:function () {
+        return extraFeeTypes.filter(item =>{
+          return item.status === 1
+        })
       }
     },
-    methods:{
-    }
+    methods: {}
   }
 </script>
 
 <style scoped>
-  .btn{
+  .btn {
     border: 0.0625rem solid #5096E0;
     border-radius: 1.875rem;
     font-size: 1rem;
@@ -93,19 +154,23 @@
     line-height: 1.875rem;
     min-width: 5.125rem;
   }
-  .btn_cancel{
+
+  .btn_cancel {
     border-color: #FC3B3B;
     color: #FC3B3B;
   }
-  .btn_print{
+
+  .btn_print {
     border-color: #4DBC89;
     color: #4DBC89;
   }
-  .herbal_head{
+
+  .herbal_head {
     display: flex;
     padding: 0.625rem;
   }
-  .herbal_head_left{
+
+  .herbal_head_left {
     flex: 1;
     align-self: center;
   }

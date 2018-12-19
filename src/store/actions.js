@@ -1,6 +1,18 @@
 import mutationTypes from '@/store/mutationTypes.js'
+import mutations from './mutations';
 
 const actions = {
+  // left
+  set_patient_info: ({commit}, {key, val}) => {
+    commit(mutationTypes.SET_PATIENT_INFO, {key, val});
+  },
+  set_state_prop: ({commit}, {key, val}) => {
+    commit(mutationTypes.SET_STATE_PROP, {key, val});
+  },
+  set_history_data: ({commit}, {key, val}) => {
+    commit(mutationTypes.SET_HISTORY_DATA, {key, val});
+  },
+
   add_new_recipt:({commit,state}, type)=>{
     let item = {};
     switch (type) {
