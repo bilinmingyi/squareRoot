@@ -41,12 +41,12 @@
         </span>
       </div>
     </div>
-    <edit-patient-info v-show="showEditPatientInfo" @closeModal="showEditPatientInfo = false"></edit-patient-info>
+    <edit-patient-info v-if="showEditPatientInfo" @closeModal="showEditPatientInfo = false"></edit-patient-info>
   </div>
 </template>
 
 <script>
-import {Icon} from 'iview';
+import { Icon } from "iview";
 import editPatientInfo from "./editPatientInfo";
 import { mapState, mapActions } from "vuex";
 export default {
@@ -59,9 +59,7 @@ export default {
       recipeData: {
         recipeList: []
       },
-
-
-      showEditPatientInfo: false,   // 显示编辑患者资料
+      showEditPatientInfo: false // 显示编辑患者资料
     };
   },
   computed: {
@@ -69,7 +67,7 @@ export default {
       // TODO: isFirst & treatPrice
       isFirst: state => state.isFirst,
       treatPrice: state => state.treatPrice,
-      patientData: state => state.patientData,
+      patientData: state => state.patientData
     }),
     // 总金额
     allPrice() {

@@ -4,8 +4,7 @@
       <span>患者资料</span>
     </div>
     <patient-detail v-show="!showHistoryDetail"></patient-detail>
-    <treat-history v-show="!showHistoryDetail"></treat-history>
-    <treat-history-detail v-show="showHistoryDetail"></treat-history-detail>
+    <treat-history></treat-history>
   </div>
 </template>
 
@@ -13,14 +12,13 @@
   import {getHerbalList} from '@/fetch/api.js'
   import patientDetail from './patientDetail';
   import treatHistory from './treatHistory';
-  import treatHistoryDetail from "./treatHistoryDetail";
-  import { mapState } from "vuex";
+  import { mapState, mapActions } from "vuex";
+  import {getPatientInfo} from '@/fetch/api.js';
   export default {
     name: "rootPage",
     components: {
       patientDetail,
-      treatHistory,
-      treatHistoryDetail
+      treatHistory
     },
     data(){
       return {
@@ -36,15 +34,15 @@
       this.getData()
     },
     methods:{
+      ...mapActions(['set_state_prop']),
       getData(){
-        getHerbalList({
-          category: 1,
-          is_cloud: 0,
-          name: "",
-          page: 1,
-          page_size: 8
-        }).then(data=>{
-          console.log(data)
+        // TODO: 获取患者id
+        let params = new FormData();
+        params.append('patientId', 22);
+        getPatientInfo(params).then(res=>{
+          if (res.code == 1000) {
+            this.set_state_prop({key: 'patientData', val: res.data})
+          }
         })
       }
     }

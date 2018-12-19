@@ -9,9 +9,6 @@ const actions = {
   set_state_prop: ({commit}, {key, val}) => {
     commit(mutationTypes.SET_STATE_PROP, {key, val});
   },
-  set_history_data: ({commit}, {key, val}) => {
-    commit(mutationTypes.SET_HISTORY_DATA, {key, val});
-  },
 
   add_new_recipt:({commit,state}, type)=>{
     let item = {};

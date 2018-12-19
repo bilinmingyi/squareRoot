@@ -22,4 +22,16 @@ function fetch(url, params) {
 let getHerbalList = (params) => {
   return fetch('/doctreat/tpl/herbal/list',params);
 }
-export {getHerbalList}
+
+const updatePatientData = params => fetch('/treatmng/patient/update', JSON.stringify(params));
+
+const getPatientInfo = params => fetch('treatmng/patient/detail', params);
+
+const getHistoryRecipes = params = fetch('/treatmng/patient/history/list', params);
+
+export {
+  getHerbalList,
+  updatePatientData,
+  getPatientInfo,
+  getHistoryRecipes
+}

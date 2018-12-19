@@ -8,9 +8,6 @@ const mutations = {
     [mutationTypes.SET_STATE_PROP](state, {key, val}) {
       state[key] = val;
     },
-    [mutationTypes.SET_HISTORY_DATA](state, {key, val}) {
-      state.historyData[key] = val;
-    },
 
     [mutationTypes.ADD_NEW_RECIPT](state, item) {
       state.recipeList.push(item);
