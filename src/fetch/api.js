@@ -27,7 +27,7 @@ const updatePatientData = params => fetch('/treatmng/patient/update', JSON.strin
 
 const getPatientInfo = params => fetch('treatmng/patient/detail', params);
 
-const getHistoryRecipes = params = fetch('/treatmng/patient/history/list', params);
+const getHistoryRecipes = params => fetch('/treatmng/patient/history/list', params);
 
 export {
   getHerbalList,
