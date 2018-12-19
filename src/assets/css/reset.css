@@ -508,6 +508,59 @@ input {
   margin-bottom: 3.5rem;
 }
 
+/*排版*/
+.col5{
+  width: 5% !important;
+}
+.col53{
+  width: 5.3%;
+}
+.col10{
+  width: 10% !important;
+}
+.col15{
+  width: 15% !important;
+}
+.col20{
+  width: 20% !important;
+}
+.col25{
+  width: 25% !important;
+}
+.col30{
+  width: 30% !important;
+}
+.col35{
+  width: 35% !important;
+}
+.col40{
+  width: 40% !important;
+}
+.col45{
+  width: 45% !important;
+}
+.col50{
+  width: 50% !important;
+}
+.col60{
+  width: 60% !important;
+}
+.col65{
+  width: 65% !important;
+}
+.col70{
+  width: 70% !important;
+}
+.col80{
+  width: 80% !important;
+}
+.col90{
+  width: 90% !important;
+}
+.col100{
+  width: 100% !important;
+}
+
 .e-p-i-content-item .ivu-input,
 .e-p-i-content-item .ivu-select-selection {
   height: 2.5rem;
