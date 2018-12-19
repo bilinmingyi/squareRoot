@@ -52,12 +52,17 @@
 
 <script>
   import {Select, Option, Input} from 'iview'
-  import {mapActions, mapState} from 'vuex'
+  import {mapActions, mapGetters} from 'vuex'
 
   export default {
     name: "therapyRecipe",
     data() {
       return {}
+    },
+    computed:{
+      ...mapGetters({
+        currentData:'currRecipeData'
+      }),
     },
     components: {
       Select,

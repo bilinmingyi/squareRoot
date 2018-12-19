@@ -50,7 +50,7 @@
 </template>
 
 <script>
-  import {mapActions, mapState} from 'vuex'
+  import {mapActions, mapGetters} from 'vuex'
   import {Select, Option, Input} from 'iview'
 
   export default {
@@ -59,6 +59,11 @@
       return {
 
       }
+    },
+    computed:{
+      ...mapGetters({
+        currentData:'currRecipeData'
+      }),
     },
     components:{
       Select,

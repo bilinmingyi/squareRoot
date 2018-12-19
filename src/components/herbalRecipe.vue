@@ -99,7 +99,7 @@
 
 <script>
   import {RadioGroup, Radio, Select, Option, Input} from 'iview'
-  import {mapActions, mapState} from 'vuex'
+  import {mapActions, mapGetters} from 'vuex'
   import {herbalMedUsages, herbalRpUsages, extraFeeTypes,medFrequency} from '@/assets/js/mapType'
 
   export default {
@@ -117,13 +117,9 @@
       Input
     },
     computed: {
-      ...mapState({
-        recipeList: state => state.recipeList,
-        currRecipe: state => state.currRecipe
+      ...mapGetters({
+        currentData:'currRecipeData'
       }),
-      currentData: function () {
-        return {...this.recipeList[this.currRecipe]}
-      },
       herbalMedUsages: function () {
         return herbalMedUsages.filter(item => {
           return item.status === 1

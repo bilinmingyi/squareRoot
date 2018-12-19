@@ -76,7 +76,7 @@
 
 <script>
   import {westernMedUsages,medFrequency} from '@/assets/js/mapType'
-  import {mapActions, mapState} from 'vuex'
+  import {mapActions, mapGetters} from 'vuex'
   import {Select, Option, Input} from 'iview'
 
   export default {
@@ -96,7 +96,10 @@
         return westernMedUsages.filter(item => {
           return item.status===1;
         })
-      }
+      },
+      ...mapGetters({
+        currentData:'currRecipeData'
+      })
     },
     methods:{
       ...mapActions([
