@@ -82,12 +82,17 @@ const actions = {
           }
         }
     }
-    commit(mutationTypes.ADD_NEW_RECIPT,item);
-    commit(mutationTypes.CHANGE_CURR_TAB,state.recipeList.length-1);
+    commit(mutationTypes.ADD_NEW_RECIPT, item);
+    commit(mutationTypes.CHANGE_CURR_TAB, state.recipeList.length - 1);
   },
-  change_curr_tab:({commit},index)=>{
-    commit(mutationTypes.CHANGE_CURR_TAB,index)
+  change_curr_tab: ({commit}, index) => {
+    commit(mutationTypes.CHANGE_CURR_TAB, index)
+  },
+  cancel_recipe: ({commit}) => {
+    commit(mutationTypes.CANCEL_RECIPE)
   }
+
+  //right
 };
 
 export default actions
