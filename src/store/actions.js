@@ -10,7 +10,8 @@ const actions = {
     commit(mutationTypes.SET_STATE_PROP, {key, val});
   },
 
-  add_new_recipt:({commit,state}, type)=>{
+  //middle
+  add_new_recipt: ({commit, state}, type) => {
     let item = {};
     switch (type) {
       case 1://重要处方
