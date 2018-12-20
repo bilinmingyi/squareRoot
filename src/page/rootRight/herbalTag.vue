@@ -1,5 +1,5 @@
 <template>
-  <div class="herbal-tag" style="position:relative;">
+  <div v-show="recipeType===1" class="herbal-tag" style="position:relative;">
     <div style="display: flex;">
       <div
         style="flex: 1;"
@@ -13,9 +13,15 @@
       >处方模板</div>
     </div>
     <div v-show="in_first_tab" class="mt5 ml6 mr6 mb5">
-      <div class="mb6" style="width:100%;display:flex;height:2rem;">
-        <input class="search-input" placeholder="药品名称/拼音简码" v-model="searchName">
-        <button class="search-btn" @click="herbalSearch()">搜索</button>
+      <div class="mb6" style="width:100%;display:flex;height:2rem;font-size:1rem;">
+        <!--<input class="search-input" placeholder="药品名称/拼音简码" v-model="searchName">-->
+        <div class="col70 mr10">
+          <Input placeholder="药品名称/拼音简码" v-model="searchName"/>
+        </div>
+        <!--<button class="search-btn" @click="herbalSearch()">搜索</button>-->
+        <div class="col20">
+          <Button @click="herbalSearch()">搜索</Button>
+        </div>
       </div>
       <div class="search-result">
         <div
@@ -29,15 +35,25 @@
           <br>
           {{item.spec}}
         </div>
+        <div
+          class="mt10"
+          style="text-align:center;font-size:1rem;"
+          v-show="searchHerbalList.length<1"
+        >暂无药品</div>
       </div>
     </div>
-
     <div v-show="in_second_tab" class="mt5 ml6 mr6 mb5">
       <div class="mb6" style="width:100%;display:flex;height:2rem;">
-        <input placeholder="请输入模板名称" type="text" class="search-input" v-model="searchTplName">
-        <div class="search-btn" @click="tplSearch()">搜索</div>
+        <div class="col70 mr10">
+          <Input placeholder="请输入模板名称" v-model="searchTplName"/>
+        </div>
+        <div class="col20">
+          <Button @click="tplSearch()">搜索</Button>
+        </div>
+        <!--<input placeholder="请输入模板名称" type="text" class="search-input" v-model="searchTplName">-->
+        <!--<div class="search-btn" @click="tplSearch()">搜索</div>-->
       </div>
-      <span class="add_prescription_btn">添加模板</span>
+      <span class="add_prescription_btn" @click="addTpl()">添加模板</span>
       <div style="min-height:20rem;max-height:45rem;overflow:auto;">
         <div
           class="prescript-list"
@@ -45,10 +61,10 @@
           :key="index"
           @click.stop="tplShow(item)"
         >{{item.name}}</div>
-        <div v-show="tplSearchList.length<1">没有相关处方模板</div>
+        <div style="text-align:center;font-size:1rem;" v-show="tplSearchList.length<1">暂无模板</div>
 
         <div class="tpl-show mt5" v-show="showTpl">
-          <div class="prescription_detail_btn">返回</div>
+          <div class="prescription_detail_btn" @click="tplHide()">返回</div>
           <div class="ml16 mr16 mt16">
             <span style="font-weight:900;">处方模板：</span>
             <span>{{tplData.tplName}}</span>
@@ -73,7 +89,7 @@
           <div>
             <button class="prescription_detail_save mr2" @click.stop="useTplShow()">使用模板</button>
             <button class="prescription_detail_save" @click.stop="editTplShow()">编辑模板</button>
-            <button class="prescription_detail_del">删除模板</button>
+            <button class="prescription_detail_del" @click.stop="delTplShow()">删除模板</button>
           </div>
           <div v-show="showUseTpl" class="alert-back">
             <div class="use-tpl">
@@ -94,135 +110,171 @@
               </div>
             </div>
           </div>
-          <div v-show="showEditTpl" class="alert-back">
-            <div class="edit-tpl">
-              <div
-                class="mt16"
-                style="height:2.75rem;width:100%;text-align:center;font-weight:900;font-size:1.125rem;border-bottom:1px solid #cccccc;"
-              >编辑模板</div>
-              <div style="position:relative;">
-                <div class="mt10 ml20">
-                  <label class="ml20" for="edit-tpl-name">模板名称：</label>
-                  <Input
-                    name="tpl-name"
-                    v-model="tplEditData.tplName"
-                    placeholder="必填"
-                    style="width: 9.375rem;"
-                  />
-                  <label class="ml20" for="edit-tpl-scope">模板类别：</label>
-                  <Select name="edit-tpl-scope" style="width:7.5rem;" v-model="tplEditData.scope">
-                    <Option value="0">共享</Option>
-                    <Option value="1">个人</Option>
-                  </Select>
-                </div>
-                <div class="mt20 ml20">
-                  <span class="ml20">药品类型：</span>
-                  <span>饮片</span>
-                  <span>颗粒</span>
-                </div>
-                <div class="mt20 ml20 mr20">
+          <div v-show="showDelTpl" class="alert-back" style="font-size:1rem;">
+            <div class="del-tpl">
+              <div class="ml20 pt20">删除模板</div>
+              <div class="ml20 pt10">
+                <Icon type="md-help-circle" size="40" color="#3182FB"/>
+                <span class="ml10">确定要删除[{{tplData.tplName}}]模板?</span>
+              </div>
+              <div style="position:absolute;right:5rem;bottom:2rem;">
+                <span @click="delTplHide()">取消</span>
+                <Button class="ml20" shape="circle" type="primary" @click="delTpl()">确定</Button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-show="showEditTpl||showAddTpl" class="alert-back">
+          <div class="edit-tpl">
+            <div
+              class="mt16"
+              style="height:2.75rem;width:100%;text-align:center;font-weight:900;font-size:1.125rem;border-bottom:1px solid #cccccc;"
+            >
+              <span v-show="showEditTpl">编辑模板</span>
+              <span v-show="showAddTpl">添加模板</span>
+            </div>
+            <div style="position:relative;">
+              <div class="mt10 ml20">
+                <label class="ml20" for="edit-tpl-name">模板名称：</label>
+                <Input
+                  name="tpl-name"
+                  v-model="tplEditData.tplName"
+                  placeholder="必填"
+                  style="width: 9.375rem;"
+                />
+                <label class="ml20" for="edit-tpl-scope">模板类别：</label>
+                <Select name="edit-tpl-scope" style="width:7.5rem;" v-model="tplEditData.scope">
+                  <Option
+                    v-for="(item,index) in tplType"
+                    :key="index"
+                    :value="item.scope"
+                  >{{item.name}}</Option>
+                </Select>
+              </div>
+              <div class="mt20 ml20">
+                <span class="ml20">药品类型：</span>
+                <span>饮片</span>
+                <span>颗粒</span>
+              </div>
+              <div class="mt20 ml20 mr20">
+                <table class="col100">
+                  <thead>
+                    <tr>
+                      <th class="col10">序号</th>
+                      <th class="col30">药名</th>
+                      <th class="col10">药量</th>
+                      <th class="col15">单位</th>
+                      <th class="col10">规格</th>
+                      <th class="col10">用法</th>
+                      <th class="col15">操作</th>
+                    </tr>
+                  </thead>
+                </table>
+                <div style="max-height:8.5rem;overflow:auto;">
                   <table class="col100">
-                    <thead>
-                      <tr>
-                        <th class="col10">序号</th>
-                        <th class="col30">药名</th>
-                        <th class="col10">药量</th>
-                        <th class="col15">单位</th>
-                        <th class="col10">规格</th>
-                        <th class="col10">用法</th>
-                        <th class="col15">操作</th>
-                      </tr>
-                    </thead>
-                  </table>
-                  <div style="max-height:8.5rem;overflow:auto;">
-                    <table class="col100">
-                      <tbody>
-                        <tr v-for="(item,index) in tplEditData.items" :key="index">
-                          <td class="col10">{{index+1}}</td>
-                          <td class="col30">{{item.name}}</td>
-                          <td class="col10">
-                            <input class="diagnosis_input" v-model="item.num">
-                          </td>
-                          <td class="col15">{{item.unit}}</td>
-                          <td class="col10">{{item.spec}}</td>
-                          <td class="col10">
-                            <input class="diagnosis_input" v-model="item.usage">
-                          </td>
-                          <td class="col15">
-                            <div style="color:#4181D8" @click.stop="delEditTplLists(index)">删除</div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div class="col100 mt10" style="border-top:#B4B4B4 solid 1px;">
-                    <div class="mt10 ml20">
-                      <input
-                        type="text"
-                        class="diagnosis_input col30"
-                        placeholder="输入药品名称/编码/拼音码"
-                        v-model="tplEditData.searchName"
-                        @input="tplEditSearch(search,100)"
-                        style
-                      >
-                    </div>
-                  </div>
-                </div>
-                <div class="tpl-search-result">
-                  <table class="col100">
-                    <thead>
-                      <tr>
-                        <th class="col20">药品名称</th>
-                        <th class="col20">药品类别</th>
-                        <th class="col20">单位</th>
-                        <th class="col20">规格</th>
-                        <th class="col20">零售价</th>
-                      </tr>
-                    </thead>
                     <tbody>
-                      <tr
-                        v-for="(item,index) in tplEditData.searchLists"
-                        :key="index"
-                        :click="editTplAddList(item)"
-                      >
-                        <td class="col20">{{item.name}}</td>
-                        <td class="col20" v-if="item.category==1">饮片</td>
-                        <td class="col20" v-if="item.category==2">颗粒</td>
-                        <td class="col20">{{item.unit_stock}}</td>
-                        <td class="col20">{{item.spec}}</td>
-                        <td class="col20">{{item.sale_price}}</td>
+                      <tr v-for="(item,index) in tplEditData.items" :key="index">
+                        <td class="col10">{{index+1}}</td>
+                        <td class="col30">{{item.name}}</td>
+                        <td class="col10">
+                          <Input v-model="item.num"/>
+                        </td>
+                        <td class="col15">{{item.unit_stock}}</td>
+                        <td class="col10">{{item.spec}}</td>
+                        <td class="col10">
+                          <Select v-model="item.usage">
+                            <Option
+                              v-for="(item1,index) in herbalMedUsages"
+                              :value="item1.name"
+                              :key="index"
+                            >{{item1.name}}</Option>
+                          </Select>
+                        </td>
+                        <td class="col15">
+                          <div style="color:#4181D8" @click.stop="delEditTplLists(index)">删除</div>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
-                <div class="mt20 ml20 mb20">
-                  <label for="dosage">饮片剂数：</label>
-                  <input
-                    class="diagnosis_input col5 mr5"
-                    name="dosage"
-                    v-model="tplEditData.dosage"
-                  >剂
+                <div
+                  class="col100 mt10 pb10"
+                  style="border-top:#B4B4B4 solid 1px;border-bottom:#B4B4B4 solid 1px;"
+                >
+                  <div class="mt10 ml20">
+                    <Input
+                      class="col30"
+                      placeholder="输入药品名称/编码/拼音码"
+                      v-model="tplEditData.searchName"
+                      @input="tplHerbalSearch()"
+                    />
+                  </div>
                 </div>
-                <div class="mt20 ml20 mb20">
-                  <label>医嘱：</label>
-                  <Input
-                    class="ml20 col70 mb10"
-                    type="textarea"
-                    placeholder="请输入文字"
-                    :rows="2"
-                    :autosize="{minRows:2,maxRows:4}"
-                  />
-                </div>
-                <div class="edit-tpl-foot">
-                  <Button
-                    class="mr20"
-                    type="primary"
-                    shape="circle"
-                    size="large"
-                    @click="saveTplEdit()"
-                  >保存</Button>
-                  <Button shape="circle" size="large" @click="cancelTplEdit()">取消</Button>
-                </div>
+              </div>
+              <div
+                class="tpl-search-result"
+                v-show="tplEditData.searchListShow"
+                style="max-height:9.5rem;overflow:auto;"
+              >
+                <table class="col100">
+                  <thead>
+                    <tr>
+                      <th class="col20">药品名称</th>
+                      <th class="col20">药品类别</th>
+                      <th class="col20">单位</th>
+                      <th class="col20">规格</th>
+                      <th class="col20">零售价</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="(item,index) in tplEditData.searchLists"
+                      :key="index"
+                      @click="editTplAddList(item)"
+                    >
+                      <td class="col20">{{item.name}}</td>
+                      <td class="col20" v-if="item.category==1">饮片</td>
+                      <td class="col20" v-if="item.category==2">颗粒</td>
+                      <td class="col20">{{item.unit_stock}}</td>
+                      <td class="col20">{{item.spec}}</td>
+                      <td class="col20">{{item.sale_price}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="mt20 ml20 mb20 col40">饮片剂数：
+                <Input style="width:10rem" name="dosage" v-model="tplEditData.dosage"/>&nbsp;&nbsp;&nbsp;剂
+              </div>
+              <div class="mt20 ml20 mb20">
+                <label>医嘱：</label>
+                <Input
+                  v-model="tplEditData.doctor_remark"
+                  class="ml20 col70 mb10"
+                  type="textarea"
+                  placeholder="请输入文字"
+                  :rows="2"
+                  :autosize="{minRows:2,maxRows:4}"
+                />
+              </div>
+              <div v-show="showEditTpl" class="edit-tpl-foot">
+                <Button
+                  class="mr20"
+                  type="primary"
+                  shape="circle"
+                  size="large"
+                  @click.stop="saveTplEdit()"
+                >保存</Button>
+                <Button shape="circle" size="large" @click.stop="cancelTplEdit()">取消</Button>
+              </div>
+              <div v-show="showAddTpl" class="edit-tpl-foot">
+                <Button
+                  class="mr20"
+                  type="primary"
+                  shape="circle"
+                  size="large"
+                  @click.stop="saveTplAdd()"
+                >保存</Button>
+                <Button shape="circle" size="large" @click.stop="cancelTplAdd()">取消</Button>
               </div>
             </div>
           </div>
@@ -233,10 +285,19 @@
 </template>
 <script>
 import axios from "axios";
-import { Input, Button, Select, Option } from "iview";
+import { mapState } from "vuex";
+import { Input, Button, Select, Option, Icon } from "iview";
+import {
+  herbalMedUsages,
+  herbalRpUsages,
+  extraFeeTypes,
+  medFrequency
+} from "@/assets/js/mapType";
 export default {
   data() {
     return {
+      showAddTpl: false,
+      showDelTpl: false,
       showEditTpl: false,
       showUseTpl: false,
       category: 1,
@@ -248,6 +309,11 @@ export default {
       searchHerbalList: [],
       showTpl: false,
       tplData: {
+        category: 0,
+        clinic_id: 0,
+        creator_name: "",
+        creator_id: "",
+        id: 0,
         tplName: "",
         scope: 0,
         items: [],
@@ -255,6 +321,7 @@ export default {
         doctor_remark: ""
       },
       tplEditData: {
+        category: 1,
         tplName: "",
         scope: 0,
         items: [],
@@ -262,15 +329,31 @@ export default {
         doctor_remark: "",
         searchName: "",
         searchLists: [],
-        category: 1
-      }
+        searchListShow: false
+      },
+      tplType: [{ name: "个人", scope: 1 }, { name: "共享", scope: 0 }]
     };
+  },
+  computed: {
+    herbalMedUsages: function() {
+      return herbalMedUsages.filter(item => {
+        return item.status === 1;
+      });
+    },
+    ...mapState({
+      recipeList: state => state.recipeList,
+      currRecipe: state => state.currRecipe
+    }),
+    recipeType: function() {
+      return this.recipeList[this.currRecipe].type;
+    }
   },
   components: {
     Input,
     Button,
     Select,
-    Option
+    Option,
+    Icon
   },
   created() {
     this.firstSearch();
@@ -283,6 +366,14 @@ export default {
     "tplEditData.items": {
       deep: true,
       handler: function() {}
+    },
+    "tplEditData.searchLists": {
+      deep: true,
+      handler: function() {
+        if (this.tplEditData.searchLists.length >= 1) {
+          this.tplEditData.searchListShow = true;
+        }
+      }
     }
   },
   methods: {
@@ -295,9 +386,6 @@ export default {
       this.in_first_tab = false;
     },
     selectHerbalItem: function(item) {
-      alert(item);
-    },
-    selectRecipePrescript: function(item) {
       alert(item);
     },
     firstSearch: function() {
@@ -323,6 +411,10 @@ export default {
       self.tplSearch();
     },
     herbalSearch: function() {
+      if (this.searchName == "") {
+        this.searchHerbalList = [];
+        return;
+      }
       var self = this;
       axios
         .post("/stockmng/medicine/herbalList", {
@@ -339,6 +431,30 @@ export default {
               if (self.in_second_tab) {
                 self.tplSearchList = res.data;
               }
+            }
+          },
+          function(error) {
+            console.log(error);
+          }
+        );
+    },
+
+    tplHerbalSearch: function() {
+      var self = this;
+      if (self.tplEditData.searchName == "") {
+        this.tplEditData.searchListShow = false;
+        return;
+      }
+      axios
+        .post("/stockmng/medicine/herbalList", {
+          medicine_name: self.tplEditData.searchName,
+          category: self.tplEditData.category
+        })
+        .then(
+          function(response) {
+            var res = response.data;
+            if (res.code == 1000) {
+              self.tplEditData.searchLists = res.data;
             }
           },
           function(error) {
@@ -365,43 +481,19 @@ export default {
           }
         );
     },
-    search: function() {
-      var self = this;
-      console.log(self.tplEditData.searchName, elf.tplEditData.category);
-      axios
-        .post("/stockmng/medicine/herbalList", {
-          medicine_name: self.tplEditData.searchName,
-          category: self.tplEditData.category
-        })
-        .then(
-          function(response) {
-            var res = response.data;
-            if (res.code == 1000) {
-              self.tplEditData.searchLists = res.data;
-            }
-          },
-          function(error) {
-            console.log(error);
-          }
-        );
-    },
-    tplEditSearch: function(func, delay) {
-      var timer = null;
-      return function() {
-        clearTimeout(timer);
-        var context = this;
-        timer = setTimeout(function() {
-          func.apply(context);
-        }, delay);
-      };
-    },
     tplShow: function(item) {
       this.tplData = {
         tplName: item.name,
         scope: item.scope,
         items: item.items,
         dosage: item.dosage,
-        doctor_remark: item.doctor_remark
+        doctor_remark: item.doctor_remark,
+        category: item.category,
+        clinic_id: item.clinic_id,
+        creator_name: item.creator_name,
+        creator_id: item.creator_id,
+        id: item.id,
+        is_cloud: item.is_cloud
       };
       this.showTpl = true;
     },
@@ -415,37 +507,156 @@ export default {
       this.showUseTpl = false;
     },
     editTplShow: function() {
-      this.showEditTpl = true;
       var self = this;
-      this.tplEditData = {
-        tplName: self.tplData.tplName,
-        scope: self.tplData.scope,
-        items: (function(items) {
-          var newArr = [];
-          items.forEach(function(item) {
-            newArr.push(item);
-          });
-          return newArr;
-        })(self.tplData.items),
-        dosage: self.tplData.dosage,
-        doctor_remark: self.tplData.doctor_remark
-      };
+      this.tplEditData.tplName = this.tplData.tplName;
+      this.tplEditData.scope = this.tplData.scope;
+      this.tplEditData.items = (function(items) {
+        var newArr = [];
+        items.forEach(function(item) {
+          newArr.push(item);
+        });
+        return newArr;
+      })(this.tplData.items);
+      this.tplEditData.dosage = this.tplData.dosage;
+      this.tplEditData.doctor_remark = this.tplData.doctor_remark;
+      this.showEditTpl = true;
     },
     editTplHide: function() {
       this.showEditTpl = false;
+    },
+    delTplShow: function() {
+      this.showDelTpl = true;
+    },
+    delTplHide: function() {
+      this.showDelTpl = false;
     },
     delEditTplLists: function(index) {
       this.tplEditData.items.splice(index, 1);
     },
     editTplAddList: function(item) {
+      var self = this;
+      var flag = true;
       this.tplEditData.items.forEach(function(e) {
         if (e.name == item.name) {
           alert("该药品已在列表中");
-          return;
-        } else {
-          this.tplEditData.items.push(item);
+          flag = false;
+          self.tplEditData.searchLists = [];
+          self.tplEditData.searchListShow = false;
+          self.tplEditData.searchName = "";
         }
       });
+      if (flag === true) {
+        var newItem = {
+          category: item.category,
+          item_id: item.id,
+          name: item.name,
+          num: 0,
+          unit: item.unit_stock,
+          stock: item.stock,
+          unit_stock: item.unit_stock,
+          unit_sale: item.unit_sale,
+          stock_sale_ratio: item.stock_sale_ratio,
+          price: item.sale_price,
+          sale_price: item.sale_price,
+          usage: 0,
+          spec: item.spec,
+          is_match: 1
+        };
+        self.tplEditData.items.push(newItem);
+        self.tplEditData.searchLists = [];
+        self.tplEditData.searchListShow = false;
+        self.tplEditData.searchName = "";
+      }
+    },
+    delTpl: function() {
+      var self = this;
+      axios
+        .post("/doctreat/tpl/herbal/delete?tplId=" + self.tplData.id, {})
+        .then(function(response) {
+          var res = response.data;
+          if (res.code == 1000) {
+            alert("删除成功");
+            self.showDelTpl = false;
+            self.showTpl = false;
+            self.firstSearch();
+          } else {
+            alert("删除失败 " + res.msg);
+            self.showDelTpl = false;
+          }
+        });
+    },
+    saveTplEdit: function() {
+      var self = this;
+      self.tplData.category = self.tplEditData.category;
+      self.tplData.name = self.tplEditData.tplName;
+      self.tplData.items = self.tplEditData.items;
+      self.tplData.scope = self.tplEditData.scope;
+      self.tplData.dosage = self.tplEditData.dosage;
+      self.tplData.doctor_remark = self.tplEditData.doctor_remark;
+
+      axios
+        .post("/doctreat/tpl/herbal/update", {
+          name: self.tplData.name,
+          scope: self.tplData.scope,
+          items: self.tplData.items,
+          dosage: self.tplData.dosage,
+          doctor_remark: self.tplData.doctor_remark,
+          category: self.tplData.category,
+          clinic_id: self.tplData.clinic_id,
+          creator_name: self.tplData.creator_name,
+          creator_id: self.tplData.creator_id,
+          id: self.tplData.id,
+          is_cloud: self.tplData.is_cloud
+        })
+        .then(
+          function(response) {
+            var res = response.data;
+            if (res.code == 1000) {
+              alert("保存成功");
+              self.self.tplData = {};
+            }
+          },
+          function(error) {
+            console.log(error);
+          }
+        );
+
+      self.showEditTpl = false;
+    },
+    cancelTplEdit: function() {
+      this.showEditTpl = false;
+    },
+    addTpl: function() {
+      this.showAddTpl = true;
+    },
+    cancelTplAdd: function() {
+      this.showAddTpl = false;
+    },
+    saveTplAdd: function() {
+      var self = this;
+      axios
+        .post("/doctreat/tpl/herbal/add", {
+          name: self.tplEditData.tplName,
+          scope: self.tplEditData.scope,
+          items: self.tplEditData.items,
+          dosage: self.tplEditData.dosage,
+          doctor_remark: self.tplEditData.doctor_remark,
+          category: self.tplEditData.category,
+          is_cloud: 0
+        })
+        .then(
+          function(response) {
+            var res = response.data;
+            if (res.code == 1000) {
+              alert("添加成功");
+              self.tplEditData = {};
+              self.showAddTpl = false;
+            }
+          },
+          function(error) {
+            console.log(error);
+          }
+        );
     }
   }
 };
@@ -543,12 +754,24 @@ export default {
   z-index: 1050;
   margin: 0 auto;
   position: relative;
-  top: 15%;
-  width: 50%;
+  top: 6rem;
+  width: 50rem;
   min-height: 15rem;
   max-height: 40rem;
   font-size: 1rem;
   overflow: auto;
+}
+.alert-back .del-tpl {
+  background-color: #ffffff;
+  box-shadow: 0 0.25rem 1rem 0.25rem rgba(0, 0, 0, 0.2);
+  border-radius: 0.25rem;
+  border-radius: 0.25rem;
+  z-index: 1050;
+  margin: 0 auto;
+  position: relative;
+  top: 8rem;
+  width: 24rem;
+  min-height: 12rem;
 }
 .alert-back .edit-tpl {
   background: #ffffff;
@@ -557,8 +780,8 @@ export default {
   z-index: 1050;
   margin: 0 auto;
   position: relative;
-  top: 8%;
-  width: 80%;
+  top: 3rem;
+  width: 68.75rem;
   min-height: 15rem;
   max-height: 40rem;
   font-size: 1rem;
@@ -694,5 +917,8 @@ tbody td {
   overflow-y: scroll;
   box-shadow: 0 0.25rem 0.5rem 0 rgba(0, 0, 0, 0.2);
   border-radius: 0.25rem;
+}
+.text-center {
+  text-align: center;
 }
 </style>
