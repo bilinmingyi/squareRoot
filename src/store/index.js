@@ -8,27 +8,37 @@ import mutations from '@/store/mutations.js'
 Vue.use(Vuex)
 const state = {
   // left
-  isFirst: "1", // 是否初诊
+  is_first: "1", // 是否初诊
   treatPrice: 0, // 诊金
   showHistoryDetail: false, // 显示就诊历史
   patientData: {
     // TODO: id
-    id: 22,
-    name: "A5",
-    mobile: "13728089836",
-    age: 14,
-    birthday: 1083513600000,
-    sex: 1,
-    weight: 55,
+    id: null,
+    name: "",
+    mobile: "",
+    age: 0,
+    birthday: 0,
+    sex: 0,
+    weight: 0,
     marital_status: 0,
-    personal_history: "过敏性鼻炎；",
+    personal_history: "",
     family_history: "",
-    allergic_history: "头孢类；",
+    allergic_history: "",
     blood_abo: 0,
     blood_rh: 0
   },
   
-
+  recordData: {
+    // 患者病历
+    chief_complaint: '',    // 主述
+    present_illness: '',    // 病史
+    allergic_history: '',   // 过敏史
+    personal_history: '',   // 既往史
+    examination: '',    // 检查
+    diagnosis_xy: '',   // 西医诊断
+    diagnosis: '',    // 中医诊断
+    treat_advice: '',   // 处理意见
+  },
   recipeList:[],
   currRecipe:0,
 };

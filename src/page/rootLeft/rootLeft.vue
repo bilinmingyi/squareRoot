@@ -4,7 +4,10 @@
       <span>患者资料</span>
     </div>
     <patient-detail v-show="!showHistoryDetail"></patient-detail>
-    <treat-history :historyDataProp="historyData" @changePage="changePage"></treat-history>
+    <div class="root-left-history">
+      <treat-history :historyFinish="historyFinish" :historyDataProp="historyData" @changePage="changePage"></treat-history>
+      <f-loader v-show="showLoader" :fixed="false"></f-loader>
+    </div>
   </div>
 </template>
 
@@ -14,16 +17,16 @@ import patientDetail from "./patientDetail";
 import treatHistory from "./treatHistory";
 import { mapState, mapActions } from "vuex";
 import { getPatientInfo, getHistoryRecipes } from "@/fetch/api.js";
+import fLoader from "@/components/fLoader";
 export default {
   name: "rootPage",
   components: {
     patientDetail,
-    treatHistory
+    treatHistory,
+    fLoader
   },
   data() {
     return {
-      // TODO: 获取患者id
-      patientId: 46,
       historyData: {
         type: 0, // -1: 就诊病历, 处方类型
         category: -1, // 中药类型
@@ -38,13 +41,17 @@ export default {
         pageSize: 2,
         reciptType: "",
         completeFirst: false,
-        treatOrderList: [],   // 就诊历史列表
-      }
+        treatOrderList: [] // 就诊历史列表
+      },
+
+      showLoader: false,
+      historyFinish: false,
     };
   },
   computed: {
     ...mapState({
-      showHistoryDetail: state => state.showHistoryDetail
+      showHistoryDetail: state => state.showHistoryDetail,
+      patientData: state => state.patientData
     })
   },
   created() {
@@ -57,7 +64,7 @@ export default {
       switch (type) {
         case "patientInfo":
           let patientInfoParams = new FormData();
-          patientInfoParams.append("patientId", this.patientId);
+          patientInfoParams.append("patientId", this.patientData.id);
           getPatientInfo(patientInfoParams).then(res => {
             if (res.code == 1000) {
               this.set_state_prop({ key: "patientData", val: res.data });
@@ -66,9 +73,10 @@ export default {
           break;
 
         case "historyRecipes":
+          this.historyFinish = false;
           getHistoryRecipes({
-            patient_name: 'WEY',
-            patient_mobile: "13965329874",
+            patient_name: this.patientData.name,
+            patient_mobile: this.patientData.mobile,
             page_size: this.historyData.pageSize,
             page: this.historyData.page
           }).then(res => {
@@ -77,12 +85,16 @@ export default {
               res.total_num / this.historyData.pageSize
             );
             this.historyData.completeFirst = true;
+
+            this.showLoader = false;
+            this.historyFinish = true;
           });
           break;
       }
     },
     changePage(page) {
       this.historyData.page = page;
+      this.showLoader = true;
       this.getData("historyRecipes");
     }
   }
@@ -99,5 +111,12 @@ export default {
   text-align: center;
   line-height: 2.1875rem;
   font-size: 1rem;
+  height: auto;
+}
+.root-left-history {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 </style>

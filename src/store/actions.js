@@ -9,6 +9,9 @@ const actions = {
   set_state_prop: ({commit}, {key, val}) => {
     commit(mutationTypes.SET_STATE_PROP, {key, val});
   },
+  set_record_prop: ({commit}, {key, val}) => {
+    commit(mutationTypes.SET_RECORD_PROP, {key, val});
+  },
 
   //middle
   add_new_recipt: ({commit, state}, type) => {

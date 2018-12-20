@@ -27,18 +27,7 @@
         <div class="history-line-s">
           <div class="display-flex">
             <div class="history-line-key">检查</div>
-            <div class="flex-1">
-              <span
-                v-if="examinationInfo.bloodpressure_num1 || examinationInfo.bloodpressure_num2"
-              >血压{{examinationInfo.bloodpressure_num1}}/{{examinationInfo.bloodpressure_num2}}mmHg，</span>
-              <span v-if="examinationInfo.bloodglucose">血糖{{examinationInfo.bloodglucose}}mg/ml，</span>
-              <span v-if="examinationInfo.trioxypurine">尿酸{{examinationInfo.trioxypurine}}umol/L，</span>
-              <span v-if="examinationInfo.heartrate">心率{{examinationInfo.heartrate}}次/分，</span>
-              <span v-if="examinationInfo.breathe">呼吸{{examinationInfo.breathe}}次/分，</span>
-              <span v-if="examinationInfo.animalheat">体温{{examinationInfo.animalheat}}℃，</span>
-              <span v-if="examinationInfo.weight">体重{{examinationInfo.weight}}kg，</span>
-              {{examinationInfo.info}}
-            </div>
+            <div class="flex-1">{{examination}}</div>
           </div>
         </div>
         <div class="history-line-s">
@@ -160,14 +149,13 @@
 <script>
 import { mapState, mapActions } from "vuex";
 export default {
-  props: ['selectedOrderProp', 'reciptTypeProp', 'examinationInfoProp'],
+  props: ["selectedOrderProp", "reciptTypeProp", "examinationInfoProp"],
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
     ...mapState({
-      currRecipe: state => state.currRecipe,
+      currRecipe: state => state.currRecipe
     }),
     selectedOrder() {
       return this.selectedOrderProp;
@@ -177,6 +165,46 @@ export default {
     },
     examinationInfo() {
       return this.examinationInfoProp;
+    },
+    examination() {
+      // 计算检查结果
+      var examination = this.examinationInfo;
+      var ret = "";
+      (examination.bloodpressure_num1 || examination.bloodpressure_num2) &&
+        (ret +=
+          "血压" +
+          examination.bloodpressure_num1 +
+          "/" +
+          examination.bloodpressure_num2 +
+          "mmHg，");
+      examination.bloodglucose &&
+        (ret += "血糖" + examination.bloodglucose + "mg/ml，");
+      examination.trioxypurine &&
+        (ret += "尿酸" + examination.trioxypurine + "umol/L，");
+      examination.heartrate &&
+        (ret += "心率" + examination.heartrate + "次/分，");
+      examination.breathe && (ret += "呼吸" + examination.breathe + "次/分，");
+      examination.animalheat &&
+        (ret += "体温" + examination.animalheat + "℃，");
+      examination.weight && (ret += "体重" + examination.weight + "kg，");
+      examination.info && (ret += examination.info);
+      return ret;
+    },
+    recordData() {
+      let [selectedOrder, examination] = [this.selectedOrder, this.examination];
+      let data = [
+        { key: "主述", val: "chief_complaint" },
+        { key: "检查", val: examination },
+        { key: "病史", val: "present_illness" },
+        { key: "西医诊断", val: "diagnosis_xy" },
+        { key: "中医诊断", val: "diagnosis" }
+      ];
+      return data.map(item => {
+        if (item.key !== "检查") {
+          item.val = selectedOrder[item.val]
+        }
+        return item;
+      });
     }
   },
   methods: {
@@ -184,7 +212,12 @@ export default {
     historyDetailsBack() {
       this.set_state_prop({ key: "showHistoryDetail", val: false });
     },
-    importHistoryRecord() {}
+    importHistoryRecord(order) {
+      // TODO: 导入病历
+    },
+    impHistory(recipe) {
+      // TODO: 导入病历
+    }
   }
 };
 </script>

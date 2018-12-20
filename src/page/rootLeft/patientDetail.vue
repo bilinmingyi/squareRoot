@@ -15,7 +15,7 @@
       <div class="mt10">
         <span class="pr20">
           <span class="font-bold pr10">年龄</span>
-          <span>{{patientData.birthday | calcAge }}岁</span>
+          <span>{{patientData.age != null ? patientData.age : patientData.birthday}}岁</span>
         </span>
         <span>
           <span class="font-bold pr10">性别</span>
@@ -64,8 +64,8 @@ export default {
   },
   computed: {
     ...mapState({
-      // TODO: isFirst & treatPrice
-      isFirst: state => state.isFirst,
+      // TODO: is_first & treatPrice
+      isFirst: state => state.is_first,
       treatPrice: state => state.treatPrice,
       patientData: state => state.patientData
     }),
