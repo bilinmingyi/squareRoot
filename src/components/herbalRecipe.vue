@@ -10,7 +10,7 @@
         </Radio>
       </RadioGroup>
       <div>
-        <button class="btn btn_cancel">删除</button>
+        <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
         <button class="btn">打印处方</button>
         <button class="btn btn_print">存为模板</button>
       </div>
@@ -99,7 +99,7 @@
 
 <script>
   import {RadioGroup, Radio, Select, Option, Input} from 'iview'
-  import {mapActions, mapState} from 'vuex'
+  import {mapActions, mapGetters} from 'vuex'
   import {herbalMedUsages, herbalRpUsages, extraFeeTypes,medFrequency} from '@/assets/js/mapType'
 
   export default {
@@ -117,13 +117,9 @@
       Input
     },
     computed: {
-      ...mapState({
-        recipeList: state => state.recipeList,
-        currRecipe: state => state.currRecipe
+      ...mapGetters({
+        currentData:'currRecipeData'
       }),
-      currentData: function () {
-        return {...this.recipeList[this.currRecipe]}
-      },
       herbalMedUsages: function () {
         return herbalMedUsages.filter(item => {
           return item.status === 1
@@ -140,7 +136,24 @@
         })
       }
     },
-    methods: {}
+    methods: {
+      ...mapActions([
+        'cancel_recipe'
+      ]),
+      cancelRecipe(){
+        this.$Modal.confirm({
+          title: '提示',
+          content: '<p>确定删除该处方？</p>',
+          onOk: () => {
+            this.cancel_recipe();
+          },
+          onCancel: () => {
+            console.log("88")
+          }
+        });
+      },
+    },
+
   }
 </script>
 

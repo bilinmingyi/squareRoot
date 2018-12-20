@@ -1,7 +1,7 @@
 <template>
   <div class="treat-history">
-    <div v-show="!showHistoryDetail">
-      <ul class="t-h-lists" v-if="historyData.treatOrderList.length!=0">
+    <div v-show="!showHistoryDetail" class="treat-history-lists">
+      <ul class="t-h-lists" v-if="historyData.treatOrderList.length!=0 && historyData.completeFirst">
         <li
           class="t-h-item"
           v-for="historyItem in historyData.treatOrderList"
@@ -35,12 +35,23 @@
         <button class="t-h-btn t-h-btn-disable" v-else>下一页</button>
       </div>
     </div>
+    <treat-history-detail
+      v-show="showHistoryDetail"
+      :selectedOrderProp="historyData.selectedOrder"
+      :reciptTypeProp="historyData.reciptType"
+      :examinationInfoProp="historyData.examinationInfo"
+    ></treat-history-detail>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
+import treatHistoryDetail from "./treatHistoryDetail";
 export default {
+  components: {
+    treatHistoryDetail
+  },
+  props: ['historyDataProp'],
   data() {
     return {
     };
@@ -48,37 +59,39 @@ export default {
   computed: {
     ...mapState({
       showHistoryDetail: state => state.showHistoryDetail,
-      historyData: state => state.historyData,
       currRecipe: state => state.currRecipe,
+      recipeList: state => state.recipeList,
+      patientData: state => state.patientData
     }),
+    historyData() {
+      return this.historyDataProp;
+    }
+  },
+  watch: {
+    currRecipe(newVal) {
+      this.historyData.reciptType =
+        this.currRecipe > -1
+          ? this.recipeList[this.currRecipe].type
+          : this.currRecipe;
+    }
   },
   methods: {
-    ...mapActions(['set_state_prop', 'set_history_data', 'set_examination_info']),
+    ...mapActions(["set_state_prop", "set_examination_info"]),
     selectOrder(item) {
-      this.set_history_data({key: 'selectedOrder', val: item});
-      
-      this.set_history_data({
-        key: 'examinationInfo', 
-        val: item.examination 
-          ? JSON.parse(item.examination) 
-          : {}
-      });
+      this.historyData.selectedOrder = item;
 
-      this.set_state_prop({key: 'showHistoryDetail', val: true});
+      this.historyData.examinationInfo = item.examination
+        ? JSON.parse(item.examination)
+        : {};
+
+      this.set_state_prop({ key: "showHistoryDetail", val: true });
     },
     changeHistoryRecipesPage(type) {
       if (type == 1) {
-        this.historyData.page--;
+        this.$emit('changePage', this.historyData.page - 1)
       } else if (type == 2) {
-        this.historyData.page++;
+        this.$emit('changePage', this.historyData.page + 1)
       }
-      this.loadHistoryRecipes(this.historyData.page);
-    },
-    loadHistoryRecipes(page) {
-      this.historyData.page = page;
-      console.log(this.historyData.page);
-
-      // TODO: load history recipes
     },
   }
 };
@@ -86,6 +99,10 @@ export default {
 
 <style scoped>
 .treat-history {
+  display: flex;
+  height: 100%;
+}
+.treat-history-lists {
   padding: 0.625rem;
   font-size: 1rem;
   background: #fff;

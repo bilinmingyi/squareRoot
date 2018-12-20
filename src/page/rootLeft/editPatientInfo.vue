@@ -1,7 +1,7 @@
 <template>
   <div class="edit-patient-info">
     <div class="e-p-i-container">
-      <div class="e-p-i-header">
+      <div class="e-p-i-header mt10">
         <span class="e-p-i-title">编辑患者资料</span>
         <Icon @click="closeModal" type="ios-close-circle-outline" class="e-p-i-close-icon"/>
       </div>
@@ -9,21 +9,40 @@
         <div class="e-p-i-content-row">
           <div class="e-p-i-content-item pr50">
             <div class="e-p-i-content-item-key">患者姓名</div>
-            <Input class="e-p-i-content-item-val" :value="patientData.name" @input="changePatientData('name', $event)" placeholder="必填"/>
+            <Input
+              class="e-p-i-content-item-val"
+              :value="localPatientData.name"
+              @input="changePatientData('name', $event)"
+              placeholder="必填"
+            />
           </div>
           <div class="e-p-i-content-item">
             <div class="e-p-i-content-item-key">手机号码</div>
-            <Input class="e-p-i-content-item-val" :value="patientData.mobile" @input="changePatientData('mobile', $event)" placeholder="必填"/>
+            <Input
+              class="e-p-i-content-item-val"
+              :value="localPatientData.mobile"
+              @input="changePatientData('mobile', $event)"
+              placeholder="必填"
+            />
           </div>
         </div>
         <div class="e-p-i-content-row">
           <div class="e-p-i-content-item pr50">
             <div class="e-p-i-content-item-key">出生日期</div>
-            <Date-picker class="e-p-i-content-item-val" type="date" :value="new Date(patientData.birthday)" @input="changePatientData('birthday', $event.getTime())"></Date-picker>
+            <Date-picker
+              class="e-p-i-content-item-val"
+              type="date"
+              :value="new Date(localPatientData.birthday)"
+              @input="changePatientData('birthday', $event.getTime())"
+            ></Date-picker>
           </div>
           <div class="e-p-i-content-item">
             <div class="e-p-i-content-item-key">患者性别</div>
-            <Select class="e-p-i-content-item-val" :value="patientData.sex" @input="changePatientData('sex', $event)">
+            <Select
+              class="e-p-i-content-item-val"
+              :value="localPatientData.sex"
+              @input="changePatientData('sex', $event)"
+            >
               <Option
                 v-for="(item,index) in clinicDict.sex"
                 :value="item.code"
@@ -35,7 +54,11 @@
         <div class="e-p-i-content-row">
           <div class="e-p-i-content-item pr50">
             <div class="e-p-i-content-item-key">婚姻状况</div>
-            <Select class="e-p-i-content-item-val" :value="patientData.marital_status" @input="changePatientData('marital_status', $event)">
+            <Select
+              class="e-p-i-content-item-val"
+              :value="localPatientData.marital_status"
+              @input="changePatientData('marital_status', $event)"
+            >
               <Option
                 v-for="(item,index) in clinicDict.maritalStatus"
                 :value="item.code"
@@ -47,7 +70,11 @@
         <div class="e-p-i-content-row">
           <div class="e-p-i-content-item pr50">
             <div class="e-p-i-content-item-key">ABO血型</div>
-            <Select class="e-p-i-content-item-val" :value="patientData.blood_abo" @input="changePatientData('blood_abo', $event)">
+            <Select
+              class="e-p-i-content-item-val"
+              :value="localPatientData.blood_abo"
+              @input="changePatientData('blood_abo', $event)"
+            >
               <Option
                 v-for="(item,index) in clinicDict.bloodAbo"
                 :value="item.code"
@@ -58,7 +85,11 @@
           <div class="e-p-i-content-item">
             <div class="e-p-i-content-item-key">RH血型</div>
             <div>{{patientData.bloodRh}}</div>
-            <Select class="e-p-i-content-item-val" :value="patientData.blood_rh" @input="changePatientData('blood_rh', $event)">
+            <Select
+              class="e-p-i-content-item-val"
+              :value="localPatientData.blood_rh"
+              @input="changePatientData('blood_rh', $event)"
+            >
               <Option
                 v-for="(item,index) in clinicDict.bloodRh"
                 :value="item.code"
@@ -70,7 +101,7 @@
       </div>
       <div class="e-p-i-footer">
         <button class="e-p-i-btn mr20" @click="saveInfo">确定</button>
-        <button class="e-p-i-btn light" @click="closeModal">取消</button>
+        <button class="e-p-i-btn ml20 light" @click="closeModal">取消</button>
       </div>
     </div>
   </div>
@@ -78,7 +109,8 @@
 
 <script>
 import { Icon, Input, Select, Option, DatePicker } from "iview";
-import { mapState, mapActions} from 'vuex';
+import { mapState, mapActions } from "vuex";
+import {updatePatientData} from '@/fetch/api.js';
 export default {
   components: {
     Icon,
@@ -114,23 +146,62 @@ export default {
           { code: 2, name: "阳性" }
         ]
       },
+      localPatientData: {}
     };
   },
   computed: {
     ...mapState({
-      patientData: state => state.patientData,
+      patientData: state => state.patientData
     })
   },
+  created() {
+    this.localPatientData = JSON.parse(JSON.stringify(this.patientData));
+  },
   methods: {
-    ...mapActions(['set_patient_info']),
+    ...mapActions(["set_patient_info"]),
     closeModal() {
       this.$emit("closeModal");
     },
     saveInfo() {
-      console.log("保存信息");
+      let reg = /^((13|14|15|17|18)[0-9]{1}\d{8})$/;
+      if (!reg.test(this.localPatientData.mobile)) {
+        this.$Message.info({
+          duration: 2,
+          closable: true,
+          content: "请输入正确的手机号！"
+        });
+      }
+
+      let params = {
+        id: this.localPatientData.id,
+        name: this.localPatientData.name,
+        birthday: this.localPatientData.birthday,
+        sex: Number(this.localPatientData.sex),
+        mobile: this.localPatientData.mobile,
+        marital_status: Number(
+          this.localPatientData.marital_status
+        ),
+        blood_abo: this.localPatientData.blood_abo,
+        blood_rh: this.localPatientData.blood_rh,
+      };
+
+      updatePatientData(params).then(res => {
+        if (res.code == 1000) {
+          // 更新Vuex patientData
+          Object.keys(this.localPatientData).forEach(key => {
+            var val = this.localPatientData[key]
+            this.set_patient_info({key, val});
+          })
+          this.closeModal();
+        } else if (res.code == 200002) {
+          this.$Message.warning('手机号已存在');
+        } else {
+          console.log(res.msg)
+        }
+      })
     },
     changePatientData(key, val) {
-      this.set_patient_info({key, val});
+      this.localPatientData[key] = val;
     }
   }
 };
@@ -146,10 +217,10 @@ export default {
   z-index: 900;
 }
 .e-p-i-container {
-  min-width: 42.5rem;
-  min-height: 25rem;
+  min-width: 40rem;
+  min-height: 20rem;
   background: #fff;
-  box-shadow: 0 4px 16px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.25rem 1rem 0.25rem rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   margin: 0 auto;
   z-index: 1050;
@@ -176,12 +247,12 @@ export default {
   padding: 0 2.5rem 0 2.5rem;
 }
 .e-p-i-footer {
-  padding: 1.875rem 0 1.25rem 0;
+  padding: 0.5rem 0 1.75rem 0;
   text-align: center;
 }
 .e-p-i-content-row {
   display: flex;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.75rem;
   align-items: center;
 }
 .e-p-i-content-item {
@@ -189,7 +260,7 @@ export default {
   flex-wrap: nowrap;
 }
 .e-p-i-content-item-key {
-  width: 6.5625rem;
+  width: 5.5rem;
   font-size: 1rem;
   color: #4c4c4c;
   letter-spacing: 0;

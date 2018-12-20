@@ -9,7 +9,10 @@ import store from './store/index'
 import 'babel-polyfill'
 
 import 'iview/dist/styles/iview.css';
+import {Message,Modal} from 'iview';
 
+Vue.prototype.$Message=Message;
+Vue.prototype.$Modal=Modal;
 
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])

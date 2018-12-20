@@ -160,31 +160,27 @@
 <script>
 import { mapState, mapActions } from "vuex";
 export default {
+  props: ['selectedOrderProp', 'reciptTypeProp', 'examinationInfoProp'],
   data() {
-    return {};
+    return {
+    };
   },
   computed: {
     ...mapState({
-      selectedOrder: state => state.historyData.selectedOrder,
-      reciptType: state => state.historyData.reciptType,
-      examinationInfo: state => state.historyData.examinationInfo,
       currRecipe: state => state.currRecipe,
-      recipeList: state => state.recipeList
-    })
-  },
-  watch: {
-    currRecipe(newVal) {
-      this.set_history_data({
-        key: "reciptType",
-        val:
-          this.currRecipe > -1
-            ? this.recipeList[this.currRecipe].type
-            : this.currRecipe
-      });
+    }),
+    selectedOrder() {
+      return this.selectedOrderProp;
+    },
+    reciptType() {
+      return this.reciptTypeProp;
+    },
+    examinationInfo() {
+      return this.examinationInfoProp;
     }
   },
   methods: {
-    ...mapActions(["set_state_prop", "set_history_data"]),
+    ...mapActions(["set_state_prop"]),
     historyDetailsBack() {
       this.set_state_prop({ key: "showHistoryDetail", val: false });
     },
@@ -203,33 +199,33 @@ export default {
   overflow: auto;
 }
 .t-h-d-scroll-box::-webkit-scrollbar-track {
-	border-radius: 10px;
-	box-shadow: inset 0 0 6px rgba(0,0,0,0);
+  border-radius: 10px;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
 }
 .t-h-d-scroll-box::-webkit-scrollbar-thumb {
-	background-color: rgba(0,0,0,0.05);
-	border-radius: 10px;
-	box-shadow: inset 1px 1px 0 rgba(0,0,0,.1);
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.1);
 }
 .t-h-d-scroll-box::-webkit-scrollbar {
-	width: 16px;
-	height: 16px;
+  width: 16px;
+  height: 16px;
 }
 .t-h-d-scroll-box::-webkit-scrollbar-track,
 .t-h-d-scroll-box::-webkit-scrollbar-thumb {
-	border-radius: 999px;
-	border: 5px solid transparent;
+  border-radius: 999px;
+  border: 5px solid transparent;
 }
 .t-h-d-scroll-box::-webkit-scrollbar-track {
-	box-shadow: 1px 1px 5px rgba(0,0,0,.2) inset;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2) inset;
 }
 .t-h-d-scroll-box::-webkit-scrollbar-thumb {
-	min-height: 20px;
-	background-clip: content-box;
-	box-shadow: 0 0 0 5px rgba(0,0,0,.2) inset;
+  min-height: 20px;
+  background-clip: content-box;
+  box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.2) inset;
 }
 .t-h-d-scroll-box::-webkit-scrollbar-corner {
-	background: transparent;
+  background: transparent;
 }
 .history-back {
   border-radius: 0.25rem;
@@ -273,7 +269,7 @@ export default {
 }
 .t-h-d-drug-item {
   display: inline-block;
-  padding-right: 1rem;
+  padding-right: 2rem;
 }
 .history-line-s {
   border-bottom: #ccc solid 1px;

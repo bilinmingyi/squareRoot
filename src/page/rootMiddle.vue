@@ -1,6 +1,7 @@
 <template>
   <div>
     <ul class="recipe_tab">
+      <li :class="['tab_li',{'currentLi': -1 === currRecipe}]" @click.stop="change_curr_tab(-1)">患者病历</li>
       <li v-for="(recipe,index) in recipeList" :class="['tab_li',{'currentLi':index === currRecipe}]"
           @click.stop="change_curr_tab(index)">{{recipe.type|recipeType}}
       </li>
@@ -18,7 +19,7 @@
         </Dropdown>
       </li>
     </ul>
-    <component :is="componentList[Number(recipeList[currRecipe].type)-1]"></component>
+    <component :is="currRecipe===-1?'patientrRcord':componentList[Number(recipeList[currRecipe].type)-1]"></component>
   </div>
 </template>
 
@@ -28,6 +29,7 @@
   import westernRecipe from '@/components/westernRecipe.vue'
   import therapyRecipe from '@/components/therapyRecipe.vue'
   import materialRecipe from '@/components/materialRecipe.vue'
+  import patientrRcord from '@/components/patientrRcord.vue'
   import {Dropdown, DropdownMenu, DropdownItem} from 'iview'
 
   export default {
@@ -44,7 +46,8 @@
       herbalRecipe,
       westernRecipe,
       therapyRecipe,
-      materialRecipe
+      materialRecipe,
+      patientrRcord
     },
     computed: {
       ...mapState({
@@ -56,6 +59,7 @@
       this.addNewRecipt(1);
       this.addNewRecipt(2);
       this.addNewRecipt(4);
+      this.change_curr_tab(-1);
     },
     methods: {
       ...mapActions([

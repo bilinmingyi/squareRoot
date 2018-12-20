@@ -12,12 +12,19 @@ const mutations = {
       state.historyData[key] = val;
     },
 
+    //middle
     [mutationTypes.ADD_NEW_RECIPT](state, item) {
       state.recipeList.push(item);
     },
     [mutationTypes.CHANGE_CURR_TAB](state, index) {
-      state.currRecipe=index;
+      state.currRecipe = index;
+    },
+    [mutationTypes.CANCEL_RECIPE](state) {
+      state.recipeList.splice(state.currRecipe,1);
+      state.currRecipe--;
     }
+
+    //right
   }
 ;
 export default mutations

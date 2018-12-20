@@ -9,11 +9,9 @@ const actions = {
   set_state_prop: ({commit}, {key, val}) => {
     commit(mutationTypes.SET_STATE_PROP, {key, val});
   },
-  set_history_data: ({commit}, {key, val}) => {
-    commit(mutationTypes.SET_HISTORY_DATA, {key, val});
-  },
 
-  add_new_recipt:({commit,state}, type)=>{
+  //middle
+  add_new_recipt: ({commit, state}, type) => {
     let item = {};
     switch (type) {
       case 1://重要处方
@@ -85,12 +83,17 @@ const actions = {
           }
         }
     }
-    commit(mutationTypes.ADD_NEW_RECIPT,item);
-    commit(mutationTypes.CHANGE_CURR_TAB,state.recipeList.length-1);
+    commit(mutationTypes.ADD_NEW_RECIPT, item);
+    commit(mutationTypes.CHANGE_CURR_TAB, state.recipeList.length - 1);
   },
-  change_curr_tab:({commit},index)=>{
-    commit(mutationTypes.CHANGE_CURR_TAB,index)
+  change_curr_tab: ({commit}, index) => {
+    commit(mutationTypes.CHANGE_CURR_TAB, index)
+  },
+  cancel_recipe: ({commit}) => {
+    commit(mutationTypes.CANCEL_RECIPE)
   }
+
+  //right
 };
 
 export default actions
