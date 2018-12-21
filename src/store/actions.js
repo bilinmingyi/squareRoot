@@ -131,8 +131,14 @@ const actions = {
   modify_medicine:({commit},{key,val,index})=>{
     commit(mutationTypes.MODIFY_MEDICINE,{key,val,index})
   },
+  cancel_medicine:({commit},index)=>{
+    commit(mutationTypes.CANCEL_MEDICINE,index)
+  },
   modify_recipe:({commit},{key,val})=>{
     commit(mutationTypes.MODIFY_RECIPE,{key,val})
+  },
+  modify_recipe_detail:({commit}, {key,val})=>{
+    commit(mutationTypes.MODIFY_RECIPE_DETAIL,{key,val})
   }
 
 

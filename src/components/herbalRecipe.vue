@@ -45,7 +45,7 @@
             </Select>
           </td>
           <td>
-            <a>删除</a>
+            <a @click.stop="cancel_medicine(index)">删除</a>
           </td>
         </tr>
         </tbody>
@@ -157,7 +157,6 @@
           }else {
             allPrice=recipePrice*Number(newVal.dosage)
           }
-          console.log(allPrice)
           this.modify_recipe({key:'money',val:allPrice})
         }
       }
@@ -166,7 +165,8 @@
       ...mapActions([
         'cancel_recipe',
         'modify_medicine',
-        'modify_recipe'
+        'modify_recipe',
+        'cancel_medicine'
       ]),
       cancelRecipe() {
         this.$Modal.confirm({
