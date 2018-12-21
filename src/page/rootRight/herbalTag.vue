@@ -1,5 +1,5 @@
 <template>
-  <div v-show="recipeType===1" class="herbal-tag" style="position:relative;">
+  <div class="herbal-tag" style="position:relative;">
     <div style="display: flex;">
       <div
         style="flex: 1;"
@@ -25,11 +25,10 @@
       </div>
       <div class="search-result">
         <div
-          class="search-result-li"
-          :class="[{'no-stock':item.stock<1}]"
+          :class="[{'no-stock':item.stock<1},{'herbal-result-li':recipeType===1},{'search-result-li':recipeType!=1}]"
           v-for="(item,index) in searchHerbalList"
           :key="index"
-          @click.stop="selectHerbalItem(item)"
+          @click.stop="selectItem(item)"
         >
           {{item.name}}
           <br>
@@ -296,17 +295,84 @@ import {
 export default {
   data() {
     return {
+      url: {
+        recentHerbal: "/doctreat/herbal/recent",
+        searchHerbal: "/stockmng/medicine/herbalList",
+        searchHerbalTpl: "/doctreat/tpl/herbal/list",
+        recentWestern: "/doctreat/western/recent",
+        searchWestern: "/stockmng/medicine/westernList",
+        searchWesternTpl: "/doctreat/tpl/western/list",
+        recentTherapy: "/doctreat/therapy/recent",
+        searchTherapy: "/clinicmng/therapy/list",
+        searchTherapyTpl: "/doctreat/tpl/therapy/list",
+        searchExtra: "/clinicmng/extraFee/list",
+        recentMaterial: "/doctreat/material/recent",
+        searchMaterial: "/stockmng/medicine/materialList"
+      },
+      arg: {
+        recentHerbal: {
+          category: 1
+        },
+        searchHerbal: {
+          medicine_name: "",
+          category: 1
+          },
+        searchHerbalTpl: {
+          category:1,
+          is_cloud:0,
+          name: "",
+          page: 1,
+          page_size:8
+        },
+        recentWestern: {},
+        searchWestern: {
+          medicine_name: "",
+          status: 1,
+          page:1,
+          page_size: 10,
+        },
+        searchWesternTpl: {
+          name: "",
+          page:1,
+          page_size: 10,
+        },
+        recentTherapy: {},
+        searchTherapy: {
+          name: "",
+          page: 1,
+          page_size: 10,
+          status: 1
+        },
+        searchTherapyTpl: {
+          name: "",
+          page: 1,
+          page_size: 8
+        },
+        recentExtra: {},
+        searchExtra: {
+          page: 1,
+          page_size: 10,
+          query: "",
+          status: 1,
+        },
+        recentMaterial: {},
+        searchMaterial: {
+          name:"",
+          page:1,
+          page_size: 8
+        }
+      },
       showAddTpl: false,
       showDelTpl: false,
       showEditTpl: false,
       showUseTpl: false,
-      category: 1,
       searchName: "",
       searchTplName: "",
       in_first_tab: true,
       in_second_tab: false,
       tplSearchList: [],
       searchHerbalList: [],
+      searchMedicineList: [],
       showTpl: false,
       tplData: {
         category: 0,
@@ -345,8 +411,17 @@ export default {
       currRecipe: state => state.currRecipe
     }),
     recipeType: function() {
-      // return this.recipeList[this.currRecipe].type;
-      return 1;
+      /*if(this.currRecipe==0){
+        return 0;
+      }else 
+        return this.recipeList[this.currRecipe].type;*/
+        return 1;
+    },
+    category: function(){
+      //if(this.recipeList[this.currRecipe].type&&this.recipeList[this.currRecipe].type==1){
+      //  return this.recipeList[this.currRecipe].category;
+      //}
+      return 2;
     }
   },
   components: {
@@ -375,7 +450,7 @@ export default {
           this.tplEditData.searchListShow = true;
         }
       }
-    }
+    },
   },
   methods: {
     in_first: function() {
@@ -386,16 +461,44 @@ export default {
       this.in_second_tab = true;
       this.in_first_tab = false;
     },
-    selectHerbalItem: function(item) {
+    selectItem: function(item) {
+
+
       alert(item);
     },
     firstSearch: function() {
       var self = this;
+      var url="";
+      var arg={};
+      switch(this.recipeType){
+        case 1:{
+          url=this.url.recentHerbal;
+          arg=this.arg.recentHerbal;
+          break;
+        }
+        case 2:{
+          url=this.url.recentWestern;
+          arg=this.arg.recentWestern;
+          break;
+        }
+        case 4:{
+          url=this.url.recentTherapy;
+          arg=this.arg.recentTherapy;
+          break;
+        }
+        case 5:{
+          url=this.url.recentExtra;
+          arg=this.arg.recentExtra;
+          break;
+        }
+        case 6:{
+          url=this.url.recentMaterial;
+          arg=this.arg.recentMaterial;
+          break;
+        }
+      }
       axios
-        .post("/doctreat/herbal/recent", {
-          medicine_name: self.searchName,
-          category: this.category
-        })
+        .post(url, arg)
         .then(
           function(response) {
             var res = response.data;
@@ -417,12 +520,64 @@ export default {
         return;
       }
       var self = this;
-      axios
+
+      var url="";
+      var arg={};
+      switch(this.recipeType){
+        case 1:{
+          url=self.url.searchHerbal;
+          arg={
+            medicine_name: self.searchName,
+            category: self.category
+          };
+          break;
+        }
+        case 2:{
+          url=self.url.recentWestern;
+          arg={
+            medicine_name: self.searchName,
+            status: 1,
+            page:1,
+            page_size: 10,
+          };
+          break;
+        }
+        case 4:{
+          url=self.url.recentTherapy;
+          arg={
+            name: self.searchName,
+            page: 1,
+            page_size: 8
+          };
+          break;
+        }
+        case 5:{
+          url=self.url.recentExtra;
+          arg={
+            page: 1,
+            page_size: 10,
+            query: self.searchName,
+            status: 1,
+        };
+          break;
+        }
+        case 6:{
+          url=self.url.recentMaterial;
+          arg={
+            name: self.searchName,
+            page:1,
+            page_size: 8
+        };
+          break;
+        }
+      }
+
+      /*axios
         .post("/stockmng/medicine/herbalList", {
           medicine_name: self.searchName,
           category: this.category
-        })
-        .then(
+        })*/
+        axios.post(url,arg).then(
           function(response) {
             var res = response.data;
             if (res.code == 1000) {
@@ -465,6 +620,35 @@ export default {
     },
     tplSearch: function() {
       var self = this;
+      var url = "";
+      var arg={};
+      switch(self.recipeType){
+        case 1:{
+          url=self.url.searchHerbalTpl;
+          arg=self.arg.recentHerbal;
+          break;
+        }
+        case 2:{
+          url=self.url.searchWesternTpl;
+          arg=self.arg.recentWestern;
+          break;
+        }
+        case 4:{
+          url=self.url.searchTherapyTpl;
+          arg=self.arg.recentTherapy;
+          break;
+        }
+        case 5:{
+          url=self.url.searchExtra;
+          arg=self.arg.recentExtra;
+          break;
+        }
+        case 6:{
+          url=self.url.recentMaterial;
+          arg=self.arg.recentMaterial;
+          break;
+        }
+      }
       axios
         .post("/doctreat/tpl/herbal/list", {
           name: self.searchTplName,
@@ -688,8 +872,22 @@ export default {
   font-size: 1rem;
 }
 
-.search-result .search-result-li {
+.search-result .herbal-result-li {
   width: 31.5%;
+  height: 3.75rem;
+  border: #5096e0 solid 1px;
+  border-radius: 0.25rem;
+  float: left;
+  margin-right: 1%;
+  margin-bottom: 0.25rem;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+}
+.search-result .search-result-li {
+  width: 95%;
   height: 3.75rem;
   border: #5096e0 solid 1px;
   border-radius: 0.25rem;
