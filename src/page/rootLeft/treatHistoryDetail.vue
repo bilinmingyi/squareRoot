@@ -18,34 +18,10 @@
         </div>
       </div>
       <div class="pb10 pl15 pr15 font-15">
-        <div class="history-line-s">
+        <div class="history-line-s" v-for="item in recordData">
           <div class="display-flex">
-            <div class="history-line-key">主诉</div>
-            <div class="flex-1">{{selectedOrder.chief_complaint}}</div>
-          </div>
-        </div>
-        <div class="history-line-s">
-          <div class="display-flex">
-            <div class="history-line-key">检查</div>
-            <div class="flex-1">{{examination}}</div>
-          </div>
-        </div>
-        <div class="history-line-s">
-          <div class="display-flex">
-            <div class="history-line-key">病史</div>
-            <div class="flex-1">{{selectedOrder.present_illness}}</div>
-          </div>
-        </div>
-        <div class="history-line-s">
-          <div class="display-flex">
-            <div class="history-line-key">西医诊断</div>
-            <div class="flex-1">{{selectedOrder.diagnosis_xy}}</div>
-          </div>
-        </div>
-        <div class="history-line-s">
-          <div class="display-flex">
-            <div class="history-line-key">中医诊断</div>
-            <div class="flex-1">{{selectedOrder.diagnosis}}</div>
+            <div class="history-line-key">{{item.code}}</div>
+            <div class="flex-1">{{item.val}}</div>
           </div>
         </div>
       </div>
@@ -151,7 +127,15 @@ import { mapState, mapActions } from "vuex";
 export default {
   props: ["selectedOrderProp", "reciptTypeProp", "examinationInfoProp"],
   data() {
-    return {};
+    return {
+      recordTemplate: [
+        { code: "主述", key: "chief_complaint" },
+        { code: "检查", key: "examination" },
+        { code: "病史", key: "present_illness" },
+        { code: "西医诊断", key: "diagnosis_xy" },
+        { code: "中医诊断", key: "diagnosis" }
+      ]
+    };
   },
   computed: {
     ...mapState({
@@ -192,31 +176,59 @@ export default {
     },
     recordData() {
       let [selectedOrder, examination] = [this.selectedOrder, this.examination];
-      let data = [
-        { key: "主述", val: "chief_complaint" },
-        { key: "检查", val: examination },
-        { key: "病史", val: "present_illness" },
-        { key: "西医诊断", val: "diagnosis_xy" },
-        { key: "中医诊断", val: "diagnosis" }
-      ];
+      let data = this.recordTemplate;
       return data.map(item => {
-        if (item.key !== "检查") {
-          item.val = selectedOrder[item.val]
-        }
+        item.val =
+          item.code !== "检查"
+            ? selectedOrder[item.key]
+              ? selectedOrder[item.key]
+              : ""
+            : examination;
         return item;
       });
     }
   },
   methods: {
-    ...mapActions(["set_state_prop"]),
+    ...mapActions(["set_state_prop", "set_record_prop"]),
     historyDetailsBack() {
       this.set_state_prop({ key: "showHistoryDetail", val: false });
     },
     importHistoryRecord(order) {
-      // TODO: 导入病历
+      let data = JSON.parse(JSON.stringify(this.recordData));
+      data.forEach(item => {
+        switch (item.key) {
+          case "examination":
+            item.val = this.examinationInfo;
+            break;
+          case "diagnosis":
+            data.push(
+              { code: "中医诊断输入框", key: "diagnosis_input", val: item.val },
+              { code: "中医诊断标签", key: "diagnosis_labels", val: [] }
+            );
+            break;
+          case "diagnosis_xy":
+            data.push(
+              {
+                code: "西医诊断输入框",
+                key: "diagnosis_xy_input",
+                val: item.val
+              },
+              { code: "西医诊断标签", key: "diagnosis_xy_labels", val: [] }
+            );
+            break;
+        }
+      });
+
+      data.forEach(item => {
+        this.set_record_prop({
+          key: item.key,
+          val: item.val
+        });
+      });
     },
     impHistory(recipe) {
-      // TODO: 导入病历
+      // TODO: 处方
+      console.log(recipe)
     }
   }
 };

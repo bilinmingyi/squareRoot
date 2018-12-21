@@ -5,7 +5,11 @@
     </div>
     <patient-detail v-show="!showHistoryDetail"></patient-detail>
     <div class="root-left-history">
-      <treat-history :historyFinish="historyFinish" :historyDataProp="historyData" @changePage="changePage"></treat-history>
+      <treat-history
+        :historyFinish="historyFinish"
+        :historyDataProp="historyData"
+        @changePage="changePage"
+      ></treat-history>
       <f-loader v-show="showLoader" :fixed="false"></f-loader>
     </div>
   </div>
@@ -38,14 +42,14 @@ export default {
         importIdx: -999, // 导入索引, -1: 就诊病历, 0: 第一个处方, 1: 第二个处方,...
         totalPageNum: 0,
         page: 1,
-        pageSize: 2,
+        pageSize: 4,
         reciptType: "",
         completeFirst: false,
         treatOrderList: [] // 就诊历史列表
       },
 
       showLoader: false,
-      historyFinish: false,
+      historyFinish: false
     };
   },
   computed: {

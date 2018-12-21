@@ -15,7 +15,8 @@
       <div class="mt10">
         <span class="pr20">
           <span class="font-bold pr10">年龄</span>
-          <span>{{patientData.age != null ? patientData.age : patientData.birthday}}岁</span>
+          <span v-if="patientData.birthday != null">{{patientData.birthday | calcAge}}岁</span>
+          <span v-else>{{patientData.age}}岁</span>
         </span>
         <span>
           <span class="font-bold pr10">性别</span>
