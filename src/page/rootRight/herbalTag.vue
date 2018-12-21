@@ -604,7 +604,16 @@ export default {
       this.in_first_tab = false;
     },
     selectItem: function(item) {
-      this.add_new_medicine({ item: item, type: this.currRecipeData.type });
+      let filterList=this.currRecipeData.data.items.filter((med)=>{
+        return item.id===med.item_id
+      });
+      console.log(filterList)
+      if(filterList.length===0){
+        this.add_new_medicine({ item: item, type: this.currRecipeData.type });
+      }else {
+        this.$Message.info("该药品已添加");
+      }
+
     },
     firstSearch: function() {
       var self = this;
