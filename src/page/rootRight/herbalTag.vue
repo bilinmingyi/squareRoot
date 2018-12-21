@@ -558,11 +558,12 @@ export default {
       });
     },
     ...mapGetters(["currRecipeData"]),
+
     recipeType: function() {
-      return 2;
+      return this.currRecipeData===undefined?1:this.currRecipeData.type;
     },
     category: function() {
-      return 1;
+      return this.currRecipeData===undefined?1:this.currRecipeData.category;
     }
   },
   components: {
@@ -604,7 +605,16 @@ export default {
       this.in_first_tab = false;
     },
     selectItem: function(item) {
-      this.add_new_medicine({ item: item, type: this.currRecipeData.type });
+      let filterList=this.currRecipeData.data.items.filter((med)=>{
+        return item.id===med.item_id
+      });
+      console.log(filterList)
+      if(filterList.length===0){
+        this.add_new_medicine({ item: item, type: this.currRecipeData.type });
+      }else {
+        this.$Message.info("该药品已添加");
+      }
+
     },
     firstSearch: function() {
       var self = this;

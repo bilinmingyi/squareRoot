@@ -96,7 +96,9 @@ const actions = {
     commit(mutationTypes.CANCEL_RECIPE)
   },
   add_new_medicine: ({commit,state},{item ,type})=>{
-    var result={};
+    let result={};
+
+
     if(type===1){
       result={
         "item_id": item.id,

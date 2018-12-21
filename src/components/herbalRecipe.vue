@@ -48,6 +48,9 @@
             <a @click.stop="cancel_medicine(index)">删除</a>
           </td>
         </tr>
+        <tr v-if="currentData.data.items.length==0">
+          <td colspan="7">右侧选择添加药品</td>
+        </tr>
         </tbody>
       </table>
     </section>
