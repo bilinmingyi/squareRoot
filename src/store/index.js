@@ -45,6 +45,8 @@ const state = {
     diagnosis_search_data: [],  // 中医诊断搜索结果
     treat_advice: '',   // 处理意见
   },
+
+  //middle
   recipeList:[],
   currRecipe:0,
 };

@@ -1,12 +1,18 @@
 <template>
-  <div v-show="recipeType===1" class="herbal-tag" style="position:relative;">
+  <div class="herbal-tag" style="position:relative;">
     <div style="display: flex;">
       <div
         style="flex: 1;"
         :class="['prescript-title',{'current-tab':in_first_tab}]"
         @click.stop="in_first"
-      >药品搜索</div>
+      >
+        <span v-show="recipeType==1||recipeType==2">药品搜索</span>
+        <span v-show="recipeType==4">项目搜索</span>
+        <span v-show="recipeType==5">附加项目</span>
+        <span v-show="recipeType==6">材料搜索</span>
+      </div>
       <div
+        v-show="recipeType==1||recipeType==2||recipeType==4"
         style="flex: 1;"
         :class="['prescript-title',{'current-tab':in_second_tab}]"
         @click.stop="in_second"
@@ -25,15 +31,23 @@
       </div>
       <div class="search-result">
         <div
-          class="search-result-li"
-          :class="[{'no-stock':item.stock<1}]"
+          :class="[{'no-stock':item.stock<1},{'herbal-result-li':recipeType===1},{'search-result-li':recipeType!=1}]"
           v-for="(item,index) in searchHerbalList"
           :key="index"
-          @click.stop="selectHerbalItem(item)"
+          @click.stop="selectItem(item)"
         >
-          {{item.name}}
-          <br>
-          {{item.spec}}
+          <div v-show="recipeType==1">
+            {{item.name}}
+            <br>
+            {{item.spec}}
+          </div>
+          <div v-show="recipeType==2">
+            {{item.name}}
+            {{item.spec}}
+          </div>
+          <div
+            v-show="recipeType==4||recipeType==5||recipeType==6"
+          >{{item.clinic_alias_name||item.name}}&emsp;({{item.price||item.sale_price}}元/{{item.unit_sale}})</div>
         </div>
         <div
           class="mt10"
@@ -60,29 +74,47 @@
           v-for="(item,index) in tplSearchList"
           :key="index"
           @click.stop="tplShow(item)"
-        >{{item.name}}</div>
-        <div style="text-align:center;font-size:1rem;" v-show="tplSearchList.length<1">暂无模板</div>
+        >
+          {{item.name}}
+          <span v-show="item.scope===1">（个人模板）</span>
+          <span v-show="item.scope===0">（共享模板）</span>
+        </div>
+        <div
+          class="mt10"
+          style="text-align:center;font-size:1rem;"
+          v-show="tplSearchList.length<1"
+        >暂无模板</div>
 
         <div class="tpl-show mt5" v-show="showTpl">
           <div class="prescription_detail_btn" @click="tplHide()">返回</div>
-          <div class="ml16 mr16 mt16">
+          <div class="ml6 mr16 mt16">
             <span style="font-weight:900;">处方模板：</span>
             <span>{{tplData.tplName}}</span>
-            <span v-show="tplData.scope==0">共享模板</span>
+            <span v-show="tplData.scope==0" style="float:right;">共享模板</span>
             <span v-show="tplData.scope==1" style="float:right;">个人模板</span>
           </div>
-          <div class="item-list mt16">
-            <div class="item-list-li" v-for="(item,index) in tplData.items" :key="index">
-              {{item.name}}
-              <br>
-              （{{item.num}}{{item.unit}}）
+          <div class="search-result mt16 ml5 mr5">
+            <div
+              :class="[{'herbal-result-li':recipeType===1},{'search-result-li':recipeType!=1}]"
+              v-for="(item,index) in tplData.items"
+              :key="index"
+            >
+              <span v-show="recipeType===1">
+                {{item.name}}
+                <br>
+                （{{item.num}}{{item.unit}}）
+              </span>
+              <span v-show="recipeType!=1">
+                {{item.name}}
+                {{item.spec}}
+              </span>
             </div>
           </div>
-          <div class="mt10 ml6 mr6">
+          <div class="mt10 ml6 mr6" v-show="recipeType==1" style="clear:both;">
             <span>剂数：</span>
             <span>{{tplData.dosage}}剂</span>
           </div>
-          <div class="mt10 ml6 mr6">
+          <div class="mt10 mb10 ml6 mr6">
             <span>医嘱：</span>
             <span>{{tplData.doctor_remark}}</span>
           </div>
@@ -151,98 +183,208 @@
                   >{{item.name}}</Option>
                 </Select>
               </div>
-              <div class="mt20 ml20">
+              <div class="mt20 ml20" v-show="recipeType===1">
                 <span class="ml20">药品类型：</span>
-                <span>饮片</span>
-                <span>颗粒</span>
+                <span v-show="category==1">饮片</span>
+                <span v-show="category==2">颗粒</span>
               </div>
               <div class="mt20 ml20 mr20">
-                <table class="col100">
-                  <thead>
-                    <tr>
-                      <th class="col10">序号</th>
-                      <th class="col30">药名</th>
-                      <th class="col10">药量</th>
-                      <th class="col15">单位</th>
-                      <th class="col10">规格</th>
-                      <th class="col10">用法</th>
-                      <th class="col15">操作</th>
-                    </tr>
-                  </thead>
-                </table>
-                <div style="max-height:8.5rem;overflow:auto;">
+                <!--中药列表-->
+                <div v-show="recipeType===1">
                   <table class="col100">
+                    <thead>
+                      <tr>
+                        <th class="col10">序号</th>
+                        <th class="col30">药名</th>
+                        <th class="col10">药量</th>
+                        <th class="col15">单位</th>
+                        <th class="col10">规格</th>
+                        <th class="col10">用法</th>
+                        <th class="col15">操作</th>
+                      </tr>
+                    </thead>
+                  </table>
+                  <div style="max-height:8.5rem;overflow:auto;">
+                    <table class="col100">
+                      <tbody>
+                        <tr v-for="(item,index) in tplEditData.items" :key="index">
+                          <td class="col10">{{index+1}}</td>
+                          <td class="col30">{{item.name}}</td>
+                          <td class="col10">
+                            <Input v-model="item.num"/>
+                          </td>
+                          <td class="col15">{{item.unit_stock}}</td>
+                          <td class="col10">{{item.spec}}</td>
+                          <td class="col10">
+                            <Select v-model="item.usage">
+                              <Option
+                                v-for="(item1,index) in herbalMedUsages"
+                                :value="item1.name"
+                                :key="index"
+                              >{{item1.name}}</Option>
+                            </Select>
+                          </td>
+                          <td class="col15">
+                            <div style="color:#4181D8" @click.stop="delEditTplLists(index)">删除</div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div
+                    class="col100 mt10 pb10"
+                    style="border-top:#B4B4B4 solid 1px;border-bottom:#B4B4B4 solid 1px;"
+                  >
+                    <div class="mt10 ml20">
+                      <Input
+                        class="col30"
+                        placeholder="输入药品名称/编码/拼音码"
+                        v-model="tplEditData.searchName"
+                        @input="tplHerbalSearch()"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!--成药列表-->
+                <div v-show="recipeType==2">
+                  <table class="col100">
+                    <thead>
+                      <tr>
+                        <th class="col5">序号</th>
+                        <th class="col25">药名</th>
+                        <th class="col10">规格</th>
+                        <th class="col10">总量</th>
+                        <th class="col5">单位</th>
+                        <th class="col10">用法</th>
+                        <th class="col10">每次用量</th>
+                        <th class="col10">频次</th>
+                        <th class="col10">天数</th>
+                        <th class="col10">操作</th>
+                      </tr>
+                    </thead>
+                  </table>
+                  <div style="max-height:8.5rem;overflow:auto;">
+                    <table class="col100">
+                      <tbody>
+                        <tr v-for="(item,index) in tplEditData.items" :key="index">
+                          <td class="col5">{{index+1}}</td>
+                          <td class="col25">{{item.name}}</td>
+                          <td class="col10">{{item.spec}}</td>
+                          <td class="col10">
+                            <Input v-model="item.num" />
+                          </td>
+                          <td class="col5">{{item.unit}}</td>
+                          <td class="col10">
+                            <Select v-model="item.usage">
+                              <Option
+                                v-for="(item1,index) in westernMedUsages"
+                                :value="item1.name"
+                                :key="index"
+                              >{{item1.name}}</Option>
+                            </Select>
+                          </td>
+                          <td class="col10">
+                            <Input v-model="item.dose_once" />
+                          </td>
+                          <td class="col10">
+                            <Select v-model="item.frequency">
+                              <Option
+                                v-for="(item1,index) in medFrequency"
+                                :value="item1.name"
+                                :key="index"
+                              >{{item1.name}}</Option>
+                            </Select>
+                          </td>
+                          <td class="col10">
+                            <Input v-model="item.days" />
+                          </td>
+                          <td class="col10">
+                            <div style="color:#4181D8" @click.stop="delEditTplLists(index)">删除</div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div
+                    class="col100 mt10 pb10"
+                    style="border-top:#B4B4B4 solid 1px;border-bottom:#B4B4B4 solid 1px;"
+                  >
+                    <div class="mt10 ml20">
+                      <Input
+                        class="col30"
+                        placeholder="输入药品名称/编码/拼音码"
+                        v-model="tplEditData.searchName"
+                        @input="tplHerbalSearch()"
+                      />
+                    </div>
+                  </div>
+                  
+                </div>
+                <div
+                  class="tpl-search-result"
+                  v-show="tplEditData.searchListShow&&recipeType==1"
+                  style="max-height:9.5rem;overflow:auto;"
+                >
+                  <table class="col100">
+                    <thead>
+                      <tr>
+                        <th class="col20">药品名称</th>
+                        <th class="col20">药品类别</th>
+                        <th class="col20">单位</th>
+                        <th class="col20">规格</th>
+                        <th class="col20">零售价</th>
+                      </tr>
+                    </thead>
                     <tbody>
-                      <tr v-for="(item,index) in tplEditData.items" :key="index">
-                        <td class="col10">{{index+1}}</td>
-                        <td class="col30">{{item.name}}</td>
-                        <td class="col10">
-                          <Input v-model="item.num"/>
-                        </td>
-                        <td class="col15">{{item.unit_stock}}</td>
-                        <td class="col10">{{item.spec}}</td>
-                        <td class="col10">
-                          <Select v-model="item.usage">
-                            <Option
-                              v-for="(item1,index) in herbalMedUsages"
-                              :value="item1.name"
-                              :key="index"
-                            >{{item1.name}}</Option>
-                          </Select>
-                        </td>
-                        <td class="col15">
-                          <div style="color:#4181D8" @click.stop="delEditTplLists(index)">删除</div>
-                        </td>
+                      <tr
+                        v-for="(item,index) in tplEditData.searchLists"
+                        :key="index"
+                        @click="editTplAddList(item)"
+                      >
+                        <td class="col20">{{item.name}}</td>
+                        <td class="col20" v-if="item.category==1">饮片</td>
+                        <td class="col20" v-if="item.category==2">颗粒</td>
+                        <td class="col20">{{item.unit_stock}}</td>
+                        <td class="col20">{{item.spec}}</td>
+                        <td class="col20">{{item.sale_price}}</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
                 <div
-                  class="col100 mt10 pb10"
-                  style="border-top:#B4B4B4 solid 1px;border-bottom:#B4B4B4 solid 1px;"
+                  class="tpl-search-result"
+                  v-show="tplEditData.searchListShow&&recipeType==2"
+                  style="max-height:9.5rem;overflow:auto;"
                 >
-                  <div class="mt10 ml20">
-                    <Input
-                      class="col30"
-                      placeholder="输入药品名称/编码/拼音码"
-                      v-model="tplEditData.searchName"
-                      @input="tplHerbalSearch()"
-                    />
-                  </div>
+                  <table class="col100">
+                    <thead>
+                      <tr>
+                        <th class="col20">药品名称</th>
+                        <th class="col20">类别</th>
+                        <th class="col20">厂商</th>
+                        <th class="col20">规格</th>
+                        <th class="col20">零售价</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="(item,index) in tplEditData.searchLists"
+                        :key="index"
+                        @click="editTplAddList(item)"
+                      >
+                        <td class="col20">{{item.name}}</td>
+                        <td class="col20">{{item.form}}</td>
+                        <td class="col20">{{item.vender}}</td>
+                        <td class="col20">{{item.spec}}</td>
+                        <td class="col20">{{item.sale_price}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
-              <div
-                class="tpl-search-result"
-                v-show="tplEditData.searchListShow"
-                style="max-height:9.5rem;overflow:auto;"
-              >
-                <table class="col100">
-                  <thead>
-                    <tr>
-                      <th class="col20">药品名称</th>
-                      <th class="col20">药品类别</th>
-                      <th class="col20">单位</th>
-                      <th class="col20">规格</th>
-                      <th class="col20">零售价</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="(item,index) in tplEditData.searchLists"
-                      :key="index"
-                      @click="editTplAddList(item)"
-                    >
-                      <td class="col20">{{item.name}}</td>
-                      <td class="col20" v-if="item.category==1">饮片</td>
-                      <td class="col20" v-if="item.category==2">颗粒</td>
-                      <td class="col20">{{item.unit_stock}}</td>
-                      <td class="col20">{{item.spec}}</td>
-                      <td class="col20">{{item.sale_price}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div class="mt20 ml20 mb20 col40">饮片剂数：
+
+              <div class="mt20 ml20 mb20 col40" v-show="recipeType==1">饮片剂数：
                 <Input style="width:10rem" name="dosage" v-model="tplEditData.dosage"/>&nbsp;&nbsp;&nbsp;剂
               </div>
               <div class="mt20 ml20 mb20">
@@ -285,9 +427,11 @@
 </template>
 <script>
 import axios from "axios";
-import { mapState } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import { Input, Button, Select, Option, Icon } from "iview";
+
 import {
+  westernMedUsages,
   herbalMedUsages,
   herbalRpUsages,
   extraFeeTypes,
@@ -296,17 +440,90 @@ import {
 export default {
   data() {
     return {
+      westernMedUsages:westernMedUsages,
+      medFrequency:medFrequency,
+      url: {
+        recentHerbal: "/doctreat/herbal/recent",
+        searchHerbal: "/stockmng/medicine/herbalList",
+        searchHerbalTpl: "/doctreat/tpl/herbal/list",
+        searchHerbalTpl: "/doctreat/tpl/herbal/update",
+
+        recentWestern: "/doctreat/western/recent",
+        searchWestern: "/stockmng/medicine/westernList",
+        searchWesternTpl: "/doctreat/tpl/western/list",
+        searchHerbalTpl: "/doctreat/tpl/herbal/update",
+
+        recentTherapy: "/doctreat/therapy/recent",
+        searchTherapy: "/clinicmng/therapy/list",
+        searchTherapyTpl: "/doctreat/tpl/therapy/list",
+        searchExtra: "/clinicmng/extraFee/list",
+        recentMaterial: "/doctreat/material/recent",
+        searchMaterial: "/stockmng/medicine/materialList"
+      },
+      arg: {
+        recentHerbal: {
+          category: 1
+        },
+        searchHerbal: {
+          medicine_name: "",
+          category: 1
+        },
+        searchHerbalTpl: {
+          category: 1,
+          is_cloud: 0,
+          name: "",
+          page: 1,
+          page_size: 8
+        },
+        recentWestern: {},
+        searchWestern: {
+          medicine_name: "",
+          status: 1,
+          page: 1,
+          page_size: 10
+        },
+        searchWesternTpl: {
+          name: "",
+          page: 1,
+          page_size: 10
+        },
+        recentTherapy: {},
+        searchTherapy: {
+          name: "",
+          page: 1,
+          page_size: 10,
+          status: 1
+        },
+        searchTherapyTpl: {
+          name: "",
+          page: 1,
+          page_size: 8
+        },
+        recentExtra: {},
+        searchExtra: {
+          page: 1,
+          page_size: 10,
+          query: "",
+          status: 1
+        },
+        recentMaterial: {},
+        searchMaterial: {
+          name: "",
+          page: 1,
+          page_size: 8
+        }
+      },
       showAddTpl: false,
       showDelTpl: false,
       showEditTpl: false,
       showUseTpl: false,
-      category: 1,
       searchName: "",
       searchTplName: "",
       in_first_tab: true,
       in_second_tab: false,
       tplSearchList: [],
       searchHerbalList: [],
+      searchMedicineList: [],
       showTpl: false,
       tplData: {
         category: 0,
@@ -340,12 +557,11 @@ export default {
         return item.status === 1;
       });
     },
-    ...mapState({
-      recipeList: state => state.recipeList,
-      currRecipe: state => state.currRecipe
-    }),
+    ...mapGetters(["currRecipeData"]),
     recipeType: function() {
-      // return this.recipeList[this.currRecipe].type;
+      return 2;
+    },
+    category: function() {
       return 1;
     }
   },
@@ -378,6 +594,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["add_new_medicine"]),
     in_first: function() {
       this.in_first_tab = true;
       this.in_second_tab = false;
@@ -386,30 +603,71 @@ export default {
       this.in_second_tab = true;
       this.in_first_tab = false;
     },
-    selectHerbalItem: function(item) {
-      alert(item);
+    selectItem: function(item) {
+      let filterList=this.currRecipeData.data.items.filter((med)=>{
+        return item.id===med.item_id
+      });
+      console.log(filterList)
+      if(filterList.length===0){
+        this.add_new_medicine({ item: item, type: this.currRecipeData.type });
+      }else {
+        this.$Message.info("该药品已添加");
+      }
+
     },
     firstSearch: function() {
       var self = this;
-      axios
-        .post("/doctreat/herbal/recent", {
-          medicine_name: self.searchName,
-          category: this.category
-        })
-        .then(
-          function(response) {
-            var res = response.data;
-            if (res.code == 1000) {
-              if (self.in_first_tab) {
-                self.searchHerbalList = res.data;
-              }
+      var url = "";
+      var arg = {};
+      switch (this.recipeType) {
+        case 1: {
+          url = this.url.recentHerbal;
+          arg = {
+            category: this.category
+          };
+          break;
+        }
+        case 2: {
+          url = this.url.recentWestern;
+          arg = this.arg.recentWestern;
+          break;
+        }
+        case 4: {
+          url = this.url.recentTherapy;
+          arg = this.arg.recentTherapy;
+          break;
+        }
+        case 5: {
+          url = this.url.searchExtra;
+          arg = this.arg.recentExtra;
+          break;
+        }
+        case 6: {
+          url = this.url.recentMaterial;
+          arg = this.arg.recentMaterial;
+          break;
+        }
+      }
+      axios.post(url, arg).then(
+        function(response) {
+          var res = response.data;
+          if (res.code == 1000) {
+            if (self.in_first_tab) {
+              self.searchHerbalList = res.data;
             }
-          },
-          function(error) {
-            console.log(error);
           }
-        );
-      self.tplSearch();
+        },
+        function(error) {
+          console.log(error);
+        }
+      );
+      if (
+        self.recipeType == 1 ||
+        self.recipeType == 2 ||
+        self.recipeType == 4
+      ) {
+        self.tplSearch();
+      }
     },
     herbalSearch: function() {
       if (this.searchName == "") {
@@ -417,40 +675,120 @@ export default {
         return;
       }
       var self = this;
-      axios
+
+      var url = "";
+      var arg = {};
+      switch (this.recipeType) {
+        case 1: {
+          url = self.url.searchHerbal;
+          arg = {
+            medicine_name: self.searchName,
+            category: self.category
+          };
+          break;
+        }
+        case 2: {
+          url = self.url.searchWestern;
+          arg = {
+            medicine_name: self.searchName,
+            status: 1,
+            page: 1,
+            page_size: 10
+          };
+          break;
+        }
+        case 4: {
+          url = self.url.searchTherapy;
+          arg = {
+            name: self.searchName,
+            page: 1,
+            page_size: 8
+          };
+          break;
+        }
+        case 5: {
+          url = self.url.searchExtra;
+          arg = {
+            page: 1,
+            page_size: 10,
+            query: self.searchName,
+            status: 1
+          };
+          break;
+        }
+        case 6: {
+          url = self.url.searchMaterial;
+          arg = {
+            name: self.searchName,
+            page: 1,
+            page_size: 8
+          };
+          break;
+        }
+      }
+
+      /*axios
         .post("/stockmng/medicine/herbalList", {
           medicine_name: self.searchName,
           category: this.category
-        })
-        .then(
-          function(response) {
-            var res = response.data;
-            if (res.code == 1000) {
-              if (self.in_first_tab) {
-                self.searchHerbalList = res.data;
-              }
-              if (self.in_second_tab) {
-                self.tplSearchList = res.data;
-              }
+        })*/
+      axios.post(url, arg).then(
+        function(response) {
+          var res = response.data;
+          if (res.code == 1000) {
+            if (self.in_first_tab) {
+              self.searchHerbalList = res.data;
             }
-          },
-          function(error) {
-            console.log(error);
+            if (self.in_second_tab) {
+              self.tplSearchList = res.data;
+            }
           }
-        );
+        },
+        function(error) {
+          console.log(error);
+        }
+      );
     },
 
     tplHerbalSearch: function() {
       var self = this;
+      var url = '';
+      var arg={};
       if (self.tplEditData.searchName == "") {
         this.tplEditData.searchListShow = false;
         return;
       }
+      switch (this.recipeType) {
+        case 1: {
+          url = self.url.searchHerbal;
+          arg = {
+            medicine_name: self.tplEditData.searchName,
+            category: self.category
+          };
+          break;
+        }
+        case 2: {
+          url = self.url.searchWestern;
+          arg = {
+            medicine_name: self.tplEditData.searchName,
+            status: 1,
+            page: 1,
+            page_size: 10
+          };
+          break;
+        }
+        case 4: {
+          url = self.url.searchTherapy;
+          arg = {
+            name: self.tplEditData.searchName,
+            page: 1,
+            page_size: 8
+          };
+          break;
+        }
+      }
       axios
-        .post("/stockmng/medicine/herbalList", {
-          medicine_name: self.tplEditData.searchName,
-          category: self.tplEditData.category
-        })
+        .post(url, arg)
         .then(
           function(response) {
             var res = response.data;
@@ -465,22 +803,50 @@ export default {
     },
     tplSearch: function() {
       var self = this;
-      axios
-        .post("/doctreat/tpl/herbal/list", {
-          name: self.searchTplName,
-          category: this.category
-        })
-        .then(
-          function(response) {
-            var res = response.data;
-            if (res.code == 1000) {
-              self.tplSearchList = res.data;
-            }
-          },
-          function(error) {
-            console.log(error);
+      var url = "";
+      var arg = {};
+      switch (self.recipeType) {
+        case 1: {
+          url = self.url.searchHerbalTpl;
+          arg = {
+            category: self.category,
+            is_cloud: 0,
+            name: self.searchTplName,
+            page: 1,
+            page_size: 8
+          };
+          break;
+        }
+        case 2: {
+          url = self.url.searchWesternTpl;
+          arg = {
+            name: self.searchTplName,
+            page: 1,
+            page_size: 10
+          };
+          break;
+        }
+        case 4: {
+          url = self.url.searchTherapyTpl;
+          arg = {
+            name: self.searchTplName,
+            page: 1,
+            page_size: 8
+          };
+          break;
+        }
+      }
+      axios.post(url, arg).then(
+        function(response) {
+          var res = response.data;
+          if (res.code == 1000) {
+            self.tplSearchList = res.data;
           }
-        );
+        },
+        function(error) {
+          console.log(error);
+        }
+      );
     },
     tplShow: function(item) {
       this.tplData = {
@@ -588,7 +954,9 @@ export default {
     },
     saveTplEdit: function() {
       var self = this;
-      self.tplData.category = self.tplEditData.category;
+      var url='';
+      var arg='';
+      self.tplData.category = this.category;
       self.tplData.name = self.tplEditData.tplName;
       self.tplData.items = self.tplEditData.items;
       self.tplData.scope = self.tplEditData.scope;
@@ -614,7 +982,18 @@ export default {
             var res = response.data;
             if (res.code == 1000) {
               alert("保存成功");
-              self.self.tplData = {};
+              self.tplData = {
+                category: 0,
+                clinic_id: 0,
+                creator_name: "",
+                creator_id: "",
+                id: 0,
+                tplName: "",
+                scope: 0,
+                items: [],
+                dosage: 0,
+                doctor_remark: ""
+              };
             }
           },
           function(error) {
@@ -628,6 +1007,17 @@ export default {
       this.showEditTpl = false;
     },
     addTpl: function() {
+      this.tplEditData = {
+        category: this.category,
+        tplName: "",
+        scope: 0,
+        items: [],
+        dosage: 0,
+        doctor_remark: "",
+        searchName: "",
+        searchLists: [],
+        searchListShow: false
+      };
       this.showAddTpl = true;
     },
     cancelTplAdd: function() {
@@ -642,7 +1032,7 @@ export default {
           items: self.tplEditData.items,
           dosage: self.tplEditData.dosage,
           doctor_remark: self.tplEditData.doctor_remark,
-          category: self.tplEditData.category,
+          category: self.category,
           is_cloud: 0
         })
         .then(
@@ -650,8 +1040,19 @@ export default {
             var res = response.data;
             if (res.code == 1000) {
               alert("添加成功");
-              self.tplEditData = {};
+              self.tplEditData = {
+                category: self.category,
+                tplName: "",
+                scope: 0,
+                items: [],
+                dosage: 0,
+                doctor_remark: "",
+                searchName: "",
+                searchLists: [],
+                searchListShow: false
+              };
               self.showAddTpl = false;
+              self.firstSearch();
             }
           },
           function(error) {
@@ -685,12 +1086,26 @@ export default {
   border: 1px solid #5096e0;
   width: 100%;
   height: 2rem;
-  font-size: 1rem;
+  font-size: 0.875rem;
 }
 
-.search-result .search-result-li {
+.search-result .herbal-result-li {
   width: 31.5%;
   height: 3.75rem;
+  border: #5096e0 solid 1px;
+  border-radius: 0.25rem;
+  float: left;
+  display: flex;
+  margin-right: 1%;
+  margin-bottom: 0.25rem;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.875rem;
+}
+.search-result .search-result-li {
+  width: 95%;
+  height: 2.5rem;
   border: #5096e0 solid 1px;
   border-radius: 0.25rem;
   float: left;
@@ -717,7 +1132,7 @@ export default {
   box-shadow: 0 0.125rem 0.25rem 0 rgba(80, 150, 224, 0.2);
 }
 .tpl-show span {
-  font-size: 1rem;
+  font-size: 0.875rem;
 }
 .tpl-show .item-list {
   margin-left: 2%;

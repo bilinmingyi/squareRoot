@@ -25,7 +25,7 @@ const actions = {
             is_cloud: 0,
             category: "1",
             doctor_remark: "",
-            dosage: 0,
+            dosage: 1,
             usage: "",
             frequency: "",
             extra_num: 0,
@@ -94,7 +94,55 @@ const actions = {
   },
   cancel_recipe: ({commit}) => {
     commit(mutationTypes.CANCEL_RECIPE)
+  },
+  add_new_medicine: ({commit,state},{item ,type})=>{
+    let result={};
+
+
+    if(type===1){
+      result={
+        "item_id": item.id,
+        "name": item.clinic_alias_name != '' ? item.clinic_alias_name : item.name,
+        "num": !item.num ? 0 : item.num,
+        "price": state.recipeList[state.currRecipe].data.is_cloud===1?item.default_sale_price:item.sale_price,
+        "unit": item.unit_stock,
+        "default_sale_price": item.default_sale_price,
+        "sale_price": item.sale_price,
+        "spec": item.spec,
+        "unit_stock": item.unit_stock,
+        "usage": !item.usage ? '' : item.usage,
+        "stock": item.stock,
+        "stock_sale_ratio":item.stock_sale_ratio,
+        "is_match":item.status == 1 ? 1 : 0,
+        "remark":!item.remark ? '': item.remark
+      }
+    }else if(type===2){
+
+    }else if(type===3){
+
+    }else if(type===4){
+
+    }else if(type===5){
+
+    }else if(type==6){
+
+    }
+
+    commit(mutationTypes.ADD_NEW_MEDICINE,result)
+  },
+  modify_medicine:({commit},{key,val,index})=>{
+    commit(mutationTypes.MODIFY_MEDICINE,{key,val,index})
+  },
+  cancel_medicine:({commit},index)=>{
+    commit(mutationTypes.CANCEL_MEDICINE,index)
+  },
+  modify_recipe:({commit},{key,val})=>{
+    commit(mutationTypes.MODIFY_RECIPE,{key,val})
+  },
+  modify_recipe_detail:({commit}, {key,val})=>{
+    commit(mutationTypes.MODIFY_RECIPE_DETAIL,{key,val})
   }
+
 
   //right
 };

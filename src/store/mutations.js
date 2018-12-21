@@ -23,9 +23,25 @@ const mutations = {
       state.currRecipe = index;
     },
     [mutationTypes.CANCEL_RECIPE](state) {
-      state.recipeList.splice(state.currRecipe,1);
+      state.recipeList.splice(state.currRecipe, 1);
       state.currRecipe--;
+    },
+    [mutationTypes.ADD_NEW_MEDICINE](state, item) {
+      state.recipeList[state.currRecipe].data.items.push(item);
+    },
+    [mutationTypes.MODIFY_MEDICINE](state, {key, val, index}) {
+      state.recipeList[state.currRecipe].data.items[index][key] = val;
+    },
+    [mutationTypes.MODIFY_RECIPE](state, {key, val}) {
+      state.recipeList[state.currRecipe][key] = val;
+    },
+    [mutationTypes.MODIFY_RECIPE_DETAIL](state, {key, val}) {
+      state.recipeList[state.currRecipe].data[key]=val;
+    },
+    [mutationTypes.CANCEL_MEDICINE](state, index) {
+      state.recipeList[state.currRecipe].data.items.splice(index, 1)
     }
+
 
     //right
   }
