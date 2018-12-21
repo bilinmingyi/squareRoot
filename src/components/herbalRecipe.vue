@@ -1,7 +1,7 @@
 <template>
   <div>
     <section class="herbal_head">
-      <RadioGroup v-model="currentData.data.category" class="herbal_head_left">
+      <RadioGroup :value="currentData.data.category" class="herbal_head_left" @on-change="changeCategory($event)">
         <Radio label="1" size="large">
           <span>饮片</span>
         </Radio>
@@ -170,7 +170,8 @@
         'modify_medicine',
         'modify_recipe',
         'cancel_medicine',
-        'modify_recipe_detail'
+        'modify_recipe_detail',
+        'clean_recipe'
       ]),
       cancelRecipe() {
         this.$Modal.confirm({
@@ -180,10 +181,29 @@
             this.cancel_recipe();
           },
           onCancel: () => {
-            console.log("88")
+
           }
         });
       },
+      changeCategory(val){
+        if(this.currentData.data.items.length===0){
+          this.modify_recipe_detail({key:'category',val:val})
+        }else {
+          this.$Modal.confirm({
+            title: '提示',
+            content: '<p>切换药类型将清空已选的药，确认要切换?</p>',
+            onOk: ()=>{
+              this.modify_recipe_detail({key:'category',val:val})
+              this.clean_recipe();
+            },
+            onCancel: ()=>{
+
+            }
+          })
+        }
+
+
+      }
     },
 
   }
