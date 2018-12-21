@@ -577,6 +577,12 @@ export default {
     this.firstSearch();
   },
   watch: {
+    recipeType:function(){
+      this.firstSearch();
+    },
+    category:function(){
+      this.firstSearch();
+    },
     searchHerbalList: {
       handler: function() {},
       deep: true
