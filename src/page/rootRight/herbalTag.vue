@@ -406,10 +406,6 @@ export default {
         return item.status === 1;
       });
     },
-    ...mapState({
-      recipeList: state => state.recipeList,
-      currRecipe: state => state.currRecipe
-    }),
     ...mapGetters([
       'currRecipeData',
     ]),
