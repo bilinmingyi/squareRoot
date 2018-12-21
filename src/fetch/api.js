@@ -23,6 +23,8 @@ let getHerbalList = (params) => {
   return fetch('/doctreat/tpl/herbal/list',params);
 }
 
+const getTreatOrderDetail = params => fetch('/doctreat/treatorder/detail', params);
+
 const updatePatientData = params => fetch('/treatmng/patient/update', JSON.stringify(params));
 
 const getPatientInfo = params => fetch('treatmng/patient/detail', params);
@@ -31,6 +33,7 @@ const getHistoryRecipes = params => fetch('/treatmng/patient/history/list', para
 
 export {
   getHerbalList,
+  getTreatOrderDetail,
   updatePatientData,
   getPatientInfo,
   getHistoryRecipes

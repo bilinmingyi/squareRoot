@@ -345,7 +345,7 @@ export default {
       currRecipe: state => state.currRecipe
     }),
     recipeType: function() {
-      //return this.recipeList[this.currRecipe].type;
+      // return this.recipeList[this.currRecipe].type;
       return 1;
     }
   },

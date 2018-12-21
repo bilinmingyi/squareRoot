@@ -11,6 +11,9 @@ const mutations = {
     [mutationTypes.SET_HISTORY_DATA](state, {key, val}) {
       state.historyData[key] = val;
     },
+    [mutationTypes.SET_RECORD_PROP](state, {key, val}) {
+      state.recordData[key] = val;
+    },
 
     //middle
     [mutationTypes.ADD_NEW_RECIPT](state, item) {

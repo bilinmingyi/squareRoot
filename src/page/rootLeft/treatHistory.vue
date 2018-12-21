@@ -1,7 +1,7 @@
 <template>
   <div class="treat-history">
     <div v-show="!showHistoryDetail" class="treat-history-lists">
-      <ul class="t-h-lists" v-if="historyData.treatOrderList.length!=0 && historyData.completeFirst">
+      <ul class="t-h-lists" v-if="isHistoryFinish && historyData.treatOrderList.length!=0 && historyData.completeFirst">
         <li
           class="t-h-item"
           v-for="historyItem in historyData.treatOrderList"
@@ -19,8 +19,8 @@
           </div>
         </li>
       </ul>
-      <div v-else class="t-h-tips">暂无就诊记录</div>
-      <div class="t-h-btn-group" v-if="historyData.treatOrderList.length!=0">
+      <div v-else-if="isHistoryFinish" class="t-h-tips">暂无就诊记录</div>
+      <div class="t-h-btn-group" v-if="isHistoryFinish && historyData.treatOrderList.length!=0">
         <button
           class="t-h-btn t-h-btn-active"
           @click.stop="changeHistoryRecipesPage(1)"
@@ -51,7 +51,7 @@ export default {
   components: {
     treatHistoryDetail
   },
-  props: ['historyDataProp'],
+  props: ['historyDataProp', 'historyFinish'],
   data() {
     return {
     };
@@ -65,6 +65,9 @@ export default {
     }),
     historyData() {
       return this.historyDataProp;
+    },
+    isHistoryFinish() {
+      return this.historyFinish;
     }
   },
   watch: {
