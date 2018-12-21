@@ -558,11 +558,12 @@ export default {
       });
     },
     ...mapGetters(["currRecipeData"]),
+
     recipeType: function() {
-      return 2;
+      return this.currRecipeData===undefined?1:this.currRecipeData.type;
     },
     category: function() {
-      return 1;
+      return this.currRecipeData===undefined?1:this.currRecipeData.category;
     }
   },
   components: {
