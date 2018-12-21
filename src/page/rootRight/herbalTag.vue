@@ -284,7 +284,7 @@
 </template>
 <script>
 import axios from "axios";
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import { Input, Button, Select, Option, Icon } from "iview";
 import {
   herbalMedUsages,
@@ -410,6 +410,9 @@ export default {
       recipeList: state => state.recipeList,
       currRecipe: state => state.currRecipe
     }),
+    ...mapGetters([
+      'currRecipeData',
+    ]),
     recipeType: function() {
       /*if(this.currRecipe==0){
         return 0;
@@ -421,7 +424,7 @@ export default {
       //if(this.recipeList[this.currRecipe].type&&this.recipeList[this.currRecipe].type==1){
       //  return this.recipeList[this.currRecipe].category;
       //}
-      return 2;
+      return 1;
     }
   },
   components: {
@@ -625,35 +628,36 @@ export default {
       switch(self.recipeType){
         case 1:{
           url=self.url.searchHerbalTpl;
-          arg=self.arg.recentHerbal;
+          arg={
+            category:self.category,
+            is_cloud:0,
+            name: self.searchTplName,
+            page: 1,
+            page_size:8
+          }
           break;
         }
         case 2:{
           url=self.url.searchWesternTpl;
-          arg=self.arg.recentWestern;
+          arg={
+            name: self.searchTplName,
+            page:1,
+            page_size: 10,
+          };
           break;
         }
         case 4:{
           url=self.url.searchTherapyTpl;
-          arg=self.arg.recentTherapy;
-          break;
-        }
-        case 5:{
-          url=self.url.searchExtra;
-          arg=self.arg.recentExtra;
-          break;
-        }
-        case 6:{
-          url=self.url.recentMaterial;
-          arg=self.arg.recentMaterial;
+          arg={
+            name: self.searchTplName,
+            page: 1,
+            page_size: 8
+          };
           break;
         }
       }
       axios
-        .post("/doctreat/tpl/herbal/list", {
-          name: self.searchTplName,
-          category: this.category
-        })
+        .post(url, arg)
         .then(
           function(response) {
             var res = response.data;
