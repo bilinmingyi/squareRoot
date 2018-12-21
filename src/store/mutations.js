@@ -23,9 +23,13 @@ const mutations = {
       state.currRecipe = index;
     },
     [mutationTypes.CANCEL_RECIPE](state) {
-      state.recipeList.splice(state.currRecipe,1);
+      state.recipeList.splice(state.currRecipe, 1);
       state.currRecipe--;
+    },
+    [mutationTypes.ADD_NEW_MEDICINE](state, item){
+      state.recipeList[state.currRecipe].data.items.push(item);
     }
+
 
     //right
   }
