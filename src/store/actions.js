@@ -141,6 +141,9 @@ const actions = {
   },
   modify_recipe_detail:({commit}, {key,val})=>{
     commit(mutationTypes.MODIFY_RECIPE_DETAIL,{key,val})
+  },
+  clean_recipe:({commit})=>{
+    commit(mutationTypes.CLEAN_RECIPE)
   }
 
 

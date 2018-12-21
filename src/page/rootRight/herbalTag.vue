@@ -446,12 +446,14 @@ export default {
         recentHerbal: "/doctreat/herbal/recent",
         searchHerbal: "/stockmng/medicine/herbalList",
         searchHerbalTpl: "/doctreat/tpl/herbal/list",
-        searchHerbalTpl: "/doctreat/tpl/herbal/update",
+        updateHerbalTpl: "/doctreat/tpl/herbal/update",
+        addHerbalTpl: "/doctreat/tpl/herbal/add",
 
         recentWestern: "/doctreat/western/recent",
         searchWestern: "/stockmng/medicine/westernList",
         searchWesternTpl: "/doctreat/tpl/western/list",
-        searchHerbalTpl: "/doctreat/tpl/herbal/update",
+        updateWesternTpl: "/doctreat/tpl/western/update",
+        addWesternTpl: "/doctreat/tpl/western/add",
 
         recentTherapy: "/doctreat/therapy/recent",
         searchTherapy: "/clinicmng/therapy/list",
@@ -558,11 +560,12 @@ export default {
       });
     },
     ...mapGetters(["currRecipeData"]),
+
     recipeType: function() {
-      return 2;
+      return this.currRecipeData===undefined?1:this.currRecipeData.type;
     },
     category: function() {
-      return 1;
+      return this.currRecipeData===undefined?1:this.currRecipeData.category;
     }
   },
   components: {
@@ -576,6 +579,12 @@ export default {
     this.firstSearch();
   },
   watch: {
+    recipeType:function(){
+      this.firstSearch();
+    },
+    category:function(){
+      this.firstSearch();
+    },
     searchHerbalList: {
       handler: function() {},
       deep: true
@@ -877,6 +886,7 @@ export default {
       var self = this;
       this.tplEditData.tplName = this.tplData.tplName;
       this.tplEditData.scope = this.tplData.scope;
+      this.tplEditData.is_cloud=this.tplData.is_cloud;
       this.tplEditData.items = (function(items) {
         var newArr = [];
         items.forEach(function(item) {
@@ -937,8 +947,17 @@ export default {
     },
     delTpl: function() {
       var self = this;
+      var url='';
+      switch(this.recipeType){
+        case 1:{
+          url="/doctreat/tpl/herbal/delete?tplId=";
+        }
+        case 2:{
+          url="/doctreat/tpl/western/delete?tplId=";          
+        }
+      }
       axios
-        .post("/doctreat/tpl/herbal/delete?tplId=" + self.tplData.id, {})
+        .post(url + self.tplData.id, {})
         .then(function(response) {
           var res = response.data;
           if (res.code == 1000) {
@@ -956,27 +975,42 @@ export default {
       var self = this;
       var url='';
       var arg='';
-      self.tplData.category = this.category;
-      self.tplData.name = self.tplEditData.tplName;
-      self.tplData.items = self.tplEditData.items;
-      self.tplData.scope = self.tplEditData.scope;
-      self.tplData.dosage = self.tplEditData.dosage;
-      self.tplData.doctor_remark = self.tplEditData.doctor_remark;
-
+      switch(this.recipeType){
+        case 1:{
+          url=self.url.updateHerbalTpl;
+          arg={
+            category:self.category,
+            name: self.tplEditData.tplName,
+            scope: self.tplEditData.scope,
+            items: self.tplEditData.items,
+            dosage: self.tplEditData.dosage,
+            doctor_remark: self.tplEditData.doctor_remark,
+            clinic_id: self.tplData.clinic_id,
+            creator_name: self.tplData.creator_name,
+            creator_id: self.tplData.creator_id,
+            id: self.tplData.id,
+            is_cloud: self.tplData.is_cloud
+          }
+        }
+        case 2:{
+          url=self.url.updateWesternTpl;
+          arg={
+            name: self.tplEditData.tplName,
+            scope: self.tplEditData.scope,
+            items: self.tplEditData.items,
+            dosage: self.tplEditData.dosage,
+            doctor_remark: self.tplEditData.doctor_remark,
+            clinic_id: self.tplData.clinic_id,
+            creator_name: self.tplData.creator_name,
+            creator_id: self.tplData.creator_id,
+            id: self.tplData.id,
+            is_cloud: 0,
+            category: 1
+          }
+        }
+      }
       axios
-        .post("/doctreat/tpl/herbal/update", {
-          name: self.tplData.name,
-          scope: self.tplData.scope,
-          items: self.tplData.items,
-          dosage: self.tplData.dosage,
-          doctor_remark: self.tplData.doctor_remark,
-          category: self.tplData.category,
-          clinic_id: self.tplData.clinic_id,
-          creator_name: self.tplData.creator_name,
-          creator_id: self.tplData.creator_id,
-          id: self.tplData.id,
-          is_cloud: self.tplData.is_cloud
-        })
+        .post(url, arg)
         .then(
           function(response) {
             var res = response.data;
@@ -994,13 +1028,16 @@ export default {
                 dosage: 0,
                 doctor_remark: ""
               };
+              self.firstSearch();
+              self.showEditTpl = false;
+              self.showTpl=false;
             }
           },
           function(error) {
             console.log(error);
           }
         );
-
+      this
       self.showEditTpl = false;
     },
     cancelTplEdit: function() {
@@ -1025,16 +1062,36 @@ export default {
     },
     saveTplAdd: function() {
       var self = this;
+      var url='';
+      var arg='';
+      switch(this.recipeType){
+        case 1:{
+          url=self.url.addHerbalTpl;
+          arg={
+            name: self.tplEditData.tplName,
+            scope: self.tplEditData.scope,
+            items: self.tplEditData.items,
+            dosage: self.tplEditData.dosage,
+            doctor_remark: self.tplEditData.doctor_remark,
+            category: self.category,
+            is_cloud: 0
+          }
+        }
+        case 2:{
+          url=self.url.addWesternTpl;
+          arg={
+            name: self.tplEditData.tplName,
+            scope: self.tplEditData.scope,
+            items: self.tplEditData.items,
+            dosage: self.tplEditData.dosage,
+            doctor_remark: self.tplEditData.doctor_remark,
+            category: 1,
+            is_cloud: 0
+          }
+        }
+      }
       axios
-        .post("/doctreat/tpl/herbal/add", {
-          name: self.tplEditData.tplName,
-          scope: self.tplEditData.scope,
-          items: self.tplEditData.items,
-          dosage: self.tplEditData.dosage,
-          doctor_remark: self.tplEditData.doctor_remark,
-          category: self.category,
-          is_cloud: 0
-        })
+        .post(url, arg)
         .then(
           function(response) {
             var res = response.data;
