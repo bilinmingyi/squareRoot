@@ -40,7 +40,7 @@
           </td>
           <td>{{item.remark}}</td>
           <td>
-            <Select style="width:4.25rem" @on-change="modify_medicine({key:'usage',val:$event,index:index})">
+            <Select style="width:4.25rem" :value="item.usage" @on-change="modify_medicine({key:'usage',val:$event,index:index})">
               <Option v-for="item in herbalMedUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
             </Select>
           </td>
@@ -58,18 +58,18 @@
       <div class="displayFlex pl10 pr10 pt10">
         <div class="width-240">
           <span class="input_label"> 剂数：</span>
-          <Input type="text" class="input_120" v-model="currentData.data.dosage"/>
+          <Input type="text" class="input_120" :value="currentData.data.dosage" @on-change="modify_recipe_detail({key:'dosage',val:$event.target.value})"/>
           <span class="input_label">剂</span>
         </div>
         <div class="width-240">
           <span class="input_label">频次：</span>
-          <Select class="input_120" v-model="currentData.data.frequency">
+          <Select class="input_120" :value="currentData.data.frequency" @on-change="modify_recipe_detail({key:'frequency',val:$event})">
             <Option v-for="item in medFrequency" :value="item.name" :key="item.name">{{ item.name }}</Option>
           </Select>
         </div>
         <div class="width-240">
           <span class="input_label"> 用法：</span>
-          <Select class="input_120" v-model="currentData.data.usage">
+          <Select class="input_120":value="currentData.data.usage" @on-change="modify_recipe_detail({key:'usage',val:$event})">
             <Option v-for="item in herbalRpUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
           </Select>
         </div>
@@ -77,24 +77,24 @@
       <div class="displayFlex p10">
         <div class="width-240">
           <span class="input_label"> 附加：</span>
-          <Select class="input_120" v-model="currentData.data.extra_feetype">
+          <Select class="input_120" :value="currentData.data.extra_feetype" @on-change="modify_recipe_detail({key:'extra_feetype',val:$event})">
             <Option v-for="item in extraFeeTypes" :value="item.name" :key="item.id">{{ item.name }}</Option>
           </Select>
         </div>
         <div class="width-240">
           <span class="input_label">数量：</span>
-          <Input type="text" class="input_120" v-model="currentData.data.extra_num"/>
+          <Input type="text" class="input_120" :value="currentData.data.extra_num" @on-change="modify_recipe_detail({key:'extra_num',val:$event.target.value})"/>
         </div>
         <div class="width-240">
           <span class="input_label"> 用量：</span>
-          <Input type="text" class="input_120" v-model="currentData.data.eachDose"/>
+          <Input type="text" class="input_120" :value="currentData.data.eachDose" @on-change="modify_recipe_detail({key:'eachDose',val:$event.target.value})"/>
           <span class="input_label">ml</span>
         </div>
       </div>
       <div class="displayFlex pl10 pt10 width-620">
         <span class="input_label pr4">医嘱：</span>
         <Input class="flexOne" type="textarea" :autosize="{minRows: 3,maxRows: 3}" placeholder="医嘱提示"
-               v-model="currentData.data.doctor_remark"/>
+               :value="currentData.data.doctor_remark" @on-change="modify_recipe_detail({key:'doctor_remark',val:$event.target.value})"/>
       </div>
     </section>
   </div>
@@ -153,11 +153,11 @@
             let extraItem=this.extraFeeTypes.filter((typeOne)=>{
               return typeOne.name === newVal.extra_feetype;
             })
-            allPrice=recipePrice*Number(newVal.dosage)+extraItem.price*newVal.extra_num;
+            allPrice=recipePrice*Number(newVal.dosage)+extraItem[0].price*newVal.extra_num;
           }else {
             allPrice=recipePrice*Number(newVal.dosage)
           }
-          this.modify_recipe({key:'money',val:allPrice})
+          this.modify_recipe({key:'money',val:Number(allPrice).toFixed(2)})
         }
       }
     },
@@ -166,7 +166,8 @@
         'cancel_recipe',
         'modify_medicine',
         'modify_recipe',
-        'cancel_medicine'
+        'cancel_medicine',
+        'modify_recipe_detail'
       ]),
       cancelRecipe() {
         this.$Modal.confirm({
