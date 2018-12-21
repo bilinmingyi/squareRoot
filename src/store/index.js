@@ -39,6 +39,8 @@ const state = {
     diagnosis: '',    // 中医诊断
     treat_advice: '',   // 处理意见
   },
+
+  //middle
   recipeList:[],
   currRecipe:0,
 };

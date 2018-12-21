@@ -284,7 +284,7 @@
 </template>
 <script>
 import axios from "axios";
-import { mapState } from "vuex";
+import { mapGetters,mapActions } from "vuex";
 import { Input, Button, Select, Option, Icon } from "iview";
 import {
   herbalMedUsages,
@@ -406,10 +406,9 @@ export default {
         return item.status === 1;
       });
     },
-    ...mapState({
-      recipeList: state => state.recipeList,
-      currRecipe: state => state.currRecipe
-    }),
+    ...mapGetters([
+      'currRecipeData'
+    ]),
     recipeType: function() {
       /*if(this.currRecipe==0){
         return 0;
@@ -453,6 +452,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions([
+      'add_new_medicine'
+    ]),
     in_first: function() {
       this.in_first_tab = true;
       this.in_second_tab = false;
@@ -462,9 +464,8 @@ export default {
       this.in_first_tab = false;
     },
     selectItem: function(item) {
+      this.add_new_medicine({item:item,type:this.currRecipeData.type})
 
-
-      alert(item);
     },
     firstSearch: function() {
       var self = this;
