@@ -123,7 +123,6 @@
       Input
     },
     computed: {
-
       currentData: function () {
         return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
       },

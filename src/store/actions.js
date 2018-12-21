@@ -97,36 +97,61 @@ const actions = {
   },
   add_new_medicine: ({commit,state},{item ,type})=>{
     let result={};
+    switch (type) {
+      case 1:
+        result={
+          "item_id": item.id,
+          "name": item.clinic_alias_name != '' ? item.clinic_alias_name : item.name,
+          "num": !item.num ? 0 : item.num,
+          "price": state.recipeList[state.currRecipe].data.is_cloud===1?item.default_sale_price:item.sale_price,
+          "unit": item.unit_stock,
+          "default_sale_price": item.default_sale_price,
+          "sale_price": item.sale_price,
+          "spec": item.spec,
+          "unit_stock": item.unit_stock,
+          "usage": !item.usage ? '' : item.usage,
+          "stock": item.stock,
+          "stock_sale_ratio":item.stock_sale_ratio,
+          "is_match":item.status == 1 ? 1 : 0,
+          "remark":!item.remark ? '': item.remark
+        }
+        break;
+      case 2:
+        result={
+          "item_id": item.id,
+          "name": item.clinic_alias_name != '' ? item.clinic_alias_name : item.name,
+          "num": !item.num ? 0 : item.num,
+          "price": item.unit === item.unit_stock ? item.sale_price:(item.unit === item.unit_sale?(item.sale_price * 1.0 / item.stock_sale_ratio):item.sale_price),
+          "unit": item.unit === item.unit_stock ? item.unit_stock:(item.unit === item.unit_sale?item.unit_sale:item.unit_stock),
+          "sale_price": item.sale_price,
+          "spec": item.spec,
+          "unit_stock": item.unit_stock,
+          "unit_sale": item.unit_sale,
+          "unit_dose": item.unit_dose,
+          "stock_sale_ratio": item.stock_sale_ratio,
+          "sale_dose_ratio": item.sale_dose_ratio,
+          "usage": !item.usage ? '' : item.usage ,
+          "days": !item.days ? 0 : item.days,
+          "frequency": !item.frequency ? '' : item.frequency,
+          "dose_once": !item.dose_once ? '' : item.dose_once,
+          "stock": item.stock,
+          "is_match": item.status == 1 ? 1 : 0,
+        }
+        break;
+      case 3:
 
+        break;
+      case 4:
 
-    if(type===1){
-      result={
-        "item_id": item.id,
-        "name": item.clinic_alias_name != '' ? item.clinic_alias_name : item.name,
-        "num": !item.num ? 0 : item.num,
-        "price": state.recipeList[state.currRecipe].data.is_cloud===1?item.default_sale_price:item.sale_price,
-        "unit": item.unit_stock,
-        "default_sale_price": item.default_sale_price,
-        "sale_price": item.sale_price,
-        "spec": item.spec,
-        "unit_stock": item.unit_stock,
-        "usage": !item.usage ? '' : item.usage,
-        "stock": item.stock,
-        "stock_sale_ratio":item.stock_sale_ratio,
-        "is_match":item.status == 1 ? 1 : 0,
-        "remark":!item.remark ? '': item.remark
-      }
-    }else if(type===2){
+        break;
+      case 5:
 
-    }else if(type===3){
+        break;
+      case 6:
 
-    }else if(type===4){
-
-    }else if(type===5){
-
-    }else if(type==6){
-
+        break;
     }
+
 
     commit(mutationTypes.ADD_NEW_MEDICINE,result)
   },
