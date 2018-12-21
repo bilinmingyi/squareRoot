@@ -446,12 +446,12 @@ export default {
         recentHerbal: "/doctreat/herbal/recent",
         searchHerbal: "/stockmng/medicine/herbalList",
         searchHerbalTpl: "/doctreat/tpl/herbal/list",
-        searchHerbalTpl: "/doctreat/tpl/herbal/update",
+        updateHerbalTpl: "/doctreat/tpl/herbal/update",
 
         recentWestern: "/doctreat/western/recent",
         searchWestern: "/stockmng/medicine/westernList",
         searchWesternTpl: "/doctreat/tpl/western/list",
-        searchHerbalTpl: "/doctreat/tpl/herbal/update",
+        updateWesternTpl: "/doctreat/tpl/herbal/update",
 
         recentTherapy: "/doctreat/therapy/recent",
         searchTherapy: "/clinicmng/therapy/list",
@@ -947,27 +947,41 @@ export default {
       var self = this;
       var url='';
       var arg='';
-      self.tplData.category = this.category;
-      self.tplData.name = self.tplEditData.tplName;
-      self.tplData.items = self.tplEditData.items;
-      self.tplData.scope = self.tplEditData.scope;
-      self.tplData.dosage = self.tplEditData.dosage;
-      self.tplData.doctor_remark = self.tplEditData.doctor_remark;
-
+      switch(this.recipeType){
+        case 1:{
+          url=self.url.updateHerbalTpl;
+          arg={
+            category:self.category,
+            name: self.tplEditData.tplName,
+            scope: self.tplEditData.scope,
+            items: self.tplEditData.items,
+            dosage: self.tplEditData.dosage,
+            doctor_remark: self.tplEditData.doctor_remark,
+            clinic_id: self.tplData.clinic_id,
+            creator_name: self.tplData.creator_name,
+            creator_id: self.tplData.creator_id,
+            id: self.tplData.id,
+            is_cloud: self.tplData.is_cloud
+          }
+        }
+        case 2:{
+          url=self.url.updateWesternTpl;
+          arg={
+            name: self.tplEditData.tplName,
+            scope: self.tplEditData.scope,
+            items: self.tplEditData.items,
+            dosage: self.tplEditData.dosage,
+            doctor_remark: self.tplEditData.doctor_remark,
+            clinic_id: self.tplData.clinic_id,
+            creator_name: self.tplData.creator_name,
+            creator_id: self.tplData.creator_id,
+            id: self.tplData.id,
+            is_cloud: self.tplData.is_cloud
+          }
+        }
+      }
       axios
-        .post("/doctreat/tpl/herbal/update", {
-          name: self.tplData.name,
-          scope: self.tplData.scope,
-          items: self.tplData.items,
-          dosage: self.tplData.dosage,
-          doctor_remark: self.tplData.doctor_remark,
-          category: self.tplData.category,
-          clinic_id: self.tplData.clinic_id,
-          creator_name: self.tplData.creator_name,
-          creator_id: self.tplData.creator_id,
-          id: self.tplData.id,
-          is_cloud: self.tplData.is_cloud
-        })
+        .post(url, arg)
         .then(
           function(response) {
             var res = response.data;
