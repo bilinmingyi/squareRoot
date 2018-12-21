@@ -25,7 +25,7 @@ const actions = {
             is_cloud: 0,
             category: "1",
             doctor_remark: "",
-            dosage: 0,
+            dosage: 1,
             usage: "",
             frequency: "",
             extra_num: 0,
@@ -127,6 +127,12 @@ const actions = {
     }
 
     commit(mutationTypes.ADD_NEW_MEDICINE,result)
+  },
+  modify_medicine:({commit},{key,val,index})=>{
+    commit(mutationTypes.MODIFY_MEDICINE,{key,val,index})
+  },
+  modify_recipe:({commit},{key,val})=>{
+    commit(mutationTypes.MODIFY_RECIPE,{key,val})
   }
 
 

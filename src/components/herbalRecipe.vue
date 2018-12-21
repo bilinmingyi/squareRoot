@@ -29,16 +29,18 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <td>1</td>
-          <td>柴胡</td>
-          <td>1克</td>
+        <tr v-for="(item,index) in currentData.data.items">
+          <td>{{index+1}}</td>
+          <td>{{item.name}}</td>
+          <td>{{item.spec==='1克/克'?'1克':item.spec}}</td>
           <td>
-            <Input style="width:3.125rem" type="text"/>
+            <Input style="width:2.5rem" type="text" :value="item.num"
+                   @on-change="modify_medicine({key:'num',val:$event.target.value,index:index})"/>
+            <span>{{item.unit}}</span>
           </td>
-          <td>1</td>
+          <td>{{item.remark}}</td>
           <td>
-            <Select style="width:6.25rem">
+            <Select style="width:4.25rem" @on-change="modify_medicine({key:'usage',val:$event,index:index})">
               <Option v-for="item in herbalMedUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
             </Select>
           </td>
@@ -91,7 +93,8 @@
       </div>
       <div class="displayFlex pl10 pt10 width-620">
         <span class="input_label pr4">医嘱：</span>
-        <Input class="flexOne" type="textarea" :autosize="{minRows: 3,maxRows: 3}" placeholder="医嘱提示" v-model="currentData.data.doctor_remark" />
+        <Input class="flexOne" type="textarea" :autosize="{minRows: 3,maxRows: 3}" placeholder="医嘱提示"
+               v-model="currentData.data.doctor_remark"/>
       </div>
     </section>
   </div>
@@ -99,14 +102,14 @@
 
 <script>
   import {RadioGroup, Radio, Select, Option, Input} from 'iview'
-  import {mapActions, mapGetters} from 'vuex'
-  import {herbalMedUsages, herbalRpUsages, extraFeeTypes,medFrequency} from '@/assets/js/mapType'
+  import {mapActions} from 'vuex'
+  import {herbalMedUsages, herbalRpUsages, extraFeeTypes, medFrequency} from '@/assets/js/mapType'
 
   export default {
     name: "herbalRecipe",
     data() {
       return {
-        medFrequency:medFrequency
+        medFrequency: medFrequency
       };
     },
     components: {
@@ -117,9 +120,11 @@
       Input
     },
     computed: {
-      ...mapGetters({
-        currentData:'currRecipeData'
-      }),
+
+      currentData: function () {
+        return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
+      },
+
       herbalMedUsages: function () {
         return herbalMedUsages.filter(item => {
           return item.status === 1
@@ -130,17 +135,40 @@
           return item.status === 1
         })
       },
-      extraFeeTypes:function () {
-        return extraFeeTypes.filter(item =>{
+      extraFeeTypes: function () {
+        return extraFeeTypes.filter(item => {
           return item.status === 1
         })
       }
     },
+    watch: {
+      'currentData.data': {
+        deep: true,
+        handler:function(newVal,oldVal){
+          var recipePrice=0,allPrice=0;
+          newVal.items.map((item)=>{
+            recipePrice+=Number(item.num)*Number(item.price)
+          });
+          if(newVal.extra_feetype!==''){
+            let extraItem=this.extraFeeTypes.filter((typeOne)=>{
+              return typeOne.name === newVal.extra_feetype;
+            })
+            allPrice=recipePrice*Number(newVal.dosage)+extraItem.price*newVal.extra_num;
+          }else {
+            allPrice=recipePrice*Number(newVal.dosage)
+          }
+          console.log(allPrice)
+          this.modify_recipe({key:'money',val:allPrice})
+        }
+      }
+    },
     methods: {
       ...mapActions([
-        'cancel_recipe'
+        'cancel_recipe',
+        'modify_medicine',
+        'modify_recipe'
       ]),
-      cancelRecipe(){
+      cancelRecipe() {
         this.$Modal.confirm({
           title: '提示',
           content: '<p>确定删除该处方？</p>',
