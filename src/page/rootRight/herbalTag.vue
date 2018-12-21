@@ -447,11 +447,13 @@ export default {
         searchHerbal: "/stockmng/medicine/herbalList",
         searchHerbalTpl: "/doctreat/tpl/herbal/list",
         updateHerbalTpl: "/doctreat/tpl/herbal/update",
+        addHerbalTpl: "/doctreat/tpl/herbal/add",
 
         recentWestern: "/doctreat/western/recent",
         searchWestern: "/stockmng/medicine/westernList",
         searchWesternTpl: "/doctreat/tpl/western/list",
-        updateWesternTpl: "/doctreat/tpl/herbal/update",
+        updateWesternTpl: "/doctreat/tpl/western/update",
+        addWesternTpl: "/doctreat/tpl/western/add",
 
         recentTherapy: "/doctreat/therapy/recent",
         searchTherapy: "/clinicmng/therapy/list",
@@ -884,6 +886,7 @@ export default {
       var self = this;
       this.tplEditData.tplName = this.tplData.tplName;
       this.tplEditData.scope = this.tplData.scope;
+      this.tplEditData.is_cloud=this.tplData.is_cloud;
       this.tplEditData.items = (function(items) {
         var newArr = [];
         items.forEach(function(item) {
@@ -944,8 +947,17 @@ export default {
     },
     delTpl: function() {
       var self = this;
+      var url='';
+      switch(this.recipeType){
+        case 1:{
+          url="/doctreat/tpl/herbal/delete?tplId=";
+        }
+        case 2:{
+          url="/doctreat/tpl/western/delete?tplId=";          
+        }
+      }
       axios
-        .post("/doctreat/tpl/herbal/delete?tplId=" + self.tplData.id, {})
+        .post(url + self.tplData.id, {})
         .then(function(response) {
           var res = response.data;
           if (res.code == 1000) {
@@ -992,7 +1004,8 @@ export default {
             creator_name: self.tplData.creator_name,
             creator_id: self.tplData.creator_id,
             id: self.tplData.id,
-            is_cloud: self.tplData.is_cloud
+            is_cloud: 0,
+            category: 1
           }
         }
       }
@@ -1015,13 +1028,16 @@ export default {
                 dosage: 0,
                 doctor_remark: ""
               };
+              self.firstSearch();
+              self.showEditTpl = false;
+              self.showTpl=false;
             }
           },
           function(error) {
             console.log(error);
           }
         );
-
+      this
       self.showEditTpl = false;
     },
     cancelTplEdit: function() {
@@ -1046,16 +1062,36 @@ export default {
     },
     saveTplAdd: function() {
       var self = this;
+      var url='';
+      var arg='';
+      switch(this.recipeType){
+        case 1:{
+          url=self.url.addHerbalTpl;
+          arg={
+            name: self.tplEditData.tplName,
+            scope: self.tplEditData.scope,
+            items: self.tplEditData.items,
+            dosage: self.tplEditData.dosage,
+            doctor_remark: self.tplEditData.doctor_remark,
+            category: self.category,
+            is_cloud: 0
+          }
+        }
+        case 2:{
+          url=self.url.addWesternTpl;
+          arg={
+            name: self.tplEditData.tplName,
+            scope: self.tplEditData.scope,
+            items: self.tplEditData.items,
+            dosage: self.tplEditData.dosage,
+            doctor_remark: self.tplEditData.doctor_remark,
+            category: 1,
+            is_cloud: 0
+          }
+        }
+      }
       axios
-        .post("/doctreat/tpl/herbal/add", {
-          name: self.tplEditData.tplName,
-          scope: self.tplEditData.scope,
-          items: self.tplEditData.items,
-          dosage: self.tplEditData.dosage,
-          doctor_remark: self.tplEditData.doctor_remark,
-          category: self.category,
-          is_cloud: 0
-        })
+        .post(url, arg)
         .then(
           function(response) {
             var res = response.data;
