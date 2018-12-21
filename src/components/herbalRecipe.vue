@@ -51,23 +51,23 @@
     </section>
     <section>
       <div class="pl10 pt20">
-        <span class="input_label"> 处方金额：100元</span>
+        <span class="input_label"> 处方金额：{{currentData.money}}元</span>
       </div>
       <div class="displayFlex pl10 pr10 pt10">
         <div class="width-240">
           <span class="input_label"> 剂数：</span>
-          <Input type="text" class="input_120"/>
+          <Input type="text" class="input_120" v-model="currentData.data.dosage"/>
           <span class="input_label">剂</span>
         </div>
         <div class="width-240">
           <span class="input_label">频次：</span>
-          <Select class="input_120">
+          <Select class="input_120" v-model="currentData.data.frequency">
             <Option v-for="item in medFrequency" :value="item.name" :key="item.name">{{ item.name }}</Option>
           </Select>
         </div>
         <div class="width-240">
           <span class="input_label"> 用法：</span>
-          <Select class="input_120">
+          <Select class="input_120" v-model="currentData.data.usage">
             <Option v-for="item in herbalRpUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
           </Select>
         </div>
@@ -75,23 +75,23 @@
       <div class="displayFlex p10">
         <div class="width-240">
           <span class="input_label"> 附加：</span>
-          <Select class="input_120">
+          <Select class="input_120" v-model="currentData.data.extra_feetype">
             <Option v-for="item in extraFeeTypes" :value="item.name" :key="item.id">{{ item.name }}</Option>
           </Select>
         </div>
         <div class="width-240">
           <span class="input_label">数量：</span>
-          <Input type="text" class="input_120"/>
+          <Input type="text" class="input_120" v-model="currentData.data.extra_num"/>
         </div>
         <div class="width-240">
           <span class="input_label"> 用量：</span>
-          <Input type="text" class="input_120"/>
+          <Input type="text" class="input_120" v-model="currentData.data.eachDose"/>
           <span class="input_label">ml</span>
         </div>
       </div>
       <div class="displayFlex pl10 pt10 width-620">
         <span class="input_label pr4">医嘱：</span>
-        <Input class="flexOne" type="textarea" :autosize="{minRows: 3,maxRows: 3}" placeholder="医嘱提示" />
+        <Input class="flexOne" type="textarea" :autosize="{minRows: 3,maxRows: 3}" placeholder="医嘱提示" v-model="currentData.data.doctor_remark" />
       </div>
     </section>
   </div>

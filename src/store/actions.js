@@ -28,9 +28,9 @@ const actions = {
             dosage: 0,
             usage: "",
             frequency: "",
-            extra_price: 0,
             extra_num: 0,
-            extra_feetype_id: "",
+            extra_feetype: "",
+            eachDose:"",
             items: []
           }
         };
