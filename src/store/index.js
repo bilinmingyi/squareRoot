@@ -17,7 +17,7 @@ const state = {
     name: "",
     mobile: "",
     age: 0,
-    birthday: 0,
+    birthday: null,
     sex: 0,
     weight: 0,
     marital_status: 0,
@@ -34,9 +34,15 @@ const state = {
     present_illness: '',    // 病史
     allergic_history: '',   // 过敏史
     personal_history: '',   // 既往史
-    examination: '',    // 检查
+    examination: {},    // 检查
     diagnosis_xy: '',   // 西医诊断
     diagnosis: '',    // 中医诊断
+    diagnosis_xy_input: '',  // 西医诊断输入框
+    diagnosis_xy_labels: [],  // 西医诊断标签
+    diagnosis_xy_search_data: [],  // 西医诊断搜索结果
+    diagnosis_input: '',  // 中医诊断输入框
+    diagnosis_labels: [],  // 中医诊断标签
+    diagnosis_search_data: [],  // 中医诊断搜索结果
     treat_advice: '',   // 处理意见
   },
   recipeList:[],
