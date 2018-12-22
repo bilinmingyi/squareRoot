@@ -12,7 +12,7 @@
       <div>
         <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
         <button class="btn">打印处方</button>
-        <button class="btn btn_print">存为模板</button>
+        <button class="btn btn_print" @click.stop="saveTplData">存为模板</button>
       </div>
     </section>
     <section>
@@ -100,7 +100,7 @@
                :value="currentData.data.doctor_remark" @on-change="modify_recipe_detail({key:'doctor_remark',val:$event.target.value})"/>
       </div>
     </section>
-    <save-tpl></save-tpl>
+    <save-tpl v-if="showAddTpl"></save-tpl>
   </div>
 </template>
 
@@ -114,7 +114,8 @@
     name: "herbalRecipe",
     data() {
       return {
-        medFrequency: medFrequency
+        medFrequency: medFrequency,
+        showAddTpl:false
       };
     },
     components: {
@@ -205,6 +206,24 @@
         }
 
 
+      },
+      saveTplData(){
+        if(this.currentData.data.items.length===0){
+          this.$Message.info("请先至少添加一个药品！");
+          return
+        }
+        let itemList=this.currentData.data.items;
+        for(var i=0;i<itemList.length;i++){
+          if(itemList[i].num==='' || itemList[i].num===0){
+            this.$Message.info("药品【"+itemList[i].name+"】的药量为空！")
+            return
+          }
+        }
+        if(this.currentData.data.dosage==='' || this.currentData.data.dosage===0){
+          this.$Message.info("请先填写处方的剂数！")
+          return
+        }
+        this.showAddTpl=true;
       }
     },
 
