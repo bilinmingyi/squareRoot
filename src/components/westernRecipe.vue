@@ -35,7 +35,7 @@
           </td>
           <td>
             <Select style="width:3.125rem" :value="item.unit"
-                    @on-change="modify_medicine({key:'unit',val:$event,index:index})">
+                    @on-change="change_unit($event,index)">
               <Option :value="item.unit_stock" key="item.unit_stock">{{item.unit_stock}}</Option>
               <Option :value="item.unit_sale" key="item.unit_sale">{{item.unit_sale}}</Option>
             </Select>
@@ -89,7 +89,7 @@
 
 <script>
   import {westernMedUsages, medFrequency} from '@/assets/js/mapType'
-  import {mapActions, mapGetters} from 'vuex'
+  import {mapActions} from 'vuex'
   import {Select, Option, Input} from 'iview'
 
   export default {
@@ -110,28 +110,29 @@
           return item.status === 1;
         })
       },
-      ...mapGetters({
-        currentData: 'currRecipeData'
-      })
+      currentData: function () {
+        return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
+      },
     },
-    watch:{
-      'currentData.data.items':{
-        deep:true,
-        handler:function (newVal,oldVal) {
-          console.log(newVal)
-          let allPrice=0;
-          newVal.map((item)=>{
-            if(item.unit===item.unit_stock){
-              allPrice+=Number(item.sale_price)*Number(item.num);
-            }else if(item.unit === item.unit_sale){
-              allPrice+=Number(item.sale_price * 1.0 / item.stock_sale_ratio)*Number(item.num);
-            }else {
-              allPrice+=Number(item.sale_price)*Number(item.num);
+    watch: {
+      'currentData.data.items': {
+        deep: true,
+        handler: function (newVal, oldVal) {
+          let allPrice = 0;
+          newVal.map((item,index) => {
+            if (item.unit === item.unit_stock) {
+              allPrice += Number(item.sale_price) * Number(item.num);
+            } else if (item.unit === item.unit_sale) {
+              allPrice += Number(item.sale_price * 1.0 / item.stock_sale_ratio) * Number(item.num);
+            } else {
+              allPrice += Number(item.sale_price) * Number(item.num);
             }
           })
-          this.modify_recipe({key:'money',val:Number(allPrice).toFixed(2)})
+          setTimeout(()=>{
+            this.modify_recipe({key: 'money', val: Number(allPrice).toFixed(2)})
+          })
         }
-      }
+      },
     },
     methods: {
       ...mapActions([
@@ -153,6 +154,18 @@
           }
         });
       },
+      change_unit(event, index) {
+        let currItems = this.currentData.data.items[index];
+        this.modify_medicine({key:'unit',val:event,index:index})
+        if (currItems.num !== '' && currItems.num !== 0) {
+          if (event === currItems.unit_stock) {
+            this.modify_medicine({key:'num',val:Math.ceil(currItems.num*1.0/currItems.stock_sale_ratio),index:index})
+          } else if (event === currItems.unit_sale) {
+            this.modify_medicine({key:'num',val:Math.ceil(currItems.num*currItems.stock_sale_ratio),index:index})
+          }
+        }
+
+      }
     }
   }
 </script>

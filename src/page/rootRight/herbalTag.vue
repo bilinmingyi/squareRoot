@@ -616,7 +616,6 @@ export default {
       let filterList=this.currRecipeData.data.items.filter((med)=>{
         return item.id===med.item_id
       });
-      console.log(filterList)
       if(filterList.length===0){
         this.add_new_medicine({ item: item, type: this.currRecipeData.type });
       }else {
