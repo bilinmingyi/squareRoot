@@ -17,7 +17,7 @@
         </div>
         <div class="mt20">
           <Button type="primary" style="width: 6rem;margin-right: 1rem" shape="circle" size="large" @click="saveData">确定</Button>
-          <Button type="primary" style="width: 6rem;margin-left: 1rem" shape="circle" size="large" ghost>取消</Button>
+          <Button type="primary" style="width: 6rem;margin-left: 1rem" shape="circle" size="large" ghost @click.stop="hideTpl">取消</Button>
         </div>
       </div>
     </section>
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-  import {saveHerbalTpl, saveWesternTpl, saveTherapyTpl} from '@/fetch/api.js'
+  import {saveMedTpl} from '@/fetch/api.js'
   import {Select, Option, Input, Button} from 'iview'
 
   export default {
@@ -57,6 +57,42 @@
           this.$Message.info("请先选择模板类型！");
           return
         }
+        let params={}
+        switch (this.currentData.type) {
+          case 1:
+            params={
+              name:this.tplName,
+              scope:this.tplType,
+              items:this.currentData.data.items,
+              doctor_remark:this.currentData.data.doctor_remark,
+              dosage:this.currentData.data.dosage,
+              category:this.currentData.data.category,
+              is_cloud:this.currentData.data.is_cloud
+            }
+            break;
+          case 2:
+            params={
+              name:this.tplName,
+              scope:this.tplType,
+              items:this.currentData.data.items,
+              doctor_remark:this.currentData.data.doctor_remark,
+            }
+            break;
+          case 4:
+            params={
+              name:this.tplName,
+              scope:this.tplType,
+              items:this.currentData.data.items,
+              doctor_remark:this.currentData.data.doctor_remark,
+            }
+            break;
+        }
+        saveMedTpl(params,this.currentData.type).then(data=>{
+          console.log(data)
+        })
+      },
+      hideTpl(){
+        this.$emit('hideTpl')
       }
     }
   }

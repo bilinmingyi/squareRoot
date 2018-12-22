@@ -100,7 +100,7 @@
                :value="currentData.data.doctor_remark" @on-change="modify_recipe_detail({key:'doctor_remark',val:$event.target.value})"/>
       </div>
     </section>
-    <save-tpl v-if="showAddTpl"></save-tpl>
+    <save-tpl v-if="showAddTpl" @hideTpl="hideTplShow"></save-tpl>
   </div>
 </template>
 
@@ -224,6 +224,9 @@
           return
         }
         this.showAddTpl=true;
+      },
+      hideTplShow(){
+        this.showAddTpl=false;
       }
     },
 

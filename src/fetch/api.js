@@ -36,11 +36,15 @@ const getCaseHistory = () => fetch('/doctreat/casehistory/detail');
 const setCaseHistory = params => fetch('/doctreat/casehistory/save', params);
 
 //middle
-const saveHerbalTpl = params => fetch('/doctreat/tpl/herbal/add', params);
-
-const saveWesternTpl = params => fetch('/doctreat/tpl/western/add', params);
-
-const saveTherapyTpl = params => fetch('/doctreat/tpl/therapy/add', params);
+const saveMedTpl = (params, type) => {
+  if (type === 1) {
+    return fetch('/doctreat/tpl/herbal/add', params);
+  } else if (type === 2) {
+    return fetch('/doctreat/tpl/western/add', params);
+  } else if (type === 4) {
+    return params => fetch('/doctreat/tpl/therapy/add', params);
+  }
+}
 
 //right
 
@@ -54,7 +58,5 @@ export {
   getCaseHistory,
   setCaseHistory,
   // middle
-  saveHerbalTpl,
-  saveWesternTpl,
-  saveTherapyTpl
+  saveMedTpl
 }
