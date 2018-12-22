@@ -36,6 +36,11 @@
             <a @click.stop="cancel_medicine(index)">删除</a>
           </td>
         </tr>
+        <tr v-if="currentData.data.items.length===0">
+          <td colspan="6">
+            右侧选择添加药品
+          </td>
+        </tr>
         </tbody>
       </table>
     </section>
@@ -65,6 +70,20 @@
       currentData: function () {
         return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
       },
+    },
+    watch:{
+      'currentData.data.items':{
+        deep:true,
+        handler:function (newVal,oldVal) {
+          let allPrice=0;
+          newVal.map((item)=>{
+            allPrice+=Number(item.price)*Number(item.num);
+          })
+          setTimeout(()=>{
+            this.modify_recipe({key: 'money', val: Number(allPrice).toFixed(2)})
+          })
+        }
+      }
     },
     components: {
       Select,

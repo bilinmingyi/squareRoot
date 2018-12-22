@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import { getHerbalList } from "@/fetch/api.js";
 import patientDetail from "./patientDetail";
 import treatHistory from "./treatHistory";
 import { mapState, mapActions } from "vuex";

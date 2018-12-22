@@ -19,9 +19,7 @@ function fetch(url, params) {
   })
 }
 
-let getHerbalList = (params) => {
-  return fetch('/doctreat/tpl/herbal/list',params);
-}
+
 
 const getTreatOrderDetail = params => fetch('/doctreat/treatorder/detail', params);
 
@@ -38,7 +36,7 @@ const getCaseHistory = () => fetch('/doctreat/casehistory/detail');
 const setCaseHistory = params => fetch('/doctreat/casehistory/save', params);
 
 export {
-  getHerbalList,
+  fetch,
   getTreatOrderDetail,
   updatePatientData,
   getPatientInfo,
