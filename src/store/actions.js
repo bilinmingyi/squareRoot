@@ -30,7 +30,7 @@ const actions = {
             frequency: "",
             extra_num: 0,
             extra_feetype: "",
-            eachDose:"",
+            eachDose: "",
             items: []
           }
         };
@@ -95,15 +95,15 @@ const actions = {
   cancel_recipe: ({commit}) => {
     commit(mutationTypes.CANCEL_RECIPE)
   },
-  add_new_medicine: ({commit,state},{item ,type})=>{
-    let result={};
+  add_new_medicine: ({commit, state}, {item, type}) => {
+    let result = {};
     switch (type) {
       case 1:
-        result={
+        result = {
           "item_id": item.id,
           "name": item.clinic_alias_name != '' ? item.clinic_alias_name : item.name,
           "num": !item.num ? 0 : item.num,
-          "price": state.recipeList[state.currRecipe].data.is_cloud===1?item.default_sale_price:item.sale_price,
+          "price": state.recipeList[state.currRecipe].data.is_cloud === 1 ? item.default_sale_price : item.sale_price,
           "unit": item.unit_stock,
           "default_sale_price": item.default_sale_price,
           "sale_price": item.sale_price,
@@ -111,18 +111,18 @@ const actions = {
           "unit_stock": item.unit_stock,
           "usage": !item.usage ? '' : item.usage,
           "stock": item.stock,
-          "stock_sale_ratio":item.stock_sale_ratio,
-          "is_match":item.status == 1 ? 1 : 0,
-          "remark":!item.remark ? '': item.remark
+          "stock_sale_ratio": item.stock_sale_ratio,
+          "is_match": item.status == 1 ? 1 : 0,
+          "remark": !item.remark ? '' : item.remark
         }
         break;
       case 2:
-        result={
+        result = {
           "item_id": item.id,
           "name": item.clinic_alias_name != '' ? item.clinic_alias_name : item.name,
           "num": !item.num ? 0 : item.num,
           // "price": item.unit === item.unit_stock ? item.sale_price:(item.unit === item.unit_sale?(item.sale_price * 1.0 / item.stock_sale_ratio):item.sale_price),
-          "unit": item.unit === item.unit_stock ? item.unit_stock:(item.unit === item.unit_sale?item.unit_sale:item.unit_stock),
+          "unit": item.unit === item.unit_stock ? item.unit_stock : (item.unit === item.unit_sale ? item.unit_sale : item.unit_stock),
           "sale_price": item.sale_price,
           "spec": item.spec,
           "unit_stock": item.unit_stock,
@@ -130,7 +130,7 @@ const actions = {
           "unit_dose": item.unit_dose,
           "stock_sale_ratio": item.stock_sale_ratio,
           "sale_dose_ratio": item.sale_dose_ratio,
-          "usage": !item.usage ? '' : item.usage ,
+          "usage": !item.usage ? '' : item.usage,
           "days": !item.days ? 0 : item.days,
           "frequency": !item.frequency ? '' : item.frequency,
           "dose_once": !item.dose_once ? '' : item.dose_once,
@@ -142,7 +142,17 @@ const actions = {
 
         break;
       case 4:
-
+        result = {
+          "unit": item.unit,
+          "remark": !item.remark ? '' : item.remark,
+          "item_id": item.id,
+          "name": item.alias_name != '' ? item.alias_name : item.name,
+          "num": !item.num ? 0 : item.num,
+          "price": item.price,
+          "type": item.type,
+          "usage": !item.usage ? '' : item.usage,
+          "is_match": item.status == 1 ? 1 : 0,
+        }
         break;
       case 5:
 
@@ -153,21 +163,21 @@ const actions = {
     }
 
 
-    commit(mutationTypes.ADD_NEW_MEDICINE,result)
+    commit(mutationTypes.ADD_NEW_MEDICINE, result)
   },
-  modify_medicine:({commit},{key,val,index})=>{
-    commit(mutationTypes.MODIFY_MEDICINE,{key,val,index})
+  modify_medicine: ({commit}, {key, val, index}) => {
+    commit(mutationTypes.MODIFY_MEDICINE, {key, val, index})
   },
-  cancel_medicine:({commit},index)=>{
-    commit(mutationTypes.CANCEL_MEDICINE,index)
+  cancel_medicine: ({commit}, index) => {
+    commit(mutationTypes.CANCEL_MEDICINE, index)
   },
-  modify_recipe:({commit},{key,val})=>{
-    commit(mutationTypes.MODIFY_RECIPE,{key,val})
+  modify_recipe: ({commit}, {key, val}) => {
+    commit(mutationTypes.MODIFY_RECIPE, {key, val})
   },
-  modify_recipe_detail:({commit}, {key,val})=>{
-    commit(mutationTypes.MODIFY_RECIPE_DETAIL,{key,val})
+  modify_recipe_detail: ({commit}, {key, val}) => {
+    commit(mutationTypes.MODIFY_RECIPE_DETAIL, {key, val})
   },
-  clean_recipe:({commit})=>{
+  clean_recipe: ({commit}) => {
     commit(mutationTypes.CLEAN_RECIPE)
   }
 
