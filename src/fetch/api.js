@@ -19,7 +19,7 @@ function fetch(url, params) {
   })
 }
 
-
+//left
 
 const getTreatOrderDetail = params => fetch('/doctreat/treatorder/detail', params);
 
@@ -35,6 +35,15 @@ const getCaseHistory = () => fetch('/doctreat/casehistory/detail');
 
 const setCaseHistory = params => fetch('/doctreat/casehistory/save', params);
 
+//middle
+const saveHerbalTpl = params => fetch('/doctreat/tpl/herbal/add', params);
+
+const saveWesternTpl = params => fetch('/doctreat/tpl/western/add', params);
+
+const saveTherapyTpl = params => fetch('/doctreat/tpl/therapy/add', params);
+
+//right
+
 export {
   fetch,
   getTreatOrderDetail,
@@ -43,5 +52,9 @@ export {
   updatePatientInfo,
   getHistoryRecipes,
   getCaseHistory,
-  setCaseHistory
+  setCaseHistory,
+  // middle
+  saveHerbalTpl,
+  saveWesternTpl,
+  saveTherapyTpl
 }

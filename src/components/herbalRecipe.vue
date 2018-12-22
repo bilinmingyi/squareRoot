@@ -100,12 +100,14 @@
                :value="currentData.data.doctor_remark" @on-change="modify_recipe_detail({key:'doctor_remark',val:$event.target.value})"/>
       </div>
     </section>
+    <save-tpl></save-tpl>
   </div>
 </template>
 
 <script>
   import {RadioGroup, Radio, Select, Option, Input} from 'iview'
   import {mapActions} from 'vuex'
+  import saveTpl from '@/components/saveRecipeTpl'
   import {herbalMedUsages, herbalRpUsages, extraFeeTypes, medFrequency} from '@/assets/js/mapType'
 
   export default {
@@ -120,7 +122,8 @@
       Radio,
       Select,
       Option,
-      Input
+      Input,
+      saveTpl
     },
     computed: {
       currentData: function () {
