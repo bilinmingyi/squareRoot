@@ -48,7 +48,7 @@
           </td>
           <td>
             <Input style="width:2.5rem" type="text" :value="item.dose_once"
-                   @on-change="modify_medicine({key:'dose_once',val:$event,index:index})"/>
+                   @on-change="modify_medicine({key:'dose_once',val:$event.target.value,index:index})"/>
             <span class="unitText">{{item.unit_dose}}</span>
           </td>
           <td>
