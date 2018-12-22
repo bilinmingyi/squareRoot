@@ -75,7 +75,7 @@
     </section>
     <section>
       <div class="pl10 pt20">
-        <span class="input_label"> 处方金额：100元</span>
+        <span class="input_label"> 处方金额：{{currentData.money}}元</span>
       </div>
       <div class="displayFlex pl10 pt10 width-620">
         <span class="input_label pr4">医嘱：</span>
@@ -114,12 +114,32 @@
         currentData: 'currRecipeData'
       })
     },
+    watch:{
+      'currentData.data.items':{
+        deep:true,
+        handler:function (newVal,oldVal) {
+          console.log(newVal)
+          let allPrice=0;
+          newVal.map((item)=>{
+            if(item.unit===item.unit_stock){
+              allPrice+=Number(item.sale_price)*Number(item.num);
+            }else if(item.unit === item.unit_sale){
+              allPrice+=Number(item.sale_price * 1.0 / item.stock_sale_ratio)*Number(item.num);
+            }else {
+              allPrice+=Number(item.sale_price)*Number(item.num);
+            }
+          })
+          this.modify_recipe({key:'money',val:Number(allPrice).toFixed(2)})
+        }
+      }
+    },
     methods: {
       ...mapActions([
         'cancel_recipe',
         'modify_medicine',
         'cancel_medicine',
-        'modify_recipe_detail'
+        'modify_recipe_detail',
+        'modify_recipe'
       ]),
       cancelRecipe() {
         this.$Modal.confirm({
