@@ -128,7 +128,7 @@ input {
 }
 .recipe_table th{
   font-weight:600;
-  padding: 0.625rem;
+  padding: 0.625rem 0;
 }
 .recipe_table tbody tr{
   border-bottom: 0.0625px solid #cccccc;

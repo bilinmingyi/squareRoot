@@ -25,38 +25,49 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <td>1</td>
-          <td>养肝方</td>
-          <td>10克/30粒/瓶</td>
+        <tr v-for="(item,index) in currentData.data.items">
+          <td>{{index+1}}</td>
+          <td>{{item.name}}</td>
+          <td>{{item.spec}}</td>
           <td>
-            <Input style="width:3.125rem" type="text"/>
+            <Input style="width:2.5rem" type="text" :value="item.num"
+                   @on-change="modify_medicine({key:'num',val:$event.target.value,index:index})"/>
           </td>
           <td>
-            <Select style="width:3.125rem">
-              <Option value="克" key="克">克</Option>
-              <Option value="毫升" key="毫升">毫升</Option>
+            <Select style="width:3.125rem" :value="item.unit"
+                    @on-change="modify_medicine({key:'unit',val:$event,index:index})">
+              <Option :value="item.unit_stock" key="item.unit_stock">{{item.unit_stock}}</Option>
+              <Option :value="item.unit_sale" key="item.unit_sale">{{item.unit_sale}}</Option>
             </Select>
           </td>
           <td>
-            <Select style="width:6.25rem">
+            <Select style="width:4.5rem" :value="item.usage"
+                    @on-change="modify_medicine({key:'usage',val:$event,index:index})">
               <Option v-for="item in westernMedUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
             </Select>
           </td>
           <td>
-            <Input style="width:3.125rem" type="text"/>
-            <span class="unitText">克</span>
+            <Input style="width:2.5rem" type="text" :value="item.dose_once"
+                   @on-change="modify_medicine({key:'dose_once',val:$event,index:index})"/>
+            <span class="unitText">{{item.unit_dose}}</span>
           </td>
           <td>
-            <Select style="width:3.125rem">
+            <Select style="width:5.5rem" :value="item.frequency"
+                    @on-change="modify_medicine({key:'frequency',val:$event,index:index})">
               <Option v-for="item in medFrequency" :value="item.name" :key="item.name">{{ item.name }}</Option>
             </Select>
           </td>
           <td>
-            <Input style="width:3.125rem" type="text"/>
+            <Input style="width:2.5rem" type="text" :value="item.days"
+                   @on-change="modify_medicine({key:'days',val:$event.target.value,index:index})"/>
           </td>
           <td>
-            <a>删除</a>
+            <a @click.stop="cancel_medicine(index)">删除</a>
+          </td>
+        </tr>
+        <tr v-if="currentData.data.items.length==0">
+          <td colspan="10">
+            右侧选择添加药品
           </td>
         </tr>
         </tbody>
@@ -68,44 +79,49 @@
       </div>
       <div class="displayFlex pl10 pt10 width-620">
         <span class="input_label pr4">医嘱：</span>
-        <Input class="flexOne" type="textarea" :autosize="{minRows: 3,maxRows: 3}" placeholder="医嘱提示" />
+        <Input class="flexOne" type="textarea" :autosize="{minRows: 3,maxRows: 3}" placeholder="医嘱提示"
+               :value="currentData.data.doctor_remark"
+               @on-change="modify_recipe_detail({key:'doctor_remark',val:$event.target.value})"/>
       </div>
     </section>
   </div>
 </template>
 
 <script>
-  import {westernMedUsages,medFrequency} from '@/assets/js/mapType'
+  import {westernMedUsages, medFrequency} from '@/assets/js/mapType'
   import {mapActions, mapGetters} from 'vuex'
   import {Select, Option, Input} from 'iview'
 
   export default {
     name: "westernRecipe",
-    data(){
+    data() {
       return {
-        medFrequency:medFrequency
+        medFrequency: medFrequency
       }
     },
-    components:{
+    components: {
       Select,
       Option,
       Input
     },
-    computed:{
-      westernMedUsages:function () {
+    computed: {
+      westernMedUsages: function () {
         return westernMedUsages.filter(item => {
-          return item.status===1;
+          return item.status === 1;
         })
       },
       ...mapGetters({
-        currentData:'currRecipeData'
+        currentData: 'currRecipeData'
       })
     },
-    methods:{
+    methods: {
       ...mapActions([
-        'cancel_recipe'
+        'cancel_recipe',
+        'modify_medicine',
+        'cancel_medicine',
+        'modify_recipe_detail'
       ]),
-      cancelRecipe(){
+      cancelRecipe() {
         this.$Modal.confirm({
           title: '提示',
           content: '<p>确定删除该处方？</p>',
@@ -151,7 +167,10 @@
     flex: 1;
     align-self: center;
   }
-  .unitText{
-    font-size: 0.875rem;
+
+  .unitText {
+    min-width: 2rem;
+    display: inline-block;
+    text-align: left;
   }
 </style>
