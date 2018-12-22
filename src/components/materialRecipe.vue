@@ -20,18 +20,20 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <td>1</td>
-          <td>针灸</td>
+        <tr v-for="(item,index) in currentData.data.items">
+          <td>{{index+1}}</td>
+          <td>{{item.name}}</td>
           <td>
-            <Input style="width:3.125rem" type="text"/>
+            <Input style="width:2.5rem" type="text" :value="item.num"
+                   @on-change="modify_medicine({key:'num',val:$event.target.value,index:index})"/>
           </td>
-          <td>支</td>
+          <td>{{item.unit}}</td>
           <td>
-            <Input type="text"/>
+            <Input type="text" :value="item.remark"
+                   @on-change="modify_medicine({key:'remark',val:$event.target.value,index:index})"/>
           </td>
           <td>
-            <a>删除</a>
+            <a @click.stop="cancel_medicine(index)">删除</a>
           </td>
         </tr>
         </tbody>
@@ -39,11 +41,12 @@
     </section>
     <section>
       <div class="pl10 pt20">
-        <span class="input_label"> 处方金额：100元</span>
+        <span class="input_label"> 处方金额：{{currentData.money}}元</span>
       </div>
       <div class="displayFlex pl10 pt10 width-620">
         <span class="input_label pr4">医嘱：</span>
-        <Input class="flexOne" type="textarea" :autosize="{minRows: 3,maxRows: 3}" placeholder="医嘱提示"/>
+        <Input class="flexOne" type="textarea" :autosize="{minRows: 3,maxRows: 3}" placeholder="医嘱提示"
+               :value="currentData.data.doctor_remark" @on-change="modify_recipe_detail({key:'doctor_remark',val:$event.target.value})"/>
       </div>
     </section>
   </div>
@@ -55,26 +58,28 @@
 
   export default {
     name: "materialRecipe",
-    data(){
-      return {
-
-      }
+    data() {
+      return {}
     },
-    computed:{
+    computed: {
       currentData: function () {
         return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
       },
     },
-    components:{
+    components: {
       Select,
       Option,
       Input
     },
-    methods:{
+    methods: {
       ...mapActions([
-        'cancel_recipe'
+        'cancel_recipe',
+        'cancel_medicine',
+        'modify_medicine',
+        'modify_recipe_detail',
+        'modify_recipe'
       ]),
-      cancelRecipe(){
+      cancelRecipe() {
         this.$Modal.confirm({
           title: '提示',
           content: '<p>确定删除该处方？</p>',

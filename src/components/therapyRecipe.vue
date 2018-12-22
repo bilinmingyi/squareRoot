@@ -25,7 +25,7 @@
           <td>{{index+1}}</td>
           <td>{{item.name}}</td>
           <td>
-            <Input style="width:3.125rem" type="text" :value="item.num"
+            <Input style="width:2.5rem" type="text" :value="item.num"
                    @on-change="modify_medicine({key:'num',val:$event.target.value,index:index})"/>
           </td>
           <td>{{item.price}}元/{{item.unit}}</td>
