@@ -5,7 +5,7 @@
       <div>
         <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
         <button class="btn">打印处方</button>
-        <button class="btn btn_print">存为模板</button>
+        <button class="btn btn_print" @click.stop="saveTplData">存为模板</button>
       </div>
     </section>
     <section>
@@ -56,17 +56,21 @@
                @on-change="modify_recipe_detail({key:'doctor_remark',val:$event.target.value})"/>
       </div>
     </section>
+    <save-tpl v-if="showAddTpl" @hideTpl="hideTplShow"></save-tpl>
   </div>
 </template>
 
 <script>
   import {Select, Option, Input} from 'iview'
+  import saveTpl from '@/components/saveRecipeTpl'
   import {mapActions} from 'vuex'
 
   export default {
     name: "therapyRecipe",
     data() {
-      return {}
+      return {
+        showAddTpl:false
+      }
     },
     computed: {
       currentData: function () {
@@ -76,7 +80,8 @@
     components: {
       Select,
       Option,
-      Input
+      Input,
+      saveTpl
     },
     watch:{
       'currentData.data.items':{
@@ -112,6 +117,23 @@
           }
         });
       },
+      saveTplData(){
+        if(this.currentData.data.items.length===0){
+          this.$Message.info("请先至少添加一个项目！");
+          return
+        }
+        let itemList=this.currentData.data.items;
+        for(var i=0;i<itemList.length;i++){
+          if(itemList[i].num==='' || itemList[i].num===0){
+            this.$Message.info("项目【"+itemList[i].name+"】的数量为空！")
+            return
+          }
+        }
+        this.showAddTpl=true;
+      },
+      hideTplShow(){
+        this.showAddTpl=false;
+      }
     }
   }
 </script>

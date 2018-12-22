@@ -42,7 +42,7 @@ const saveMedTpl = (params, type) => {
   } else if (type === 2) {
     return fetch('/doctreat/tpl/western/add', params);
   } else if (type === 4) {
-    return params => fetch('/doctreat/tpl/therapy/add', params);
+    return fetch('/doctreat/tpl/therapy/add', params);
   }
 }
 
