@@ -56,7 +56,7 @@
 
 <script>
   import {Select, Option, Input} from 'iview'
-  import {mapActions, mapGetters} from 'vuex'
+  import {mapActions} from 'vuex'
 
   export default {
     name: "therapyRecipe",

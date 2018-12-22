@@ -114,7 +114,7 @@ const actions = {
           "stock_sale_ratio": item.stock_sale_ratio,
           "is_match": item.status == 1 ? 1 : 0,
           "remark": !item.remark ? '' : item.remark
-        }
+        };
         break;
       case 2:
         result = {
@@ -136,7 +136,7 @@ const actions = {
           "dose_once": !item.dose_once ? '' : item.dose_once,
           "stock": item.stock,
           "is_match": item.status == 1 ? 1 : 0,
-        }
+        };
         break;
       case 3:
 
@@ -152,13 +152,24 @@ const actions = {
           "type": item.type,
           "usage": !item.usage ? '' : item.usage,
           "is_match": item.status == 1 ? 1 : 0,
-        }
+        };
         break;
       case 5:
 
         break;
       case 6:
-
+        result={
+          "remark": !item.remark ? '' : item.remark,
+          "item_id": item.id,
+          "name": item.clinic_alias_name != '' ? item.clinic_alias_name : item.name,
+          "num": !item.num ? 0 : item.num,
+          "stock": item.stock,
+          "price": item.sale_price / item.stock_sale_ratio,
+          "stock_sale_ratio": item.stock_sale_ratio,
+          "unit": item.unit_sale,
+          "spec": item.spec,
+          "is_match": item.status == 1 ? 1 : 0
+        };
         break;
     }
 
