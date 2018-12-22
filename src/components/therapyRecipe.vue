@@ -42,7 +42,7 @@
     </section>
     <section>
       <div class="pl10 pt20">
-        <span class="input_label"> 处方金额：100元</span>
+        <span class="input_label"> 处方金额：{{currentData.money}}元</span>
       </div>
       <div class="displayFlex pl10 pt10 width-620">
         <span class="input_label pr4">医嘱：</span>
@@ -72,6 +72,20 @@
       Select,
       Option,
       Input
+    },
+    watch:{
+      'currentData.data.items':{
+        deep:true,
+        handler:function (newVal, oldVal) {
+          let allPrice=0;
+          newVal.map((item)=>{
+            allPrice+=Number(item.price)*Number(item.num);
+          });
+          setTimeout(()=>{
+            this.modify_recipe({key: 'money', val: Number(allPrice).toFixed(2)})
+          })
+        }
+      }
     },
     methods: {
       ...mapActions([
