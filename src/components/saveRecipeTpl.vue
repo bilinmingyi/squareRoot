@@ -88,7 +88,12 @@
             break;
         }
         saveMedTpl(params,this.currentData.type).then(data=>{
-          console.log(data)
+          if(data.code===1000){
+            this.$Message.info("保存成功！");
+            this.hideTpl();
+          }else {
+            this.$Message.info(data.msg)
+          }
         })
       },
       hideTpl(){
