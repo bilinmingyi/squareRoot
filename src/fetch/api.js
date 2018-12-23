@@ -47,6 +47,55 @@ const saveMedTpl = (params, type) => {
 }
 
 //right
+const searchRecentMed = (params, type) => {
+  if (type === 1) {
+    return fetch('/doctreat/herbal/recent', params);
+  } else if (type === 2) {
+    return fetch('/doctreat/western/recent', params);
+  } else if (type === 4) {
+    return fetch('/doctreat/therapy/recent', params);
+  } else if (type === 6) {
+    return fetch('/doctreat/material/recent', params);
+  }
+}
+const searchMed = (params, type) => {
+  if (type === 1) {
+    return fetch('/stockmng/medicine/herbalList', params);
+  } else if (type === 2) {
+    return fetch('/stockmng/medicine/westernList', params);
+  } else if (type === 4) {
+    return fetch('/clinicmng/therapy/list', params);
+  } else if (type === 6) {
+    return fetch('/stockmng/medicine/materialList', params);
+  }
+}
+const searchTpl = (params, type) => {
+  if (type === 1) {
+    return fetch('/doctreat/tpl/herbal/list', params);
+  } else if (type === 2) {
+    return fetch('/doctreat/tpl/western/list', params);
+  } else if (type === 4) {
+    return fetch('/doctreat/tpl/therapy/list', params);
+  }
+}
+const updateTpl = (params, type) => {
+  if (type === 1) {
+    return fetch('/doctreat/tpl/herbal/update', params);
+  } else if (type === 2) {
+    return fetch('/doctreat/tpl/western/update', params);
+  } else if (type === 4) {
+    return fetch('/doctreat/tpl/therapy/update', params);
+  }
+}
+const delTpl = (id, params, type) => {
+  if (type === 1) {
+    return fetch('/doctreat/tpl/herbal/delete?tplId='+id, params);
+  } else if (type === 2) {
+    return fetch('/doctreat/tpl/western/delete?tplId='+id, params);
+  } else if (type === 4) {
+    return fetch('/doctreat/tpl/therapy/delete?tplId='+id, params);
+  }
+}
 
 export {
   fetch,
@@ -58,5 +107,12 @@ export {
   getCaseHistory,
   setCaseHistory,
   // middle
-  saveMedTpl
+  saveMedTpl,
+  //right
+  searchRecentMed,
+  searchMed,
+  searchTpl,
+  updateTpl,
+  delTpl,
+
 }
