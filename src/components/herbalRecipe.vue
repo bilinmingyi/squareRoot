@@ -12,7 +12,7 @@
       <div>
         <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
         <button class="btn">打印处方</button>
-        <button class="btn btn_print">存为模板</button>
+        <button class="btn btn_print" @click.stop="saveTplData">存为模板</button>
       </div>
     </section>
     <section>
@@ -100,19 +100,22 @@
                :value="currentData.data.doctor_remark" @on-change="modify_recipe_detail({key:'doctor_remark',val:$event.target.value})"/>
       </div>
     </section>
+    <save-tpl v-if="showAddTpl" @hideTpl="hideTplShow"></save-tpl>
   </div>
 </template>
 
 <script>
   import {RadioGroup, Radio, Select, Option, Input} from 'iview'
   import {mapActions} from 'vuex'
+  import saveTpl from '@/components/saveRecipeTpl'
   import {herbalMedUsages, herbalRpUsages, extraFeeTypes, medFrequency} from '@/assets/js/mapType'
 
   export default {
     name: "herbalRecipe",
     data() {
       return {
-        medFrequency: medFrequency
+        medFrequency: medFrequency,
+        showAddTpl:false
       };
     },
     components: {
@@ -120,10 +123,10 @@
       Radio,
       Select,
       Option,
-      Input
+      Input,
+      saveTpl
     },
     computed: {
-
       currentData: function () {
         return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
       },
@@ -203,6 +206,27 @@
         }
 
 
+      },
+      saveTplData(){
+        if(this.currentData.data.items.length===0){
+          this.$Message.info("请先至少添加一个药品！");
+          return
+        }
+        let itemList=this.currentData.data.items;
+        for(var i=0;i<itemList.length;i++){
+          if(itemList[i].num==='' || itemList[i].num===0){
+            this.$Message.info("药品【"+itemList[i].name+"】的药量为空！")
+            return
+          }
+        }
+        if(this.currentData.data.dosage==='' || this.currentData.data.dosage===0){
+          this.$Message.info("请先填写处方的剂数！")
+          return
+        }
+        this.showAddTpl=true;
+      },
+      hideTplShow(){
+        this.showAddTpl=false;
       }
     },
 

@@ -5,7 +5,7 @@
       <div>
         <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
         <button class="btn">打印处方</button>
-        <button class="btn btn_print">存为模板</button>
+        <button class="btn btn_print" @click.stop="saveTplData">存为模板</button>
       </div>
     </section>
     <section>
@@ -25,38 +25,49 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <td>1</td>
-          <td>养肝方</td>
-          <td>10克/30粒/瓶</td>
+        <tr v-for="(item,index) in currentData.data.items">
+          <td>{{index+1}}</td>
+          <td>{{item.name}}</td>
+          <td>{{item.spec}}</td>
           <td>
-            <Input style="width:3.125rem" type="text"/>
+            <Input style="width:2.5rem" type="text" :value="item.num"
+                   @on-change="modify_medicine({key:'num',val:$event.target.value,index:index})"/>
           </td>
           <td>
-            <Select style="width:3.125rem">
-              <Option value="克" key="克">克</Option>
-              <Option value="毫升" key="毫升">毫升</Option>
+            <Select style="width:3.125rem" :value="item.unit"
+                    @on-change="change_unit($event,index)">
+              <Option :value="item.unit_stock" key="item.unit_stock">{{item.unit_stock}}</Option>
+              <Option :value="item.unit_sale" key="item.unit_sale">{{item.unit_sale}}</Option>
             </Select>
           </td>
           <td>
-            <Select style="width:6.25rem">
+            <Select style="width:4.5rem" :value="item.usage"
+                    @on-change="modify_medicine({key:'usage',val:$event,index:index})">
               <Option v-for="item in westernMedUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
             </Select>
           </td>
           <td>
-            <Input style="width:3.125rem" type="text"/>
-            <span class="unitText">克</span>
+            <Input style="width:2.5rem" type="text" :value="item.dose_once"
+                   @on-change="modify_medicine({key:'dose_once',val:$event.target.value,index:index})"/>
+            <span class="unitText">{{item.unit_dose}}</span>
           </td>
           <td>
-            <Select style="width:3.125rem">
+            <Select style="width:5.5rem" :value="item.frequency"
+                    @on-change="modify_medicine({key:'frequency',val:$event,index:index})">
               <Option v-for="item in medFrequency" :value="item.name" :key="item.name">{{ item.name }}</Option>
             </Select>
           </td>
           <td>
-            <Input style="width:3.125rem" type="text"/>
+            <Input style="width:2.5rem" type="text" :value="item.days"
+                   @on-change="modify_medicine({key:'days',val:$event.target.value,index:index})"/>
           </td>
           <td>
-            <a>删除</a>
+            <a @click.stop="cancel_medicine(index)">删除</a>
+          </td>
+        </tr>
+        <tr v-if="currentData.data.items.length==0">
+          <td colspan="10">
+            右侧选择添加药品
           </td>
         </tr>
         </tbody>
@@ -64,48 +75,78 @@
     </section>
     <section>
       <div class="pl10 pt20">
-        <span class="input_label"> 处方金额：100元</span>
+        <span class="input_label"> 处方金额：{{currentData.money}}元</span>
       </div>
       <div class="displayFlex pl10 pt10 width-620">
         <span class="input_label pr4">医嘱：</span>
-        <Input class="flexOne" type="textarea" :autosize="{minRows: 3,maxRows: 3}" placeholder="医嘱提示" />
+        <Input class="flexOne" type="textarea" :autosize="{minRows: 3,maxRows: 3}" placeholder="医嘱提示"
+               :value="currentData.data.doctor_remark"
+               @on-change="modify_recipe_detail({key:'doctor_remark',val:$event.target.value})"/>
       </div>
     </section>
+    <save-tpl v-if="showAddTpl" @hideTpl="hideTplShow"></save-tpl>
   </div>
 </template>
 
 <script>
-  import {westernMedUsages,medFrequency} from '@/assets/js/mapType'
-  import {mapActions, mapGetters} from 'vuex'
+  import {westernMedUsages, medFrequency} from '@/assets/js/mapType'
+  import saveTpl from '@/components/saveRecipeTpl'
+  import {mapActions} from 'vuex'
   import {Select, Option, Input} from 'iview'
 
   export default {
     name: "westernRecipe",
-    data(){
+    data() {
       return {
-        medFrequency:medFrequency
+        medFrequency: medFrequency,
+        showAddTpl:false
       }
     },
-    components:{
+    components: {
       Select,
       Option,
-      Input
+      Input,
+      saveTpl
     },
-    computed:{
-      westernMedUsages:function () {
+    computed: {
+      westernMedUsages: function () {
         return westernMedUsages.filter(item => {
-          return item.status===1;
+          return item.status === 1;
         })
       },
-      ...mapGetters({
-        currentData:'currRecipeData'
-      })
+      currentData: function () {
+        return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
+      },
     },
-    methods:{
+    watch: {
+      'currentData.data.items': {
+        deep: true,
+        handler: function (newVal, oldVal) {
+          let allPrice = 0;
+          newVal.map((item,index) => {
+            if (item.unit === item.unit_stock) {
+              allPrice += Number(item.sale_price) * Number(item.num);
+            } else if (item.unit === item.unit_sale) {
+              allPrice += Number(item.sale_price * 1.0 / item.stock_sale_ratio) * Number(item.num);
+            } else {
+              allPrice += Number(item.sale_price) * Number(item.num);
+            }
+          })
+          setTimeout(()=>{
+            this.modify_recipe({key: 'money', val: Number(allPrice).toFixed(2)})
+          })
+        }
+      },
+    },
+    methods: {
       ...mapActions([
-        'cancel_recipe'
+        'cancel_recipe',
+        'modify_medicine',
+        'cancel_medicine',
+        'modify_recipe_detail',
+        'modify_recipe'
       ]),
-      cancelRecipe(){
+      cancelRecipe() {
         this.$Modal.confirm({
           title: '提示',
           content: '<p>确定删除该处方？</p>',
@@ -117,6 +158,35 @@
           }
         });
       },
+      change_unit(event, index) {
+        let currItems = this.currentData.data.items[index];
+        this.modify_medicine({key:'unit',val:event,index:index})
+        if (currItems.num !== '' && currItems.num !== 0) {
+          if (event === currItems.unit_stock) {
+            this.modify_medicine({key:'num',val:Math.ceil(currItems.num*1.0/currItems.stock_sale_ratio),index:index})
+          } else if (event === currItems.unit_sale) {
+            this.modify_medicine({key:'num',val:Math.ceil(currItems.num*currItems.stock_sale_ratio),index:index})
+          }
+        }
+
+      },
+      saveTplData(){
+        if(this.currentData.data.items.length===0){
+          this.$Message.info("请先至少添加一个药品！");
+          return
+        }
+        let itemList=this.currentData.data.items;
+        for(var i=0;i<itemList.length;i++){
+          if(itemList[i].num==='' || itemList[i].num===0){
+            this.$Message.info("药品【"+itemList[i].name+"】的药量为空！")
+            return
+          }
+        }
+        this.showAddTpl=true;
+      },
+      hideTplShow(){
+        this.showAddTpl=false;
+      }
     }
   }
 </script>
@@ -151,7 +221,10 @@
     flex: 1;
     align-self: center;
   }
-  .unitText{
-    font-size: 0.875rem;
+
+  .unitText {
+    min-width: 2rem;
+    display: inline-block;
+    text-align: left;
   }
 </style>
