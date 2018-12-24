@@ -565,7 +565,7 @@ export default {
       return this.currRecipeData===undefined?1:this.currRecipeData.type;
     },
     category: function() {
-      return this.currRecipeData===undefined?1:this.currRecipeData.category;
+      return this.currRecipeData===undefined?1:this.currRecipeData.data.category;
     }
   },
   components: {

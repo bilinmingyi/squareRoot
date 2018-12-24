@@ -77,7 +77,7 @@ export default {
     category: function() {
       return this.currRecipeData === undefined
         ? 1
-        : this.currRecipeData.category;
+        : this.currRecipeData.data.category;
     }
   },
   created() {
