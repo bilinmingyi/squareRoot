@@ -661,6 +661,29 @@ input {
   top: 50%;
 }
 
+/* 修改iview tag样式 */
+.diagnosis-input-box .ivu-tag {
+  height: auto;
+  min-height: 1.375rem;
+  position: relative;
+  padding-right: 1.4375rem;
+  background: #82bcf9;
+  color: #fff;
+  border: none;
+}
+
+.diagnosis-input-box .ivu-tag .ivu-tag-text {
+  color: #fff;
+}
+
+.diagnosis-input-box .ivu-tag .ivu-icon {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%) scale(1.42857143) rotate(0);
+  color: #fff;
+}
+
 .diagnosis-input::-webkit-input-placeholder {
   font-size: 0.875rem;
   font-family: PingFangSC-Regular;

@@ -35,6 +35,39 @@ const getCaseHistory = () => fetch('/doctreat/casehistory/detail');
 
 const setCaseHistory = params => fetch('/doctreat/casehistory/save', params);
 
+const getDiseaseList = (params, type) => {
+  if (type === "diagnosis") {
+    return fetch('/doctreat/treatorder/zyDisease/list', params);
+  } else if (type === "diagnosis_xy") {
+    return fetch('/doctreat/treatorder/ybDisease/list', params);
+  }
+}
+
+const checkIsMatch = (params, type, recipe) => {
+  switch (type) {
+    case 1:
+      return (recipe.is_cloud == 1)
+        ? fetch('/stockmng/dyHerbal/list', params)
+        : fetch('/stockmng/medicine/herbalList', params)
+      break;
+    case 2:
+      return fetch('/stockmng/medicine/westernList', params);
+      break;
+    case 3:
+      return fetch('/stockmng/dyProduct/list', params);
+      break;
+    case 4:
+      return fetch('/clinicmng/therapy/list', params);
+      break;
+    case 5:
+      return fetch('/clinicmng/extraFee/list', params);
+      break;
+    case 6:
+      return fetch('/stockmng/medicine/materialList', params);
+      break;
+  }
+}
+
 //middle
 const saveMedTpl = (params, type) => {
   if (type === 1) {
@@ -108,6 +141,8 @@ export {
   getHistoryRecipes,
   getCaseHistory,
   setCaseHistory,
+  getDiseaseList,
+  checkIsMatch,
   // middle
   saveMedTpl,
   //right
