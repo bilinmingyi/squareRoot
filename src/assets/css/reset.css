@@ -422,6 +422,13 @@ input {
 .ml20 {
   margin-left: 1.25rem;
 }
+.ml30 {
+  margin-left: 1.875rem;
+}
+.ml40 {
+  margin-left: 2.5rem;
+
+}
 
 /* margin-right */
 .mr5 {
