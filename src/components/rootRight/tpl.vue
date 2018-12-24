@@ -134,7 +134,10 @@
                 :key="index"
               >
                 {{item.alias_name||item.clinic_alias_name||item.name}} ({{item.num}}{{item.unit}}/{{item.usage}})
-                <span v-show="item.status==0" style="color:red;font-weight:bold;">暂无此药</span>
+                <span
+                  v-show="item.status==0"
+                  style="color:red;font-weight:bold;"
+                >暂无此药</span>
               </div>
               <div v-if="recipeType==0">
                 <div>
@@ -719,7 +722,7 @@ export default {
           params = {
             name: self.searchTplName,
             scope: 1,
-            page: 1,
+            page: 1
           };
           break;
         }
@@ -728,21 +731,21 @@ export default {
             category: self.category,
             is_cloud: 0,
             name: self.searchTplName,
-            page: 1,
+            page: 1
           };
           break;
         }
         case 2: {
           params = {
             name: self.searchTplName,
-            page: 1,
+            page: 1
           };
           break;
         }
         case 4: {
           params = {
             name: self.searchTplName,
-            page: 1,
+            page: 1
           };
           break;
         }
@@ -789,14 +792,14 @@ export default {
           params = {
             medicine_name: self.tplEditData.searchName,
             status: 1,
-            page: 1,
+            page: 1
           };
           break;
         }
         case 4: {
           params = {
             name: self.tplEditData.searchName,
-            page: 1,
+            page: 1
           };
           break;
         }
@@ -966,12 +969,31 @@ export default {
       this.showTpl = false;
     },
     useTpl: function() {
-        var self = this;
+      var self = this;
       if (this.recipeType !== 0) {
-          this.clean_recipe();
-          this.tplData.items.forEach(function(e) {
-            self.add_new_medicine({ item: e, type: self.recipeType });
-          });
+        this.clean_recipe();
+        var newItem = {};
+        this.tplData.items.forEach(function(item) {
+          newItem = {
+            category: item.category,
+            is_match: item.is_match,
+            item_id: item.item_id,
+            name: item.name,
+            alias_name:item.alias_name||item.name,
+            clinic_alias_name:item.clinic_alias_name||item.name,
+            num: item.num,
+            price: item.price,
+            sale_price: item.sale_price,
+            spec: item.spec,
+            stock: item.stock,
+            stock_sale_ratio: item.stock_sale_ratio,
+            unit: item.unit,
+            unit_sale: item.unit_sale,
+            unit_stock: item.unit_stock,
+            usage: item.usage,
+          };
+          self.add_new_medicine({ item: newItem, type: self.recipeType });
+        });
       }
     },
     useTplShow: function() {
@@ -1231,7 +1253,7 @@ export default {
   position: relative;
   top: 6rem;
   width: 50rem;
-  min-height: 20rem;
+  min-height: 15rem;
   max-height: 50rem;
   font-size: 1rem;
   overflow: auto;
