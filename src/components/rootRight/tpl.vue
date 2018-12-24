@@ -82,7 +82,7 @@
                 class="use-list-li"
                 v-for="(item,index) in tplData.items"
                 :key="index"
-              >{{item.alias_name||item.clinic_alias_name||item.name}} ({{item.num}}{{item.unit}}/{{item.usage}}{{}})</div>
+              >{{item.alias_name||item.clinic_alias_name||item.name}} ({{item.num}}{{item.unit}}/{{item.usage}})</div>
             </div>
             <div style="text-align:center;margin-top:2rem;">
               <button class="saveBtn mr20">确认</button>
@@ -99,7 +99,7 @@
             </div>
             <div style="position:absolute;right:5rem;bottom:2rem;">
               <span @click="delTplHide()">取消</span>
-              <Button class="ml20" shape="circle" type="primary" @click="delTpl()">确定</Button>
+              <Button class="ml20 tpl-btn" shape="circle" type="primary" @click="delTpl()">确定</Button>
             </div>
           </div>
         </div>
@@ -414,23 +414,23 @@
             </div>
             <div v-show="showEditTpl" class="edit-tpl-foot">
               <Button
-                class="mr20"
+                class="mr20 tpl-btn"
                 type="primary"
                 shape="circle"
                 size="large"
                 @click.stop="saveTplEdit()"
               >保存</Button>
-              <Button shape="circle" size="large" @click.stop="cancelTplEdit()">取消</Button>
+              <Button class="tpl-btn" shape="circle" size="large" @click.stop="cancelTplEdit()">取消</Button>
             </div>
             <div v-show="showAddTpl" class="edit-tpl-foot">
               <Button
-                class="mr20"
+                class="mr20 tpl-btn"
                 type="primary"
                 shape="circle"
                 size="large"
                 @click.stop="saveTplAdd()"
               >保存</Button>
-              <Button shape="circle" size="large" @click.stop="cancelTplAdd()">取消</Button>
+              <Button class="tpl-btn" shape="circle" size="large" @click.stop="cancelTplAdd()">取消</Button>
             </div>
           </div>
         </div>
@@ -510,11 +510,12 @@ export default {
     },
     ...mapGetters(["currRecipeData"]),
     recipeType: function() {
-      return this.currRecipeData === undefined ? 1 : this.currRecipeData.type;
+      return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
     },
     category: function() {
-      //return this.currRecipeData === undefined ? 1 : this.currRecipeData.category;
-      return 1;
+      return this.currRecipeData === undefined
+        ? 1
+        : this.currRecipeData.data.category;
     }
   },
   created() {
@@ -522,7 +523,7 @@ export default {
   },
   watch: {
     recipeType: function() {
-        this.showTpl = false;
+      this.showTpl = false;
       this.firstSearch();
     },
     category: function() {
@@ -545,12 +546,20 @@ export default {
   methods: {
     firstSearch: function() {
       this.tplSearchList = [];
-      this.tplSearch();
+      if (this.recipeType != 6) {
+        this.tplSearch();
+      }
     },
     tplSearch: function() {
       var self = this;
       var params = {};
       switch (self.recipeType) {
+        case 0: {
+          params = {
+              scope:1,
+          };
+          break;
+        }
         case 1: {
           params = {
             category: self.category,
@@ -1172,5 +1181,9 @@ tbody td {
   overflow-y: scroll;
   box-shadow: 0 0.25rem 0.5rem 0 rgba(0, 0, 0, 0.2);
   border-radius: 0.25rem;
+}
+.tpl-btn {
+  font-size: 1rem;
+  width: 6rem;
 }
 </style>
