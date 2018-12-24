@@ -80,7 +80,7 @@ export default {
 }
 .page_content {
   display: flex;
-  min-height: calc(100vh - 8.6rem);
+  min-height: calc(100vh - 8.7rem);
 }
 .hidden {
   visibility: hidden;
