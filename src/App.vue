@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <router-view></router-view>
     <router-view name="Header"></router-view>
     <div class="page_content" v-if="initFinish">
+      <router-view style="flex: 1;"></router-view>
       <router-view class="left" name="Left"/>
       <router-view class="middle" name="Middle"/>
       <router-view class="right" name="Right"/>
