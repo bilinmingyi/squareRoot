@@ -2,7 +2,7 @@
   <div class="content">
     <div class="title">辅助开方</div>
     <div>
-      <Button type="primary" shape="circle" class="btn-cancel" @click="historyBack()">关闭</Button>
+      <Button size="small" type="primary" shape="circle" class="btn-cancel" @click="historyBack()">关闭</Button>
     </div>
   </div>
 </template>
@@ -26,6 +26,7 @@
 <style scoped>
   .content {
     display: flex;
+    padding: 0.5rem 0 0.5rem 0.5rem;
   }
 
   .title {
@@ -37,9 +38,10 @@
     align-self: center;
   }
   .btn-cancel{
-    background: #FC3B3B;
-    border: none;
+    background: #FFFFFF;
+    border-color: #FC3B3B;
     font-size: 1rem;
     width: 8rem;
+    color: #FC3B3B;
   }
 </style>

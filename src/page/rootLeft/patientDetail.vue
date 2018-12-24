@@ -31,7 +31,7 @@
         <span class="font-bold pr10">联系电话</span>
         <span>{{patientData.mobile}}</span>
       </div>
-      <div class="mt5">
+      <div class="mt5" v-if="canShowMoney">
         <span class="pr20">
           <span class="font-bold pr10">诊金</span>
           <span>{{treatPrice | priceFormat}}</span>
@@ -51,6 +51,12 @@ import { Icon } from "iview";
 import editPatientInfo from "./editPatientInfo";
 import { mapState, mapActions } from "vuex";
 export default {
+  props:{
+    canShowMoney:{
+      type:Boolean,
+      default:true
+    }
+  },
   components: {
     Icon,
     editPatientInfo

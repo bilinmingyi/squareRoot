@@ -30,5 +30,6 @@
   }
   .assistRight{
     flex: 73;
+    background: #ffffff;
   }
 </style>
