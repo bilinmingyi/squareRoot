@@ -59,7 +59,6 @@ export default {
       this.firstSearch();
     },
     category: function() {
-      alert(this.category);
       this.searchName = "";
       this.searchList=[];
       this.firstSearch();
