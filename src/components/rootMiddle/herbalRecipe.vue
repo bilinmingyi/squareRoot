@@ -158,7 +158,7 @@
           newVal.items.map((item)=>{
             recipePrice+=Number(item.num)*Number(item.price)
           });
-          if(newVal.extra_feetype!==''){
+          if(newVal.extra_feetype!==''&&newVal.extra_feetype!==undefined&&newVal.extra_feetype!=null){
             let extraItem=this.extraFeeTypes.filter((typeOne)=>{
               return typeOne.name === newVal.extra_feetype;
             })

@@ -14,7 +14,7 @@
         <div style="min-height:20rem;max-height:45rem;overflow:auto;">
           <div
             class="prescript-list"
-            v-for="(item,index) in tplSearchList"
+            v-for="(item,index) in showList"
             :key="index"
             @click.stop="tplShow(item)"
           >
@@ -27,6 +27,25 @@
             style="text-align:center;font-size:1rem;"
             v-show="tplSearchList.length<1"
           >暂无模板</div>
+          <div class="pt15" style="clear:both;display:flex;justify-content:center;">
+            <Button
+              v-show="currPage!==1"
+              shape="circle"
+              type="primary"
+              ghost
+              @click.stop="changePage(0)"
+            >上一页</Button>
+            <Button v-show="currPage===1" disabled shape="circle">上一页</Button>
+            <div class="ml10"></div>
+            <Button
+              v-show="currPage!==page_num"
+              shape="circle"
+              type="primary"
+              ghost
+              @click.stop="changePage(1)"
+            >下一页</Button>
+            <Button v-show="currPage===page_num" disabled shape="circle">下一页</Button>
+          </div>
         </div>
       </div>
       <div class="tpl-show mt5" style="font-size:0.875rem;" v-show="showTpl">
@@ -113,7 +132,10 @@
                 class="use-list-li"
                 v-for="(item,index) in tplData.items"
                 :key="index"
-              >{{item.alias_name||item.clinic_alias_name||item.name}} ({{item.num}}{{item.unit}}/{{item.usage}})</div>
+              >
+                {{item.alias_name||item.clinic_alias_name||item.name}} ({{item.num}}{{item.unit}}/{{item.usage}})
+                <span v-show="item.status==0" style="color:red;font-weight:bold;">暂无此药</span>
+              </div>
               <div v-if="recipeType==0">
                 <div>
                   <span class="case-label">既往史&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -142,7 +164,7 @@
               </div>
             </div>
             <div style="text-align:center;margin-top:2rem;">
-              <button class="saveBtn mr20">确认</button>
+              <button class="saveBtn mr20" @click.stop="useTpl()">确认</button>
               <button class="saveBtn cancelBtn" @click.stop="useTplHide()">取消</button>
             </div>
           </div>
@@ -523,6 +545,10 @@ export default {
   },
   data() {
     return {
+      currPage: 1,
+      page_num: 0,
+      showList: [],
+      page_size: 0,
       westernMedUsages: westernMedUsages,
       medFrequency: medFrequency,
       showAddTpl: false,
@@ -590,11 +616,63 @@ export default {
   watch: {
     recipeType: function() {
       this.showTpl = false;
+      this.searchTplName = "";
+      this.tplSearchList = [];
+      this.showList = [];
       this.firstSearch();
     },
     category: function() {
       this.showTpl = false;
+      this.searchTplName = "";
+      this.tplSearchList = [];
       this.firstSearch();
+    },
+    tplSearchList: {
+      deep: true,
+      handler: function() {
+        if (this.recipeType === 1) {
+          this.page_size = 10;
+        } else {
+          this.page_size = 10;
+        }
+        this.currPage = 1;
+        this.page_num = Number(
+          (this.tplSearchList.length / this.page_size).toFixed(0)
+        );
+        if (this.page_num * this.page_size < this.tplSearchList.length) {
+          this.page_num++;
+        }
+        if (this.page_num == 1) {
+          this.showList = this.tplSearchList.slice(0);
+        } else {
+          if (this.currPage == this.page_num) {
+            this.showList = this.tplSearchList.slice(
+              this.page_size * (this.currPage - 1)
+            );
+          } else {
+            this.showList = this.tplSearchList.slice(
+              this.page_size * (this.currPage - 1),
+              this.page_size * this.currPage
+            );
+          }
+        }
+      }
+    },
+    currPage: function() {
+      if (this.page_num == 1) {
+        this.showList = this.tplSearchList.slice(0, -1);
+      } else {
+        if (this.currPage == this.page_num) {
+          this.showList = this.tplSearchList.slice(
+            this.page_size * (this.currPage - 1)
+          );
+        } else {
+          this.showList = this.tplSearchList.slice(
+            this.page_size * (this.currPage - 1),
+            this.page_size * this.currPage
+          );
+        }
+      }
     },
     "tplEditData.items": {
       deep: true,
@@ -610,10 +688,27 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["add_new_medicine", "clean_recipe"]),
     firstSearch: function() {
       this.tplSearchList = [];
       if (this.recipeType != 6) {
         this.tplSearch();
+      }
+    },
+    changePage: function(flag) {
+      if (flag == 0) {
+        if (this.currPage == 1) {
+          this.currPage = 1;
+        } else {
+          this.currPage--;
+        }
+      }
+      if (flag == 1) {
+        if (this.currPage == this.page_num) {
+          this.currPage = this.page_num;
+        } else {
+          this.currPage++;
+        }
       }
     },
     tplSearch: function() {
@@ -625,7 +720,6 @@ export default {
             name: self.searchTplName,
             scope: 1,
             page: 1,
-            page_size: 20
           };
           break;
         }
@@ -635,7 +729,6 @@ export default {
             is_cloud: 0,
             name: self.searchTplName,
             page: 1,
-            page_size: 20
           };
           break;
         }
@@ -643,7 +736,6 @@ export default {
           params = {
             name: self.searchTplName,
             page: 1,
-            page_size: 20
           };
           break;
         }
@@ -651,7 +743,6 @@ export default {
           params = {
             name: self.searchTplName,
             page: 1,
-            page_size: 20
           };
           break;
         }
@@ -690,7 +781,6 @@ export default {
             category: self.category,
             medicine_name: self.tplEditData.searchName,
             page: 1,
-            page_size: 20,
             status: 1
           };
           break;
@@ -700,7 +790,6 @@ export default {
             medicine_name: self.tplEditData.searchName,
             status: 1,
             page: 1,
-            page_size: 10
           };
           break;
         }
@@ -708,7 +797,6 @@ export default {
           params = {
             name: self.tplEditData.searchName,
             page: 1,
-            page_size: 8
           };
           break;
         }
@@ -753,7 +841,8 @@ export default {
           spec: item.spec,
           is_match: 1,
           alias_name: item.alias_name,
-          clinic_alias_name: item.clinic_alias_name
+          clinic_alias_name: item.clinic_alias_name,
+          status: item.status
         };
         self.tplEditData.items.push(newItem);
         self.tplEditData.searchLists = [];
@@ -875,6 +964,15 @@ export default {
     },
     tplHide: function() {
       this.showTpl = false;
+    },
+    useTpl: function() {
+        var self = this;
+      if (this.recipeType !== 0) {
+          this.clean_recipe();
+          this.tplData.items.forEach(function(e) {
+            self.add_new_medicine({ item: e, type: self.recipeType });
+          });
+      }
     },
     useTplShow: function() {
       this.showUseTpl = true;
