@@ -18,7 +18,16 @@ export default new Router({
       components: {
         Left:() => import('@/page/rootLeft/rootLeft.vue'),
         Middle: () =>import('@/page/rootMiddle.vue'),
-        Right: ()=>import('@/page/rootRight.vue')
+        Right: ()=>import('@/page/rootRight.vue'),
+        Header: ()=>import('@/components/fHeader.vue')
+      }
+    },
+    {
+      path: '/assist',
+      name: 'assist',
+      components: {
+        default:() => import('@/page/assistPage.vue'),
+        Header: ()=> import('@/components/assistPage/aHeader.vue')
       }
     }
 
