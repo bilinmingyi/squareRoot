@@ -25,7 +25,7 @@
           </div>
         </div>
       </div>
-      <div v-for="recipe in selectedOrder.recipe_list">
+      <div v-for="(recipe, index) in selectedOrder.recipe_list">
         <section v-if="recipe.recipe_type==1">
           <div class="history-title">
             <span class="font-bold flex-1">
@@ -41,7 +41,7 @@
             <span
               v-if="currRecipe != -1 && reciptType == 1"
               class="t-h-d-active-import"
-              @click="impHistory(recipe)"
+              @click="impHistory(recipe, index)"
             >导入</span>
             <span class="t-h-d-disable-import" v-else>导入</span>
           </div>
@@ -60,7 +60,7 @@
             <span
               class="t-h-d-active-import"
               v-if="currRecipe != -1 && reciptType == 2"
-              @click="impHistory(recipe)"
+              @click="impHistory(recipe, index)"
             >导入</span>
             <span class="t-h-d-disable-import" v-else>导入</span>
           </div>
@@ -77,7 +77,7 @@
             <span
               class="t-h-d-active-import"
               v-if="currRecipe != -1 && reciptType == 3"
-              @click="impHistory(recipe)"
+              @click="impHistory(recipe, index)"
             >导入</span>
             <span class="t-h-d-disable-import" v-else>导入</span>
           </div>
@@ -94,7 +94,7 @@
             <span
               class="t-h-d-active-import"
               v-if="currRecipe != -1 && reciptType == 4"
-              @click="impHistory(recipe)"
+              @click="impHistory(recipe, index)"
             >导入</span>
             <span class="t-h-d-disable-import" v-else>导入</span>
           </div>
@@ -108,7 +108,7 @@
           <span
             class="t-h-d-active-import"
             v-if="currRecipe != -1 && reciptType == 5"
-            @click="impHistory(recipe)"
+            @click="impHistory(recipe, index)"
           >导入</span>
           <span class="t-h-d-disable-import" v-else>导入</span>
         </div>
@@ -119,12 +119,19 @@
         </section>-->
       </div>
     </div>
+
+    <history-result v-show="historyResultShow" :recipeProp="selectedOrder.recipe_list"></history-result>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
+import historyResult from "@/page/rootLeft/historyResult";
+import { checkIsMatch } from "@/fetch/api.js";
 export default {
+  components: {
+    historyResult
+  },
   props: ["selectedOrderProp", "reciptTypeProp", "examinationInfoProp"],
   data() {
     return {
@@ -134,7 +141,17 @@ export default {
         { code: "病史", key: "present_illness" },
         { code: "西医诊断", key: "diagnosis_xy" },
         { code: "中医诊断", key: "diagnosis" }
-      ]
+      ],
+      historyResultShow: false,
+      listMap: [
+          "",
+          "herbal_list",
+          "western_list",
+          "product_list",
+          "therapy_list",
+          "extra_list"
+      ],
+      formatRecipes: []
     };
   },
   computed: {
@@ -186,6 +203,43 @@ export default {
             : examination;
         return item;
       });
+    },
+    recipe_list() {
+      return this.selectedOrder.recipe_list;
+    }
+  },
+  watch: {
+    recipe_list: {
+      deep: true,
+      handler(newVal) {
+        let map = this.listMap;
+        this.formatRecipes = [];
+        newVal.forEach(item => {
+          let type = item.recipe_type;
+          let ids = [];
+          if (!map[type]) return;
+          item[map[type]].forEach(list => {
+            ids.push(list.item_id);
+          });
+          this.formatRecipes.push(item);
+          if (ids.length <= 0) return;
+          let params = { status: 1 };
+          params.ids = ids;
+          checkIsMatch(params, type, type == 1 ? item.is_cloud : null).then(
+            res => {
+              if (res.code == 1000) {
+                let data = res.data;
+                data.forEach(dataItem => {
+                  
+                })
+                
+              } else {
+                console.log(res.msg);
+              }
+            }
+          );
+        });
+      }
     }
   },
   methods: {
@@ -226,9 +280,15 @@ export default {
         });
       });
     },
-    impHistory(recipe) {
+    impHistory(recipe, index) {
+      this.historyResultShow = true;
       // TODO: 处方
-      console.log(recipe)
+      console.log(recipe, index);
+      let type = recipe.recipe_type;
+      switch (type) {
+        case 1:
+          break;
+      }
     }
   }
 };

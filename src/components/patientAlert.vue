@@ -1,47 +1,5 @@
 <template>
   <div class="prescription_tab_bg">
-    <!--既往史-->
-    <div v-if="DiagnosisItem.type==0" class="prescription_tab">
-      <div v-show="!DiagnosisItem.CommonEdit">
-        <div class="display-flex mb10">
-          <div class="prescription_tab_head_title">{{DiagnosisItem.typeName}}编辑</div>
-          <div class="prescription_tab_head_close mr10" @click.stop="deleteContent()">删除</div>
-          <div class="prescription_tab_head_close" @click.stop="Initialization()">重置</div>
-        </div>
-        <div class="mb10">
-          <Input type="textarea" :rows="4" placeholder="请输入文字" v-model="DiagnosisItem.contentText"></Input>
-        </div>
-        <div class="flex-wrap mb10">
-          <div
-            class="prescription_tab_content_item cursor_pointer"
-            v-for="item in DiagnosisItem.currList"
-            @click.stop="clickword(item)"
-          >{{item}}</div>
-        </div>
-        <div class="display-flex">
-          <div class="display-flex flex-1">
-            <div class="prescription_tab_page mr30" style="width: 48px;">
-              <span class="active" v-show="DiagnosisItem.page>1" @click.stop="changeCurrPage(2)">上一页</span>
-              <span class="disable" v-show="DiagnosisItem.page<=1">上一页</span>
-            </div>
-            <div class="prescription_tab_page mr30" style="width: 48px;">
-              <span
-                class="active"
-                v-show="DiagnosisItem.page<DiagnosisItem.totalNum"
-                @click.stop="changeCurrPage(1)"
-              >下一页</span>
-              <span class="disable" v-show="DiagnosisItem.page>=DiagnosisItem.totalNum">下一页</span>
-            </div>
-            <div class="prescription_set_common_world_btn" @click="setCommonWord()">设置常用词</div>
-          </div>
-          <div class="display-flex">
-            <div class="prescription_tab_save mr20" @click.stop="saveEdit()">确定</div>
-            <div class="prescription_tab_cancel" @click="clinicClose()">关闭</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--既往史-->
     <!--主诉-->
     <div v-if="DiagnosisItem.type==2" class="prescription_tab">
       <div v-show="!DiagnosisItem.CommonEdit">
@@ -106,6 +64,234 @@
       </div>
     </div>
     <!--主诉-->
+    <!--病史-->
+    <div v-if="DiagnosisItem.type==4" class="prescription_tab">
+      <div v-show="!DiagnosisItem.CommonEdit">
+        <div class="display-flex mb10">
+          <div class="prescription_tab_head_title">{{DiagnosisItem.typeName}}编辑</div>
+          <div class="prescription_tab_head_close mr10" @click.stop="deleteContent()">删除</div>
+          <div class="prescription_tab_head_close" @click.stop="Initialization()">重置</div>
+        </div>
+        <div class="display-flex mb10">
+          <Input
+            type="textarea"
+            :rows="4"
+            placeholder="请输入文字"
+            v-model="DiagnosisItem.contentText"
+            @click.stop="clickword(item)"
+          ></Input>
+        </div>
+        <div class="display-flex mb10">
+          <div
+            class="prescription_tab_content_item cursor_pointer"
+            v-for="item in DiagnosisItem.currList"
+            @click.stop="clickword(item)"
+          >{{item}}</div>
+        </div>
+        <div class="display-flex">
+          <div class="display-flex flex-1">
+            <div class="prescription_tab_page mr30" style="width: 48px;">
+              <span v-show="DiagnosisItem.page>1" class="active" @click.stop="changeCurrPage(2)">上一页</span>
+              <span v-show="DiagnosisItem.page<=1" class="disable">上一页</span>
+            </div>
+            <div class="prescription_tab_page mr30" style="width: 48px;">
+              <span
+                v-show="DiagnosisItem.page<DiagnosisItem.totalNum"
+                class="active"
+                @click.stop="changeCurrPage(1)"
+              >下一页</span>
+              <span v-show="DiagnosisItem.page>=DiagnosisItem.totalNum" class="disable">下一页</span>
+            </div>
+            <div class="prescription_set_common_world_btn" @click="setCommonWord()">设置常用词</div>
+          </div>
+          <div class="display-flex">
+            <div class="prescription_tab_save mr20" @click.stop="saveEdit()">确定</div>
+            <div class="prescription_tab_cancel" @click="clinicClose()">关闭</div>
+          </div>
+        </div>
+      </div>
+      <div
+        v-show="DiagnosisItem.CommonEdit"
+      >#{include file="common/treatCommon/setCommonWord.html"/}</div>
+    </div>
+    <!--病史-->
+    <!--过敏史-->
+    <div v-if="DiagnosisItem.type==1" class="prescription_tab">
+      <div v-show="!DiagnosisItem.CommonEdit">
+        <div class="display-flex mb10">
+          <div class="prescription_tab_head_title">{{DiagnosisItem.typeName}}编辑</div>
+          <div class="prescription_tab_head_close mr10" @click.stop="deleteContent()">删除</div>
+          <div class="prescription_tab_head_close" @click.stop="Initialization()">重置</div>
+        </div>
+        <div class="mb10">
+          <Input type="textarea" :rows="4" placeholder="请输入文字" v-model="DiagnosisItem.contentText"></Input>
+        </div>
+        <div class="display-flex flex-wrap mb10">
+          <div
+            class="prescription_tab_content_item cursor_pointer"
+            v-for="item in DiagnosisItem.currList"
+            @click.stop="clickword(item)"
+          >{{item}}</div>
+        </div>
+        <div class="display-flex">
+          <div class="display-flex flex-1">
+            <div class="prescription_tab_page mr30" style="width: 48px;">
+              <span v-show="DiagnosisItem.page>1" class="active" @click.stop="changeCurrPage(2)">上一页</span>
+              <span v-show="DiagnosisItem.page<=1" class="disable">上一页</span>
+            </div>
+            <div class="prescription_tab_page mr30" style="width: 48px;">
+              <span
+                v-show="DiagnosisItem.page<DiagnosisItem.totalNum"
+                class="active"
+                @click.stop="changeCurrPage(1)"
+              >下一页</span>
+              <span v-show="DiagnosisItem.page>=DiagnosisItem.totalNum" class="disable">下一页</span>
+            </div>
+            <div class="prescription_set_common_world_btn" @click="setCommonWord()">设置常用词</div>
+          </div>
+          <div class="display-flex">
+            <div class="prescription_tab_save mr20" @click.stop="saveEdit()">确定</div>
+            <div class="prescription_tab_cancel" @click="clinicClose()">关闭</div>
+          </div>
+        </div>
+      </div>
+      <div
+        v-show="DiagnosisItem.CommonEdit"
+      >#{include file="common/treatCommon/setCommonWord.html"/}</div>
+    </div>
+    <!--过敏史-->
+    <!--既往史-->
+    <div v-if="DiagnosisItem.type==0" class="prescription_tab">
+      <div v-show="!DiagnosisItem.CommonEdit">
+        <div class="display-flex mb10">
+          <div class="prescription_tab_head_title">{{DiagnosisItem.typeName}}编辑</div>
+          <div class="prescription_tab_head_close mr10" @click.stop="deleteContent()">删除</div>
+          <div class="prescription_tab_head_close" @click.stop="Initialization()">重置</div>
+        </div>
+        <div class="mb10">
+          <Input type="textarea" :rows="4" placeholder="请输入文字" v-model="DiagnosisItem.contentText"></Input>
+        </div>
+        <div class="flex-wrap mb10">
+          <div
+            class="prescription_tab_content_item cursor_pointer"
+            v-for="item in DiagnosisItem.currList"
+            @click.stop="clickword(item)"
+          >{{item}}</div>
+        </div>
+        <div class="display-flex">
+          <div class="display-flex flex-1">
+            <div class="prescription_tab_page mr30" style="width: 48px;">
+              <span class="active" v-show="DiagnosisItem.page>1" @click.stop="changeCurrPage(2)">上一页</span>
+              <span class="disable" v-show="DiagnosisItem.page<=1">上一页</span>
+            </div>
+            <div class="prescription_tab_page mr30" style="width: 48px;">
+              <span
+                class="active"
+                v-show="DiagnosisItem.page<DiagnosisItem.totalNum"
+                @click.stop="changeCurrPage(1)"
+              >下一页</span>
+              <span class="disable" v-show="DiagnosisItem.page>=DiagnosisItem.totalNum">下一页</span>
+            </div>
+            <div class="prescription_set_common_world_btn" @click="setCommonWord()">设置常用词</div>
+          </div>
+          <div class="display-flex">
+            <div class="prescription_tab_save mr20" @click.stop="saveEdit()">确定</div>
+            <div class="prescription_tab_cancel" @click="clinicClose()">关闭</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--既往史-->
+    <!--检查-->
+    <div v-if="DiagnosisItem.type==3" class="prescription_tab">
+      <div class="display-flex mb10">
+        <div class="prescription_tab_head_title">{{DiagnosisItem.typeName}}编辑</div>
+        <div class="prescription_tab_head_close" @click.stop="Initialization()">重置</div>
+      </div>
+      <div>
+        <div class="prescription-blue-title">固定检查信息</div>
+        <div class="prescription_tab_check">
+          <div class="display-flex mb5">
+            <div class="flex-1">
+              <span class="check_name">血压</span>
+              <span>
+                <input
+                  type="number"
+                  class="check_num"
+                  v-model="DiagnosisItem.check.bloodpressure_num1"
+                >
+              </span>
+              <span>/</span>
+              <span>
+                <input
+                  type="number"
+                  class="check_num"
+                  v-model="DiagnosisItem.check.bloodpressure_num2"
+                >
+              </span>
+              <span>mmHg</span>
+            </div>
+            <div class="flex-1">
+              <span class="check_name">血糖</span>
+              <span>
+                <input type="number" class="check_num" v-model="DiagnosisItem.check.bloodglucose">
+              </span>
+              <span>mg/ml</span>
+            </div>
+            <div class="flex-1"></div>
+          </div>
+          <div class="displayFlex mb5">
+            <div class="flex-1">
+              <span class="check_name">尿酸</span>
+              <span>
+                <input type="number" class="check_num" v-model="DiagnosisItem.check.trioxypurine">
+              </span>
+              <span>umol/L</span>
+            </div>
+            <div class="flex-1">
+              <span class="check_name">心率</span>
+              <span>
+                <input type="number" class="check_num" v-model="DiagnosisItem.check.heartrate">
+              </span>
+              <span>次/分</span>
+            </div>
+            <div class="flex-1">
+              <span class="check_name">呼吸</span>
+              <span>
+                <input type="number" class="check_num" v-model="DiagnosisItem.check.breathe">
+              </span>
+              <span>次/分</span>
+            </div>
+          </div>
+          <div class="display-flex mb5">
+            <div class="flex-1">
+              <span class="check_name">体温</span>
+              <span>
+                <input type="number" class="check_num" v-model="DiagnosisItem.check.animalheat">
+              </span>
+              <span>℃</span>
+            </div>
+            <div class="flex-1">
+              <span class="check_name">体重</span>
+              <span>
+                <input type="number" class="check_num" v-model="DiagnosisItem.check.weight">
+              </span>
+              <span>kg</span>
+            </div>
+            <div class="flex-1"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearfix">
+        <div class="prescription-blue-title">检查信息编辑</div>
+        <Input type="textarea" :rows="3" placeholder="请输入文字" v-model="DiagnosisItem.check.info"></Input>
+      </div>
+      <div class="display-flex mt10" style="justify-content: flex-end;">
+        <div class="prescription_tab_save mr20" @click.stop="saveEdit()">确定</div>
+        <div class="prescription_tab_cancel" @click="clinicClose()">关闭</div>
+      </div>
+    </div>
+    <!--检查-->
     <set-common-word
       v-show="DiagnosisItem.CommonEdit"
       :data="DiagnosisItem"
@@ -131,6 +317,14 @@ export default {
     diagnosisTypeProp: {
       type: Number,
       default: -1
+    },
+    caseHistoryProp: {
+      type: Object,
+      default: {},
+    },
+    timeStamp: {
+      type: Number,
+      default: 0,
     }
   },
   components: {
@@ -215,7 +409,7 @@ export default {
       ],
       numList: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "，", "。"],
       timeList: ["小时", "天", "周", "月", "年", "早上", "下午", "晚上"],
-      showSetCommonWord: false
+      showSetCommonWord: false,
     };
   },
   computed: {
@@ -226,19 +420,17 @@ export default {
     }),
     diagnosisType() {
       return this.diagnosisTypeProp;
+    },
+    caseHistory() {
+      return this.caseHistoryProp;
     }
   },
   watch: {
-    diagnosisType(newVal) {
-      this.DiagnosisItem = this.DiagnosisTypeList[newVal];
+    timeStamp(newVal) {
+      this.DiagnosisItem = this.DiagnosisTypeList[this.diagnosisType];
       this.Initialization();
       this.getCaseHistoryFn();
     }
-  },
-  created() {
-    this.DiagnosisItem = this.DiagnosisTypeList[this.diagnosisType];
-    this.Initialization();
-    this.getCaseHistoryFn();
   },
   methods: {
     ...mapActions(["set_record_prop"]),
@@ -258,8 +450,10 @@ export default {
       }
     },
     getCaseHistoryFn() {
-      getCaseHistory().then(res => {
-        if (res.code == 1000) {
+      // getCaseHistory().then(res => {
+      //   if (res.code == 1000) {
+          let res = {};
+          res.data = this.caseHistory;
           if (
             res.data.past_history != undefined &&
             res.data.past_history != null &&
@@ -369,10 +563,10 @@ export default {
           }
 
           this.changePage(1);
-        } else {
-          console.log(res.msg);
-        }
-      });
+      //   } else {
+      //     console.log(res.msg);
+      //   }
+      // });
     },
     changePage(page) {
       this.DiagnosisItem.page = page;
@@ -626,6 +820,39 @@ export default {
   border: #5096e0 solid 1px;
   text-align: center;
   font-size: 0.9375rem;
+}
+
+.prescription_tab_check {
+  width: 100%;
+  border: #5096e0 solid 1px;
+  height: auto;
+  background: #fff;
+  border-radius: 0.25rem;
+  padding: 0.3125rem 0.625rem;
+  font-size: 1rem;
+}
+
+.prescription-blue-title {
+  color: #5096e0;
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.check_name {
+  width: 50px;
+  line-height: 30px;
+  display: inline-block;
+}
+
+.check_num {
+  width: 3.125rem;
+  line-height: 1.875rem;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: #4c4c4c solid 1px;
+  outline: none;
 }
 
 .display-flex {

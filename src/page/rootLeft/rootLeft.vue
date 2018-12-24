@@ -62,7 +62,7 @@ export default {
     this.getData("historyRecipes");
   },
   methods: {
-    ...mapActions(["set_state_prop"]),
+    ...mapActions(["set_state_prop", 'set_record_prop']),
     getData(type) {
       switch (type) {
         case "patientInfo":
@@ -71,6 +71,9 @@ export default {
           getPatientInfo(patientInfoParams).then(res => {
             if (res.code == 1000) {
               this.set_state_prop({ key: "patientData", val: res.data });
+              this.set_record_prop({ key: 'personal_history', val: res.data.personal_history});
+              this.set_record_prop({ key: 'present_illness', val: res.data.present_illness});
+              this.set_record_prop({ key: 'allergic_history', val: res.data.allergic_history});
             }
           });
           break;
