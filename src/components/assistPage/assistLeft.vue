@@ -8,22 +8,22 @@
       <div class="diagnosisItem">
         <label class="labelText">西医诊断</label>
         <Select filterable class="flexOne" placeholder="" v-model="XYPatientId" remote :remote-method="findXYDiagnosis"
-                :loading="XYLoading" clearable @on-clear="clearXY" @click="test()">
-          <Option v-for="item in XYList" :value="item.parent_id">{{item.xy_name}}</Option>
+                :loading="XYLoading" clearable @on-clear="clearXY" @click.native="findXYDiagnosis('')">
+          <Option v-for="item in XYList" :value="item.parent_id" :key="item.parent_id">{{item.xy_name}}</Option>
         </Select>
       </div>
       <div class="diagnosisItem">
         <label class="labelText">中医诊断</label>
         <Select filterable class="flexOne" placeholder="" v-model="ZYPatientId" remote :remote-method="findZYDiagnosis"
                 :loading="ZYLoading" clearable @on-clear="clearZY">
-          <Option v-for="item in ZYList" :value="item.parent_id">{{item.zy_name}}</Option>
+          <Option v-for="item in ZYList" :value="item.parent_id" :key="item.parent_id">{{item.zy_name}}</Option>
         </Select>
       </div>
       <div class="diagnosisItem">
         <label class="labelText">中医辨证</label>
         <Select filterable class="flexOne" placeholder="" v-model="ZYdiscriminate" remote
                 :remote-method="findZYdiscriminate" clearable  @on-clear="clearZYD">
-          <Option v-for="item in ZYDList" :value="item.bz_name">{{item.bz_name}}</Option>
+          <Option v-for="item in ZYDList" :value="item.bz_name" :key="item.bz_name">{{item.bz_name}}</Option>
 
         </Select>
       </div>
@@ -85,9 +85,6 @@
       }
     },
     methods: {
-      test(){
-        console.log(9999)
-      },
       findXYDiagnosis(query) {
         if (this.ZYdiagnosis.replace(/\s*/g, '') === '') {
           this.ZYPatientId = ''
