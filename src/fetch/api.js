@@ -96,6 +96,8 @@ const delTpl = (id, params, type) => {
     return fetch('/doctreat/tpl/western/delete?tplId='+id, params);
   } else if (type === 4) {
     return fetch('/doctreat/tpl/therapy/delete?tplId='+id, params);
+  } else if (type === 0) {
+    return fetch('/doctreat/tpl/casehistory/delete?tplId='+id, params);
   }
 }
 
