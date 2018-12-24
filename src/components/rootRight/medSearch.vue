@@ -2,7 +2,7 @@
   <div class="mt5 ml6 mr6 mb5">
     <div class="mb6" style="width:100%;display:flex;height:2rem;font-size:1rem;">
       <div class="col70 mr10">
-        <Input placeholder="药品名称/拼音简码" v-model="searchName"/>
+        <Input @input="sto()" placeholder="药品名称/拼音简码" v-model="searchName"/>
       </div>
       <div class="col20">
         <Button @click="searchMed()">搜索</Button>
@@ -11,7 +11,7 @@
     <div class="search-result">
       <div
         :class="[{'no-stock':item.stock<1},{'herbal-result-li':recipeType===1},{'search-result-li':recipeType!=1}]"
-        v-for="(item,index) in searchList"
+        v-for="(item,index) in showList"
         :key="index"
         @click.stop="selectItem(item)"
       >
@@ -33,6 +33,13 @@
       </div>
       <div class="mt10" style="text-align:center;font-size:1rem;" v-show="searchList.length<1">暂无药品</div>
     </div>
+    <div class="pt15" style="clear:both;display:flex;justify-content:center;">
+      <Button v-show="currPage!==1" shape="circle" type="primary" ghost @click.stop="changePage(0)">上一页</Button>
+      <Button v-show="currPage===1" disabled shape="circle">上一页</Button>
+      <div class="ml10"></div>
+      <Button v-show="currPage!==page_num" shape="circle" type="primary" ghost @click.stop="changePage(1)">下一页</Button>
+      <Button v-show="currPage===page_num" disabled shape="circle">下一页</Button>
+    </div>
   </div>
 </template>
 
@@ -48,23 +55,73 @@ export default {
   },
   data() {
     return {
+      timer: null,
       searchName: "",
-      searchList: []
+      searchList: [],
+      currPage: 1,
+      page_num: 0,
+      showList: [],
+      page_size: 0
     };
   },
   watch: {
     recipeType: function() {
       this.searchName = "";
-      this.searchList=[];
+      this.searchList = [];
+      this.showList = [];
       this.firstSearch();
     },
     category: function() {
       this.searchName = "";
-      this.searchList=[];
+      this.searchList = [];
       this.firstSearch();
     },
-    searchList: function(){
-
+    searchList: {
+      deep: true,
+      handler: function() {
+        if (this.recipeType === 1) {
+          this.page_size = 18;
+        } else {
+          this.page_size = 10;
+        }
+        this.currPage = 1;
+        this.page_num = Number(
+          (this.searchList.length / this.page_size).toFixed(0)
+        );
+        if (this.page_num * this.page_size < this.searchList.length) {
+          this.page_num++;
+        }
+        if (this.page_num == 1) {
+          this.showList = this.searchList.slice(0);
+        } else {
+          if (this.currPage == this.page_num) {
+            this.showList = this.searchList.slice(
+              this.page_size * (this.currPage - 1)
+            );
+          } else {
+            this.showList = this.searchList.slice(
+              this.page_size * (this.currPage - 1),
+              this.page_size * this.currPage
+            );
+          }
+        }
+      }
+    },
+    currPage: function() {
+      if (this.page_num == 1) {
+        this.showList = this.searchList.slice(0, -1);
+      } else {
+        if (this.currPage == this.page_num) {
+          this.showList = this.searchList.slice(
+            this.page_size * (this.currPage - 1)
+          );
+        } else {
+          this.showList = this.searchList.slice(
+            this.page_size * (this.currPage - 1),
+            this.page_size * this.currPage
+          );
+        }
+      }
     }
   },
   computed: {
@@ -90,9 +147,25 @@ export default {
         this.$Message.info("该药品已添加");
       }
     },
+    changePage: function(flag) {
+      if (flag == 0) {
+        if (this.currPage == 1) {
+          this.currPage = 1;
+        } else {
+          this.currPage--;
+        }
+      }
+      if (flag == 1) {
+        if (this.currPage == this.page_num) {
+          this.currPage = this.page_num;
+        } else {
+          this.currPage++;
+        }
+      }
+    },
     firstSearch: function() {
-      this.searchList=[];
-      if(this.recipeType===0){
+      this.searchList = [];
+      if (this.recipeType === 0) {
         return;
       }
       var self = this;
@@ -104,7 +177,7 @@ export default {
       ).then(
         function(res) {
           if (res.code == 1000) {
-            self.searchList=res.data;
+            self.searchList = res.data;
           }
         },
         function(error) {
@@ -112,22 +185,32 @@ export default {
         }
       );
     },
+    sto: function(){
+      var self=this;
+      var t;
+      return function(){
+        clearTimeout(t);
+        var cox=self;
+        t=setTimeout(function(){
+          cox.searchMed.call(cox);
+        },200)
+      }
+    },
     searchMed: function() {
-      if (this.searchName == "") {
-        this.searchList=[];
-        this.firstSearch();
+      var self=this;
+      if (self.searchName == "") {
+        self.searchList = [];
+        self.firstSearch();
         return;
       }
-      var self = this;
       var params = {};
-      switch (this.recipeType) {
+      switch (self.recipeType) {
         case 1: {
           params = {
             medicine_name: self.searchName,
             category: self.category,
             status: 1,
-            page: 1,
-            page_size: 10
+            page: 1
           };
           break;
         }
@@ -135,23 +218,20 @@ export default {
           params = {
             medicine_name: self.searchName,
             status: 1,
-            page: 1,
-            page_size: 10
+            page: 1
           };
           break;
         }
         case 4: {
           params = {
             name: self.searchName,
-            page: 1,
-            page_size: 8
+            page: 1
           };
           break;
         }
         case 5: {
           params = {
             page: 1,
-            page_size: 10,
             query: self.searchName,
             status: 1
           };
@@ -160,8 +240,7 @@ export default {
         case 6: {
           params = {
             name: self.searchName,
-            page: 1,
-            page_size: 8
+            page: 1
           };
           break;
         }

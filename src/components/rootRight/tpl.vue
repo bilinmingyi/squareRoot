@@ -10,11 +10,11 @@
             <Button @click="tplSearch()">搜索</Button>
           </div>
         </div>
-        <span class="add_prescription_btn" @click="addTpl()">添加模板</span>
+        <span class="add_prescription_btn" v-show="recipeType!==0" @click="addTpl()">添加模板</span>
         <div style="min-height:20rem;max-height:45rem;overflow:auto;">
           <div
             class="prescript-list"
-            v-for="(item,index) in tplSearchList"
+            v-for="(item,index) in showList"
             :key="index"
             @click.stop="tplShow(item)"
           >
@@ -27,17 +27,36 @@
             style="text-align:center;font-size:1rem;"
             v-show="tplSearchList.length<1"
           >暂无模板</div>
+          <div class="pt15" style="clear:both;display:flex;justify-content:center;">
+            <Button
+              v-show="currPage!==1"
+              shape="circle"
+              type="primary"
+              ghost
+              @click.stop="changePage(0)"
+            >上一页</Button>
+            <Button v-show="currPage===1" disabled shape="circle">上一页</Button>
+            <div class="ml10"></div>
+            <Button
+              v-show="currPage!==page_num"
+              shape="circle"
+              type="primary"
+              ghost
+              @click.stop="changePage(1)"
+            >下一页</Button>
+            <Button v-show="currPage===page_num" disabled shape="circle">下一页</Button>
+          </div>
         </div>
       </div>
-      <div class="tpl-show mt5" v-show="showTpl">
+      <div class="tpl-show mt5" style="font-size:0.875rem;" v-show="showTpl">
         <div class="prescription_detail_btn" @click="tplHide()">返回</div>
-        <div class="ml6 mr16 mt16">
+        <div class="ml6 mr16 mt16" style="font-size:0.875rem;border-bottom: 1px solid #4c89db;">
           <span style="font-weight:900;">处方模板：</span>
           <span>{{tplData.tplName}}</span>
           <span v-show="tplData.scope==0" style="float:right;">共享模板</span>
           <span v-show="tplData.scope==1" style="float:right;">个人模板</span>
         </div>
-        <div class="search-result mt16 ml5 mr5">
+        <div class="search-result mt16 ml5 mr5" v-show="recipeType!=0">
           <div
             :class="[{'herbal-result-li':recipeType===1},{'search-result-li':recipeType!=1}]"
             v-for="(item,index) in tplData.items"
@@ -62,13 +81,43 @@
           <span>剂数：</span>
           <span>{{tplData.dosage}}剂</span>
         </div>
-        <div class="mt10 mb10 ml6 mr6">
+        <div class="mt10 mb10 ml6 mr6" v-show="recipeType!=0">
           <span>医嘱：</span>
           <span>{{tplData.doctor_remark}}</span>
         </div>
+        <div class="mt10 ml10 mb20 tpl-case" v-show="recipeType==0">
+          <div>
+            <span class="case-label">既往史&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span>{{tplData.personal_history}}</span>
+          </div>
+          <div>
+            <span class="case-label">过敏史&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span>{{tplData.allergic_history}}</span>
+          </div>
+          <div>
+            <span class="case-label">主述&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span>{{tplData.chief_complaint}}</span>
+          </div>
+          <div>
+            <span class="case-label">病史&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span>{{tplData.present_illness}}</span>
+          </div>
+          <div>
+            <span class="case-label">西医诊断&nbsp;</span>
+            <span>{{tplData.diagnosis_xy}}</span>
+          </div>
+          <div>
+            <span class="case-label">中医诊断&nbsp;</span>
+            <span>{{tplData.diagnosis}}</span>
+          </div>
+        </div>
         <div>
           <button class="prescription_detail_save mr2" @click.stop="useTplShow()">使用模板</button>
-          <button class="prescription_detail_save" @click.stop="editTplShow()">编辑模板</button>
+          <button
+            class="prescription_detail_save"
+            v-show="recipeType!==0"
+            @click.stop="editTplShow()"
+          >编辑模板</button>
           <button class="prescription_detail_del" @click.stop="delTplShow()">删除模板</button>
         </div>
         <div v-show="showUseTpl" class="alert-back">
@@ -79,13 +128,46 @@
             <div style="margin:1rem 0 0 2rem;font-weight:900;">使用模板将覆盖已编辑之信息</div>
             <div class="use-list mt10">
               <div
+                v-if="recipeType!=0"
                 class="use-list-li"
                 v-for="(item,index) in tplData.items"
                 :key="index"
-              >{{item.alias_name||item.clinic_alias_name||item.name}} ({{item.num}}{{item.unit}}/{{item.usage}})</div>
+              >
+                {{item.alias_name||item.clinic_alias_name||item.name}} ({{item.num}}{{item.unit}}/{{item.usage}})
+                <span
+                  v-show="item.status==0"
+                  style="color:red;font-weight:bold;"
+                >暂无此药</span>
+              </div>
+              <div v-if="recipeType==0">
+                <div>
+                  <span class="case-label">既往史&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  <span>{{tplData.personal_history}}</span>
+                </div>
+                <div>
+                  <span class="case-label">过敏史&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  <span>{{tplData.allergic_history}}</span>
+                </div>
+                <div>
+                  <span class="case-label">主述&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  <span>{{tplData.chief_complaint}}</span>
+                </div>
+                <div>
+                  <span class="case-label">病史&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  <span>{{tplData.present_illness}}</span>
+                </div>
+                <div>
+                  <span class="case-label">西医诊断&nbsp;</span>
+                  <span>{{tplData.diagnosis_xy}}</span>
+                </div>
+                <div>
+                  <span class="case-label">中医诊断&nbsp;</span>
+                  <span>{{tplData.diagnosis}}</span>
+                </div>
+              </div>
             </div>
             <div style="text-align:center;margin-top:2rem;">
-              <button class="saveBtn mr20">确认</button>
+              <button class="saveBtn mr20" @click.stop="useTpl()">确认</button>
               <button class="saveBtn cancelBtn" @click.stop="useTplHide()">取消</button>
             </div>
           </div>
@@ -398,14 +480,14 @@
               </div>
             </div>
 
-            <div class="mt20 ml20 mb20 col40" v-show="recipeType==1">饮片剂数：
-              <Input style="width:10rem" name="dosage" v-model="tplEditData.dosage"/>&nbsp;&nbsp;&nbsp;剂
+            <div class="mt20 ml40 mb20 col40" v-show="recipeType==1">饮片剂数：
+              <Input style="width:4rem" name="dosage" v-model="tplEditData.dosage"/>&nbsp;&nbsp;&nbsp;剂
             </div>
-            <div class="mt20 ml20 mb20">
-              <label>医嘱：</label>
+            <div class="mt20 ml40 mb20">
+              <label class="ml20">&nbsp;&nbsp;&nbsp;医嘱：</label>
               <Input
                 v-model="tplEditData.doctor_remark"
-                class="ml20 col70 mb10"
+                class="col70 mb10"
                 type="textarea"
                 placeholder="请输入文字"
                 :rows="2"
@@ -466,6 +548,10 @@ export default {
   },
   data() {
     return {
+      currPage: 1,
+      page_num: 0,
+      showList: [],
+      page_size: 0,
       westernMedUsages: westernMedUsages,
       medFrequency: medFrequency,
       showAddTpl: false,
@@ -486,7 +572,16 @@ export default {
         scope: 0,
         items: [],
         dosage: 0,
-        doctor_remark: ""
+        doctor_remark: "",
+
+        chief_complaint: "", //主诉
+        present_illness: "", //病史
+        allergic_history: "", //过敏史
+        personal_history: "", //既往史
+        examination: "", //检查
+        diagnosis: "", //中医诊断
+        diagnosis_xy: "", //西医诊断
+        treat_advice: "" //处理意见
       },
       tplEditData: {
         category: 1,
@@ -524,11 +619,63 @@ export default {
   watch: {
     recipeType: function() {
       this.showTpl = false;
+      this.searchTplName = "";
+      this.tplSearchList = [];
+      this.showList = [];
       this.firstSearch();
     },
     category: function() {
       this.showTpl = false;
+      this.searchTplName = "";
+      this.tplSearchList = [];
       this.firstSearch();
+    },
+    tplSearchList: {
+      deep: true,
+      handler: function() {
+        if (this.recipeType === 1) {
+          this.page_size = 10;
+        } else {
+          this.page_size = 10;
+        }
+        this.currPage = 1;
+        this.page_num = Number(
+          (this.tplSearchList.length / this.page_size).toFixed(0)
+        );
+        if (this.page_num * this.page_size < this.tplSearchList.length) {
+          this.page_num++;
+        }
+        if (this.page_num == 1) {
+          this.showList = this.tplSearchList.slice(0);
+        } else {
+          if (this.currPage == this.page_num) {
+            this.showList = this.tplSearchList.slice(
+              this.page_size * (this.currPage - 1)
+            );
+          } else {
+            this.showList = this.tplSearchList.slice(
+              this.page_size * (this.currPage - 1),
+              this.page_size * this.currPage
+            );
+          }
+        }
+      }
+    },
+    currPage: function() {
+      if (this.page_num == 1) {
+        this.showList = this.tplSearchList.slice(0, -1);
+      } else {
+        if (this.currPage == this.page_num) {
+          this.showList = this.tplSearchList.slice(
+            this.page_size * (this.currPage - 1)
+          );
+        } else {
+          this.showList = this.tplSearchList.slice(
+            this.page_size * (this.currPage - 1),
+            this.page_size * this.currPage
+          );
+        }
+      }
     },
     "tplEditData.items": {
       deep: true,
@@ -544,10 +691,27 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["add_new_medicine", "clean_recipe"]),
     firstSearch: function() {
       this.tplSearchList = [];
       if (this.recipeType != 6) {
         this.tplSearch();
+      }
+    },
+    changePage: function(flag) {
+      if (flag == 0) {
+        if (this.currPage == 1) {
+          this.currPage = 1;
+        } else {
+          this.currPage--;
+        }
+      }
+      if (flag == 1) {
+        if (this.currPage == this.page_num) {
+          this.currPage = this.page_num;
+        } else {
+          this.currPage++;
+        }
       }
     },
     tplSearch: function() {
@@ -556,7 +720,9 @@ export default {
       switch (self.recipeType) {
         case 0: {
           params = {
-              scope:1,
+            name: self.searchTplName,
+            scope: 1,
+            page: 1
           };
           break;
         }
@@ -565,24 +731,21 @@ export default {
             category: self.category,
             is_cloud: 0,
             name: self.searchTplName,
-            page: 1,
-            page_size: 20
+            page: 1
           };
           break;
         }
         case 2: {
           params = {
             name: self.searchTplName,
-            page: 1,
-            page_size: 20
+            page: 1
           };
           break;
         }
         case 4: {
           params = {
             name: self.searchTplName,
-            page: 1,
-            page_size: 20
+            page: 1
           };
           break;
         }
@@ -621,7 +784,6 @@ export default {
             category: self.category,
             medicine_name: self.tplEditData.searchName,
             page: 1,
-            page_size: 20,
             status: 1
           };
           break;
@@ -630,16 +792,14 @@ export default {
           params = {
             medicine_name: self.tplEditData.searchName,
             status: 1,
-            page: 1,
-            page_size: 10
+            page: 1
           };
           break;
         }
         case 4: {
           params = {
             name: self.tplEditData.searchName,
-            page: 1,
-            page_size: 8
+            page: 1
           };
           break;
         }
@@ -684,7 +844,8 @@ export default {
           spec: item.spec,
           is_match: 1,
           alias_name: item.alias_name,
-          clinic_alias_name: item.clinic_alias_name
+          clinic_alias_name: item.clinic_alias_name,
+          status: item.status
         };
         self.tplEditData.items.push(newItem);
         self.tplEditData.searchLists = [];
@@ -792,12 +953,48 @@ export default {
         creator_name: item.creator_name,
         creator_id: item.creator_id,
         id: item.id,
-        is_cloud: item.is_cloud
+        is_cloud: item.is_cloud,
+
+        chief_complaint: item.chief_complaint, //主诉
+        present_illness: item.present_illness, //病史
+        allergic_history: item.allergic_history, //过敏史
+        personal_history: item.personal_history, //既往史
+        examination: item.examination, //检查
+        diagnosis: item.diagnosis, //中医诊断
+        diagnosis_xy: item.diagnosis_xy //西医诊断
       };
       this.showTpl = true;
     },
     tplHide: function() {
       this.showTpl = false;
+    },
+    useTpl: function() {
+      var self = this;
+      if (this.recipeType !== 0) {
+        this.clean_recipe();
+        var newItem = {};
+        this.tplData.items.forEach(function(item) {
+          newItem = {
+            category: item.category,
+            is_match: item.is_match,
+            item_id: item.item_id,
+            name: item.name,
+            alias_name:item.alias_name||item.name,
+            clinic_alias_name:item.clinic_alias_name||item.name,
+            num: item.num,
+            price: item.price,
+            sale_price: item.sale_price,
+            spec: item.spec,
+            stock: item.stock,
+            stock_sale_ratio: item.stock_sale_ratio,
+            unit: item.unit,
+            unit_sale: item.unit_sale,
+            unit_stock: item.unit_stock,
+            usage: item.usage,
+          };
+          self.add_new_medicine({ item: newItem, type: self.recipeType });
+        });
+      }
     },
     useTplShow: function() {
       this.showUseTpl = true;
@@ -816,13 +1013,16 @@ export default {
       this.tplEditData.tplName = this.tplData.tplName;
       this.tplEditData.scope = this.tplData.scope;
       this.tplEditData.is_cloud = this.tplData.is_cloud;
-      this.tplEditData.items = (function(items) {
-        var newArr = [];
-        items.forEach(function(item) {
-          newArr.push(item);
-        });
-        return newArr;
-      })(this.tplData.items);
+      if (this.recipeType !== 0) {
+        this.tplEditData.items = (function(items) {
+          var newArr = [];
+          items.forEach(function(item) {
+            newArr.push(item);
+          });
+          return newArr;
+        })(this.tplData.items);
+      }
+
       this.tplEditData.dosage = this.tplData.dosage;
       this.tplEditData.doctor_remark = this.tplData.doctor_remark;
       this.showEditTpl = true;
@@ -1054,7 +1254,7 @@ export default {
   top: 6rem;
   width: 50rem;
   min-height: 15rem;
-  max-height: 40rem;
+  max-height: 50rem;
   font-size: 1rem;
   overflow: auto;
 }
@@ -1185,5 +1385,15 @@ tbody td {
 .tpl-btn {
   font-size: 1rem;
   width: 6rem;
+}
+.tpl-case div {
+  margin-right: 1rem;
+  padding-bottom: 0.5rem;
+  margin-top: 0.5rem;
+  border-bottom: 1px solid #c1c1c1;
+  border-top: 1px transparent;
+}
+.case-label {
+  font-weight: bold;
 }
 </style>
