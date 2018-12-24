@@ -4,7 +4,7 @@
       <div v-show="!showTpl">
         <div class="mb6" style="width:100%;display:flex;height:2rem;">
           <div class="col70 mr10">
-            <Input placeholder="请输入模板名称" v-model="searchTplName"/>
+            <Input placeholder="请输入模板名称" @input="tplSearch()" v-model="searchTplName"/>
           </div>
           <div class="col20">
             <Button @click="tplSearch()">搜索</Button>
@@ -548,8 +548,9 @@ export default {
   },
   data() {
     return {
+      timer: null,
       currPage: 1,
-      page_num: 0,
+      page_num: 1,
       showList: [],
       page_size: 0,
       westernMedUsages: westernMedUsages,
@@ -620,44 +621,41 @@ export default {
     recipeType: function() {
       this.showTpl = false;
       this.searchTplName = "";
-      this.tplSearchList = [];
-      this.showList = [];
+      //this.tplSearchList = [];
+      //this.showList = [];
       this.firstSearch();
     },
     category: function() {
       this.showTpl = false;
       this.searchTplName = "";
-      this.tplSearchList = [];
+      //this.tplSearchList = [];
       this.firstSearch();
     },
-    tplSearchList: {
-      deep: true,
-      handler: function() {
-        if (this.recipeType === 1) {
-          this.page_size = 10;
+    tplSearchList: function() {
+      if (this.recipeType === 1) {
+        this.page_size = 10;
+      } else {
+        this.page_size = 10;
+      }
+      this.currPage = 1;
+      this.page_num = Number(
+        (this.tplSearchList.length / this.page_size).toFixed(0)
+      );
+      if (this.page_num * this.page_size < this.tplSearchList.length) {
+        this.page_num++;
+      }
+      if (this.page_num == 1) {
+        this.showList = this.tplSearchList.slice(0);
+      } else {
+        if (this.currPage == this.page_num) {
+          this.showList = this.tplSearchList.slice(
+            this.page_size * (this.currPage - 1)
+          );
         } else {
-          this.page_size = 10;
-        }
-        this.currPage = 1;
-        this.page_num = Number(
-          (this.tplSearchList.length / this.page_size).toFixed(0)
-        );
-        if (this.page_num * this.page_size < this.tplSearchList.length) {
-          this.page_num++;
-        }
-        if (this.page_num == 1) {
-          this.showList = this.tplSearchList.slice(0);
-        } else {
-          if (this.currPage == this.page_num) {
-            this.showList = this.tplSearchList.slice(
-              this.page_size * (this.currPage - 1)
-            );
-          } else {
-            this.showList = this.tplSearchList.slice(
-              this.page_size * (this.currPage - 1),
-              this.page_size * this.currPage
-            );
-          }
+          this.showList = this.tplSearchList.slice(
+            this.page_size * (this.currPage - 1),
+            this.page_size * this.currPage
+          );
         }
       }
     },
@@ -750,12 +748,14 @@ export default {
           break;
         }
       }
-      self.tplSearchList = [];
-      searchTpl(params, this.recipeType).then(function(res) {
-        if (res.code == 1000) {
-          self.tplSearchList = res.data;
-        }
-      });
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => {
+        searchTpl(params, this.recipeType).then(function(res) {
+          if (res.code == 1000) {
+            self.tplSearchList = res.data;
+          }
+        });
+      }, 300);
     },
     addTpl: function() {
       this.tplEditData = {
@@ -804,16 +804,19 @@ export default {
           break;
         }
       }
-      searchMed(params, self.recipeType).then(
-        function(res) {
-          if (res.code == 1000) {
-            self.tplEditData.searchLists = res.data;
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => {
+        searchMed(params, self.recipeType).then(
+          function(res) {
+            if (res.code == 1000) {
+              self.tplEditData.searchLists = res.data;
+            }
+          },
+          function(err) {
+            console.log(err);
           }
-        },
-        function(err) {
-          console.log(err);
-        }
-      );
+        );
+      });
     },
     editTplAddList: function(item) {
       var self = this;
@@ -979,8 +982,8 @@ export default {
             is_match: item.is_match,
             item_id: item.item_id,
             name: item.name,
-            alias_name:item.alias_name||item.name,
-            clinic_alias_name:item.clinic_alias_name||item.name,
+            alias_name: item.alias_name || item.name,
+            clinic_alias_name: item.clinic_alias_name || item.name,
             num: item.num,
             price: item.price,
             sale_price: item.sale_price,
@@ -990,10 +993,11 @@ export default {
             unit: item.unit,
             unit_sale: item.unit_sale,
             unit_stock: item.unit_stock,
-            usage: item.usage,
+            usage: item.usage
           };
           self.add_new_medicine({ item: newItem, type: self.recipeType });
         });
+        this.showUseTpl = false;
       }
     },
     useTplShow: function() {
