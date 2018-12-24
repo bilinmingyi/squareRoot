@@ -1,16 +1,13 @@
 <template>
   <div>
     <section class="herbal_head">
-      <RadioGroup :value="currentData.data.category" class="herbal_head_left" @on-change="changeCategory($event)">
-        <Radio label="1" size="large">
-          <span>饮片</span>
-        </Radio>
-        <Radio label="2" size="large">
-          <span>颗粒</span>
-        </Radio>
-      </RadioGroup>
+      <div  class="herbal_head_left">
+        <f-radio value="1" name="herCate" :currVal="currentData.data.category" @change="changeCategory($event)">饮片</f-radio>
+        <f-radio value="2" name="herCate" :currVal="currentData.data.category" @change="changeCategory($event)" >颗粒</f-radio>
+      </div>
       <div>
         <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
+        <button class="btn" v-if="currentData.data.category==2">辅助开方</button>
         <button class="btn">打印处方</button>
         <button class="btn btn_print" @click.stop="saveTplData">存为模板</button>
       </div>
@@ -106,8 +103,9 @@
 
 <script>
   import {RadioGroup, Radio, Select, Option, Input} from 'iview'
+  import fRadio from '@/components/fRadio.vue'
   import {mapActions} from 'vuex'
-  import saveTpl from '@/components/saveRecipeTpl'
+  import saveTpl from '@/components/rootMiddle/saveRecipeTpl'
   import {herbalMedUsages, herbalRpUsages, extraFeeTypes, medFrequency} from '@/assets/js/mapType'
 
   export default {
@@ -124,7 +122,8 @@
       Select,
       Option,
       Input,
-      saveTpl
+      saveTpl,
+      fRadio
     },
     computed: {
       currentData: function () {
@@ -188,19 +187,20 @@
           }
         });
       },
-      changeCategory(val){
+      changeCategory(event){
+        event.preventDefault();
         if(this.currentData.data.items.length===0){
-          this.modify_recipe_detail({key:'category',val:val})
+          this.modify_recipe_detail({key:'category',val:event.target.value})
         }else {
           this.$Modal.confirm({
             title: '提示',
             content: '<p>切换药类型将清空已选的药，确认要切换?</p>',
             onOk: ()=>{
-              this.modify_recipe_detail({key:'category',val:val})
+              this.modify_recipe_detail({key:'category',val:event.target.value})
               this.clean_recipe();
             },
             onCancel: ()=>{
-
+              this.$forceUpdate()
             }
           })
         }

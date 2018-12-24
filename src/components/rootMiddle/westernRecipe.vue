@@ -90,7 +90,7 @@
 
 <script>
   import {westernMedUsages, medFrequency} from '@/assets/js/mapType'
-  import saveTpl from '@/components/saveRecipeTpl'
+  import saveTpl from '@/components/rootMiddle/saveRecipeTpl'
   import {mapActions} from 'vuex'
   import {Select, Option, Input} from 'iview'
 

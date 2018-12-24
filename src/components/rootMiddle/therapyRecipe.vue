@@ -62,7 +62,7 @@
 
 <script>
   import {Select, Option, Input} from 'iview'
-  import saveTpl from '@/components/saveRecipeTpl'
+  import saveTpl from '@/components/rootMiddle/saveRecipeTpl'
   import {mapActions} from 'vuex'
 
   export default {

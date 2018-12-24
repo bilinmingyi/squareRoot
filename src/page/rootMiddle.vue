@@ -25,10 +25,10 @@
 
 <script>
   import {mapActions, mapState} from 'vuex'
-  import herbalRecipe from '@/components/herbalRecipe.vue'
-  import westernRecipe from '@/components/westernRecipe.vue'
-  import therapyRecipe from '@/components/therapyRecipe.vue'
-  import materialRecipe from '@/components/materialRecipe.vue'
+  import herbalRecipe from '@/components/rootMiddle/herbalRecipe.vue'
+  import westernRecipe from '@/components/rootMiddle/westernRecipe.vue'
+  import therapyRecipe from '@/components/rootMiddle/therapyRecipe.vue'
+  import materialRecipe from '@/components/rootMiddle/materialRecipe.vue'
   import patientrRcord from '@/components/patientrRcord.vue'
   import {Dropdown, DropdownMenu, DropdownItem} from 'iview'
 
