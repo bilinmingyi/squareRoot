@@ -3,21 +3,24 @@
     <div>
       <div style="display: flex;background-color: #f2f2f2;">
         <div
+          v-show="recipeType==1||recipeType==2||recipeType==4||recipeType==6"
           style="flex: 1;"
           :class="['prescript-title',{'current-tab':in_first_tab}]"
           @click.stop="in_first"
         >
           <span v-show="recipeType==1||recipeType==2">药品搜索</span>
           <span v-show="recipeType==4">项目搜索</span>
-          <span v-show="recipeType==5">附加项目</span>
           <span v-show="recipeType==6">材料搜索</span>
         </div>
         <div
-          v-show="recipeType==1||recipeType==2||recipeType==4"
+          v-show="recipeType==1||recipeType==2||recipeType==4||recipeType==0"
           style="flex: 1;"
           :class="['prescript-title',{'current-tab':in_second_tab}]"
           @click.stop="in_second"
-        >处方模板</div>
+        >
+          <span v-show="recipeType!=0">处方模板</span>
+          <span v-show="recipeType==0">病历模板</span>        
+        </div>
       </div>
     </div>
     <div class="right-content">
@@ -33,25 +36,34 @@ import medSearch from '@/components/rootRight/medSearch.vue'
 import tpl from '@/components/rootRight/tpl.vue'
   export default {
     name: "rootRight",
-    components: {
-    medSearch,
-    tpl
-  },
+      components: {
+      medSearch,
+      tpl
+    },
     data (){
       return{
-      in_first_tab: true,
-      in_second_tab: false,
+      in_first_tab: false,
+      in_second_tab: true,
       }
       
     },
     computed:{
     ...mapGetters(["currRecipeData"]),
       recipeType: function() {
-        return this.currRecipeData===undefined?1:this.currRecipeData.type;
+        return this.currRecipeData===undefined?0:this.currRecipeData.type;
+      },
     },
+    watch: {
+      recipeType: function(){
+        if(this.recipeType==0){
+          this.in_second();
+        }else{
+          this.in_first();
+        }
+      }
     },
     methods: {
-      in_first: function() {
+    in_first: function() {
       this.in_first_tab = true;
       this.in_second_tab = false;
     },

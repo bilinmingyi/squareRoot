@@ -76,6 +76,8 @@ const searchTpl = (params, type) => {
     return fetch('/doctreat/tpl/western/list', params);
   } else if (type === 4) {
     return fetch('/doctreat/tpl/therapy/list', params);
+  } else if (type === 0) {
+    return fetch('/doctreat/tpl/casehistory/list',params);
   }
 }
 const updateTpl = (params, type) => {

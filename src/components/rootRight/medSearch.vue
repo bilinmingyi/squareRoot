@@ -63,24 +63,20 @@ export default {
       this.searchList=[];
       this.firstSearch();
     },
-    searchList: {
-      handler: function() {},
-      deep: true
+    searchList: function(){
+
     }
   },
   computed: {
     ...mapGetters(["currRecipeData"]),
     recipeType: function() {
-      return this.currRecipeData === undefined ? 1 : this.currRecipeData.type;
+      return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
     },
     category: function() {
       return this.currRecipeData === undefined
         ? 1
         : this.currRecipeData.data.category;
     }
-  },
-  created() {
-    this.firstSearch();
   },
   methods: {
     ...mapActions(["add_new_medicine"]),
@@ -95,8 +91,11 @@ export default {
       }
     },
     firstSearch: function() {
+      this.searchList=[];
+      if(this.recipeType===0){
+        return;
+      }
       var self = this;
-      self.searchList = [];
       searchRecentMed(
         {
           category: self.category
@@ -105,10 +104,7 @@ export default {
       ).then(
         function(res) {
           if (res.code == 1000) {
-            
-            res.data.forEach(function(e) {
-              self.searchList.push(e);
-            });
+            self.searchList=res.data;
           }
         },
         function(error) {
@@ -118,6 +114,7 @@ export default {
     },
     searchMed: function() {
       if (this.searchName == "") {
+        this.searchList=[];
         this.firstSearch();
         return;
       }
