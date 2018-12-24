@@ -7,7 +7,7 @@
       </div>
       <div>
         <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
-        <button class="btn">辅助开方</button>
+        <button class="btn" v-if="currentData.data.category==2">辅助开方</button>
         <button class="btn">打印处方</button>
         <button class="btn btn_print" @click.stop="saveTplData">存为模板</button>
       </div>
