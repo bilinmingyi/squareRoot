@@ -2,7 +2,7 @@
   <div class="mt5 ml6 mr6 mb5">
     <div class="mb6" style="width:100%;display:flex;height:2rem;font-size:1rem;">
       <div class="col70 mr10">
-        <Input placeholder="药品名称/拼音简码" v-model="searchName"/>
+        <Input @input="sto()" placeholder="药品名称/拼音简码" v-model="searchName"/>
       </div>
       <div class="col20">
         <Button @click="searchMed()">搜索</Button>
@@ -55,6 +55,7 @@ export default {
   },
   data() {
     return {
+      timer: null,
       searchName: "",
       searchList: [],
       currPage: 1,
@@ -184,15 +185,26 @@ export default {
         }
       );
     },
+    sto: function(){
+      var self=this;
+      var t;
+      return function(){
+        clearTimeout(t);
+        var cox=self;
+        t=setTimeout(function(){
+          cox.searchMed.call(cox);
+        },200)
+      }
+    },
     searchMed: function() {
-      if (this.searchName == "") {
-        this.searchList = [];
-        this.firstSearch();
+      var self=this;
+      if (self.searchName == "") {
+        self.searchList = [];
+        self.firstSearch();
         return;
       }
-      var self = this;
       var params = {};
-      switch (this.recipeType) {
+      switch (self.recipeType) {
         case 1: {
           params = {
             medicine_name: self.searchName,
