@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <f-header></f-header>
+    <router-view></router-view>
+    <router-view name="Header"></router-view>
     <div class="page_content" v-if="initFinish">
       <router-view class="left" name="Left"/>
       <router-view class="middle" name="Middle"/>
@@ -11,14 +12,14 @@
 </template>
 
 <script>
-import fHeader from "@/components/fHeader.vue";
+
 import { getTreatOrderDetail } from "@/fetch/api.js";
 import fLoader from "@/components/fLoader";
 import { mapState, mapActions } from "vuex";
 export default {
   name: "App",
   components: {
-    fHeader,
+
     fLoader
   },
   data() {

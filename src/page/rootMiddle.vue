@@ -56,10 +56,12 @@
       })
     },
     created() {
-      this.addNewRecipt(1);
-      this.addNewRecipt(2);
-      this.addNewRecipt(4);
-      this.change_curr_tab(-1);
+      if(this.recipeList.length===0){
+        this.addNewRecipt(1);
+        this.addNewRecipt(2);
+        this.addNewRecipt(4);
+        this.change_curr_tab(-1);
+      }
     },
     methods: {
       ...mapActions([

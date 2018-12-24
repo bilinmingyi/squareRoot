@@ -7,7 +7,9 @@
       </div>
       <div>
         <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
-        <button class="btn" v-if="currentData.data.category==2">辅助开方</button>
+        <button class="btn" v-if="currentData.data.category==2">
+          <router-link to="/assist">辅助开方</router-link>
+        </button>
         <button class="btn">打印处方</button>
         <button class="btn btn_print" @click.stop="saveTplData">存为模板</button>
       </div>
@@ -107,6 +109,7 @@
   import {mapActions} from 'vuex'
   import saveTpl from '@/components/rootMiddle/saveRecipeTpl'
   import {herbalMedUsages, herbalRpUsages, extraFeeTypes, medFrequency} from '@/assets/js/mapType'
+  import Link from "iview/src/mixins/link";
 
   export default {
     name: "herbalRecipe",
@@ -117,6 +120,7 @@
       };
     },
     components: {
+      Link,
       RadioGroup,
       Radio,
       Select,
