@@ -5,17 +5,9 @@
         <f-radio value="1" name="herCate" :currVal="currentData.data.category" @change="changeCategory($event)">饮片</f-radio>
         <f-radio value="2" name="herCate" :currVal="currentData.data.category" @change="changeCategory($event)" >颗粒</f-radio>
       </div>
-
-      <!--<RadioGroup v-model="currentData.data.category" class="herbal_head_left" @on-change="changeCategory($event)">-->
-        <!--<Radio label="1" size="large">-->
-          <!--<span>饮片</span>-->
-        <!--</Radio>-->
-        <!--<Radio label="2" size="large">-->
-          <!--<span>颗粒</span>-->
-        <!--</Radio>-->
-      <!--</RadioGroup>-->
       <div>
         <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
+        <button class="btn">辅助开方</button>
         <button class="btn">打印处方</button>
         <button class="btn btn_print" @click.stop="saveTplData">存为模板</button>
       </div>
@@ -113,7 +105,7 @@
   import {RadioGroup, Radio, Select, Option, Input} from 'iview'
   import fRadio from '@/components/fRadio.vue'
   import {mapActions} from 'vuex'
-  import saveTpl from '@/components/saveRecipeTpl'
+  import saveTpl from '@/components/rootMiddle/saveRecipeTpl'
   import {herbalMedUsages, herbalRpUsages, extraFeeTypes, medFrequency} from '@/assets/js/mapType'
 
   export default {
