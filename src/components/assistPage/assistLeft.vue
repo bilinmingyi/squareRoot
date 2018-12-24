@@ -8,7 +8,7 @@
       <div class="diagnosisItem">
         <label class="labelText">西医诊断</label>
         <Select filterable class="flexOne" placeholder="" v-model="XYPatientId" remote :remote-method="findXYDiagnosis"
-                :loading="XYLoading" clearable @on-clear="clearXY">
+                :loading="XYLoading" clearable @on-clear="clearXY" @click="test()">
           <Option v-for="item in XYList" :value="item.parent_id">{{item.xy_name}}</Option>
         </Select>
       </div>
@@ -22,7 +22,7 @@
       <div class="diagnosisItem">
         <label class="labelText">中医辨证</label>
         <Select filterable class="flexOne" placeholder="" v-model="ZYdiscriminate" remote
-                :remote-method="findZYdiscriminate">
+                :remote-method="findZYdiscriminate" clearable  @on-clear="clearZYD">
           <Option v-for="item in ZYDList" :value="item.bz_name">{{item.bz_name}}</Option>
 
         </Select>
@@ -85,6 +85,9 @@
       }
     },
     methods: {
+      test(){
+        console.log(9999)
+      },
       findXYDiagnosis(query) {
         if (this.ZYdiagnosis.replace(/\s*/g, '') === '') {
           this.ZYPatientId = ''
@@ -169,6 +172,10 @@
         this.ZYdiagnosis = '';
         this.ZYList = [];
         this.ZYPatientId = '';
+      },
+      clearZYD(){
+        this.ZYdiscriminate="";
+        this.ZYDList=[];
       }
     }
   }
