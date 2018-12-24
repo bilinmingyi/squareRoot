@@ -45,6 +45,7 @@ const saveMedTpl = (params, type) => {
     return fetch('/doctreat/tpl/therapy/add', params);
   }
 }
+const searchDiagnosis = (params) => fetch('/treatmng/dytreatorder/fjbDisease',params);
 
 //right
 const searchRecentMed = (params, type) => {
@@ -77,7 +78,7 @@ const searchTpl = (params, type) => {
   } else if (type === 4) {
     return fetch('/doctreat/tpl/therapy/list', params);
   } else if (type === 0) {
-    return fetch('/doctreat/tpl/casehistory/list',params);
+    return fetch('/doctreat/tpl/casehistory/list', params);
   }
 }
 const updateTpl = (params, type) => {
@@ -91,13 +92,13 @@ const updateTpl = (params, type) => {
 }
 const delTpl = (id, params, type) => {
   if (type === 1) {
-    return fetch('/doctreat/tpl/herbal/delete?tplId='+id, params);
+    return fetch('/doctreat/tpl/herbal/delete?tplId=' + id, params);
   } else if (type === 2) {
-    return fetch('/doctreat/tpl/western/delete?tplId='+id, params);
+    return fetch('/doctreat/tpl/western/delete?tplId=' + id, params);
   } else if (type === 4) {
-    return fetch('/doctreat/tpl/therapy/delete?tplId='+id, params);
+    return fetch('/doctreat/tpl/therapy/delete?tplId=' + id, params);
   } else if (type === 0) {
-    return fetch('/doctreat/tpl/casehistory/delete?tplId='+id, params);
+    return fetch('/doctreat/tpl/casehistory/delete?tplId=' + id, params);
   }
 }
 
@@ -112,6 +113,7 @@ export {
   setCaseHistory,
   // middle
   saveMedTpl,
+  searchDiagnosis,
   //right
   searchRecentMed,
   searchMed,
