@@ -486,7 +486,16 @@ export default {
         scope: 0,
         items: [],
         dosage: 0,
-        doctor_remark: ""
+        doctor_remark: "",
+
+        chief_complaint: "", //主诉
+        present_illness: "", //病史
+        allergic_history: "", //过敏史
+        past_history: "", //既往史
+        examination: "", //检查
+        herbal_diagnosis: "", //中医诊断
+        western_diagnosis: "", //西医诊断
+        processing_opinion: "" //处理意见
       },
       tplEditData: {
         category: 1,
@@ -556,7 +565,7 @@ export default {
       switch (self.recipeType) {
         case 0: {
           params = {
-              scope:1,
+            scope: 1
           };
           break;
         }
@@ -816,13 +825,16 @@ export default {
       this.tplEditData.tplName = this.tplData.tplName;
       this.tplEditData.scope = this.tplData.scope;
       this.tplEditData.is_cloud = this.tplData.is_cloud;
-      this.tplEditData.items = (function(items) {
-        var newArr = [];
-        items.forEach(function(item) {
-          newArr.push(item);
-        });
-        return newArr;
-      })(this.tplData.items);
+      if (this.recipeType !== 0) {
+        this.tplEditData.items = (function(items) {
+          var newArr = [];
+          items.forEach(function(item) {
+            newArr.push(item);
+          });
+          return newArr;
+        })(this.tplData.items);
+      }
+
       this.tplEditData.dosage = this.tplData.dosage;
       this.tplEditData.doctor_remark = this.tplData.doctor_remark;
       this.showEditTpl = true;
