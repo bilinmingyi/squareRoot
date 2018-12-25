@@ -197,6 +197,12 @@ const actions = {
   },
   set_order_seqno:({commit},val)=>{
     commit(mutationTypes.SET_ORDER_SEQNO,val)
+  },
+  init_recipe:({commit},list) =>{
+    commit(mutationTypes.INIT_RECIPE,list)
+  },
+  init_recode:({commit},obj)=>{
+    commit(mutationTypes.INIT_RECODE,obj)
   }
 
   //right

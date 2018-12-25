@@ -13,7 +13,7 @@
 
 <script>
 
-import { getTreatOrderDetail } from "@/fetch/api.js";
+import { getTreatOrderDetail,loadDraft } from "@/fetch/api.js";
 import fLoader from "@/components/fLoader";
 import { mapState, mapActions } from "vuex";
 export default {
@@ -35,9 +35,10 @@ export default {
   },
   created() {
     this.init();
+    this.loadDraftData();
   },
   methods: {
-    ...mapActions(['set_patient_info', 'set_order_seqno']),
+    ...mapActions(['set_patient_info', 'set_order_seqno','init_recipe','init_recode']),
     init() {
       let params = { order_seqno: this.getOrderSeqno() };
       this.showLoader = true;
@@ -65,6 +66,20 @@ export default {
       // TODO: 获取订单号
 
       return "T0283427054002";
+    },
+    loadDraftData(){
+      loadDraft({
+        "order_seqno":this.getOrderSeqno()
+      }).then(data=>{
+        if(data.code===1000){
+          let result=JSON.parse(data.data);
+          this.init_recipe(JSON.parse(JSON.stringify(result.recipeList)));
+          this.init_recode(JSON.parse(JSON.stringify(result.recordData)));
+          console.log(result)
+        }else {
+          this.$Message.info(data.msg)
+        }
+      })
     }
   }
 };

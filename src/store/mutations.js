@@ -68,8 +68,14 @@ const mutations = {
     [mutationTypes.SELECT_FJB_RECIPE](state, obj) {
       state.fjbRecipe = obj;
     },
-    [mutationTypes.SET_ORDER_SEQNO](state,val) {
-      state.orderSeqno=val;
+    [mutationTypes.SET_ORDER_SEQNO](state, val) {
+      state.orderSeqno = val;
+    },
+    [mutationTypes.INIT_RECIPE](state, list) {
+      state.recipeList = list
+    },
+    [mutationTypes.INIT_RECODE](state, obj) {
+      state.recordData=obj;
     }
     //right
   }
