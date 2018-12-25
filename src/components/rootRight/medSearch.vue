@@ -145,6 +145,9 @@ export default {
         : this.currRecipeData.data.category;
     }
   },
+  created() {
+    this.firstSearch();
+  },
   methods: {
     ...mapActions(["add_new_medicine"]),
     selectItem: function(item) {
