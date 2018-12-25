@@ -114,6 +114,7 @@ const getHerbalList = (params) => fetch('/stockmng/medicine/herbalList', params)
 
 const saveDraft = (params) => fetch('/doctreat/treatorder/save', params)
 
+const loadDraft = (params) => fetch('/doctreat/treatorder/getDraft', params)
 
 //right
 const searchRecentMed = (params, type) => {
@@ -191,6 +192,7 @@ export {
   getFJDrugList,
   getHerbalList,
   saveDraft,
+  loadDraft,
 
   //right
   searchRecentMed,

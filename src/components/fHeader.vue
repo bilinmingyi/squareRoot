@@ -4,14 +4,14 @@
     <div>
       <Button type="primary" shape="circle" class="btn-time" @click.stop="saveDraft();">临时保存</Button>
       <Button type="primary" shape="circle" class="btn-cancel" @click.stop="confirmCancel">取消就诊</Button>
-      <Button type="primary" shape="circle" class="btn-done">完成就诊</Button>
+      <Button type="primary" shape="circle" class="btn-done" @click.stop="saveData">完成就诊</Button>
     </div>
   </div>
 </template>
 
 <script>
   import {Button} from 'iview'
-  import {mapState} from 'vuex'
+  import {mapState, mapActions} from 'vuex'
   import {saveDraft, cancelOrder} from '@/fetch/api.js'
 
   export default {
@@ -33,6 +33,9 @@
       })
     },
     methods: {
+      ...mapActions([
+        'change_curr_tab'
+      ]),
       saveDraft() {
         let draftData = {
           recipeList: this.recipeList,
@@ -40,17 +43,17 @@
         }
         saveDraft({
           "patient_name": this.patientData.name,
-          "patient_mobile":  this.patientData.mobile,
-          "patient_sex":  this.patientData.sex,
-          "patient_marital_status":  this.patientData.marital_status,
-          "patient_birthday":  this.patientData.birthday,
+          "patient_mobile": this.patientData.mobile,
+          "patient_sex": this.patientData.sex,
+          "patient_marital_status": this.patientData.marital_status,
+          "patient_birthday": this.patientData.birthday,
           "order_seqno": this.orderSeqno,
           "draft": JSON.stringify(draftData),
         }).then(data => {
           console.log(data)
-          if(data.code===1000){
+          if (data.code === 1000) {
             this.$router.go(-1)
-          }else {
+          } else {
             this.$Message.info("保存失败");
           }
         })
@@ -77,6 +80,42 @@
             this.$Message.error(res.msg);
           }
         })
+      },
+      saveData() {
+        let resultList = this.recipeList.filter(item => {
+          return item.data.items.length !== 0
+        });
+        if (resultList.length === 0) {
+          this.$Message.info("至少添加一个完整的处方！");
+          return
+        }
+        try {
+          this.recipeList.forEach((item, index) => {
+              item.data.items.forEach(med => {
+                if (med.is_match !== 1) {
+                  this.change_curr_tab(index)
+                  throw new Error("药品名不匹配:请删除[" + med.name + "]")
+                }
+                if (med.num <= 0) {
+                  this.change_curr_tab(index)
+                  throw new Error("请重新填写[" + med.name + "]的数量！")
+                }
+                if (med.unit == '' && item.type === 2) {
+                  this.change_curr_tab(index)
+                  throw new Error("请重新选择[" + med.name + "]的单位！")
+                }
+              })
+
+              if (item.data.dosage <= 0 && item.type === 1) {
+                this.change_curr_tab(index)
+                throw new Error("请填写处方的剂数！")
+              }
+            }
+          )
+        } catch (e) {
+          this.$Message.info(e.message)
+        }
+
       }
     }
   }
