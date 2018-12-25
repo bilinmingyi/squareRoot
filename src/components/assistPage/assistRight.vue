@@ -47,7 +47,7 @@
         </table>
       </div>
 
-      <Button class="use_recipe_btn" type="primary" shape="circle">导入该处方</Button>
+      <Button class="use_recipe_btn" type="primary" shape="circle" v-if="currentFjList.length!=0">导入该处方</Button>
 
     </section>
   </div>
