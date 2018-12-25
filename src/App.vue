@@ -73,9 +73,10 @@ export default {
     },
     loadDraftData(){
       loadDraft({
-        "order_seqno":this.getOrderSeqno()
+        "order_seqno":this.getOrderSeqno('orderSeqno')
       }).then(data=>{
         if(data.code===1000){
+          if (data.data == '') return;
           let result=JSON.parse(data.data);
           this.init_recipe(JSON.parse(JSON.stringify(result.recipeList)));
           this.init_recode(JSON.parse(JSON.stringify(result.recordData)));
