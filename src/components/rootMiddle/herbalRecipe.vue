@@ -31,16 +31,21 @@
         <tr v-for="(item,index) in currentData.data.items">
           <td>{{index+1}}</td>
           <td>{{item.name}}</td>
-          <td v-if="item.is_match===0" style="color: red;" colspan="2">
-            系统内搜索不到该药品
-          </td>
-          <td v-if="item.is_match===1">{{item.spec==='1克/克'?'1克':item.spec}}</td>
-          <td v-if="item.is_match===1">
-            <Input style="width:2.5rem" type="text" :value="item.num"
-                   @on-change="modify_medicine({key:'num',val:$event.target.value,index:index})"/>
-            <span>{{item.unit}}</span>
-            <span class="num_text" v-if="currentData.data.category==2">({{item.num*item.stock_sale_ratio}}{{item.unit_sale}})</span>
-          </td>
+
+          <template  v-if="item.is_match===1">
+            <td>{{item.spec==='1克/克'?'1克':item.spec}}</td>
+            <td>
+              <Input style="width:2.5rem" type="text" :value="item.num"
+                     @on-change="modify_medicine({key:'num',val:$event.target.value,index:index})"/>
+              <span>{{item.unit}}</span>
+              <span class="num_text" v-if="currentData.data.category==2">({{item.num*item.stock_sale_ratio}}{{item.unit_sale}})</span>
+            </td>
+          </template>
+          <template v-else>
+            <td style="color: red;" colspan="2">
+              系统内搜索不到该药品
+            </td>
+          </template>
           <td>{{item.remark}}</td>
           <td>
             <Select style="width:4.25rem" :value="item.usage" @on-change="modify_medicine({key:'usage',val:$event,index:index})">

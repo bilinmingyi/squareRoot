@@ -23,15 +23,22 @@
         <tr v-for="(item,index) in currentData.data.items">
           <td>{{index+1}}</td>
           <td>{{item.name}}</td>
-          <td>
-            <Input style="width:2.5rem" type="text" :value="item.num"
-                   @on-change="modify_medicine({key:'num',val:$event.target.value,index:index})"/>
-          </td>
-          <td>{{item.unit}}</td>
-          <td>
-            <Input type="text" :value="item.remark"
-                   @on-change="modify_medicine({key:'remark',val:$event.target.value,index:index})"/>
-          </td>
+          <template v-if="item.is_match===1">
+            <td>
+              <Input style="width:2.5rem" type="text" :value="item.num"
+                     @on-change="modify_medicine({key:'num',val:$event.target.value,index:index})"/>
+            </td>
+            <td>{{item.unit}}</td>
+            <td>
+              <Input type="text" :value="item.remark"
+                     @on-change="modify_medicine({key:'remark',val:$event.target.value,index:index})"/>
+            </td>
+          </template>
+          <template v-else>
+            <td colspan="3">
+              系统内搜索不到该药品
+            </td>
+          </template>
           <td>
             <a @click.stop="cancel_medicine(index)">删除</a>
           </td>
