@@ -38,7 +38,7 @@
           <tbody>
           <tr v-for="(item,index) in currentFjList">
             <td style="width: 10%;">{{index+1}}</td>
-            <td>{{item.drugName}}</td>
+            <td>{{item.drugName.replace(/his.*/,'')}}</td>
             <td style="width: 10%;">{{item.number}}{{item.unit}}</td>
             <td>{{item.dosageRange}}{{item.unit}}</td>
             <td  style="width: 35%">{{item.remark}}</td>
@@ -47,7 +47,7 @@
         </table>
       </div>
 
-      <Button class="use_recipe_btn" type="primary" shape="circle" v-if="currentFjList.length!=0">导入该处方</Button>
+      <Button class="use_recipe_btn" type="primary" shape="circle" v-if="currentFjList.length!=0" @click.stop="importRecipe">导入该处方</Button>
 
     </section>
   </div>
@@ -57,7 +57,7 @@
   import fRadio from '@/components/fRadio.vue'
   import {Button, CheckboxGroup , Checkbox} from 'iview'
   import {mapActions, mapState} from 'vuex'
-  import {getJJInfo, getFJDrugList} from '@/fetch/api.js'
+  import {getJJInfo, getFJDrugList, getHerbalList} from '@/fetch/api.js'
 
   export default {
     name: "assistRight",
@@ -78,7 +78,10 @@
       ...mapState({
         'fjbRecipe':state=>state.fjbRecipe,
         'patientData':state=>state.patientData
-      })
+      }),
+      currentData: function () {
+        return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
+      },
     },
     watch:{
       fjbRecipe:{
@@ -97,6 +100,10 @@
       }
     },
     methods:{
+      ...mapActions([
+        'clean_recipe',
+        'add_new_medicine'
+      ]),
       PostJJInfo(){
         this.symptomList=[];
         this.symptomValList=[];
@@ -134,6 +141,95 @@
           }
         }).catch(error=>{
           console.log(error)
+        })
+      },
+      importRecipe(){
+        if(this.currentData.data.items.length===0){
+          this.findMedByName()
+        }else {
+          this.$Modal.confirm({
+            title: '提示',
+            content: '<p>导入药品将清空已选的药，确认要导入?</p>',
+            onOk: ()=>{
+
+            },
+            onCancel: ()=>{
+
+            }
+          })
+        }
+      },
+      findMedByName(){
+        let nameList=[];
+        this.currentFjList.forEach(item =>{
+          nameList.push(item.drugName.replace(/his.*/, ''))
+        });
+        getHerbalList({
+          "category":2,
+          "names":nameList
+        }).then(data=>{
+          if(data.code===1000){
+            this.clean_recipe();
+            this.currentFjList.forEach(item =>{
+              var existence={};
+              for(var i=0;i<data.data.length;i++){
+                if (item.drugName.replace(/his.*/, '') == data.data[i].name) {
+                  existence = data.data[i];
+                  break
+                }
+              }
+
+              if(i===data.data.length){
+                this.add_new_medicine(
+                  {
+                    item:{
+                      "item_id": '',
+                      "clinic_alias_name":'',
+                      "name": item.drugName.replace(/his.*/, ''),
+                      "num": '',
+                      "price": '',
+                      "unit": '',
+                      "default_sale_price": '',
+                      "sale_price": '',
+                      "spec": '',
+                      "unit_stock": '',
+                      "usage": '',
+                      "stock": '',
+                      "stock_sale_ratio": '',
+                      "status": 0,
+                      "remark": item.number+ item.unit+item.dosageRange==''?'':'('+item.dosageRange + item.unit+')'
+                    },
+                    type:1
+                  }
+                )
+              }else {
+                this.add_new_medicine(
+                  {
+                    item:{
+                      "item_id": existence.id,
+                      "clinic_alias_name":existence.clinic_alias_name,
+                      "name": existence.name,
+                      "num": item.unit == '克' ? existence.unit_stock != '克' ? Math.ceil(item.number / existence.stock_sale_ratio) : item.number : 0,
+                      "unit": existence.unit_stock,
+                      "default_sale_price": existence.sale_price,
+                      "sale_price": existence.sale_price,
+                      "spec": existence.spec,
+                      "unit_stock": existence.unit_stock,
+                      "usage": '',
+                      "stock": existence.stock,
+                      "stock_sale_ratio": existence.stock_sale_ratio,
+                      "status": 1,
+                      "remark": item.number+ item.unit+item.dosageRange==''?'':'('+item.dosageRange + item.unit+')'
+                    },
+                    type:1
+                  }
+                )
+              }
+            })
+            this.$router.go(-1);
+          }else {
+            this.$Message.info(data.msg)
+          }
         })
       }
     }

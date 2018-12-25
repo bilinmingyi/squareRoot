@@ -42,13 +42,27 @@ const mutations = {
       state.recipeList[state.currRecipe].data.items.splice(index, 1)
     },
     [mutationTypes.CLEAN_RECIPE](state) {
+      switch (state.recipeList[state.currRecipe].type) {
+        case 1:
+          state.recipeList[state.currRecipe].data.dosage = 1;
+          state.recipeList[state.currRecipe].data.usage = '';
+          state.recipeList[state.currRecipe].data.frequency = '';
+          state.recipeList[state.currRecipe].data.extra_num = 0;
+          state.recipeList[state.currRecipe].data.extra_feetype = '';
+          state.recipeList[state.currRecipe].data.eachDose = 0;
+          break;
+        case 2:
+          break;
+        case 3:
+          break;
+        case 4:
+          break;
+        case 5:
+          break;
+        case 6:
+          break;
+      }
       state.recipeList[state.currRecipe].data.doctor_remark = '';
-      state.recipeList[state.currRecipe].data.dosage = 1;
-      state.recipeList[state.currRecipe].data.usage = '';
-      state.recipeList[state.currRecipe].data.frequency = '';
-      state.recipeList[state.currRecipe].data.extra_num = 0;
-      state.recipeList[state.currRecipe].data.extra_feetype = '';
-      state.recipeList[state.currRecipe].data.eachDose = 0;
       state.recipeList[state.currRecipe].data.items = [];
     },
     [mutationTypes.SELECT_FJB_RECIPE](state,obj) {

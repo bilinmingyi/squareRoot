@@ -106,6 +106,9 @@ const getFJDrugList= (params) => axios({
   }],
 });
 
+const getHerbalList=(params)=>fetch('/stockmng/medicine/herbalList',params);
+
+
 
 //right
 const searchRecentMed = (params, type) => {
@@ -178,6 +181,7 @@ export {
   searchDiagnosis,
   getJJInfo,
   getFJDrugList,
+  getHerbalList,
   //right
   searchRecentMed,
   searchMed,

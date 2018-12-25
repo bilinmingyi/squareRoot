@@ -156,7 +156,10 @@
         handler:function(newVal,oldVal){
           var recipePrice=0,allPrice=0;
           newVal.items.map((item)=>{
-            recipePrice+=Number(item.num)*Number(item.price)
+            if(item.is_match===1){
+              recipePrice+=Number(item.num)*Number(item.price)
+            }
+
           });
           if(newVal.extra_feetype!==''&& newVal.extra_feetype!==undefined && newVal.extra_feetype!=null){
             let extraItem=this.extraFeeTypes.filter((typeOne)=>{
