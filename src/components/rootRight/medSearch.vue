@@ -26,7 +26,7 @@
         </div>
         <div
           v-show="recipeType==4"
-        >{{item.alias_name||item.name}}&emsp;({{item.price||item.sale_price}}元/{{item.unit_sale}})</div>
+        >{{item.alias_name||item.name}}&emsp;({{item.price||item.sale_price}}元/{{item.unit_sale||item.unit}})</div>
         <div
           v-show="recipeType==6"
         >{{item.clinic_alias_name||item.name}}&emsp;({{item.price||item.sale_price}}元/{{item.unit_sale}})</div>
