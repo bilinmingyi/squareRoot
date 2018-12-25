@@ -186,9 +186,10 @@
       @close="showSaveRecordTpl = false"
     ></save-record-tpl>
     <print-record
-      v-if="showPrintRecord"
+      v-show="showPrintRecord"
       @close="showPrintRecord = false"
       :printFlag="printFlag"
+      @reset="printFlag = false"
     ></print-record>
   </div>
   <!-- 患者病历 -->
@@ -308,7 +309,7 @@ export default {
 
     printPrescription() {
       // 打印病历
-      this.showPrintRecord = true;
+      // this.showPrintRecord = true;
       this.printFlag = true;
     },
 
