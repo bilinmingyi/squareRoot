@@ -31,8 +31,11 @@
         <tr v-for="(item,index) in currentData.data.items">
           <td>{{index+1}}</td>
           <td>{{item.name}}</td>
-          <td>{{item.spec==='1克/克'?'1克':item.spec}}</td>
-          <td>
+          <td v-if="item.is_match===0" style="color: red" colspan="2">
+            药名不匹配
+          </td>
+          <td v-if="item.is_match===1">{{item.spec==='1克/克'?'1克':item.spec}}</td>
+          <td v-if="item.is_match===1">
             <Input style="width:2.5rem" type="text" :value="item.num"
                    @on-change="modify_medicine({key:'num',val:$event.target.value,index:index})"/>
             <span>{{item.unit}}</span>
@@ -153,6 +156,7 @@
     watch: {
       'currentData.data': {
         deep: true,
+        immediate:true,
         handler:function(newVal,oldVal){
           var recipePrice=0,allPrice=0;
           newVal.items.map((item)=>{
