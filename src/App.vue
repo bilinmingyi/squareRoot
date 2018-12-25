@@ -38,8 +38,7 @@ export default {
     this.loadDraftData();
   },
   methods: {
-    ...mapActions(['set_patient_info', 'set_order_seqno','init_recipe','init_recode']),
-    ...mapActions(['set_patient_info', 'set_order_seqno', 'set_state_prop']),
+    ...mapActions(['set_patient_info', 'set_order_seqno','init_recipe','init_recode','set_state_prop']),
     init() {
       let params = { order_seqno: this.getOrderSeqno() };
       this.showLoader = true;
@@ -76,7 +75,6 @@ export default {
           let result=JSON.parse(data.data);
           this.init_recipe(JSON.parse(JSON.stringify(result.recipeList)));
           this.init_recode(JSON.parse(JSON.stringify(result.recordData)));
-          console.log(result)
         }else {
           this.$Message.info(data.msg)
         }
