@@ -49,7 +49,10 @@ const state = {
   //middle
   recipeList:[],
   currRecipe:0,
-  fjbRecipe:{}
+  fjbRecipe:{},
+
+  // right
+  recordTplChange: false,
 };
 if (module.hot) {
   // 使 action 和 mutation 成为可热重载模块

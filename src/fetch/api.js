@@ -68,6 +68,8 @@ const checkIsMatch = (params, type, recipe) => {
   }
 }
 
+const addRecordTpl = params => fetch('/doctreat/tpl/casehistory/add', params);
+
 //middle
 const saveMedTpl = (params, type) => {
   if (type === 1) {
@@ -148,6 +150,7 @@ export {
   setCaseHistory,
   getDiseaseList,
   checkIsMatch,
+  addRecordTpl,
   // middle
   saveMedTpl,
   searchDiagnosis,
