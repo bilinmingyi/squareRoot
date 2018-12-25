@@ -28,7 +28,7 @@
             <Input style="width:2.5rem" type="text" :value="item.num"
                    @on-change="modify_medicine({key:'num',val:$event.target.value,index:index})"/>
           </td>
-          <td>{{item.price}}元/{{item.unit}}</td>
+          <td>{{item.price}}元/次</td>
           <td>
             <Input type="text" :value="item.remark"
                    @on-change="modify_medicine({key:'remark',val:$event.target.value,index:index})"/>

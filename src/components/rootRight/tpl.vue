@@ -63,12 +63,12 @@
             :key="index"
           >
             <span v-show="recipeType===1">
-              {{item.name}}
+              {{item.alias_name||item.clinic_alias_name||item.name}}
               <br>
               （{{item.num}}{{item.unit}}）
             </span>
             <span v-show="recipeType===2">
-              {{item.name}}
+              {{item.alias_name||item.clinic_alias_name||item.name}}
               {{item.spec}}
             </span>
             <span v-show="recipeType===4">
@@ -135,9 +135,9 @@
               >
                 {{item.alias_name||item.clinic_alias_name||item.name}} ({{item.num}}{{item.unit}}/{{item.usage}})
                 <span
-                  v-show="item.status==0"
-                  style="color:red;font-weight:bold;"
-                >暂无此药</span>
+                  v-show="recipeType==4"
+                >{{item.price}}/次</span>
+                <span v-show="item.status==0" style="color:red;font-weight:bold;">暂无此药</span>
               </div>
               <div v-if="recipeType==0">
                 <div>
@@ -834,15 +834,16 @@ export default {
         var newItem = {
           category: item.category,
           item_id: item.id,
-          name: item.name,
+          name: item.alias_name||item.clinic_alias_name||item.name,
           num: 0,
-          unit: item.unit_stock,
+          unit: item.unit||unit_stock.unit,
+          unit_stock: item.unit_stock||item.unit,
           stock: item.stock,
           unit_stock: item.unit_stock,
           unit_sale: item.unit_sale,
           stock_sale_ratio: item.stock_sale_ratio,
-          price: item.sale_price,
-          sale_price: item.sale_price,
+          price: item.price||item.sale_price,
+          sale_price: item.sale_price||item.price,
           usage: 0,
           spec: item.spec,
           is_match: 1,
@@ -851,8 +852,8 @@ export default {
           status: item.status
         };
         self.tplEditData.items.push(newItem);
-        self.tplEditData.searchLists = [];
         self.tplEditData.searchListShow = false;
+        self.tplEditData.searchLists = [];
         self.tplEditData.searchName = "";
       }
     },
@@ -975,13 +976,12 @@ export default {
       var self = this;
       if (this.recipeType !== 0) {
         this.clean_recipe();
-        var newItem = {};
-        this.tplData.items.forEach(function(item) {
-          newItem = {
+        self.tplData.items.forEach(function(item) {
+          var newItem = {
             category: item.category,
             is_match: item.is_match,
             item_id: item.item_id,
-            name: item.name,
+            name: item.alias_name||item.clinic_alias_name||item.name,
             alias_name: item.alias_name || item.name,
             clinic_alias_name: item.clinic_alias_name || item.name,
             num: item.num,
@@ -993,28 +993,31 @@ export default {
             unit: item.unit,
             unit_sale: item.unit_sale,
             unit_stock: item.unit_stock,
-            usage: item.usage
+            usage: item.usage,
+            dose_once:item.dose_once,
+            frequency: item.frequency,
+            days: item.days
           };
           self.add_new_medicine({ item: newItem, type: self.recipeType });
         });
         this.showUseTpl = false;
       } else {
         var data = {
-          chief_complaint: self.tplData.chief_complaint||'',
-          present_illness: self.tplData.present_illness||'',
-          allergic_history: self.tplData.allergic_history||'',
-          personal_history: self.tplData.personal_history||'',
-          examinationInfo: self.tplData.examination||'',
-          diagnosis_input: self.tplData.diagnosis||'',
-          diagnosis_xy_input: self.tplData.diagnosis_xy||'',
-          treat_advice: self.tplData.treat_advice||'',
+          chief_complaint: self.tplData.chief_complaint || "",
+          present_illness: self.tplData.present_illness || "",
+          allergic_history: self.tplData.allergic_history || "",
+          personal_history: self.tplData.personal_history || "",
+          examinationInfo: self.tplData.examination || "",
+          diagnosis_input: self.tplData.diagnosis || "",
+          diagnosis_xy_input: self.tplData.diagnosis_xy || "",
+          treat_advice: self.tplData.treat_advice || "",
           diagnosis_xy_labels: [],
           diagnosis_labels: []
         };
         Object.keys(data).forEach(function(k) {
           self.set_record_prop({
             key: k,
-            val: data[k],
+            val: data[k]
           });
         });
         self.showUseTpl = false;
