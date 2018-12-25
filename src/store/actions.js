@@ -200,6 +200,12 @@ const actions = {
   },
   change_print_pre:({commit, state})=>{
     commit(mutationTypes.CHANGE_PRINT_PRE);
+  },
+  init_recipe:({commit},list) =>{
+    commit(mutationTypes.INIT_RECIPE,list)
+  },
+  init_recode:({commit},obj)=>{
+    commit(mutationTypes.INIT_RECODE,obj)
   }
 
   //right
