@@ -24,15 +24,22 @@
         <tr v-for="(item,index) in currentData.data.items">
           <td>{{index+1}}</td>
           <td>{{item.name}}</td>
-          <td>
-            <Input style="width:2.5rem" type="text" :value="item.num"
-                   @on-change="modify_medicine({key:'num',val:$event.target.value,index:index})"/>
-          </td>
-          <td>{{item.price}}元/次</td>
-          <td>
-            <Input type="text" :value="item.remark"
-                   @on-change="modify_medicine({key:'remark',val:$event.target.value,index:index})"/>
-          </td>
+          <template v-if="item.is_match===1">
+            <td>
+              <Input style="width:2.5rem" type="text" :value="item.num"
+                     @on-change="modify_medicine({key:'num',val:$event.target.value,index:index})"/>
+            </td>
+            <td>{{item.price}}元/次</td>
+            <td>
+              <Input type="text" :value="item.remark"
+                     @on-change="modify_medicine({key:'remark',val:$event.target.value,index:index})"/>
+            </td>
+          </template>
+          <template v-else>
+            <td colspan="3">
+              系统内搜索不到该项目
+            </td>
+          </template>
           <td>
             <a @click.stop="cancel_medicine(index)">删除</a>
           </td>
@@ -69,7 +76,7 @@
     name: "therapyRecipe",
     data() {
       return {
-        showAddTpl:false
+        showAddTpl: false
       }
     },
     computed: {
@@ -83,15 +90,15 @@
       Input,
       saveTpl
     },
-    watch:{
-      'currentData.data.items':{
-        deep:true,
-        handler:function (newVal, oldVal) {
-          let allPrice=0;
-          newVal.map((item)=>{
-            allPrice+=Number(item.price)*Number(item.num);
+    watch: {
+      'currentData.data.items': {
+        deep: true,
+        handler: function (newVal, oldVal) {
+          let allPrice = 0;
+          newVal.map((item) => {
+            allPrice += Number(item.price) * Number(item.num);
           });
-          setTimeout(()=>{
+          setTimeout(() => {
             this.modify_recipe({key: 'money', val: Number(allPrice).toFixed(2)})
           })
         }
@@ -117,22 +124,22 @@
           }
         });
       },
-      saveTplData(){
-        if(this.currentData.data.items.length===0){
+      saveTplData() {
+        if (this.currentData.data.items.length === 0) {
           this.$Message.info("请先至少添加一个项目！");
           return
         }
-        let itemList=this.currentData.data.items;
-        for(var i=0;i<itemList.length;i++){
-          if(itemList[i].num==='' || itemList[i].num===0){
-            this.$Message.info("项目【"+itemList[i].name+"】的数量为空！")
+        let itemList = this.currentData.data.items;
+        for (var i = 0; i < itemList.length; i++) {
+          if (itemList[i].num === '' || itemList[i].num === 0) {
+            this.$Message.info("项目【" + itemList[i].name + "】的数量为空！")
             return
           }
         }
-        this.showAddTpl=true;
+        this.showAddTpl = true;
       },
-      hideTplShow(){
-        this.showAddTpl=false;
+      hideTplShow() {
+        this.showAddTpl = false;
       }
     }
   }

@@ -36,7 +36,7 @@
           </template>
           <template v-else>
             <td colspan="3">
-              系统内搜索不到该药品
+              系统内搜索不到该材料
             </td>
           </template>
           <td>
