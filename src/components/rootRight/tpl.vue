@@ -528,7 +528,7 @@ import {
   herbalRpUsages,
   medFrequency
 } from "@/assets/js/mapType";
-import { mapGetters, mapActions } from "vuex";
+import { mapState, mapGetters, mapActions } from "vuex";
 import { Input, Button, Select, Option, Icon } from "iview";
 import {
   searchTpl,
@@ -600,12 +600,15 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      recordTplChange: state => state.recordTplChange,
+    }),
     herbalMedUsages: function() {
       return herbalMedUsages.filter(item => {
         return item.status === 1;
       });
     },
-    ...mapGetters(["currRecipeData","recordTplChange"]),
+    ...mapGetters(["currRecipeData"]),
     recipeType: function() {
       return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
     },
