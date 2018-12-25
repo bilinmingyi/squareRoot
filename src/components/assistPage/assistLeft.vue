@@ -28,24 +28,16 @@
         </Select>
       </div>
       <div class="diagnosisFind">
-        <Button type="primary" ghost shape="circle" style="width: 80%;">处方查询</Button>
+        <Button type="primary" ghost shape="circle" style="width: 80%;" @click.stop="searchFj">处方查询</Button>
       </div>
     </section>
     <section>
-      <div class="recipe_item recipe_item_active">
+      <div class="recipe_item recipe_item_active" v-for="item in fjList">
         <div class="recipe_item_title">
-          丁香柿蒂汤《症因脉治》
+          {{item.fjName}}{{item.sourceContent}}
         </div>
         <div class="recipe_item_content">
-          主治胃气虚寒，失于和降，呃逆不已，胸脘痞闷，舌淡苔白，脉沉迟。
-        </div>
-      </div>
-      <div class="recipe_item">
-        <div class="recipe_item_title">
-          丁香柿蒂汤《症因脉治》
-        </div>
-        <div class="recipe_item_content">
-          主治胃气虚寒，失于和降，呃逆不已，胸脘痞闷，舌淡苔白，脉沉迟。
+          {{item.symptom[0]}}
         </div>
       </div>
     </section>
@@ -55,7 +47,7 @@
 <script>
   import patientDetail from "@/page/rootLeft/patientDetail";
   import {Option, Select, Button} from 'iview'
-  import {searchDiagnosis} from '@/fetch/api.js'
+  import {searchDiagnosis,searchFJB} from '@/fetch/api.js'
 
   export default {
     name: "assistLeft",
@@ -81,7 +73,8 @@
         ZYDList: [],
         ZYDLoading:false,
 
-        searchTime: ''
+        searchTime: '',
+        fjList:[]
       }
     },
     methods: {
@@ -188,6 +181,25 @@
         if(this.XYdiagnosis.replace(/\s*/g, '')!=='' || this.ZYdiagnosis.replace(/\s*/g, '')!=='' || this.ZYdiscriminate.replace(/\s*/g, '')!==''){
           this.findZYdiscriminate(this.ZYdiscriminate);
         }
+      },
+      searchFj(){
+        if(this.XYdiagnosis.replace(/\s*/g, '') === '' && this.ZYdiagnosis.replace(/\s*/g, '') === '' && this.ZYdiscriminate.replace(/\s*/g, '') === ''){
+          this.$Message.info("请先输入诊断情况");
+          return
+        }
+
+        searchFJB({
+          bzName:this.ZYdiscriminate,
+          symptoms:"",
+          zdNameC:this.ZYdiagnosis,
+          zdNameW:this.XYdiagnosis
+        }).then(data=>{
+          if(data.success){
+            this.fjList=data.result;
+          }else {
+            this.$Message.info(data.error)
+          }
+        })
       }
     }
   }

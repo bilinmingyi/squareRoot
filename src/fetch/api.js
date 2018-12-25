@@ -80,6 +80,8 @@ const saveMedTpl = (params, type) => {
 }
 const searchDiagnosis = (params) => fetch('/treatmng/dytreatorder/fjbDisease',params);
 
+const searchFJB= (params) => fetch('http://123.207.90.226:8088/api/services/app/fjData/SearchFJInfo',params);
+
 //right
 const searchRecentMed = (params, type) => {
   if (type === 1) {
@@ -155,5 +157,5 @@ export {
   searchTpl,
   updateTpl,
   delTpl,
-
+  searchFJB
 }
