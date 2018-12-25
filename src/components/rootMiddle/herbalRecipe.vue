@@ -39,6 +39,7 @@
             <Input style="width:2.5rem" type="text" :value="item.num"
                    @on-change="modify_medicine({key:'num',val:$event.target.value,index:index})"/>
             <span>{{item.unit}}</span>
+            <span class="num_text">({{item.num*item.stock_sale_ratio}}{{item.unit_sale}})</span>
           </td>
           <td>{{item.remark}}</td>
           <td>
@@ -269,7 +270,11 @@
     display: flex;
     padding: 0.625rem;
   }
-
+  .num_text{
+    display: inline-block;
+    width: 3rem;
+    color: #4DBC89;
+  }
   .herbal_head_left {
     flex: 1;
     align-self: center;

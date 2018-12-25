@@ -151,7 +151,7 @@
             title: '提示',
             content: '<p>导入药品将清空已选的药，确认要导入?</p>',
             onOk: ()=>{
-
+              this.findMedByName();
             },
             onCancel: ()=>{
 
@@ -193,6 +193,7 @@
                       "sale_price": '',
                       "spec": '',
                       "unit_stock": '',
+                      "unit_sale":'',
                       "usage": '',
                       "stock": '',
                       "stock_sale_ratio": '',
@@ -215,6 +216,7 @@
                       "sale_price": existence.sale_price,
                       "spec": existence.spec,
                       "unit_stock": existence.unit_stock,
+                      "unit_sale":existence.unit_sale,
                       "usage": '',
                       "stock": existence.stock,
                       "stock_sale_ratio": existence.stock_sale_ratio,
