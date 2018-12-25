@@ -80,9 +80,37 @@ const saveMedTpl = (params, type) => {
     return fetch('/doctreat/tpl/therapy/add', params);
   }
 }
-const searchDiagnosis = (params) => fetch('/treatmng/dytreatorder/fjbDisease',params);
+const searchDiagnosis = (params) => fetch('/treatmng/dytreatorder/fjbDisease', params);
 
-const searchFJB= (params) => fetch('http://123.207.90.226:8088/api/services/app/fjData/SearchFJInfo',params);
+const searchFJB = (params) => fetch('http://123.207.90.226:8088/api/services/app/fjData/SearchFJInfo', params);
+
+const getJJInfo = (params) => axios({
+  method: 'post',
+  url: 'http://123.207.90.226:8088/api/services/app/fjData/PostJJInfo',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+  },
+  params:params
+});
+const getFJDrugList= (params) => axios({
+  method: 'post',
+  url: 'http://123.207.90.226:8088/api/services/app/fjData/GetFJDrugList',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+  },
+  data:params,
+  transformRequest: [function (data) {
+    let ret = ''
+    for (let it in data) {
+      ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+    }
+    return ret.slice(0,-1)
+  }],
+});
+
+const getHerbalList=(params)=>fetch('/stockmng/medicine/herbalList',params);
+
+
 
 //right
 const searchRecentMed = (params, type) => {
@@ -154,6 +182,9 @@ export {
   // middle
   saveMedTpl,
   searchDiagnosis,
+  getJJInfo,
+  getFJDrugList,
+  getHerbalList,
   //right
   searchRecentMed,
   searchMed,
