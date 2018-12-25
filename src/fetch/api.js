@@ -90,26 +90,27 @@ const getJJInfo = (params) => axios({
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
   },
-  params:params
+  params: params
 });
-const getFJDrugList= (params) => axios({
+const getFJDrugList = (params) => axios({
   method: 'post',
   url: 'http://123.207.90.226:8088/api/services/app/fjData/GetFJDrugList',
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
   },
-  data:params,
+  data: params,
   transformRequest: [function (data) {
     let ret = ''
     for (let it in data) {
       ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
     }
-    return ret.slice(0,-1)
+    return ret.slice(0, -1)
   }],
 });
 
-const getHerbalList=(params)=>fetch('/stockmng/medicine/herbalList',params);
+const getHerbalList = (params) => fetch('/stockmng/medicine/herbalList', params);
 
+const saveDraft = (params) => fetch('/doctreat/treatorder/save', params)
 
 
 //right
@@ -179,12 +180,15 @@ export {
   getDiseaseList,
   checkIsMatch,
   addRecordTpl,
+
   // middle
   saveMedTpl,
   searchDiagnosis,
   getJJInfo,
   getFJDrugList,
   getHerbalList,
+  saveDraft,
+
   //right
   searchRecentMed,
   searchMed,

@@ -38,7 +38,7 @@
         </span>
         <span>
           <span class="font-bold pr10">总金额</span>
-          <span>{{allPrice | priceFormat}}</span>
+          <span>{{totalPrice | priceFormat}}</span>
         </span>
       </div>
     </div>
@@ -49,7 +49,7 @@
 <script>
 import { Icon } from "iview";
 import editPatientInfo from "./editPatientInfo";
-import { mapState, mapActions } from "vuex";
+import { mapState, mapGetters, mapActions } from "vuex";
 import { getPatientInfo } from "@/fetch/api.js";
 export default {
   props: {
@@ -77,34 +77,7 @@ export default {
       treatPrice: state => state.treatPrice,
       patientData: state => state.patientData
     }),
-    // 总金额
-    allPrice() {
-      let tempPrice = 0;
-      let recipeList = this.recipeData.recipeList;
-      recipeList.forEach(function(recipe) {
-        var price = 0;
-        recipe.items.forEach(function(item) {
-          price += Number(item.price) * 10000 * Number(item.num); // 防精度丢失
-        });
-        price /= 10000;
-        if (recipe.name == "中药处方") {
-          tempPrice +=
-            Number(recipe.dosage) * Number(price) + Number(recipe.extra_price);
-        } else if (recipe.name == "中成药西药") {
-          tempPrice += Number(price);
-        } else if (recipe.name == "产品处方") {
-          tempPrice += Number(price);
-        } else if (recipe.name == "项目处方") {
-          tempPrice += Number(price);
-        } else if (recipe.name == "附加服务") {
-          tempPrice += Number(price);
-        } else if (recipe.name == "材料处方") {
-          tempPrice += Number(price);
-        }
-      });
-      tempPrice += Number(this.treatPrice);
-      return tempPrice.toFixed(2);
-    }
+    ...mapGetters(['totalPrice']),
   },
   created() {
     if (!this.canShowMoney) {

@@ -237,7 +237,11 @@ export default {
                 let data = res.data;
                 for (let i = 0, len = arr.length; i < len; i++) {
                   let findData = data.find(dataItem => dataItem.id == arr[i].item_id);
-                  arr[i] = Object.assign(arr[i], findData, {is_match: 1});
+                  if (findData) {
+                    arr[i] = Object.assign(arr[i], findData, {is_match: 1});
+                  } else {
+                    arr[i] = Object.assign(arr[i], {is_match: 0});
+                  }
                 }
                 item.checkMatch = true;
               } else {

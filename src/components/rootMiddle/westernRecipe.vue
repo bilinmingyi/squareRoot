@@ -28,39 +28,46 @@
         <tr v-for="(item,index) in currentData.data.items">
           <td>{{index+1}}</td>
           <td>{{item.name}}</td>
-          <td>{{item.spec}}</td>
-          <td>
-            <Input style="width:2.5rem" type="text" :value="item.num"
-                   @on-change="modify_medicine({key:'num',val:$event.target.value,index:index})"/>
-          </td>
-          <td>
-            <Select style="width:3.125rem" :value="item.unit"
-                    @on-change="change_unit($event,index)">
-              <Option :value="item.unit_stock" key="item.unit_stock">{{item.unit_stock}}</Option>
-              <Option :value="item.unit_sale" key="item.unit_sale">{{item.unit_sale}}</Option>
-            </Select>
-          </td>
-          <td>
-            <Select style="width:4.5rem" :value="item.usage"
-                    @on-change="modify_medicine({key:'usage',val:$event,index:index})">
-              <Option v-for="item in westernMedUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
-            </Select>
-          </td>
-          <td>
-            <Input style="width:2.5rem" type="text" :value="item.dose_once"
-                   @on-change="modify_medicine({key:'dose_once',val:$event.target.value,index:index})"/>
-            <span class="unitText">{{item.unit_dose}}</span>
-          </td>
-          <td>
-            <Select style="width:5.5rem" :value="item.frequency"
-                    @on-change="modify_medicine({key:'frequency',val:$event,index:index})">
-              <Option v-for="item in medFrequency" :value="item.name" :key="item.name">{{ item.name }}</Option>
-            </Select>
-          </td>
-          <td>
-            <Input style="width:2.5rem" type="text" :value="item.days"
-                   @on-change="modify_medicine({key:'days',val:$event.target.value,index:index})"/>
-          </td>
+
+          <template v-if="item.is_match===1">
+            <td>{{item.spec}}</td>
+            <td>
+              <Input style="width:2.5rem" type="text" :value="item.num"
+                     @on-change="modify_medicine({key:'num',val:$event.target.value,index:index})"/>
+            </td>
+            <td>
+              <Select style="width:3.125rem" :value="item.unit"
+                      @on-change="change_unit($event,index)">
+                <Option :value="item.unit_stock" key="item.unit_stock">{{item.unit_stock}}</Option>
+                <Option :value="item.unit_sale" key="item.unit_sale">{{item.unit_sale}}</Option>
+              </Select>
+            </td>
+            <td>
+              <Select style="width:4.5rem" :value="item.usage"
+                      @on-change="modify_medicine({key:'usage',val:$event,index:index})">
+                <Option v-for="item in westernMedUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
+              </Select>
+            </td>
+            <td>
+              <Input style="width:2.5rem" type="text" :value="item.dose_once"
+                     @on-change="modify_medicine({key:'dose_once',val:$event.target.value,index:index})"/>
+              <span class="unitText">{{item.unit_dose}}</span>
+            </td>
+            <td>
+              <Select style="width:5.5rem" :value="item.frequency"
+                      @on-change="modify_medicine({key:'frequency',val:$event,index:index})">
+                <Option v-for="item in medFrequency" :value="item.name" :key="item.name">{{ item.name }}</Option>
+              </Select>
+            </td>
+            <td>
+              <Input style="width:2.5rem" type="text" :value="item.days"
+                     @on-change="modify_medicine({key:'days',val:$event.target.value,index:index})"/>
+            </td>
+          </template>
+          <template v-else>
+            <td colspan="7" style="color: red;">系统内搜索不到该药品</td>
+          </template>
+
           <td>
             <a @click.stop="cancel_medicine(index)">删除</a>
           </td>

@@ -181,6 +181,16 @@
       @close="closePatientAlert"
       :timeStamp="Date.now()"
     ></patient-alert>
+    <save-record-tpl
+      v-show="showSaveRecordTpl"
+      @close="showSaveRecordTpl = false"
+    ></save-record-tpl>
+    <print-record
+      v-show="showPrintRecord"
+      @close="showPrintRecord = false"
+      :printFlag="printFlag"
+      @reset="printFlag = false"
+    ></print-record>
   </div>
   <!-- 患者病历 -->
 </template>
@@ -190,22 +200,29 @@ import { mapState, mapActions } from "vuex";
 import { Input, Tag } from "iview";
 import patientAlert from "./patientAlert";
 import { getCaseHistory, getDiseaseList } from "@/fetch/api.js";
+import saveRecordTpl from '@/components/saveRecordTpl';
+import printRecord from '@/components/printRecord';
 export default {
   name: "patientrRcord",
   components: {
     Input,
     Tag,
-    patientAlert
+    patientAlert,
+    saveRecordTpl,
+    printRecord
   },
   data() {
     return {
       showPatientAlert: false,
+      showSaveRecordTpl: false,
+      showPrintRecord: false,
       diagnosisType: 0,
       recordCaseHistoryFinish: false,
       recordCaseHistory: {},
 
       diagnosisTimer: null,
-      diagnosisDataIndex: 0 // 诊断下拉数组当前选中索引
+      diagnosisDataIndex: 0,  // 诊断下拉数组当前选中索引
+      printFlag: false, // 打印病历
     };
   },
   computed: {
@@ -292,10 +309,13 @@ export default {
 
     printPrescription() {
       // 打印病历
+      // this.showPrintRecord = true;
+      this.printFlag = true;
     },
 
     showSaveTemplate() {
       // 存为模板
+      this.showSaveRecordTpl = true;
     },
 
     /* 中西医诊断 */

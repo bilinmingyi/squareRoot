@@ -37,10 +37,11 @@ export default {
     this.init();
   },
   methods: {
-    ...mapActions(['set_patient_info']),
+    ...mapActions(['set_patient_info', 'set_order_seqno', 'set_state_prop']),
     init() {
       let params = { order_seqno: this.getOrderSeqno() };
       this.showLoader = true;
+      this.set_order_seqno(this.getOrderSeqno());
       getTreatOrderDetail(params).then(res => {
         console.log(res);
         if (res.code === 1000) {
@@ -52,7 +53,7 @@ export default {
               this.set_patient_info({key: item, val})
             }
           })
-
+          this.set_state_prop({key: 'doctorName', val: data.doctor_name})
           this.initFinish = true;
         } else {
           console.log(res.msg);
@@ -64,7 +65,7 @@ export default {
     getOrderSeqno() {
       // TODO: 获取订单号
 
-      return "T0283079283002";
+      return "T0283427054002";
     }
   }
 };

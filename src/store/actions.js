@@ -101,7 +101,7 @@ const actions = {
       case 1:
         result = {
           "item_id": item.id,
-          "name": item.clinic_alias_name != '' ? item.clinic_alias_name : item.name,
+          "name": item.clinic_alias_name != '' && item.clinic_alias_name != null ? item.clinic_alias_name : item.name,
           "num": !item.num ? 0 : item.num,
           "price": state.recipeList[state.currRecipe].data.is_cloud === 1 ? item.default_sale_price : item.sale_price,
           "unit": item.unit_stock,
@@ -109,6 +109,7 @@ const actions = {
           "sale_price": item.sale_price,
           "spec": item.spec,
           "unit_stock": item.unit_stock,
+          "unit_sale":item.unit_sale,
           "usage": !item.usage ? '' : item.usage,
           "stock": item.stock,
           "stock_sale_ratio": item.stock_sale_ratio,
@@ -119,7 +120,7 @@ const actions = {
       case 2:
         result = {
           "item_id": item.id,
-          "name": item.clinic_alias_name != '' ? item.clinic_alias_name : item.name,
+          "name": item.clinic_alias_name != '' && item.clinic_alias_name != null ? item.clinic_alias_name : item.name,
           "num": !item.num ? 0 : item.num,
           // "price": item.unit === item.unit_stock ? item.sale_price:(item.unit === item.unit_sale?(item.sale_price * 1.0 / item.stock_sale_ratio):item.sale_price),
           "unit": item.unit === item.unit_stock ? item.unit_stock : (item.unit === item.unit_sale ? item.unit_sale : item.unit_stock),
@@ -146,7 +147,7 @@ const actions = {
           "unit": item.unit,
           "remark": !item.remark ? '' : item.remark,
           "item_id": item.id,
-          "name": item.alias_name != '' ? item.alias_name : item.name,
+          "name": item.alias_name != '' && item.alias_name != null ? item.alias_name : item.name,
           "num": !item.num ? 0 : item.num,
           "price": item.price,
           "type": item.type,
@@ -161,7 +162,7 @@ const actions = {
         result={
           "remark": !item.remark ? '' : item.remark,
           "item_id": item.id,
-          "name": item.clinic_alias_name != '' ? item.clinic_alias_name : item.name,
+          "name": item.clinic_alias_name != '' && item.clinic_alias_name != null ? item.clinic_alias_name : item.name,
           "num": !item.num ? 0 : item.num,
           "stock": item.stock,
           "price": item.sale_price / item.stock_sale_ratio,
@@ -193,8 +194,10 @@ const actions = {
   },
   select_fjb_recipe:({commit},obj)=>{
     commit(mutationTypes.SELECT_FJB_RECIPE,obj)
+  },
+  set_order_seqno:({commit},val)=>{
+    commit(mutationTypes.SET_ORDER_SEQNO,val)
   }
-
 
   //right
 };
