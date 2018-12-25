@@ -32,7 +32,7 @@
       </div>
     </section>
     <section>
-      <div class="recipe_item recipe_item_active" v-for="item in fjList">
+      <div :class="['recipe_item',{'recipe_item_active':fjbRecipe.fjCode===item.fjCode}]" v-for="item in fjList" @click.stop="select_fjb_recipe(item)">
         <div class="recipe_item_title">
           {{item.fjName}}{{item.sourceContent}}
         </div>
@@ -48,6 +48,7 @@
   import patientDetail from "@/page/rootLeft/patientDetail";
   import {Option, Select, Button} from 'iview'
   import {searchDiagnosis,searchFJB} from '@/fetch/api.js'
+  import {mapActions, mapState} from 'vuex'
 
   export default {
     name: "assistLeft",
@@ -77,7 +78,15 @@
         fjList:[]
       }
     },
+    computed:{
+      ...mapState({
+        'fjbRecipe':state=>state.fjbRecipe
+      })
+    },
     methods: {
+      ...mapActions([
+        'select_fjb_recipe'
+      ]),
       findXYDiagnosis(query) {
         if (this.ZYdiagnosis.replace(/\s*/g, '') === '') {
           this.ZYPatientId = ''
@@ -251,6 +260,7 @@
     background: #ffffff;
     padding: 0 1rem;
     margin-top: 1rem;
+    cursor: pointer;
   }
 
   .recipe_item_active {

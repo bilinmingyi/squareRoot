@@ -190,6 +190,9 @@ const actions = {
   },
   clean_recipe: ({commit}) => {
     commit(mutationTypes.CLEAN_RECIPE)
+  },
+  select_fjb_recipe:({commit},obj)=>{
+    commit(mutationTypes.SELECT_FJB_RECIPE,obj)
   }
 
 
