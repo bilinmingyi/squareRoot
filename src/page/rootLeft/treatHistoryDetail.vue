@@ -39,7 +39,7 @@
               </span>
             </span>
             <span
-              v-if="currRecipe != -1 && reciptType == 1"
+              v-if="currRecipe != -1 && reciptType == 1 && recipe.is_cloud==0"
               class="t-h-d-active-import"
               @click="impHistory(recipe, index)"
             >导入</span>
@@ -76,7 +76,7 @@
             <span class="font-bold flex-1">产品处方</span>
             <span
               class="t-h-d-active-import"
-              v-if="currRecipe != -1 && reciptType == 3"
+              v-if="currRecipe != -1 && reciptType == 3 && recipe.is_cloud==0"
               @click="impHistory(recipe, index)"
             >导入</span>
             <span class="t-h-d-disable-import" v-else>导入</span>
@@ -120,7 +120,11 @@
       </div>
     </div>
 
-    <history-result v-show="historyResultShow" :recipeProp="selectedOrder.recipe_list"></history-result>
+    <history-result 
+      v-show="formatedRecipes[formatedRecipesIndex] && formatedRecipes[formatedRecipesIndex].checkMatch && historyResultShow" 
+      :recipeDataProp="formatedRecipes[formatedRecipesIndex]"
+      :map="listMap"
+      @close="historyResultShow = false"></history-result>
   </div>
 </template>
 
@@ -151,7 +155,8 @@ export default {
           "therapy_list",
           "extra_list"
       ],
-      formatRecipes: []
+      formatedRecipes: [],
+      formatedRecipesIndex: -1,
     };
   },
   computed: {
@@ -213,26 +218,28 @@ export default {
       deep: true,
       handler(newVal) {
         let map = this.listMap;
-        this.formatRecipes = [];
-        newVal.forEach(item => {
+        this.formatedRecipes = [];
+        newVal.forEach((item, index) => {
           let type = item.recipe_type;
           let ids = [];
           if (!map[type]) return;
           item[map[type]].forEach(list => {
             ids.push(list.item_id);
           });
-          this.formatRecipes.push(item);
-          if (ids.length <= 0) return;
+          this.formatedRecipes.push(item);
+          if (ids.length <= 0 || item.is_cloud == 1) return;
           let params = { status: 1 };
           params.ids = ids;
           checkIsMatch(params, type, type == 1 ? item.is_cloud : null).then(
             res => {
               if (res.code == 1000) {
+                let arr = item[map[type]];
                 let data = res.data;
-                data.forEach(dataItem => {
-                  
-                })
-                
+                for (let i = 0, len = arr.length; i < len; i++) {
+                  let findData = data.find(dataItem => dataItem.id == arr[i].item_id);
+                  arr[i] = Object.assign(arr[i], findData, {is_match: 1});
+                }
+                item.checkMatch = true;
               } else {
                 console.log(res.msg);
               }
@@ -281,14 +288,8 @@ export default {
       });
     },
     impHistory(recipe, index) {
+      this.formatedRecipesIndex = index;
       this.historyResultShow = true;
-      // TODO: 处方
-      console.log(recipe, index);
-      let type = recipe.recipe_type;
-      switch (type) {
-        case 1:
-          break;
-      }
     }
   }
 };

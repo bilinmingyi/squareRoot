@@ -23,6 +23,7 @@ const fullTime = val => {
 
 /* 计算年龄 */
 const calcAge = (t) => {
+  if (t == null) return '';
   var today = new Date();
   var born = new Date(t);
 
