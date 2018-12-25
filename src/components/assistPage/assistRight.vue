@@ -219,7 +219,7 @@
                       "stock": existence.stock,
                       "stock_sale_ratio": existence.stock_sale_ratio,
                       "status": 1,
-                      "remark": item.number+ item.unit+item.dosageRange==''?'':'('+item.dosageRange + item.unit+')'
+                      "remark": item.number+''+item.unit+''+(item.dosageRange==''?'':'('+item.dosageRange + item.unit+')')
                     },
                     type:1
                   }
