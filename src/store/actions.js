@@ -198,6 +198,9 @@ const actions = {
   set_order_seqno:({commit},val)=>{
     commit(mutationTypes.SET_ORDER_SEQNO,val)
   },
+  change_print_pre:({commit, state})=>{
+    commit(mutationTypes.CHANGE_PRINT_PRE);
+  },
   init_recipe:({commit},list) =>{
     commit(mutationTypes.INIT_RECIPE,list)
   },

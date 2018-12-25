@@ -20,6 +20,7 @@
       </li>
     </ul>
     <component :is="currRecipe===-1?'patientrRcord':componentList[Number(recipeList[currRecipe].type)-1]"></component>
+    <print-prescription v-if="currRecipe!==-1"></print-prescription>
   </div>
 </template>
 
@@ -30,6 +31,7 @@
   import therapyRecipe from '@/components/rootMiddle/therapyRecipe.vue'
   import materialRecipe from '@/components/rootMiddle/materialRecipe.vue'
   import patientrRcord from '@/components/patientrRcord.vue'
+  import printPrescription from '@/components/rootMiddle/printPrescription.vue'
   import {Dropdown, DropdownMenu, DropdownItem} from 'iview'
 
   export default {
@@ -47,7 +49,8 @@
       westernRecipe,
       therapyRecipe,
       materialRecipe,
-      patientrRcord
+      patientrRcord,
+      printPrescription
     },
     computed: {
       ...mapState({

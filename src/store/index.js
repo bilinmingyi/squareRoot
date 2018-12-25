@@ -52,7 +52,7 @@ const state = {
   recipeList:[],
   currRecipe:0,
   fjbRecipe:{},
-
+  printPre:false,
   // right
   recordTplChange: false,
 };
