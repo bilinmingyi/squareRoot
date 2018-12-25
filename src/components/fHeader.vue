@@ -3,7 +3,7 @@
     <div class="title">患者接诊</div>
     <div>
       <Button type="primary" shape="circle" class="btn-time" @click.stop="saveDraft();">临时保存</Button>
-      <Button type="primary" shape="circle" class="btn-cancel">取消就诊</Button>
+      <Button type="primary" shape="circle" class="btn-cancel" @click.stop="confirmCancel">取消就诊</Button>
       <Button type="primary" shape="circle" class="btn-done" @click.stop="saveData">完成就诊</Button>
     </div>
   </div>
@@ -12,12 +12,17 @@
 <script>
   import {Button} from 'iview'
   import {mapState, mapActions} from 'vuex'
-  import {saveDraft} from '@/fetch/api.js'
+  import {saveDraft, cancelOrder} from '@/fetch/api.js'
 
   export default {
     name: "fHeader",
     components: {
       Button
+    },
+    data() {
+      return {
+        cancelOrderModal: false,
+      }
     },
     computed: {
       ...mapState({
@@ -50,6 +55,29 @@
             this.$router.go(-1)
           } else {
             this.$Message.info("保存失败");
+          }
+        })
+      },
+      confirmCancel() {
+        this.$Modal.confirm({
+          title: '操作',
+          content: '<p style="font-size: 1rem;">确定要取消就诊？</p>',
+          onOk: () => {
+            this.cancelOrderFn();
+          },
+          onCancel: () => {
+
+          }
+        });
+      },
+      cancelOrderFn() {
+        cancelOrder({
+          order_seqno: this.orderSeqno
+        }).then(res => {
+          if (res.code == 1000) {
+            this.$router.go(-1);
+          } else {
+            this.$Message.error(res.msg);
           }
         })
       },

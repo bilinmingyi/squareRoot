@@ -8,8 +8,8 @@
           <span class="edit_span" @click="editPatient()">编辑</span>
         </div>
         <div class="p-d-is-first font-14">
-          <span v-if="isFirst === '1'">初诊</span>
-          <span v-else-if="isFirst === '0'">复诊</span>
+          <span v-if="isFirst == 1">初诊</span>
+          <span v-else-if="isFirst == 0">复诊</span>
         </div>
       </div>
       <div class="mt10">
@@ -72,8 +72,7 @@ export default {
   },
   computed: {
     ...mapState({
-      // TODO: is_first & treatPrice
-      isFirst: state => state.is_first,
+      isFirst: state => state.isFirst,
       treatPrice: state => state.treatPrice,
       patientData: state => state.patientData
     }),
