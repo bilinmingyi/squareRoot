@@ -8,7 +8,7 @@
         <Button @click="searchMed()">搜索</Button>
       </div>
     </div>
-    <div class="search-result">
+    <div class="search-result" v-show="showResult">
       <div
         :class="[{'no-stock':item.stock<1},{'herbal-result-li':recipeType===1},{'search-result-li':recipeType!=1}]"
         v-for="(item,index) in showList"
@@ -67,6 +67,7 @@ export default {
   },
   data() {
     return {
+      showResult:false,
       timer: null,
       searchName: "",
       searchList: [],
@@ -79,13 +80,14 @@ export default {
   watch: {
     recipeType: function() {
       this.searchName = "";
+      this.showResult=false;
       //this.searchList = [];
       //this.showList = [];
       this.firstSearch();
     },
     category: function() {
-      //this.searchName = "";
-      //this.searchList = [];
+      this.searchName = "";
+      this.showResult=false;
       this.firstSearch();
     },
     searchList: function() {
@@ -115,6 +117,7 @@ export default {
           );
         }
       }
+      this.showResult=true;
     },
     currPage: function() {
       if (this.page_num == 1) {
