@@ -11,7 +11,7 @@
           </div>
         </div>
         <span class="add_prescription_btn" v-show="recipeType!==0" @click="addTpl()">添加模板</span>
-        <div style="min-height:20rem;max-height:45rem;overflow:auto;">
+        <div v-show="showResult" style="min-height:20rem;max-height:45rem;overflow:auto;">
           <div
             class="prescript-list"
             v-for="(item,index) in showList"
@@ -25,7 +25,7 @@
           <div
             class="mt10"
             style="text-align:center;font-size:1rem;"
-            v-show="tplSearchList.length<1"
+            v-show="showList.length<1"
           >暂无模板</div>
           <div class="pt15" style="clear:both;display:flex;justify-content:center;">
             <Button
@@ -548,6 +548,7 @@ export default {
   },
   data() {
     return {
+      showResult:false,
       timer: null,
       currPage: 1,
       page_num: 1,
@@ -604,7 +605,7 @@ export default {
         return item.status === 1;
       });
     },
-    ...mapGetters(["currRecipeData"]),
+    ...mapGetters(["currRecipeData","recordTplChange"]),
     recipeType: function() {
       return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
     },
@@ -612,7 +613,7 @@ export default {
       return this.currRecipeData === undefined
         ? 1
         : this.currRecipeData.data.category;
-    }
+    },
   },
   created() {
     this.firstSearch();
@@ -621,14 +622,17 @@ export default {
     recipeType: function() {
       this.showTpl = false;
       this.searchTplName = "";
-      //this.tplSearchList = [];
-      //this.showList = [];
+      this.showResult=false;
       this.firstSearch();
     },
     category: function() {
       this.showTpl = false;
       this.searchTplName = "";
-      //this.tplSearchList = [];
+      this.showResult=false;      
+      this.firstSearch();
+    },
+    recordTplChange: function(){
+      this.showResult=false;      
       this.firstSearch();
     },
     tplSearchList: function() {
@@ -658,6 +662,7 @@ export default {
           );
         }
       }
+      this.showResult=true;      
     },
     currPage: function() {
       if (this.page_num == 1) {
@@ -691,9 +696,9 @@ export default {
   methods: {
     ...mapActions(["add_new_medicine", "clean_recipe", "set_record_prop"]),
     firstSearch: function() {
-      this.tplSearchList = [];
       if (this.recipeType != 6) {
         this.tplSearch();
+        this.showResult=true;
       }
     },
     changePage: function(flag) {
@@ -753,6 +758,7 @@ export default {
         searchTpl(params, this.recipeType).then(function(res) {
           if (res.code == 1000) {
             self.tplSearchList = res.data;
+            self.showResult=true;
           }
         });
       }, 300);

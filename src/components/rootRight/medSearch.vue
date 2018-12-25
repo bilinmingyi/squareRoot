@@ -81,8 +81,6 @@ export default {
     recipeType: function() {
       this.searchName = "";
       this.showResult=false;
-      //this.searchList = [];
-      //this.showList = [];
       this.firstSearch();
     },
     category: function() {
