@@ -39,9 +39,9 @@ export default {
   methods: {
     ...mapActions(['set_patient_info', 'set_order_seqno', 'set_state_prop']),
     init() {
-      let params = { order_seqno: this.getOrderSeqno() };
+      let params = { order_seqno: this.getOrderSeqno('orderSeqno') };
       this.showLoader = true;
-      this.set_order_seqno(this.getOrderSeqno());
+      this.set_order_seqno(this.getOrderSeqno('orderSeqno'));
       getTreatOrderDetail(params).then(res => {
         console.log(res);
         if (res.code === 1000) {
@@ -53,7 +53,9 @@ export default {
               this.set_patient_info({key: item, val})
             }
           })
-          this.set_state_prop({key: 'doctorName', val: data.doctor_name})
+          this.set_state_prop({key: 'isFirst', val: data.is_first});
+          this.set_state_prop({key: 'treatPrice', val: data.treat_price});
+          this.set_state_prop({key: 'doctorName', val: data.doctor_name});
           this.initFinish = true;
         } else {
           console.log(res.msg);
@@ -62,10 +64,11 @@ export default {
         this.showLoader = false;
       });
     },
-    getOrderSeqno() {
-      // TODO: 获取订单号
-
-      return "T0283427054002";
+    getOrderSeqno(name) {
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+      var r = window.location.search.substr(1).match(reg);
+      if (r != null)return decodeURIComponent(r[2]);
+      return '';
     }
   }
 };

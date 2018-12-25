@@ -19,6 +19,8 @@ function fetch(url, params) {
   })
 }
 
+const cancelOrder = params => fetch('/doctreat/treatorder/cancel', params);
+
 //left
 
 const getTreatOrderDetail = params => fetch('/doctreat/treatorder/detail', params);
@@ -170,6 +172,7 @@ const delTpl = (id, params, type) => {
 
 export {
   fetch,
+  cancelOrder,
   getTreatOrderDetail,
   updatePatientData,
   getPatientInfo,
