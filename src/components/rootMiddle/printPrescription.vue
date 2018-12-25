@@ -5,7 +5,7 @@
         <div
           style="width: 100%;height: 35px;text-align: center;line-height: 35px;font-weight: bold;font-size: 20px;"
         >
-          <!--{{printclinicName}}-->
+          {{clinicName}}
         </div>
         <div
           style="width: 100%;height: 24px;text-align: center;line-height: 24px;font-weight: bold;font-size: 16px;"
@@ -42,12 +42,13 @@
           </div>
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
             <span style="font-weight: bolder">费别：</span>
+            自费
           </div>
         </div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
             <span style="font-weight: bolder">病历号：</span>
-            <!--{{orderSeqno}}-->
+            {{orderSeqno}}
           </div>
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
             <span style="font-weight: bolder">电话：</span>
@@ -58,7 +59,8 @@
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
             <span
               style="font-weight: bolder"
-            >住址：{{patientData.province_name}}{{patientData.city_name}}{{patientData.county_name}}{{patientData.address}}</span>
+            >住址：</span>
+            {{patientData.province_name}}{{patientData.city_name}}{{patientData.county_name}}{{patientData.address}}
           </div>
         </div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
@@ -202,6 +204,7 @@
           </div>
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
             <span style="font-weight: bolder">医师：</span>
+            {{doctorName}}
             <!--<span>${controllers.AuthController.userName}</span>-->
           </div>
         </div>
@@ -230,6 +233,7 @@
           </div>
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
             <span style="font-weight: bolder">医生：</span>
+            {{doctorName}}
             <!--<span>${controllers.AuthController.userName}</span>-->
           </div>
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
@@ -262,7 +266,7 @@ export default {
   name: "printPrescription",
   computed: {
     ...mapGetters(["currRecipeData"]),
-    ...mapState(["patientData", "recordData","printPre"]),
+    ...mapState(["patientData", "recordData","printPre", 'orderSeqno', 'clinicName', 'doctorName']),
     recipeType: function() {
       return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
     },
