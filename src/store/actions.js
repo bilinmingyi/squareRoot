@@ -194,8 +194,10 @@ const actions = {
   },
   select_fjb_recipe:({commit},obj)=>{
     commit(mutationTypes.SELECT_FJB_RECIPE,obj)
+  },
+  set_order_seqno:({commit},val)=>{
+    commit(mutationTypes.SET_ORDER_SEQNO,val)
   }
-
 
   //right
 };

@@ -65,11 +65,12 @@ const mutations = {
       state.recipeList[state.currRecipe].data.doctor_remark = '';
       state.recipeList[state.currRecipe].data.items = [];
     },
-    [mutationTypes.SELECT_FJB_RECIPE](state,obj) {
-      state.fjbRecipe=obj;
+    [mutationTypes.SELECT_FJB_RECIPE](state, obj) {
+      state.fjbRecipe = obj;
+    },
+    [mutationTypes.SET_ORDER_SEQNO](state,val) {
+      state.orderSeqno=val;
     }
-
-
     //right
   }
 ;
