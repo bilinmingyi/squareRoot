@@ -70,6 +70,9 @@ const mutations = {
     },
     [mutationTypes.SET_ORDER_SEQNO](state,val) {
       state.orderSeqno=val;
+    },
+    [mutationTypes.CHANGE_PRINT_PRE](state){
+      state.printPre=state.printPre===true?false:true;
     }
     //right
   }

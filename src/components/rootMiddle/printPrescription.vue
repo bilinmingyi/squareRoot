@@ -41,7 +41,7 @@
             <span style="font-weight: bolder">科室：</span>
           </div>
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
-            <span style="font-weight: bolder">费别：{{payCategory==1?"深圳新医保":"自费"}}</span>
+            <span style="font-weight: bolder">费别：</span>
           </div>
         </div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
@@ -86,7 +86,7 @@
           <div style="width: 100%;height: auto;margin-bottom: 5px;">
             <div
               style="float: left;width: 33.3%;line-height: 24px;"
-              v-for="(itemOne,index) in currRecipeData.data.items"
+              v-for="(itemOne,index) in (currRecipeData.data.items||[])"
               :key="index"
             >
               <span style="margin-right: 8px;">{{itemOne.name}}</span>
@@ -101,7 +101,7 @@
           <div style="width: 100%;height: auto;margin-bottom: 5px;">
             <div
               style="line-height: 24px;"
-              v-for="(itemOne,index) in currRecipeData.data.items"
+              v-for="(itemOne,index) in (currRecipeData.data.items||[])"
               :key="index"
             >
               <span style="margin-right: 30px;">{{itemOne.name}}</span>
@@ -119,7 +119,7 @@
           <div style="width: 100%;height: auto;margin-bottom: 15px;">
             <div
               style="width: 100%;height: auto;margin-bottom: 5px; display: flex;"
-              v-for="(itemOne,index) in currRecipeData.data.items"
+              v-for="(itemOne,index) in (currRecipeData.data.items||[])"
               :key="index"
             >
               <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
@@ -134,7 +134,7 @@
           <div style="width: 100%;height: auto;margin-bottom: 15px;">
             <div
               style="width: 100%;height: auto;margin-bottom: 5px; display: flex;"
-              v-for="(itemOne,index) in currRecipeData.data.items"
+              v-for="(itemOne,index) in (currRecipeData.data.items||[])"
               :key="index"
             >
               <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
@@ -216,7 +216,7 @@
         </div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
-            <span style="font-weight: bolder">处方总金额（元）：{{currRecipeData.data.money}}</span>
+            <span style="font-weight: bolder">处方总金额（元）：{{currRecipeData.money}}</span>
           </div>
         </div>
       </section>
@@ -226,7 +226,7 @@
       >
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
-            <span style="font-weight: bolder">总金额（元）：{{currRecipeData.data.money}}</span>
+            <span style="font-weight: bolder">总金额（元）：{{currRecipeData.money}}</span>
           </div>
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
             <span style="font-weight: bolder">医生：</span>
@@ -260,12 +260,9 @@
 import { mapGetters, mapState } from "vuex";
 export default {
   name: "printPrescription",
-  data() {
-    return {};
-  },
   computed: {
     ...mapGetters(["currRecipeData"]),
-    ...mapState(["patientData", "recordData"]),
+    ...mapState(["patientData", "recordData","printPre"]),
     recipeType: function() {
       return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
     },
@@ -276,8 +273,13 @@ export default {
     },
     getCurrDate: function() {
       var d = new Date();
-      return d.getFullYear() + "-" + (d.getMonth() + 1) + d.getDate();
+      return d.getFullYear() + "-" + (d.getMonth() + 1)+'-' + d.getDate();
     }
+  },
+  watch:{
+      printPre: function(){
+          this.printPrescription();
+      }
   },
   methods: {
     printPrescription: function() {

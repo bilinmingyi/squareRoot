@@ -4,7 +4,7 @@
       <div class="herbal_head_left"></div>
       <div>
         <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
-        <button class="btn">打印处方</button>
+        <button class="btn"  @click="print_pre()">打印处方</button>
       </div>
     </section>
     <section>
@@ -103,8 +103,12 @@
         'cancel_medicine',
         'modify_medicine',
         'modify_recipe_detail',
-        'modify_recipe'
+        'modify_recipe',
+        'change_print_pre',
       ]),
+      print_pre: function(){
+        this.change_print_pre();
+      },
       cancelRecipe() {
         this.$Modal.confirm({
           title: '提示',
