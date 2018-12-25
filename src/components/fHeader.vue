@@ -23,14 +23,15 @@
       ...mapState({
         'recordData': state => state.recordData,
         'recipeList': state => state.recipeList,
-        'patientData': state => state.patientData
+        'patientData': state => state.patientData,
+        'orderSeqno': state => state.orderSeqno
       })
     },
     methods: {
       saveDraft() {
         let draftData = {
-          recipeList: recipeList,
-          recordData: recordData,
+          recipeList: this.recipeList,
+          recordData: this.recordData,
         }
         saveDraft({
           "patient_name": this.patientData.name,
@@ -38,10 +39,10 @@
           "patient_sex":  this.patientData.sex,
           "patient_marital_status":  this.patientData.marital_status,
           "patient_birthday":  this.patientData.birthday,
-          "order_seqno": '',
+          "order_seqno": this.orderSeqno,
           "draft": JSON.stringify(draftData),
         }).then(data => {
-
+          console.log(data)
         })
       }
     }

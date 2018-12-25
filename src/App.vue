@@ -64,7 +64,7 @@ export default {
     getOrderSeqno() {
       // TODO: 获取订单号
 
-      return "T0283079283002";
+      return "T0283427054002";
     }
   }
 };
