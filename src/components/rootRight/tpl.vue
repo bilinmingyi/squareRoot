@@ -689,7 +689,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["add_new_medicine", "clean_recipe"]),
+    ...mapActions(["add_new_medicine", "clean_recipe", "set_record_prop"]),
     firstSearch: function() {
       this.tplSearchList = [];
       if (this.recipeType != 6) {
@@ -998,6 +998,26 @@ export default {
           self.add_new_medicine({ item: newItem, type: self.recipeType });
         });
         this.showUseTpl = false;
+      } else {
+        var data = {
+          chief_complaint: self.tplData.chief_complaint||'',
+          present_illness: self.tplData.present_illness||'',
+          allergic_history: self.tplData.allergic_history||'',
+          personal_history: self.tplData.personal_history||'',
+          examinationInfo: self.tplData.examination||'',
+          diagnosis_input: self.tplData.diagnosis||'',
+          diagnosis_xy_input: self.tplData.diagnosis_xy||'',
+          treat_advice: self.tplData.treat_advice||'',
+          diagnosis_xy_labels: [],
+          diagnosis_labels: []
+        };
+        Object.keys(data).forEach(function(k) {
+          self.set_record_prop({
+            key: k,
+            val: data[k],
+          });
+        });
+        self.showUseTpl = false;
       }
     },
     useTplShow: function() {
