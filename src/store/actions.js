@@ -109,6 +109,7 @@ const actions = {
           "sale_price": item.sale_price,
           "spec": item.spec,
           "unit_stock": item.unit_stock,
+          "unit_sale":item.unit_sale,
           "usage": !item.usage ? '' : item.usage,
           "stock": item.stock,
           "stock_sale_ratio": item.stock_sale_ratio,

@@ -19,7 +19,7 @@
           @click.stop="in_second"
         >
           <span v-show="recipeType!=0">处方模板</span>
-          <span v-show="recipeType==0">病历模板</span>        
+          <span v-show="recipeType==0">病历模板</span>
         </div>
       </div>
     </div>
@@ -32,37 +32,45 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import medSearch from '@/components/rootRight/medSearch.vue'
-import tpl from '@/components/rootRight/tpl.vue'
-  export default {
-    name: "rootRight",
-      components: {
-      medSearch,
-      tpl
-    },
-    data (){
-      return{
+import medSearch from "@/components/rootRight/medSearch.vue";
+import tpl from "@/components/rootRight/tpl.vue";
+export default {
+  name: "rootRight",
+  components: {
+    medSearch,
+    tpl
+  },
+  data() {
+    return {
       in_first_tab: false,
-      in_second_tab: true,
-      }
-      
-    },
-    computed:{
+      in_second_tab: false,
+    };
+  },
+  created(){
+    if(this.recipeType==0){
+      this.in_first_tab=false;
+      this.in_second_tab=true;
+    }else{
+      this.in_first_tab=true;
+      this.in_second_tab=false;
+    }
+  },
+  computed: {
     ...mapGetters(["currRecipeData"]),
-      recipeType: function() {
-        return this.currRecipeData===undefined?0:this.currRecipeData.type;
-      },
-    },
-    watch: {
-      recipeType: function(){
-        if(this.recipeType==0){
-          this.in_second();
-        }else{
-          this.in_first();
-        }
+    recipeType: function() {
+      return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
+    }
+  },
+  watch: {
+    recipeType: function() {
+      if (this.recipeType == 0) {
+        this.in_second();
+      } else {
+        this.in_first();
       }
-    },
-    methods: {
+    }
+  },
+  methods: {
     in_first: function() {
       this.in_first_tab = true;
       this.in_second_tab = false;
@@ -70,13 +78,13 @@ import tpl from '@/components/rootRight/tpl.vue'
     in_second: function() {
       this.in_second_tab = true;
       this.in_first_tab = false;
-    },
     }
   }
+};
 </script>
 
 <style scoped>
-.right-content{
+.right-content {
   background: white;
 }
 .prescript-title {

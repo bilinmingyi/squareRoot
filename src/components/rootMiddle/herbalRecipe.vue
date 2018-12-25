@@ -31,12 +31,21 @@
         <tr v-for="(item,index) in currentData.data.items">
           <td>{{index+1}}</td>
           <td>{{item.name}}</td>
-          <td>{{item.spec==='1克/克'?'1克':item.spec}}</td>
-          <td>
-            <Input style="width:2.5rem" type="text" :value="item.num"
-                   @on-change="modify_medicine({key:'num',val:$event.target.value,index:index})"/>
-            <span>{{item.unit}}</span>
-          </td>
+
+          <template  v-if="item.is_match===1">
+            <td>{{item.spec==='1克/克'?'1克':item.spec}}</td>
+            <td>
+              <Input style="width:2.5rem" type="text" :value="item.num"
+                     @on-change="modify_medicine({key:'num',val:$event.target.value,index:index})"/>
+              <span>{{item.unit}}</span>
+              <span class="num_text" v-if="currentData.data.category==2">({{item.num*item.stock_sale_ratio}}{{item.unit_sale}})</span>
+            </td>
+          </template>
+          <template v-else>
+            <td style="color: red;" colspan="2">
+              系统内搜索不到该药品
+            </td>
+          </template>
           <td>{{item.remark}}</td>
           <td>
             <Select style="width:4.25rem" :value="item.usage" @on-change="modify_medicine({key:'usage',val:$event,index:index})">
@@ -153,6 +162,7 @@
     watch: {
       'currentData.data': {
         deep: true,
+        immediate:true,
         handler:function(newVal,oldVal){
           var recipePrice=0,allPrice=0;
           newVal.items.map((item)=>{
@@ -265,7 +275,11 @@
     display: flex;
     padding: 0.625rem;
   }
-
+  .num_text{
+    display: inline-block;
+    width: 3rem;
+    color: #4DBC89;
+  }
   .herbal_head_left {
     flex: 1;
     align-self: center;
