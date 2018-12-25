@@ -183,7 +183,13 @@
     ></patient-alert>
     <save-record-tpl
       v-show="showSaveRecordTpl"
-      @close="showSaveRecordTpl = false"></save-record-tpl>
+      @close="showSaveRecordTpl = false"
+    ></save-record-tpl>
+    <print-record
+      v-if="showPrintRecord"
+      @close="showPrintRecord = false"
+      :printFlag="printFlag"
+    ></print-record>
   </div>
   <!-- 患者病历 -->
 </template>
@@ -194,24 +200,28 @@ import { Input, Tag } from "iview";
 import patientAlert from "./patientAlert";
 import { getCaseHistory, getDiseaseList } from "@/fetch/api.js";
 import saveRecordTpl from '@/components/saveRecordTpl';
+import printRecord from '@/components/printRecord';
 export default {
   name: "patientrRcord",
   components: {
     Input,
     Tag,
     patientAlert,
-    saveRecordTpl
+    saveRecordTpl,
+    printRecord
   },
   data() {
     return {
       showPatientAlert: false,
       showSaveRecordTpl: false,
+      showPrintRecord: false,
       diagnosisType: 0,
       recordCaseHistoryFinish: false,
       recordCaseHistory: {},
 
       diagnosisTimer: null,
-      diagnosisDataIndex: 0 // 诊断下拉数组当前选中索引
+      diagnosisDataIndex: 0,  // 诊断下拉数组当前选中索引
+      printFlag: false, // 打印病历
     };
   },
   computed: {
@@ -298,6 +308,8 @@ export default {
 
     printPrescription() {
       // 打印病历
+      this.showPrintRecord = true;
+      this.printFlag = true;
     },
 
     showSaveTemplate() {
