@@ -166,7 +166,7 @@
                 </div>
               </div>
             </div>
-            <div style="text-align:center;margin-top:2rem;">
+            <div class="pb20" style="text-align:center;margin-top:2rem;">
               <button class="saveBtn mr20" @click.stop="useTpl()">确认</button>
               <button class="saveBtn cancelBtn" @click.stop="useTplHide()">取消</button>
             </div>
