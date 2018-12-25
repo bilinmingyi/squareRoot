@@ -181,6 +181,9 @@
       @close="closePatientAlert"
       :timeStamp="Date.now()"
     ></patient-alert>
+    <save-record-tpl
+      v-show="showSaveRecordTpl"
+      @close="showSaveRecordTpl = false"></save-record-tpl>
   </div>
   <!-- 患者病历 -->
 </template>
@@ -190,16 +193,19 @@ import { mapState, mapActions } from "vuex";
 import { Input, Tag } from "iview";
 import patientAlert from "./patientAlert";
 import { getCaseHistory, getDiseaseList } from "@/fetch/api.js";
+import saveRecordTpl from '@/components/saveRecordTpl';
 export default {
   name: "patientrRcord",
   components: {
     Input,
     Tag,
-    patientAlert
+    patientAlert,
+    saveRecordTpl
   },
   data() {
     return {
       showPatientAlert: false,
+      showSaveRecordTpl: false,
       diagnosisType: 0,
       recordCaseHistoryFinish: false,
       recordCaseHistory: {},
@@ -296,6 +302,7 @@ export default {
 
     showSaveTemplate() {
       // 存为模板
+      this.showSaveRecordTpl = true;
     },
 
     /* 中西医诊断 */
