@@ -39,6 +39,7 @@ export default {
   },
   methods: {
     ...mapActions(['set_patient_info', 'set_order_seqno','init_recipe','init_recode']),
+    ...mapActions(['set_patient_info', 'set_order_seqno', 'set_state_prop']),
     init() {
       let params = { order_seqno: this.getOrderSeqno() };
       this.showLoader = true;

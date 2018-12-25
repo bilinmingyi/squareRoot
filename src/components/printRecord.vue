@@ -4,7 +4,7 @@
     <section style="color: #000000;">
       <div
         style="width: 100%;height: 35px;text-align: center;line-height: 35px;font-weight: bold;font-size: 20px;margin-bottom: 20px"
-      >{{orderData.clinic_name}}病历</div>
+      >{{clinicName}}病历</div>
       <section
         style="border-bottom: #000000 solid 2px;border-top: #000000 solid 2px;padding: 10px 0px;font-size: 12px;"
       >
@@ -86,7 +86,7 @@
       <section style="font-size: 12px;display: flex;margin-top: 20px">
         <div style="flex: 1;"></div>
         <div style="padding-right: 50px">
-          <span>医生名称：{{orderData.doctor_name}}</span>
+          <span>医生名称：{{doctorName}}</span>
         </div>
       </section>
     </section>
@@ -96,15 +96,10 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import { watch } from 'fs';
 export default {
-  props: ['printFlag'],
+  props: ["printFlag"],
   data() {
     return {
-      orderData: {
-        clinic_name: '大医联帮诊所',
-        doctor_name: 'demo'
-      }
     };
   },
   computed: {
@@ -112,7 +107,8 @@ export default {
       patientData: state => state.patientData,
       recordData: state => state.recordData,
       orderSeqno: state => state.orderSeqno,
-      // orderData: state => state.orderData
+      clinicName: state => state.clinicName,
+      doctorName: state => state.doctorName
     }),
     examination() {
       // 计算检查结果
@@ -137,11 +133,37 @@ export default {
       examination.weight && (ret += "体重" + examination.weight + "kg，");
       examination.info && (ret += examination.info);
       return ret;
-    },
+    }
   },
   watch: {
     printFlag(newVal) {
-
+      if (newVal) {
+        this.printPrescription('printCase');
+      }
+    }
+  },
+  methods: {
+    printPrescription: function(id_str) {
+      setTimeout(() => {
+        var el = document.getElementById(id_str);
+        var iframe = document.createElement("IFRAME");
+        var doc = null;
+        iframe.setAttribute(
+          "style",
+          "position:absolute;width:0px;height:0px;left:-500px;top:-500px;"
+        );
+        document.body.appendChild(iframe);
+        doc = iframe.contentWindow.document;
+        doc.write("<LINK rel='stylesheet' type='text/css'>");
+        doc.write("<div>" + el.innerHTML + "</div>");
+        doc.close();
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+        if (navigator.userAgent.indexOf("MSIE") > 0) {
+          document.body.removeChild(iframe);
+        }
+        this.$emit('reset')
+      }, 30);
     }
   }
 };
