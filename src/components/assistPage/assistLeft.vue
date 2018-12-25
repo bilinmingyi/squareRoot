@@ -8,21 +8,21 @@
       <div class="diagnosisItem">
         <label class="labelText">西医诊断</label>
         <Select filterable class="flexOne" placeholder="" v-model="XYPatientId" remote :remote-method="findXYDiagnosis"
-                :loading="XYLoading" clearable @on-clear="clearXY" @click.native="findXYDiagnosis('')">
+                :loading="XYLoading" clearable @on-clear="clearXY" @click.native="automaticXY()">
           <Option v-for="item in XYList" :value="item.parent_id" :key="item.parent_id">{{item.xy_name}}</Option>
         </Select>
       </div>
       <div class="diagnosisItem">
         <label class="labelText">中医诊断</label>
         <Select filterable class="flexOne" placeholder="" v-model="ZYPatientId" remote :remote-method="findZYDiagnosis"
-                :loading="ZYLoading" clearable @on-clear="clearZY">
+                :loading="ZYLoading" clearable @on-clear="clearZY" @click.native="automaticZY()">
           <Option v-for="item in ZYList" :value="item.parent_id" :key="item.parent_id">{{item.zy_name}}</Option>
         </Select>
       </div>
       <div class="diagnosisItem">
         <label class="labelText">中医辨证</label>
         <Select filterable class="flexOne" placeholder="" v-model="ZYdiscriminate" remote
-                :remote-method="findZYdiscriminate" clearable  @on-clear="clearZYD">
+                :remote-method="findZYdiscriminate" clearable  @on-clear="clearZYD"  @click.native="automaticZYD()">
           <Option v-for="item in ZYDList" :value="item.bz_name" :key="item.bz_name">{{item.bz_name}}</Option>
 
         </Select>
@@ -173,6 +173,21 @@
       clearZYD(){
         this.ZYdiscriminate="";
         this.ZYDList=[];
+      },
+      automaticXY(){
+        if(this.XYdiagnosis.replace(/\s*/g, '')!=='' || this.ZYPatientId!=='' || this.ZYdiscriminate!==''){
+          this.findXYDiagnosis(this.XYdiagnosis);
+        }
+      },
+      automaticZY(){
+        if(this.ZYdiagnosis.replace(/\s*/g, '')!=='' || this.XYPatientId!=='' || this.ZYdiscriminate!==''){
+          this.findZYDiagnosis(this.ZYdiagnosis);
+        }
+      },
+      automaticZYD(){
+        if(this.XYdiagnosis.replace(/\s*/g, '')!=='' || this.ZYdiagnosis.replace(/\s*/g, '')!=='' || this.ZYdiscriminate.replace(/\s*/g, '')!==''){
+          this.findZYdiscriminate(this.ZYdiscriminate);
+        }
       }
     }
   }
