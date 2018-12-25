@@ -6,6 +6,7 @@
       <Button type="primary" shape="circle" class="btn-cancel">取消就诊</Button>
       <Button type="primary" shape="circle" class="btn-done" @click.stop="saveData">完成就诊</Button>
     </div>
+    <preview-recipe></preview-recipe>
   </div>
 </template>
 
@@ -13,11 +14,12 @@
   import {Button} from 'iview'
   import {mapState, mapActions} from 'vuex'
   import {saveDraft} from '@/fetch/api.js'
-
+  import previewRecipe from '@/components/rootMiddle/previewRecipe.vue'
   export default {
     name: "fHeader",
     components: {
-      Button
+      Button,
+      previewRecipe
     },
     computed: {
       ...mapState({
