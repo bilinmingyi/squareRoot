@@ -15,8 +15,8 @@
       <div class="mt10">
         <span class="pr20">
           <span class="font-bold pr10">年龄</span>
-          <span v-if="patientData.birthday != null">{{patientData.birthday | calcAge}}岁</span>
-          <span v-else>{{patientData.age}}岁</span>
+          <span>{{patientData.birthday | calcAge}}岁</span>
+          <!-- <span v-else>{{patientData.age}}岁</span> -->
         </span>
         <span>
           <span class="font-bold pr10">性别</span>
@@ -50,11 +50,12 @@
 import { Icon } from "iview";
 import editPatientInfo from "./editPatientInfo";
 import { mapState, mapActions } from "vuex";
+import { getPatientInfo } from "@/fetch/api.js";
 export default {
-  props:{
-    canShowMoney:{
-      type:Boolean,
-      default:true
+  props: {
+    canShowMoney: {
+      type: Boolean,
+      default: true
     }
   },
   components: {
@@ -105,7 +106,19 @@ export default {
       return tempPrice.toFixed(2);
     }
   },
+  created() {
+    if (!this.canShowMoney) {
+      let patientInfoParams = new FormData();
+      patientInfoParams.append("patientId", this.patientData.id);
+      getPatientInfo(patientInfoParams).then(res => {
+        if (res.code == 1000) {
+          this.set_state_prop({ key: "patientData", val: res.data });
+        }
+      });
+    }
+  },
   methods: {
+    ...mapActions(['set_state_prop']),
     editPatient() {
       this.showEditPatientInfo = true;
     }

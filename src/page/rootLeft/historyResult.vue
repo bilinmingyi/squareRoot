@@ -10,8 +10,8 @@
         <span class="text_red">没有的药品</span>不会导入至处方。
       </div>
       <div class="d_Classic_prescription_quote2 clearfix">
-        <div v-if="recipeData.historyType==1">
-          <div class="fl mb5" style="width: 33.3%" v-for="(item,index) in recipeData.historyMach">
+        <div v-if="recipeData.recipe_type==1" class="flex-wrap">
+          <div class="mb5" style="width: 33.3%" v-for="(item,index) in recipeData.herbal_list">
             <span v-if="item.is_match==0">
               <span>{{item.name}}</span>
               <span class="pl10">({{item.num}}{{item.unit}}/{{item.usage}})</span>
@@ -23,8 +23,8 @@
             </span>
           </div>
         </div>
-        <div v-if="recipeData.historyType==2">
-          <div class="fl mb5" style="width: 100%" v-for="(item,index) in recipeData.historyMach">
+        <div v-if="recipeData.recipe_type==2" class="flex-wrap">
+          <div class="mb5" style="width: 100%" v-for="(item,index) in recipeData.western_list">
             <span v-if="item.is_match==0">
               <span>{{item.name}}</span>
               <span class="pl10">({{item.num}}{{item.unit}}/{{item.usage}})</span>
@@ -36,8 +36,8 @@
             </span>
           </div>
         </div>
-        <div v-if="recipeData.historyType==3">
-          <div class="fl mb5" style="width: 100%" v-for="(item,index) in recipeData.historyMach">
+        <div v-if="recipeData.recipe_type==3" class="flex-wrap">
+          <div class="mb5" style="width: 100%" v-for="(item,index) in recipeData.product_list">
             <span v-if="item.is_match==0">
               <span>{{item.name}}</span>
               <span class="pl10">({{item.num}}{{item.unit}}/{{item.usage}})</span>
@@ -49,8 +49,8 @@
             </span>
           </div>
         </div>
-        <div v-if="recipeData.historyType==4">
-          <div class="fl mb5" style="width: 100%" v-for="(item,index) in recipeData.historyMach">
+        <div v-if="recipeData.recipe_type==4" class="flex-wrap">
+          <div class="mb5" style="width: 100%" v-for="(item,index) in recipeData.therapy_list">
             <span v-if="item.is_match==0">
               <span>{{item.name}}</span>
               <span
@@ -66,8 +66,8 @@
             </span>
           </div>
         </div>
-        <div v-if="recipeData.historyType==5">
-          <div class="fl mb5" style="width: 100%" v-for="(item,index) in recipeData.historyMach">
+        <div v-if="recipeData.recipe_type==5" class="flex-wrap">
+          <div class="mb5" style="width: 100%" v-for="(item,index) in recipeData.extra_list">
             <span v-if="item.is_match==0">
               <span>{{item.name}}</span>
               <span
@@ -95,22 +95,62 @@
 <script>
 import { mapState, mapActions } from "vuex";
 export default {
-  props: ['recipeProp'],
+  props: {
+    recipeDataProp: {
+      type: Object,
+      default() {
+        return {
+          recipe_type: 0
+        };
+      }
+    },
+    map: {
+      type: Array,
+      default() {
+        return [
+          "",
+          "herbal_list",
+          "western_list",
+          "product_list",
+          "therapy_list",
+          "extra_list"
+        ];
+      }
+    }
+  },
   data() {
-    return {
-      recipeData: {
-        historyType: 0,
-        historyMach: [],
-      },
-
-    };
+    return {};
   },
   computed: {
     ...mapState({
       currRecipe: state => state.currRecipe,
+      recipeList: state => state.recipeList
     }),
-    recipeList() {
-      return this.recipeData;
+    recipeData() {
+      return this.recipeDataProp;
+    },
+    mapList() {
+      return this.map;
+    }
+  },
+  methods: {
+    ...mapActions(["clean_recipe", "add_new_medicine", "modify_recipe_detail"]),
+    cancelHistory() {
+      this.$emit("close");
+    },
+    saveHistory() {
+      let recipe = this.recipeData;
+      let type = recipe.recipe_type;
+      let map = this.mapList;
+      let arr = recipe[map[type]];
+      this.clean_recipe();
+      arr.forEach(item => {
+        this.add_new_medicine({ item, type });
+      })
+      if (type == 1) {
+        this.modify_recipe_detail({ key: 'dosage', val: recipe.dosage})
+      }
+      this.cancelHistory();
     }
   }
 };
@@ -178,5 +218,15 @@ export default {
   background: #ffffff;
   border: 1px solid #5096e0;
   color: #5096e0;
+}
+.display-flex {
+  display: flex;
+}
+.flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+.flex-1 {
+  flex: 1;
 }
 </style>
