@@ -43,6 +43,11 @@
           "draft": JSON.stringify(draftData),
         }).then(data => {
           console.log(data)
+          if(data.code===1000){
+            this.$router.go(-1)
+          }else {
+            this.$Message.info("保存失败");
+          }
         })
       }
     }
