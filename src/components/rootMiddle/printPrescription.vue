@@ -262,11 +262,17 @@
 </template>
 <script>
 import { mapGetters, mapState } from "vuex";
+import {clinicName} from '@/assets/js/mapType.js'
 export default {
   name: "printPrescription",
+  data(){
+    return {
+      clinicName: clinicName,
+    }
+  },
   computed: {
     ...mapGetters(["currRecipeData"]),
-    ...mapState(["patientData", "recordData","printPre", 'orderSeqno', 'clinicName', 'doctorName']),
+    ...mapState(["patientData", "recordData","printPre", 'orderSeqno', 'doctorName']),
     recipeType: function() {
       return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
     },
