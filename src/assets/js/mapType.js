@@ -74,5 +74,6 @@ module.exports= {
   herbalRpUsages,
   westernMedUsages,
   extraFeeTypes,
-  medFrequency
+  medFrequency,
+  clinicName
 }
