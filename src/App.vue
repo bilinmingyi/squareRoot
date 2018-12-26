@@ -69,7 +69,7 @@ export default {
       var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
       var r = window.location.search.substr(1).match(reg);
       if (r != null)return decodeURIComponent(r[2]);
-      return '';
+      return null;
     },
     loadDraftData(){
       loadDraft({
@@ -78,8 +78,13 @@ export default {
         if(data.code===1000){
           if (data.data == '') return;
           let result=JSON.parse(data.data);
-          this.init_recipe(JSON.parse(JSON.stringify(result.recipeList)));
-          this.init_recode(JSON.parse(JSON.stringify(result.recordData)));
+          try{
+            this.init_recipe(JSON.parse(JSON.stringify(result.recipeList)));
+            this.init_recode(JSON.parse(JSON.stringify(result.recordData)));
+          }catch (e) {
+
+          }
+
         }else {
           this.$Message.info(data.msg)
         }
