@@ -43,7 +43,6 @@ export default {
       this.showLoader = true;
       this.set_order_seqno(this.getOrderSeqno('orderSeqno'));
       getTreatOrderDetail(params).then(res => {
-        console.log(res);
         if (res.code === 1000) {
           let data = res.data;
           let patientData = this.patientData;
@@ -104,7 +103,7 @@ export default {
 }
 .page_content {
   display: flex;
-  min-height: calc(100vh - 8.7rem);
+  min-height: calc(100vh - 9.2rem);
 }
 .hidden {
   visibility: hidden;

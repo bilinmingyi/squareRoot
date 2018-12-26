@@ -40,6 +40,9 @@
           {{item.symptom[0]}}
         </div>
       </div>
+      <div v-if="fjList.length===0" style="text-align: center;margin: 1rem auto">
+        暂无处方信息
+      </div>
     </section>
   </div>
 </template>

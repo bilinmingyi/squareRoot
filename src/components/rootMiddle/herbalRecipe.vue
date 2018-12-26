@@ -1,14 +1,16 @@
 <template>
   <div>
     <section class="herbal_head">
-      <div  class="herbal_head_left">
-        <f-radio value="1" name="herCate" :currVal="currentData.data.category" @change="changeCategory($event)">饮片</f-radio>
-        <f-radio value="2" name="herCate" :currVal="currentData.data.category" @change="changeCategory($event)" >颗粒</f-radio>
+      <div class="herbal_head_left">
+        <f-radio value="1" :name="'herCate'" :currVal="currentData.data.category" @change="changeCategory($event)">饮片
+        </f-radio>
+        <f-radio value="2" :name="'herCate'" :currVal="currentData.data.category" @change="changeCategory($event)">颗粒
+        </f-radio>
       </div>
       <div>
         <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
-        <button class="btn" v-if="currentData.data.category==2">
-          <router-link :to="'/assist'">辅助开方</router-link>
+        <button class="btn" v-if="currentData.data.category==2" @click.stop="toAssist">
+          辅助开方
         </button>
         <button class="btn" @click="print_pre()">打印处方</button>
         <button class="btn btn_print" @click.stop="saveTplData">存为模板</button>
@@ -32,7 +34,7 @@
           <td>{{index+1}}</td>
           <td>{{item.name}}</td>
 
-          <template  v-if="item.is_match===1">
+          <template v-if="item.is_match===1">
             <td>{{item.spec==='1克/克'?'1克':item.spec}}</td>
             <td>
               <Input style="width:2.5rem" type="text" :value="item.num"
@@ -48,7 +50,8 @@
           </template>
           <td>{{item.remark}}</td>
           <td>
-            <Select style="width:4.25rem" :value="item.usage" @on-change="modify_medicine({key:'usage',val:$event,index:index})">
+            <Select style="width:4.25rem" :value="item.usage"
+                    @on-change="modify_medicine({key:'usage',val:$event,index:index})">
               <Option v-for="item in herbalMedUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
             </Select>
           </td>
@@ -69,18 +72,21 @@
       <div class="displayFlex pl10 pr10 pt10">
         <div class="width-240">
           <span class="input_label"> 剂数：</span>
-          <Input type="text" class="input_120" :value="currentData.data.dosage" @on-change="modify_recipe_detail({key:'dosage',val:$event.target.value})"/>
+          <Input type="text" class="input_120" :value="currentData.data.dosage"
+                 @on-change="modify_recipe_detail({key:'dosage',val:$event.target.value})"/>
           <span class="input_label">剂</span>
         </div>
         <div class="width-240">
           <span class="input_label">频次：</span>
-          <Select class="input_120" :value="currentData.data.frequency" @on-change="modify_recipe_detail({key:'frequency',val:$event})">
+          <Select class="input_120" :value="currentData.data.frequency"
+                  @on-change="modify_recipe_detail({key:'frequency',val:$event})">
             <Option v-for="item in medFrequency" :value="item.name" :key="item.name">{{ item.name }}</Option>
           </Select>
         </div>
         <div class="width-240">
           <span class="input_label"> 用法：</span>
-          <Select class="input_120":value="currentData.data.usage" @on-change="modify_recipe_detail({key:'usage',val:$event})">
+          <Select class="input_120" :value="currentData.data.usage"
+                  @on-change="modify_recipe_detail({key:'usage',val:$event})">
             <Option v-for="item in herbalRpUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
           </Select>
         </div>
@@ -94,18 +100,21 @@
         </div>
         <div class="width-240">
           <span class="input_label">数量：</span>
-          <Input type="text" class="input_120" :value="currentData.data.extra_num" @on-change="modify_recipe_detail({key:'extra_num',val:$event.target.value})"/>
+          <Input type="text" class="input_120" :value="currentData.data.extra_num"
+                 @on-change="modify_recipe_detail({key:'extra_num',val:$event.target.value})"/>
         </div>
         <div class="width-240">
           <span class="input_label"> 用量：</span>
-          <Input type="text" class="input_120" :value="currentData.data.eachDose" @on-change="modify_recipe_detail({key:'eachDose',val:$event.target.value})"/>
+          <Input type="text" class="input_120" :value="currentData.data.eachDose"
+                 @on-change="modify_recipe_detail({key:'eachDose',val:$event.target.value})"/>
           <span class="input_label">ml</span>
         </div>
       </div>
       <div class="displayFlex pl10 pt10 width-620">
         <span class="input_label pr4">医嘱：</span>
         <Input class="flexOne" type="textarea" :autosize="{minRows: 3,maxRows: 3}" placeholder="医嘱提示"
-               :value="currentData.data.doctor_remark" @on-change="modify_recipe_detail({key:'doctor_remark',val:$event.target.value})"/>
+               :value="currentData.data.doctor_remark"
+               @on-change="modify_recipe_detail({key:'doctor_remark',val:$event.target.value})"/>
       </div>
     </section>
     <save-tpl v-if="showAddTpl" @hideTpl="hideTplShow"></save-tpl>
@@ -125,7 +134,7 @@
     data() {
       return {
         medFrequency: medFrequency,
-        showAddTpl:false
+        showAddTpl: false
       };
     },
     components: {
@@ -162,24 +171,24 @@
     watch: {
       'currentData.data': {
         deep: true,
-        immediate:true,
-        handler:function(newVal,oldVal){
-          var recipePrice=0,allPrice=0;
-          newVal.items.map((item)=>{
-            if(item.is_match===1){
-              recipePrice+=Number(item.num)*Number(item.price)
+        immediate: true,
+        handler: function (newVal, oldVal) {
+          var recipePrice = 0, allPrice = 0;
+          newVal.items.map((item) => {
+            if (item.is_match === 1) {
+              recipePrice += Number(item.num) * Number(item.price)
             }
 
           });
-          if(newVal.extra_feetype!==''&& newVal.extra_feetype!==undefined && newVal.extra_feetype!=null){
-            let extraItem=this.extraFeeTypes.filter((typeOne)=>{
+          if (newVal.extra_feetype !== '' && newVal.extra_feetype !== undefined && newVal.extra_feetype != null) {
+            let extraItem = this.extraFeeTypes.filter((typeOne) => {
               return typeOne.name === newVal.extra_feetype;
             })
-            allPrice=recipePrice*Number(newVal.dosage)+extraItem[0].price*newVal.extra_num;
-          }else {
-            allPrice=recipePrice*Number(newVal.dosage)
+            allPrice = recipePrice * Number(newVal.dosage) + extraItem[0].price * newVal.extra_num;
+          } else {
+            allPrice = recipePrice * Number(newVal.dosage)
           }
-          this.modify_recipe({key:'money',val:Number(allPrice).toFixed(2)})
+          this.modify_recipe({key: 'money', val: Number(allPrice).toFixed(2)})
         }
       }
     },
@@ -193,7 +202,7 @@
         'clean_recipe',
         'change_print_pre',
       ]),
-      print_pre: function(){
+      print_pre: function () {
         this.change_print_pre();
       },
       cancelRecipe() {
@@ -208,19 +217,18 @@
           }
         });
       },
-      changeCategory(event){
-        event.preventDefault();
-        if(this.currentData.data.items.length===0){
-          this.modify_recipe_detail({key:'category',val:event.target.value})
-        }else {
+      changeCategory(event) {
+        if (this.currentData.data.items.length === 0) {
+          this.modify_recipe_detail({key: 'category', val: event.target.value})
+        } else {
           this.$Modal.confirm({
             title: '提示',
             content: '<p>切换药类型将清空已选的药，确认要切换?</p>',
-            onOk: ()=>{
-              this.modify_recipe_detail({key:'category',val:event.target.value})
+            onOk: () => {
+              this.modify_recipe_detail({key: 'category', val: event.target.value})
               this.clean_recipe();
             },
-            onCancel: ()=>{
+            onCancel: () => {
               this.$forceUpdate()
             }
           })
@@ -228,33 +236,36 @@
 
 
       },
-      saveTplData(){
-        if(this.currentData.data.items.length===0){
+      saveTplData() {
+        if (this.currentData.data.items.length === 0) {
           this.$Message.info("请先至少添加一个药品！");
           return
         }
-        let itemList=this.currentData.data.items;
-        for(var i=0;i<itemList.length;i++){
-          if(itemList[i].num==='' || itemList[i].num===0){
-            this.$Message.info("药品【"+itemList[i].name+"】的药量为空！")
+        let itemList = this.currentData.data.items;
+        for (var i = 0; i < itemList.length; i++) {
+          if (itemList[i].num === '' || itemList[i].num === 0) {
+            this.$Message.info("药品【" + itemList[i].name + "】的药量为空！")
             return
           }
         }
-        if(this.currentData.data.dosage==='' || this.currentData.data.dosage===0){
+        if (this.currentData.data.dosage === '' || this.currentData.data.dosage === 0) {
           this.$Message.info("请先填写处方的剂数！")
           return
         }
-        this.showAddTpl=true;
+        this.showAddTpl = true;
       },
-      hideTplShow(){
-        this.showAddTpl=false;
+      hideTplShow() {
+        this.showAddTpl = false;
       },
-      change_extra(val){
-        this.modify_recipe_detail({key:'extra_feetype',val:val});
-        let extraItem=this.extraFeeTypes.filter((typeOne)=>{
+      change_extra(val) {
+        this.modify_recipe_detail({key: 'extra_feetype', val: val});
+        let extraItem = this.extraFeeTypes.filter((typeOne) => {
           return typeOne.name === val;
         })
-        this.modify_recipe_detail({key:'extra_price',val:extraItem[0].price})
+        this.modify_recipe_detail({key: 'extra_price', val: extraItem[0].price})
+      },
+      toAssist() {
+        this.$router.push({path: 'assist'})
       }
     },
 
@@ -286,11 +297,13 @@
     display: flex;
     padding: 0.625rem;
   }
-  .num_text{
+
+  .num_text {
     display: inline-block;
     width: 3rem;
     color: #4DBC89;
   }
+
   .herbal_head_left {
     flex: 1;
     align-self: center;

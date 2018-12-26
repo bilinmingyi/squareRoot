@@ -27,6 +27,7 @@
   .assistLeft{
     flex: 26;
     margin-right: 1rem;
+    min-height: calc(100vh - 9.2rem);
   }
   .assistRight{
     flex: 73;
