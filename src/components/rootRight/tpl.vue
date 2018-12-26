@@ -841,11 +841,10 @@ export default {
       });
       if (flag === true) {
         var newItem = {
-          category: item.category,
           item_id: item.id,
           name: item.alias_name||item.clinic_alias_name||item.name,
           num: 0,
-          unit: item.unit||unit_stock.unit,
+          unit: item.unit||item.unit_stock,
           unit_stock: item.unit_stock||item.unit,
           stock: item.stock,
           unit_stock: item.unit_stock,
