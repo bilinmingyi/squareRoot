@@ -854,10 +854,9 @@ export default {
           sale_price: item.sale_price||item.price,
           usage: 0,
           spec: item.spec,
-          is_match: 1,
           alias_name: item.alias_name,
           clinic_alias_name: item.clinic_alias_name,
-          status: item.status
+          status: item.status||1
         };
         self.tplEditData.items.push(newItem);
         self.tplEditData.searchListShow = false;
@@ -989,7 +988,6 @@ export default {
         self.tplData.items.forEach(function(item) {
           var newItem = {
             category: item.category,
-            is_match: item.is_match,
             item_id: item.item_id,
             name: item.alias_name||item.clinic_alias_name||item.name,
             alias_name: item.alias_name || item.name,
@@ -1006,7 +1004,8 @@ export default {
             usage: item.usage,
             dose_once:item.dose_once,
             frequency: item.frequency,
-            days: item.days
+            days: item.days,
+            status: 1
           };
           self.add_new_medicine({ item: newItem, type: self.recipeType });
         });
