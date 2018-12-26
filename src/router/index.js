@@ -4,30 +4,29 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 export default new Router({
-  scrollBehavior (to, from, savedPosition) {
-    return { x: 0, y: 0 }
+  mode: 'hash',
+  scrollBehavior(to, from, savedPosition) {
+    return {x: 0, y: 0}
   },
   routes: [
     {
-      path:'/',
-      redirect:'/root'
+      path: '/',
+      redirect: '/root'
     },
     {
       path: '/root',
-      name: 'root',
       components: {
-        Left:() => import('@/page/rootLeft/rootLeft.vue'),
-        Middle: () =>import('@/page/rootMiddle.vue'),
-        Right: ()=>import('@/page/rootRight.vue'),
-        Header: ()=>import('@/components/fHeader.vue')
+        Left: () => import('@/page/rootLeft/rootLeft.vue'),
+        Middle: () => import('@/page/rootMiddle.vue'),
+        Right: () => import('@/page/rootRight.vue'),
+        Header: () => import('@/components/fHeader.vue')
       }
     },
     {
       path: '/assist',
-      name: 'assist',
       components: {
-        default:() => import('@/page/assistPage.vue'),
-        Header: ()=> import('@/components/assistPage/aHeader.vue')
+        default: () => import('@/page/assistPage.vue'),
+        Header: () => import('@/components/assistPage/aHeader.vue')
       }
     }
 
