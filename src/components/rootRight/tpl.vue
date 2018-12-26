@@ -951,6 +951,8 @@ export default {
       );
     },
     cancelTplAdd: function() {
+      this.tplEditData.searchListShow=false;
+      this.tplEditData.searchLists=[];
       this.showAddTpl = false;
     },
     tplShow: function(item) {
@@ -1171,6 +1173,8 @@ export default {
     },
     cancelTplEdit: function() {
       this.showEditTpl = false;
+      this.tplEditData.tplSearchList=[];
+      this.tplEditData.searchListShow=false;
     }
   }
 };
