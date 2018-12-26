@@ -8,7 +8,7 @@
       <div>
         <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
         <button class="btn" v-if="currentData.data.category==2">
-          <router-link to="/assist">辅助开方</router-link>
+          <router-link :to="'/assist'">辅助开方</router-link>
         </button>
         <button class="btn" @click="print_pre()">打印处方</button>
         <button class="btn btn_print" @click.stop="saveTplData">存为模板</button>
