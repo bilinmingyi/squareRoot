@@ -6,9 +6,6 @@ body, h1, h2, h3, h4, h5, p, dl, dd, ol, ul, th, td, form, fieldset, input, butt
   font-family: "microsoft yahei";
 }
 
-body {
-  background: #F5F5F5;
-}
 
 html {
   -webkit-text-size-adjust: none;
@@ -152,7 +149,7 @@ input {
   flex: 1;
 }
 .input_120{
-  width: 7.5rem;
+  width: 7.5rem !important;
 }
 .input_label{
   font-size: 0.875rem;
