@@ -88,7 +88,7 @@
         <div class="mt10 ml10 mb20 tpl-case" v-show="recipeType==0">
           <div>
             <span class="case-label">既往史&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span>{{tplData.personal_history}}</span>
+            <span>{{tplData.past_history}}</span>
           </div>
           <div>
             <span class="case-label">过敏史&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -579,7 +579,7 @@ export default {
         chief_complaint: "", //主诉
         present_illness: "", //病史
         allergic_history: "", //过敏史
-        personal_history: "", //既往史
+        past_history: "", //既往史
         examination: "", //检查
         diagnosis: "", //中医诊断
         diagnosis_xy: "", //西医诊断
@@ -971,7 +971,7 @@ export default {
         chief_complaint: item.chief_complaint, //主诉
         present_illness: item.present_illness, //病史
         allergic_history: item.allergic_history, //过敏史
-        personal_history: item.personal_history, //既往史
+        past_history: item.past_history, //既往史
         examination: item.examination, //检查
         diagnosis: item.diagnosis, //中医诊断
         diagnosis_xy: item.diagnosis_xy //西医诊断
