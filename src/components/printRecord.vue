@@ -96,10 +96,12 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import {clinicName} from '@/assets/js/mapType.js'
 export default {
   props: ["printFlag"],
   data() {
     return {
+      clinicName:clinicName
     };
   },
   computed: {
@@ -107,7 +109,6 @@ export default {
       patientData: state => state.patientData,
       recordData: state => state.recordData,
       orderSeqno: state => state.orderSeqno,
-      clinicName: state => state.clinicName,
       doctorName: state => state.doctorName
     }),
     examination() {
