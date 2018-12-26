@@ -2,11 +2,11 @@
   <div class="content">
     <div class="title">患者接诊</div>
     <div>
-      <Button type="primary" shape="circle" class="btn-time" @click.stop="saveDraft();">临时保存</Button>
+      <Button type="primary" shape="circle" class="btn-time" @click.stop="saveDraftData(1)">临时保存</Button>
       <Button type="primary" shape="circle" class="btn-cancel" @click.stop="confirmCancel">取消就诊</Button>
       <Button type="primary" shape="circle" class="btn-done" @click.stop="saveData">完成就诊</Button>
     </div>
-    <preview-recipe></preview-recipe>
+    <preview-recipe v-if="previewOrder" @hidePreview="hidePreview"></preview-recipe>
   </div>
 </template>
 
@@ -25,6 +25,7 @@
     data() {
       return {
         cancelOrderModal: false,
+        previewOrder:false
       }
     },
     computed: {
@@ -39,7 +40,7 @@
       ...mapActions([
         'change_curr_tab'
       ]),
-      saveDraft() {
+      saveDraftData(canReturn) {
         let draftData = {
           recipeList: this.recipeList,
           recordData: this.recordData,
@@ -55,7 +56,9 @@
         }).then(data => {
           console.log(data)
           if (data.code === 1000) {
-            this.$router.go(-1)
+            if(canReturn===1){
+              this.$router.go(-1)
+            }
           } else {
             this.$Message.info("保存失败");
           }
@@ -117,8 +120,13 @@
           )
         } catch (e) {
           this.$Message.info(e.message)
+          return
         }
-
+        this.previewOrder=true;
+        this.saveDraftData();
+      },
+      hidePreview(){
+        this.previewOrder=false
       }
     }
   }

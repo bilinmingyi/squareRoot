@@ -82,7 +82,7 @@
           <Button size="large">确定无误</Button>
         </div>
         <div class="content_right_item">
-          <Button size="large">返回修改</Button>
+          <Button size="large" @click="returnToModify">返回修改</Button>
         </div>
       </div>
     </section>
@@ -123,6 +123,11 @@
           });
           this.allPrice=allMoney;
         }
+      }
+    },
+    methods:{
+      returnToModify(){
+        this.$emit('hidePreview')
       }
     }
   }
