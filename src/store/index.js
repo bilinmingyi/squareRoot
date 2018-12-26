@@ -8,14 +8,13 @@ import mutations from '@/store/mutations.js'
 Vue.use(Vuex)
 const state = {
   // left
-  is_first: "1", // 是否初诊
+  isFirst: "1", // 是否初诊
   treatPrice: 0, // 诊金
   showHistoryDetail: false, // 显示就诊历史
   orderSeqno:'',
   clinicName: '',
   doctorName: '',
   patientData: {
-    // TODO: id
     id: null,
     name: "",
     mobile: "",
@@ -53,7 +52,7 @@ const state = {
   recipeList:[],
   currRecipe:0,
   fjbRecipe:{},
-
+  printPre:false,
   // right
   recordTplChange: false,
 };
