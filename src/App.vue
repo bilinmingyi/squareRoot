@@ -101,6 +101,7 @@ export default {
   color: #2c3e50;
   margin-top: 3.75rem;
   padding: 1.25rem;
+  background: #F5F5F5;
 }
 .page_content {
   display: flex;
