@@ -79,7 +79,7 @@
       </div>
       <div class="content_right">
         <div class="content_right_item mr20">
-          <Button size="large">确定无误</Button>
+          <Button size="large" @click.stop="submitOrder">确定无误</Button>
         </div>
         <div class="content_right_item">
           <Button size="large" @click="returnToModify">返回修改</Button>
@@ -92,6 +92,7 @@
 <script>
   import {Button} from 'iview'
   import {mapState} from 'vuex'
+  import {submitOrder} from '@/fetch/api.js'
   export default {
     name: "previewRecipe",
     data(){
@@ -109,7 +110,9 @@
         "recordData":state=>state.recordData,
         "recipeList": state=>state.recipeList.filter(item=>{
           return item.data.items.length !== 0
-        })
+        }),
+        "draftData": state=>state.draftData,
+        "treatPrice": state=> state.treatPrice
       })
     },
     watch:{
@@ -128,6 +131,78 @@
     methods:{
       returnToModify(){
         this.$emit('hidePreview')
+      },
+      submitOrder(){
+        let recipeList=JSON.parse(JSON.stringify(this.recipeList)),resultList=[];
+        recipeList.forEach(item=>{
+          switch (item.type) {
+            case 1:
+              resultList.push({
+                'recipe_type':item.type,
+                'is_cloud':item.data.is_cloud,
+                'dose_once':item.data.eachDose,
+                'extra_name':item.data.extra_feetype,
+                'extra_num':item.data.extra_num,
+                'extra_price':Number(item.data.extra_price)*Number(item.data.extra_num),
+                'category':item.data.category,
+                'dosage':item.data.dosage,
+                'frequency':item.data.frequency,
+                'usage':item.data.usage,
+                'doctor_remark':item.data.doctor_remark,
+                'herbal_list':item.data.items
+              })
+              break;
+            case 2:
+              resultList.push({
+                'recipe_type':item.type,
+                'is_cloud':0,
+                'doctor_remark':item.data.doctor_remark,
+                'western_list':item.data.items
+              })
+              break;
+            case 4:
+              resultList.push({
+                'recipe_type':item.type,
+                'doctor_remark':item.data.doctor_remark,
+                "therapy_list":item.data.items
+              })
+              break;
+            case 6:
+              resultList.push({
+                'recipe_type':item.type,
+                'doctor_remark':item.data.doctor_remark,
+                "material_list":item.data.items
+              })
+              break;
+          }
+        });
+        resultList.push({
+          'recipe_type':5,
+          'doctor_remark':'',
+          "extra_list":[]
+        })
+
+        submitOrder({
+          "order_seqno":this.orderSeqno,
+          "chief_complaint":this.recordData.chief_complaint,
+          "examination":JSON.stringify(this.recordData.examination),
+          "diagnosis":this.recordData.diagnosis,
+          "diagnosis_xy":this.recordData.diagnosis_xy,
+          "present_illness":this.recordData.present_illness,
+          "recipe_list":resultList,
+          "draft":this.draftData,
+          "treat_price":this.treatPrice
+        }).then(data=>{
+          if(data.code===1000){
+            this.$router.go(-1);
+          }else if(data.code===500011){
+            this.$Message.info("药品不存在！");
+            return
+          }
+          else {
+            this.$Message.info("提交失败--"+data.msg)
+          }
+        })
       }
     }
   }

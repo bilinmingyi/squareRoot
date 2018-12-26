@@ -30,6 +30,7 @@ const actions = {
             frequency: "",
             extra_num: 0,
             extra_feetype: "",
+            extra_price:0,
             eachDose: "",
             items: []
           }
@@ -206,8 +207,10 @@ const actions = {
   },
   init_recode:({commit},obj)=>{
     commit(mutationTypes.INIT_RECODE,obj)
+  },
+  save_draft_data:({commit},str)=>{
+    commit(mutationTypes.SAVE_DRAFT_DATA,str)
   }
-
   //right
 };
 

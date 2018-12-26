@@ -53,6 +53,7 @@ const state = {
   currRecipe:0,
   fjbRecipe:{},
   printPre:false,
+  draftData:'',
   // right
   recordTplChange: false,
 };

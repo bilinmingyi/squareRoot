@@ -112,9 +112,11 @@ const getFJDrugList = (params) => axios({
 
 const getHerbalList = (params) => fetch('/stockmng/medicine/herbalList', params);
 
-const saveDraft = (params) => fetch('/doctreat/treatorder/save', params)
+const saveDraft = (params) => fetch('/doctreat/treatorder/save', params);
 
-const loadDraft = (params) => fetch('/doctreat/treatorder/getDraft', params)
+const loadDraft = (params) => fetch('/doctreat/treatorder/getDraft', params);
+
+const submitOrder =(params) =>fetch('/doctreat/treatorder/submitOrder',params)
 
 //right
 const searchRecentMed = (params, type) => {
@@ -193,6 +195,7 @@ export {
   getHerbalList,
   saveDraft,
   loadDraft,
+  submitOrder,
 
   //right
   searchRecentMed,

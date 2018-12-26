@@ -38,13 +38,15 @@
     },
     methods: {
       ...mapActions([
-        'change_curr_tab'
+        'change_curr_tab',
+        'save_draft_data'
       ]),
       saveDraftData(canReturn) {
         let draftData = {
           recipeList: this.recipeList,
           recordData: this.recordData,
         }
+        this.save_draft_data(JSON.stringify(draftData));
         saveDraft({
           "patient_name": this.patientData.name,
           "patient_mobile": this.patientData.mobile,

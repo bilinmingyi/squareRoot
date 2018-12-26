@@ -88,7 +88,7 @@
       <div class="displayFlex p10">
         <div class="width-240">
           <span class="input_label"> 附加：</span>
-          <Select class="input_120" :value="currentData.data.extra_feetype" @on-change="modify_recipe_detail({key:'extra_feetype',val:$event})">
+          <Select class="input_120" :value="currentData.data.extra_feetype" @on-change="change_extra($event)">
             <Option v-for="item in extraFeeTypes" :value="item.name" :key="item.id">{{ item.name }}</Option>
           </Select>
         </div>
@@ -248,6 +248,13 @@
       },
       hideTplShow(){
         this.showAddTpl=false;
+      },
+      change_extra(val){
+        this.modify_recipe_detail({key:'extra_feetype',val:val});
+        let extraItem=this.extraFeeTypes.filter((typeOne)=>{
+          return typeOne.name === val;
+        })
+        this.modify_recipe_detail({key:'extra_price',val:extraItem[0].price})
       }
     },
 
