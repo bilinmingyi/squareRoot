@@ -123,7 +123,6 @@ const actions = {
           "item_id": item.id,
           "name": item.clinic_alias_name != '' && item.clinic_alias_name != null ? item.clinic_alias_name : item.name,
           "num": !item.num ? 0 : item.num,
-          // "price": item.unit === item.unit_stock ? item.sale_price:(item.unit === item.unit_sale?(item.sale_price * 1.0 / item.stock_sale_ratio):item.sale_price),
           "unit": item.unit === item.unit_stock ? item.unit_stock : (item.unit === item.unit_sale ? item.unit_sale : item.unit_stock),
           "sale_price": item.sale_price,
           "spec": item.spec,

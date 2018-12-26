@@ -602,6 +602,7 @@ export default {
   color: #515a6e;
   background: #f6fbfe;
   font-size: 0.9375rem;
+  outline: none;
 }
 .diagnosis-input:focus {
   outline-color: transparent;
