@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="mt5 ml6 mr6 mb5">
-      <div v-show="!showTpl">
+      <div v-if="!showTpl">
         <div class="mb6" style="width:100%;display:flex;height:2rem;">
           <div class="col70 mr10">
             <Input placeholder="请输入模板名称" @input="tplSearch()" v-model="searchTplName"/>
@@ -120,7 +120,7 @@
           >编辑模板</button>
           <button class="prescription_detail_del" @click.stop="delTplShow()">删除模板</button>
         </div>
-        <div v-show="showUseTpl" class="alert-back">
+        <div v-if="showUseTpl" class="alert-back">
           <div class="use-tpl">
             <div
               style="text-align:center;padding-top:2rem;font-weight:900;font-size:1rem;color: #5f95da;"
@@ -172,7 +172,7 @@
             </div>
           </div>
         </div>
-        <div v-show="showDelTpl" class="alert-back" style="font-size:1rem;">
+        <div v-if="showDelTpl" class="alert-back" style="font-size:1rem;">
           <div class="del-tpl">
             <div class="ml20 pt20">删除模板</div>
             <div class="ml20 pt10">
@@ -186,7 +186,7 @@
           </div>
         </div>
       </div>
-      <div v-show="showEditTpl||showAddTpl" class="alert-back">
+      <div v-if="showEditTpl||showAddTpl" class="alert-back">
         <div class="edit-tpl">
           <div
             class="mt16"
@@ -241,7 +241,7 @@
                         <td class="col10">{{index+1}}</td>
                         <td class="col30">{{item.name}}</td>
                         <td class="col10">
-                          <InputNumber min=1 v-model="item.num"/>
+                          <InputNumber :value="Number(item.num)" @input="item.num=$event.target.value" />
                         </td>
                         <td class="col15">{{item.unit_stock}}</td>
                         <td class="col10">{{item.spec}}</td>
@@ -301,7 +301,7 @@
                         <td class="col25">{{item.name}}</td>
                         <td class="col10">{{item.spec}}</td>
                         <td class="col10">
-                          <InputNumber min=1 class="col50" v-model="item.num"/>
+                          <InputNumber class="col50" :value="Number(item.num)" @input="item.num=$event.target.value" />
                         </td>
                         <td class="col5">{{item.unit}}</td>
                         <td class="col10">
@@ -314,7 +314,7 @@
                           </Select>
                         </td>
                         <td class="col10">
-                          <InputNumber class="col50" v-model="item.dose_once"/>
+                          <InputNumber class="col50" :value="Number(item.dose_once)" @input="item.dose_once=$event.target.value" />
                         </td>
                         <td class="col10">
                           <Select v-model="item.frequency">
@@ -326,7 +326,7 @@
                           </Select>
                         </td>
                         <td class="col10">
-                          <InputNumber class="col50" v-model="item.days"/>
+                          <InputNumber class="col50" :value="Number(item.days)" @input="item.days=$event.target.value" />
                         </td>
                         <td class="col10">
                           <div style="color:#4181D8" @click.stop="delEditTplLists(index)">删除</div>
@@ -368,7 +368,7 @@
                         <td class="col10">{{index+1}}</td>
                         <td class="col50">{{item.alias_name||item.clinic_alias_name||item.name}}</td>
                         <td class="col20">
-                          <InputNumber min=1 class="col60" v-model="item.num"/>
+                          <InputNumber class="col60" :value="Number(item.num)" @input="item.num=$event.target.value" />
                         </td>
                         <td class="col20">
                           <div style="color:#4181D8" @click.stop="delEditTplLists(index)">删除</div>
@@ -394,7 +394,7 @@
 
               <div
                 class="tpl-search-result"
-                v-show="tplEditData.searchListShow&&recipeType==1"
+                v-if="tplEditData.searchListShow&&recipeType==1"
                 style="max-height:9.5rem;overflow:auto;font-size:0.875rem;"
               >
                 <table class="col100">
@@ -481,7 +481,7 @@
             </div>
 
             <div class="mt20 ml40 mb20 col40" v-show="recipeType==1">饮片剂数：
-              <InputNumber style="width:4rem" name="dosage" v-model="tplEditData.dosage"/>&nbsp;&nbsp;&nbsp;剂
+              <InputNumber style="width:4rem" name="dosage" :value="Number(tplEditData.dosage)" @input="tplEditData.dosage=$event.target.value" />&nbsp;&nbsp;&nbsp;剂
             </div>
             <div class="mt20 ml40 mb20">
               <label class="ml20">&nbsp;&nbsp;&nbsp;医嘱：</label>
@@ -494,7 +494,7 @@
                 :autosize="{minRows:2,maxRows:4}"
               />
             </div>
-            <div v-show="showEditTpl" class="edit-tpl-foot">
+            <div v-if="showEditTpl" class="edit-tpl-foot">
               <Button
                 class="mr20 tpl-btn"
                 type="primary"
@@ -504,7 +504,7 @@
               >保存</Button>
               <Button class="tpl-btn" shape="circle" size="large" @click.stop="cancelTplEdit()">取消</Button>
             </div>
-            <div v-show="showAddTpl" class="edit-tpl-foot">
+            <div v-if="showAddTpl" class="edit-tpl-foot">
               <Button
                 class="mr20 tpl-btn"
                 type="primary"
