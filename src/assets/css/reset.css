@@ -734,3 +734,9 @@ input {
 ::-webkit-scrollbar-corner {
 	background: transparent;
 }
+
+/* patient-record input */
+.patient-record-input .ivu-input {
+  min-height: 2.375rem !important;
+  line-height: 1.875rem;
+}

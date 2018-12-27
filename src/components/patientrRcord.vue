@@ -12,6 +12,7 @@
       </div>
       <div class="mid-record-item-val" @click.stop="clinicRecord(2)">
         <Input
+          class="patient-record-input"
           type="textarea"
           :autosize="{minRows: 2,maxRows: 5}"
           placeholder="点此输入"
@@ -27,6 +28,7 @@
       </div>
       <div class="mid-record-item-val" @click.stop="clinicRecord(4)">
         <Input
+          class="patient-record-input"
           type="textarea"
           :autosize="{minRows: 2,maxRows: 5}"
           placeholder="点此输入"
@@ -42,6 +44,7 @@
       </div>
       <div class="mid-record-item-val" @click.stop="clinicRecord(1)">
         <Input
+          class="patient-record-input"
           type="textarea"
           :autosize="{minRows: 1,maxRows: 5}"
           placeholder="点此输入"
@@ -57,6 +60,7 @@
       </div>
       <div class="mid-record-item-val" @click.stop="clinicRecord(0)">
         <Input
+          class="patient-record-input"
           type="textarea"
           :autosize="{minRows: 1,maxRows: 5}"
           placeholder="点此输入"
@@ -72,6 +76,7 @@
       </div>
       <div class="mid-record-item-val" @click.stop="clinicRecord(3)">
         <Input
+          class="patient-record-input"
           type="textarea"
           :autosize="{minRows: 1,maxRows: 5}"
           placeholder="点此输入"
