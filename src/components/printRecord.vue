@@ -69,7 +69,7 @@
           <div style="flex: 1;">
             <div class="menu_big_input" @click="clinicRecord(3)">
               <div class="menu_big_input1" style="width: auto">
-                <span>{{examination}}</span>
+                <pre style="margin: 0; font-family: 'microsoft yahei';">{{examination}}</pre>
               </div>
             </div>
           </div>
@@ -132,7 +132,7 @@ export default {
       examination.animalheat &&
         (ret += "体温" + examination.animalheat + "℃，");
       examination.weight && (ret += "体重" + examination.weight + "kg，");
-      examination.info && (ret += examination.info);
+      examination.info && (ret += '\n' + examination.info);
       return ret;
     }
   },
