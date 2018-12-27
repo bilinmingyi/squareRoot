@@ -32,8 +32,8 @@
           <template v-if="item.is_match===1">
             <td>{{item.spec}}</td>
             <td>
-              <Input style="width:2.5rem" type="text" :value="item.num"
-                     @on-change="modify_medicine({key:'num',val:$event.target.value,index:index})"/>
+              <InputNumber style="width:3.2rem;" :value="item.num"
+                     @on-change="modify_medicine({key:'num',val:$event,index:index})"/>
             </td>
             <td>
               <Select style="width:3.125rem" :value="item.unit"
@@ -49,8 +49,8 @@
               </Select>
             </td>
             <td>
-              <Input style="width:2.5rem" type="text" :value="item.dose_once"
-                     @on-change="modify_medicine({key:'dose_once',val:$event.target.value,index:index})"/>
+              <InputNumber style="width:3.2rem" :value="Number(item.dose_once)"
+                     @on-change="modify_medicine({key:'dose_once',val:$event,index:index})"/>
               <span class="unitText">{{item.unit_dose}}</span>
             </td>
             <td>
@@ -60,8 +60,8 @@
               </Select>
             </td>
             <td>
-              <Input style="width:2.5rem" type="text" :value="item.days"
-                     @on-change="modify_medicine({key:'days',val:$event.target.value,index:index})"/>
+              <InputNumber style="width:3.2rem" :value="item.days"
+                     @on-change="modify_medicine({key:'days',val:$event,index:index})"/>
             </td>
           </template>
           <template v-else>
@@ -99,7 +99,7 @@
   import {westernMedUsages, medFrequency} from '@/assets/js/mapType'
   import saveTpl from '@/components/rootMiddle/saveRecipeTpl'
   import {mapActions} from 'vuex'
-  import {Select, Option, Input} from 'iview'
+  import {Select, Option, Input, InputNumber} from 'iview'
 
   export default {
     name: "westernRecipe",
@@ -113,7 +113,8 @@
       Select,
       Option,
       Input,
-      saveTpl
+      saveTpl,
+      InputNumber
     },
     computed: {
       westernMedUsages: function () {

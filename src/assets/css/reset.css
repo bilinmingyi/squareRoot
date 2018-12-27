@@ -95,7 +95,6 @@ input:-ms-input-placeholder {
 }
 
 input {
-  font-size: 1rem;
   color: #3F3F3F;
 }
 
@@ -121,6 +120,7 @@ input {
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 2000;
 }
 .recipe_table{
   width: 100%;

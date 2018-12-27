@@ -26,8 +26,8 @@
           <td>{{item.name}}</td>
           <template v-if="item.is_match===1">
             <td>
-              <Input style="width:2.5rem" type="text" :value="item.num"
-                     @on-change="modify_medicine({key:'num',val:$event.target.value,index:index})"/>
+              <InputNumber style="width:3.2rem" :value="item.num"
+                     @on-change="modify_medicine({key:'num',val:$event,index:index})"/>
             </td>
             <td>{{item.price}}元/次</td>
             <td>
@@ -68,7 +68,7 @@
 </template>
 
 <script>
-  import {Select, Option, Input} from 'iview'
+  import {Select, Option, Input, InputNumber} from 'iview'
   import saveTpl from '@/components/rootMiddle/saveRecipeTpl'
   import {mapActions} from 'vuex'
 
@@ -88,6 +88,7 @@
       Select,
       Option,
       Input,
+      InputNumber,
       saveTpl
     },
     watch: {
