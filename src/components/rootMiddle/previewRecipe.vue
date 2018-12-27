@@ -126,7 +126,7 @@
           newVal.forEach(item => {
             allMoney += Number(item.money);
           });
-          this.allPrice = allMoney;
+          this.allPrice = Number(allMoney).toFixed(2);
         }
       }
     },

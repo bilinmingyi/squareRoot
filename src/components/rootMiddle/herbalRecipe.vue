@@ -37,8 +37,8 @@
           <template v-if="item.is_match===1">
             <td>{{item.spec==='1克/克'?'1克':item.spec}}</td>
             <td>
-              <Input style="width:2.5rem" type="text" :value="item.num"
-                     @on-change="modify_medicine({key:'num',val:$event.target.value,index:index})"/>
+              <InputNumber style="width:3.2rem" :value="item.num"
+                     @on-change="modify_medicine({key:'num',val:$event,index:index})"/>
               <span>{{item.unit}}</span>
               <span class="num_text" v-if="currentData.data.category==2">({{item.num*item.stock_sale_ratio}}{{item.unit_sale}})</span>
             </td>
@@ -72,8 +72,8 @@
       <div class="displayFlex pl10 pr10 pt10">
         <div class="width-240">
           <span class="input_label"> 剂数：</span>
-          <Input type="text" class="input_120" :value="currentData.data.dosage"
-                 @on-change="modify_recipe_detail({key:'dosage',val:$event.target.value})"/>
+          <InputNumber class="input_120" :value="currentData.data.dosage"
+                 @on-change="modify_recipe_detail({key:'dosage',val:$event})"/>
           <span class="input_label">剂</span>
         </div>
         <div class="width-240">
@@ -100,13 +100,13 @@
         </div>
         <div class="width-240">
           <span class="input_label">数量：</span>
-          <Input type="text" class="input_120" :value="currentData.data.extra_num"
-                 @on-change="modify_recipe_detail({key:'extra_num',val:$event.target.value})"/>
+          <InputNumber class="input_120" :value="currentData.data.extra_num"
+                 @on-change="modify_recipe_detail({key:'extra_num',val:$event})"/>
         </div>
         <div class="width-240">
           <span class="input_label"> 用量：</span>
-          <Input type="text" class="input_120" :value="currentData.data.eachDose"
-                 @on-change="modify_recipe_detail({key:'eachDose',val:$event.target.value})"/>
+          <InputNumber class="input_120" :value="currentData.data.eachDose"
+                 @on-change="modify_recipe_detail({key:'eachDose',val:$event})"/>
           <span class="input_label">ml</span>
         </div>
       </div>
@@ -122,7 +122,7 @@
 </template>
 
 <script>
-  import {RadioGroup, Radio, Select, Option, Input} from 'iview'
+  import {RadioGroup, Radio, Select, Option, Input, InputNumber} from 'iview'
   import fRadio from '@/components/fRadio.vue'
   import {mapActions} from 'vuex'
   import saveTpl from '@/components/rootMiddle/saveRecipeTpl'
@@ -144,6 +144,7 @@
       Select,
       Option,
       Input,
+      InputNumber,
       saveTpl,
       fRadio
     },

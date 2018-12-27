@@ -31,7 +31,7 @@ const actions = {
             extra_num: 0,
             extra_feetype: "",
             extra_price:0,
-            eachDose: "",
+            eachDose: 0,
             items: []
           }
         };

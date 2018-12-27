@@ -25,8 +25,8 @@
           <td>{{item.name}}</td>
           <template v-if="item.is_match===1">
             <td>
-              <Input style="width:2.5rem" type="text" :value="item.num"
-                     @on-change="modify_medicine({key:'num',val:$event.target.value,index:index})"/>
+              <InputNumber style="width:3.2rem" :value="item.num"
+                     @on-change="modify_medicine({key:'num',val:$event,index:index})"/>
             </td>
             <td>{{item.unit}}</td>
             <td>
@@ -66,7 +66,7 @@
 
 <script>
   import {mapActions} from 'vuex'
-  import {Select, Option, Input} from 'iview'
+  import {Select, Option, Input, InputNumber} from 'iview'
 
   export default {
     name: "materialRecipe",
@@ -95,6 +95,7 @@
     components: {
       Select,
       Option,
+      InputNumber,
       Input
     },
     methods: {
