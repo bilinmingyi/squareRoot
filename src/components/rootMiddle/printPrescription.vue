@@ -248,7 +248,7 @@
       >
         <div style=" display: flex;display: -webkit-flex;width: 100%;">
           <span style="display: flex;display: -webkit-flex;">注：</span>
-          <span style="flex: 5;-webkit-flex: 5" v-show="recipeType==4">1、本处方当日有效
+          <span style="flex: 5;-webkit-flex: 5">1、本处方当日有效
             <br>2、取药时请当面核对药品名称、规格、数量
             <br>3、延长处方用量时间原因：慢性病、老年病、外地、其他
           </span>

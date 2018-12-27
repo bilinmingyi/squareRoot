@@ -116,7 +116,9 @@ const saveDraft = (params) => fetch('/doctreat/treatorder/save', params);
 
 const loadDraft = (params) => fetch('/doctreat/treatorder/getDraft', params);
 
-const submitOrder =(params) =>fetch('/doctreat/treatorder/submitOrder',params)
+const submitOrder =(params) =>fetch('/doctreat/treatorder/submitOrder',params);
+
+const waitingPage='/dyyzs/doctreat/waiting/listPage';
 
 //right
 const searchRecentMed = (params, type) => {
@@ -196,6 +198,7 @@ export {
   saveDraft,
   loadDraft,
   submitOrder,
+  waitingPage,
 
   //right
   searchRecentMed,

@@ -1,4 +1,4 @@
-var herbalRpUsages=[],herbalMedUsages=[],westernMedUsages=[],extraFeeTypes=[],clinicName='';
+var herbalRpUsages=[],herbalMedUsages=[],westernMedUsages=[],extraFeeTypes=[],clinicName='', medFrequency=[];
 try{
   clinicName=window.baseInfo.clinicName;
 }catch (e) {
@@ -66,8 +66,13 @@ try {
       "status": 1
     }]; // 附加项目类型
 }
+try{
+  medFrequency=window.baseInfo.medFrequency;
+}catch (e) {
+  medFrequency = [{"name": "每天一次"}, {"name": "每天两次"}, {"name": "每天三次"}, {"name": "每天四次"}, {"name": "两天一次"}, {"name": "每周一次"}, {"name": "饭前"}, {"name": "饭后"}, {"name": "睡前"}, {"name": "医嘱"}];
+}
 
-var medFrequency = [{"name": "每天一次"}, {"name": "每天两次"}, {"name": "每天三次"}, {"name": "每天四次"}, {"name": "两天一次"}, {"name": "每周一次"}, {"name": "饭前"}, {"name": "饭后"}, {"name": "睡前"}, {"name": "医嘱"}];
+
 
 module.exports= {
   herbalMedUsages,
@@ -75,5 +80,5 @@ module.exports= {
   westernMedUsages,
   extraFeeTypes,
   medFrequency,
-  clinicName
+  clinicName,
 }
