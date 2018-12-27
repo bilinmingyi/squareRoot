@@ -71,11 +71,14 @@ export default {
     }
   },
   watch: {
-    currRecipe(newVal) {
-      this.historyData.reciptType =
+    currRecipe: {
+      handler(newVal) {
+        this.historyData.reciptType =
         this.currRecipe > -1
           ? this.recipeList[this.currRecipe].type
           : this.currRecipe;
+      },
+      immediate: true
     }
   },
   methods: {
