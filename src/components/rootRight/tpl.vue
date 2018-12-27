@@ -241,7 +241,7 @@
                         <td class="col10">{{index+1}}</td>
                         <td class="col30">{{item.name}}</td>
                         <td class="col10">
-                          <Input v-model="item.num"/>
+                          <InputNumber min=1 v-model="item.num"/>
                         </td>
                         <td class="col15">{{item.unit_stock}}</td>
                         <td class="col10">{{item.spec}}</td>
@@ -301,7 +301,7 @@
                         <td class="col25">{{item.name}}</td>
                         <td class="col10">{{item.spec}}</td>
                         <td class="col10">
-                          <Input class="col50" v-model="item.num"/>
+                          <InputNumber min=1 class="col50" v-model="item.num"/>
                         </td>
                         <td class="col5">{{item.unit}}</td>
                         <td class="col10">
@@ -314,7 +314,7 @@
                           </Select>
                         </td>
                         <td class="col10">
-                          <Input class="col50" v-model="item.dose_once"/>
+                          <InputNumber class="col50" v-model="item.dose_once"/>
                         </td>
                         <td class="col10">
                           <Select v-model="item.frequency">
@@ -326,7 +326,7 @@
                           </Select>
                         </td>
                         <td class="col10">
-                          <Input class="col50" v-model="item.days"/>
+                          <InputNumber class="col50" v-model="item.days"/>
                         </td>
                         <td class="col10">
                           <div style="color:#4181D8" @click.stop="delEditTplLists(index)">删除</div>
@@ -337,7 +337,7 @@
                 </div>
                 <div
                   class="col100 mt10 pb10"
-                  style="border-top:#B4B4B4 solid 1px;border-bottom:#B4B4B4 solid 1px;"
+                  style="border-bottom:#B4B4B4 solid 1px;"
                 >
                   <div class="mt10 ml20">
                     <Input
@@ -368,7 +368,7 @@
                         <td class="col10">{{index+1}}</td>
                         <td class="col50">{{item.alias_name||item.clinic_alias_name||item.name}}</td>
                         <td class="col20">
-                          <Input class="col60" v-model="item.num"/>
+                          <InputNumber min=1 class="col60" v-model="item.num"/>
                         </td>
                         <td class="col20">
                           <div style="color:#4181D8" @click.stop="delEditTplLists(index)">删除</div>
@@ -379,7 +379,7 @@
                 </div>
                 <div
                   class="col100 mt10 pb10"
-                  style="border-top:#B4B4B4 solid 1px;border-bottom:#B4B4B4 solid 1px;"
+                  style="border-bottom:#B4B4B4 solid 1px;"
                 >
                   <div class="mt10 ml20">
                     <Input
@@ -395,7 +395,7 @@
               <div
                 class="tpl-search-result"
                 v-show="tplEditData.searchListShow&&recipeType==1"
-                style="max-height:9.5rem;overflow:auto;"
+                style="max-height:9.5rem;overflow:auto;font-size:0.875rem;"
               >
                 <table class="col100">
                   <thead>
@@ -426,7 +426,7 @@
               <div
                 class="tpl-search-result"
                 v-show="tplEditData.searchListShow&&recipeType==2"
-                style="max-height:9.5rem;overflow:auto;"
+                style="max-height:9.5rem;overflow:auto;font-size:0.875rem;"
               >
                 <table class="col100">
                   <thead>
@@ -457,7 +457,7 @@
               <div
                 class="tpl-search-result"
                 v-show="tplEditData.searchListShow&&recipeType==4"
-                style="max-height:9.5rem;overflow:auto;"
+                style="max-height:9.5rem;overflow:auto;font-size:0.875rem;"
               >
                 <table class="col100">
                   <thead>
@@ -481,7 +481,7 @@
             </div>
 
             <div class="mt20 ml40 mb20 col40" v-show="recipeType==1">饮片剂数：
-              <Input style="width:4rem" name="dosage" v-model="tplEditData.dosage"/>&nbsp;&nbsp;&nbsp;剂
+              <InputNumber style="width:4rem" name="dosage" v-model="tplEditData.dosage"/>&nbsp;&nbsp;&nbsp;剂
             </div>
             <div class="mt20 ml40 mb20">
               <label class="ml20">&nbsp;&nbsp;&nbsp;医嘱：</label>
@@ -529,7 +529,7 @@ import {
   medFrequency
 } from "@/assets/js/mapType";
 import { mapState, mapGetters, mapActions } from "vuex";
-import { Input, Button, Select, Option, Icon } from "iview";
+import { Input, Button, Select, Option, Icon, InputNumber } from "iview";
 import {
   searchTpl,
   updateTpl,
@@ -544,7 +544,8 @@ export default {
     Button,
     Select,
     Option,
-    Icon
+    Icon,
+    InputNumber
   },
   data() {
     return {
