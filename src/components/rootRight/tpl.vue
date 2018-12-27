@@ -337,7 +337,7 @@
                 </div>
                 <div
                   class="col100 mt10 pb10"
-                  style="border-top:#B4B4B4 solid 1px;border-bottom:#B4B4B4 solid 1px;"
+                  style="border-bottom:#B4B4B4 solid 1px;"
                 >
                   <div class="mt10 ml20">
                     <Input
@@ -379,7 +379,7 @@
                 </div>
                 <div
                   class="col100 mt10 pb10"
-                  style="border-top:#B4B4B4 solid 1px;border-bottom:#B4B4B4 solid 1px;"
+                  style="border-bottom:#B4B4B4 solid 1px;"
                 >
                   <div class="mt10 ml20">
                     <Input
