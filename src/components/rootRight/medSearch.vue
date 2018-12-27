@@ -1,11 +1,11 @@
 <template>
-  <div class="mt5 ml6 mr6 mb5">
-    <div class="mb6" style="width:100%;display:flex;height:2rem;font-size:1rem;">
+  <div class="mt5 ml6 mb5">
+    <div class="mb6" style="padding-right:3%;width:100%;display:flex;height:2rem;font-size:1rem;">
       <div class="col70 mr10">
         <Input @input="searchMed()" placeholder="药品名称/拼音简码" v-model="searchName"/>
       </div>
-      <div class="col20">
-        <Button @click="searchMed()">搜索</Button>
+      <div class="col30">
+        <Button long @click="searchMed()">搜索</Button>
       </div>
     </div>
     <div class="search-result" v-show="showResult">
@@ -279,13 +279,13 @@ export default {
   font-size: 0.875rem;
 }
 .search-result .search-result-li {
-  width: 95%;
+  width: 97%;
   height: 2.5rem;
   border: #5096e0 solid 1px;
   border-radius: 0.25rem;
   float: left;
-  margin-right: 1%;
   margin-bottom: 0.25rem;
+  padding-right: 1%;
   text-align: center;
   justify-content: center;
   display: flex;

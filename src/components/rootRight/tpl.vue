@@ -6,8 +6,8 @@
           <div class="col70 mr10">
             <Input placeholder="请输入模板名称" @input="tplSearch()" v-model="searchTplName"/>
           </div>
-          <div class="col20">
-            <Button @click="tplSearch()">搜索</Button>
+          <div class="col30">
+            <Button long @click="tplSearch()">搜索</Button>
           </div>
         </div>
         <span class="add_prescription_btn" v-show="recipeType!==0" @click="addTpl()">添加模板</span>
