@@ -25,8 +25,7 @@ export default new Router({
     {
       path: '/assist',
       components: {
-        default: () => import('@/page/assistPage.vue'),
-        Header: () => import('@/components/assistPage/aHeader.vue')
+        default: () => import('@/page/assistPage.vue')
       }
     }
 

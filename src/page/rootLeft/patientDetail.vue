@@ -23,11 +23,11 @@
           <span>{{patientData.sex | parseSex}}</span>
         </span>
       </div>
-      <div class="mt5">
+      <div class="mt5"  v-if="canShowMoney">
         <span class="font-bold pr10">体重</span>
         <span>{{patientData.weight > 0 ? patientData.weight + 'kg' : '未知'}}</span>
       </div>
-      <div class="mt5">
+      <div class="mt5" v-if="canShowMoney">
         <span class="font-bold pr10">联系电话</span>
         <span>{{patientData.mobile}}</span>
       </div>

@@ -263,7 +263,10 @@
         let extraItem = this.extraFeeTypes.filter((typeOne) => {
           return typeOne.name === val;
         })
-        this.modify_recipe_detail({key: 'extra_price', val: extraItem[0].price})
+        if(extraItem[0]){
+          this.modify_recipe_detail({key: 'extra_price', val: extraItem[0].price})
+        }
+
       },
       toAssist() {
         this.$router.push({path: 'assist'})

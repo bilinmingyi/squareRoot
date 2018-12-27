@@ -95,7 +95,7 @@
           this.ZYPatientId = ''
         }
         clearTimeout(this.searchTime)
-        this.XYdiagnosis = query;
+        this.XYdiagnosis = query.replace(/\s*/g, '');
         this.searchTime = setTimeout(() => {
           if ((this.ZYPatientId === '' || this.ZYPatientId === undefined) && query.replace(/\s*/g, '') === '' && this.ZYdiscriminate.replace(/\s*/g, '') === '') {
             return
@@ -121,7 +121,7 @@
           this.XYPatientId = ''
         }
         clearTimeout(this.searchTime)
-        this.ZYdiagnosis = query;
+        this.ZYdiagnosis = query.replace(/\s*/g, '');
         this.searchTime = setTimeout(() => {
           if ((this.XYPatientId === '' || this.XYPatientId === undefined) && query.replace(/\s*/g, '') === '' && this.ZYdiscriminate.replace(/\s*/g, '') === '') {
             return

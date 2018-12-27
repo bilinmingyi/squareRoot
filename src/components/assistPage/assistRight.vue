@@ -5,6 +5,9 @@
         中药处方详情
       </div>
       <div class="root-right"></div>
+      <div class="root-right-btn">
+        <button class="btn-cancel" @click="historyBack()">关闭</button>
+      </div>
     </section>
     <section>
       <div class="recipe_name">
@@ -198,7 +201,7 @@
                       "stock": '',
                       "stock_sale_ratio": '',
                       "status": 0,
-                      "remark": item.number+ item.unit+item.dosageRange==''?'':'('+item.dosageRange + item.unit+')'
+                      "remark": item.number+ item.unit+(item.dosageRange==''?'':'('+item.dosageRange + item.unit+')')
                     },
                     type:1
                   }
@@ -233,6 +236,9 @@
             this.$Message.info(data.msg)
           }
         })
+      },
+      historyBack(){
+        this.$router.go(-1)
       }
     }
   }
@@ -254,7 +260,7 @@
 
   .root-right {
     flex: 64;
-    background: #F2F2F2;
+    background: #f5f5f5;
   }
 
   .recipe_name {
@@ -289,5 +295,20 @@
     font-weight:600;
     color: #4C4C4C;
     line-height:1.38rem;
+  }
+  .root-right-btn{
+
+
+    background: #f5f5f5;
+
+  }
+  .btn-cancel{
+    background: #ffffff;
+    border: 1px solid #FC3B3B;
+    font-size: 1rem;
+    width: 8rem;
+    color: #FC3B3B;
+    border-radius: 1.25rem;
+    line-height: 1.75rem;
   }
 </style>
