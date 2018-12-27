@@ -110,6 +110,10 @@
             <span class="case-label">中医诊断&nbsp;</span>
             <span>{{tplData.diagnosis}}</span>
           </div>
+          <div style="display:flex;">
+            <span class="case-label" style="flex: 3;">检查</span>
+            <div style="flex:7;margin:0;font-family:'microsoft yahei';border:0!important;">{{tplExamination}}</div>
+          </div>
         </div>
         <div>
           <button class="prescription_detail_save mr2" @click.stop="useTplShow()">使用模板</button>
@@ -142,7 +146,7 @@
               <div v-if="recipeType==0">
                 <div>
                   <span class="case-label">既往史&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                  <span>{{tplData.personal_history}}</span>
+                  <span>{{tplData.past_history}}</span>
                 </div>
                 <div>
                   <span class="case-label">过敏史&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -164,6 +168,10 @@
                   <span class="case-label">中医诊断&nbsp;</span>
                   <span>{{tplData.diagnosis}}</span>
                 </div>
+                <div style="display:flex;">
+            <span class="case-label" style="flex: 1;">检查</span>
+            <div style="flex:9;margin:0;font-family:'microsoft yahei';">{{tplExamination}}</div>
+          </div>
               </div>
             </div>
             <div class="pb20" style="text-align:center;margin-top:2rem;">
@@ -241,7 +249,10 @@
                         <td class="col10">{{index+1}}</td>
                         <td class="col30">{{item.name}}</td>
                         <td class="col10">
-                          <InputNumber :value="Number(item.num)" @input="item.num=$event.target.value" />
+                          <InputNumber
+                            :value="Number(item.num)"
+                            @input="item.num=$event.target.value"
+                          />
                         </td>
                         <td class="col15">{{item.unit_stock}}</td>
                         <td class="col10">{{item.spec}}</td>
@@ -261,10 +272,7 @@
                     </tbody>
                   </table>
                 </div>
-                <div
-                  class="col100 mt10 pb10"
-                  style="border-bottom:#B4B4B4 solid 1px;"
-                >
+                <div class="col100 mt10 pb10" style="border-bottom:#B4B4B4 solid 1px;">
                   <div class="mt10 ml20">
                     <Input
                       class="col30"
@@ -301,7 +309,11 @@
                         <td class="col25">{{item.name}}</td>
                         <td class="col10">{{item.spec}}</td>
                         <td class="col10">
-                          <InputNumber class="col50" :value="Number(item.num)" @input="item.num=$event.target.value" />
+                          <InputNumber
+                            class="col50"
+                            :value="Number(item.num)"
+                            @input="item.num=$event.target.value"
+                          />
                         </td>
                         <td class="col5">{{item.unit}}</td>
                         <td class="col10">
@@ -314,7 +326,11 @@
                           </Select>
                         </td>
                         <td class="col10">
-                          <InputNumber class="col50" :value="Number(item.dose_once)" @input="item.dose_once=$event.target.value" />
+                          <InputNumber
+                            class="col50"
+                            :value="Number(item.dose_once)"
+                            @input="item.dose_once=$event.target.value"
+                          />
                         </td>
                         <td class="col10">
                           <Select v-model="item.frequency">
@@ -326,7 +342,11 @@
                           </Select>
                         </td>
                         <td class="col10">
-                          <InputNumber class="col50" :value="Number(item.days)" @input="item.days=$event.target.value" />
+                          <InputNumber
+                            class="col50"
+                            :value="Number(item.days)"
+                            @input="item.days=$event.target.value"
+                          />
                         </td>
                         <td class="col10">
                           <div style="color:#4181D8" @click.stop="delEditTplLists(index)">删除</div>
@@ -335,10 +355,7 @@
                     </tbody>
                   </table>
                 </div>
-                <div
-                  class="col100 mt10 pb10"
-                  style="border-bottom:#B4B4B4 solid 1px;"
-                >
+                <div class="col100 mt10 pb10" style="border-bottom:#B4B4B4 solid 1px;">
                   <div class="mt10 ml20">
                     <Input
                       class="col30"
@@ -368,7 +385,11 @@
                         <td class="col10">{{index+1}}</td>
                         <td class="col50">{{item.alias_name||item.clinic_alias_name||item.name}}</td>
                         <td class="col20">
-                          <InputNumber class="col60" :value="Number(item.num)" @input="item.num=$event.target.value" />
+                          <InputNumber
+                            class="col60"
+                            :value="Number(item.num)"
+                            @input="item.num=$event.target.value"
+                          />
                         </td>
                         <td class="col20">
                           <div style="color:#4181D8" @click.stop="delEditTplLists(index)">删除</div>
@@ -377,10 +398,7 @@
                     </tbody>
                   </table>
                 </div>
-                <div
-                  class="col100 mt10 pb10"
-                  style="border-bottom:#B4B4B4 solid 1px;"
-                >
+                <div class="col100 mt10 pb10" style="border-bottom:#B4B4B4 solid 1px;">
                   <div class="mt10 ml20">
                     <Input
                       class="col30"
@@ -481,7 +499,12 @@
             </div>
 
             <div class="mt20 ml40 mb20 col40" v-show="recipeType==1">饮片剂数：
-              <InputNumber style="width:4rem" name="dosage" :value="Number(tplEditData.dosage)" @input="tplEditData.dosage=$event.target.value" />&nbsp;&nbsp;&nbsp;剂
+              <InputNumber
+                style="width:4rem"
+                name="dosage"
+                :value="Number(tplEditData.dosage)"
+                @input="tplEditData.dosage=$event.target.value"
+              />&nbsp;&nbsp;&nbsp;剂
             </div>
             <div class="mt20 ml40 mb20">
               <label class="ml20">&nbsp;&nbsp;&nbsp;医嘱：</label>
@@ -549,7 +572,7 @@ export default {
   },
   data() {
     return {
-      showResult:false,
+      showResult: false,
       timer: null,
       currPage: 1,
       page_num: 1,
@@ -602,8 +625,31 @@ export default {
   },
   computed: {
     ...mapState({
-      recordTplChange: state => state.recordTplChange,
+      recordTplChange: state => state.recordTplChange
     }),
+    tplExamination: function() {
+      if (this.recipeType == 0&&this.tplData.examination) {
+        var e = JSON.parse(this.tplData.examination);
+        var ret = "";
+        (e.bloodpressure_num1 || e.bloodpressure_num2) &&
+          (ret +=
+            "血压" +
+            e.bloodpressure_num1 +
+            "/" +
+            e.bloodpressure_num2 +
+            "mmHg，");
+        e.bloodglucose && (ret += "血糖" + e.bloodglucose + "mg/ml，");
+        e.trioxypurine && (ret += "尿酸" + e.trioxypurine + "umol/L，");
+        e.heartrate && (ret += "心率" + e.heartrate + "次/分，");
+        e.breathe && (ret += "呼吸" + e.breathe + "次/分，");
+        e.animalheat && (ret += "体温" + e.animalheat + "℃，");
+        e.weight && (ret += "体重" + e.weight + "kg，");
+        e.info && (ret += "\n" + e.info);
+        return ret;
+      } else {
+        return "";
+      }
+    },
     herbalMedUsages: function() {
       return herbalMedUsages.filter(item => {
         return item.status === 1;
@@ -617,7 +663,7 @@ export default {
       return this.currRecipeData === undefined
         ? 1
         : this.currRecipeData.data.category;
-    },
+    }
   },
   created() {
     this.firstSearch();
@@ -626,17 +672,17 @@ export default {
     recipeType: function() {
       this.showTpl = false;
       this.searchTplName = "";
-      this.showResult=false;
+      this.showResult = false;
       this.firstSearch();
     },
     category: function() {
       this.showTpl = false;
       this.searchTplName = "";
-      this.showResult=false;      
+      this.showResult = false;
       this.firstSearch();
     },
-    recordTplChange: function(){
-      this.showResult=false;      
+    recordTplChange: function() {
+      this.showResult = false;
       this.firstSearch();
     },
     tplSearchList: function() {
@@ -666,7 +712,7 @@ export default {
           );
         }
       }
-      this.showResult=true;      
+      this.showResult = true;
     },
     currPage: function() {
       if (this.page_num == 1) {
@@ -702,7 +748,7 @@ export default {
     firstSearch: function() {
       if (this.recipeType != 6) {
         this.tplSearch();
-        this.showResult=true;
+        this.showResult = true;
       }
     },
     changePage: function(flag) {
@@ -762,7 +808,7 @@ export default {
         searchTpl(params, this.recipeType).then(function(res) {
           if (res.code == 1000) {
             self.tplSearchList = res.data;
-            self.showResult=true;
+            self.showResult = true;
           }
         });
       }, 300);
@@ -843,26 +889,26 @@ export default {
       if (flag === true) {
         var newItem = {
           item_id: item.id,
-          name: item.alias_name||item.clinic_alias_name||item.name,
+          name: item.alias_name || item.clinic_alias_name || item.name,
           num: 0,
-          unit: item.unit||item.unit_stock,
-          unit_stock: item.unit_stock||item.unit,
+          unit: item.unit || item.unit_stock,
+          unit_stock: item.unit_stock || item.unit,
           stock: item.stock,
           dose_once: item.dose_once,
           unit_stock: item.unit_stock,
           unit_sale: item.unit_sale,
-          unit_dose:item.unit_dose,
+          unit_dose: item.unit_dose,
           sale_dose_ratio: item.sale_dose_ratio,
           stock_sale_ratio: item.stock_sale_ratio,
-          price: item.price||item.sale_price,
-          sale_price: item.sale_price||item.price,
+          price: item.price || item.sale_price,
+          sale_price: item.sale_price || item.price,
           usage: 0,
           spec: item.spec,
           alias_name: item.alias_name,
           clinic_alias_name: item.clinic_alias_name,
-          status: item.status||1,
+          status: item.status || 1,
           type: item.type,
-          default_sale_price: item.default_sale_price,
+          default_sale_price: item.default_sale_price
         };
         self.tplEditData.items.push(newItem);
         self.tplEditData.searchListShow = false;
@@ -956,8 +1002,8 @@ export default {
       );
     },
     cancelTplAdd: function() {
-      this.tplEditData.searchListShow=false;
-      this.tplEditData.searchLists=[];
+      this.tplEditData.searchListShow = false;
+      this.tplEditData.searchLists = [];
       this.showAddTpl = false;
     },
     tplShow: function(item) {
@@ -992,31 +1038,30 @@ export default {
       if (this.recipeType !== 0) {
         this.clean_recipe();
         self.tplData.items.forEach(function(item) {
-
           var newItem = {
             category: item.category,
             id: item.item_id,
-            name: item.alias_name||item.clinic_alias_name||item.name,
+            name: item.alias_name || item.clinic_alias_name || item.name,
             alias_name: item.alias_name || item.name,
             clinic_alias_name: item.clinic_alias_name || item.name,
             num: item.num,
             price: item.price,
             sale_price: item.sale_price,
-            default_sale_price: item.default_sale_price||0,
+            default_sale_price: item.default_sale_price || 0,
             spec: item.spec,
             stock: item.stock,
             stock_sale_ratio: item.stock_sale_ratio,
-            unit: item.unit||'次',
+            unit: item.unit || "次",
             unit_sale: item.unit_sale,
             unit_stock: item.unit_stock,
             usage: item.usage,
-            dose_once:item.dose_once,
+            dose_once: item.dose_once,
             frequency: item.frequency,
             days: item.days,
             status: 1,
-            unit_dose: item.unit_dose||'克',
-            sale_dose_ratio: item.sale_dose_ratio||0,
-            type: item.type||1,
+            unit_dose: item.unit_dose || "克",
+            sale_dose_ratio: item.sale_dose_ratio || 0,
+            type: item.type || 1
           };
           self.add_new_medicine({ item: newItem, type: self.recipeType });
         });
@@ -1026,10 +1071,11 @@ export default {
           chief_complaint: self.tplData.chief_complaint || "",
           present_illness: self.tplData.present_illness || "",
           allergic_history: self.tplData.allergic_history || "",
-          personal_history: self.tplData.personal_history || "",
-          examinationInfo: self.tplData.examination || "",
-          diagnosis_input: self.tplData.diagnosis || "",
-          diagnosis_xy_input: self.tplData.diagnosis_xy || "",
+          past_history: self.tplData.past_history || "",
+          examinationInfo: JSON.parse(self.tplData.examination) || {},
+          examination: JSON.parse(self.tplData.examination) || {},
+          diagnosis_input: self.tplData.diagnosis!=''?self.tplData.diagnosis+';':'',
+          diagnosis_xy_input: self.tplData.diagnosis_xy!=''?self.tplData.diagnosis_xy+';':'',
           treat_advice: self.tplData.treat_advice || "",
           diagnosis_xy_labels: [],
           diagnosis_labels: []
@@ -1183,8 +1229,8 @@ export default {
     },
     cancelTplEdit: function() {
       this.showEditTpl = false;
-      this.tplEditData.tplSearchList=[];
-      this.tplEditData.searchListShow=false;
+      this.tplEditData.tplSearchList = [];
+      this.tplEditData.searchListShow = false;
     }
   }
 };
