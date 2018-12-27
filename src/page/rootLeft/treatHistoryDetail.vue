@@ -224,19 +224,19 @@ export default {
         newVal.forEach((item, index) => {
           let type = item.recipe_type;
           let ids = [];
+          this.formatedRecipes.push(JSON.parse(JSON.stringify(item)));
           if (!map[type]) return;
-          item[map[type]].forEach(list => {
+          let formatItem = this.formatedRecipes[index];
+          formatItem[map[type]].forEach(list => {
             ids.push(list.item_id);
           });
-          this.formatedRecipes.push(item);
-          if (ids.length <= 0 || item.is_cloud == 1) return;
+          if (ids.length <= 0 || formatItem.is_cloud == 1) return;
           let params = { status: 1 };
           params.ids = ids;
-          console.log(params)
-          checkIsMatch(params, type, type == 1 ? item.is_cloud : null).then(
+          checkIsMatch(params, type, type == 1 ? formatItem.is_cloud : null).then(
             res => {
               if (res.code == 1000) {
-                let arr = item[map[type]];
+                let arr = formatItem[map[type]];
                 let data = res.data;
                 for (let i = 0, len = arr.length; i < len; i++) {
                   let findData = data.find(dataItem => dataItem.id == arr[i].item_id);
@@ -246,7 +246,7 @@ export default {
                     arr[i] = Object.assign(arr[i], {is_match: 0});
                   }
                 }
-                item.checkMatch = true;
+                formatItem.checkMatch = true;
               } else {
                 console.log(res.msg);
               }

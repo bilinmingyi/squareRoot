@@ -110,7 +110,7 @@
 <script>
 import { Icon, Input, Select, Option, DatePicker } from "iview";
 import { mapState, mapActions } from "vuex";
-import {updatePatientData} from '@/fetch/api.js';
+import { updatePatientData, saveDraft } from "@/fetch/api.js";
 export default {
   components: {
     Icon,
@@ -151,14 +151,17 @@ export default {
   },
   computed: {
     ...mapState({
-      patientData: state => state.patientData
+      recordData: state => state.recordData,
+      recipeList: state => state.recipeList,
+      patientData: state => state.patientData,
+      orderSeqno: state => state.orderSeqno
     })
   },
   created() {
     this.localPatientData = JSON.parse(JSON.stringify(this.patientData));
   },
   methods: {
-    ...mapActions(["set_patient_info"]),
+    ...mapActions(["set_patient_info", "save_draft_data"]),
     closeModal() {
       this.$emit("closeModal");
     },
@@ -178,30 +181,54 @@ export default {
         birthday: this.localPatientData.birthday,
         sex: Number(this.localPatientData.sex),
         mobile: this.localPatientData.mobile,
-        marital_status: Number(
-          this.localPatientData.marital_status
-        ),
+        marital_status: Number(this.localPatientData.marital_status),
         blood_abo: this.localPatientData.blood_abo,
-        blood_rh: this.localPatientData.blood_rh,
+        blood_rh: this.localPatientData.blood_rh
       };
 
       updatePatientData(params).then(res => {
         if (res.code == 1000) {
           // 更新Vuex patientData
           Object.keys(this.localPatientData).forEach(key => {
-            var val = this.localPatientData[key]
-            this.set_patient_info({key, val});
-          })
+            var val = this.localPatientData[key];
+            this.set_patient_info({ key, val });
+          });
           this.closeModal();
+          this.saveDraftData();
         } else if (res.code == 200002) {
-          this.$Message.warning('手机号已存在');
+          this.$Message.warning("手机号已存在");
         } else {
-          console.log(res.msg)
+          this.$Message.error(res.msg);
         }
-      })
+      });
     },
     changePatientData(key, val) {
       this.localPatientData[key] = val;
+    },
+    saveDraftData(canReturn) {
+      let draftData = {
+        recipeList: this.recipeList,
+        recordData: this.recordData
+      };
+      this.save_draft_data(JSON.stringify(draftData));
+      saveDraft({
+        patient_name: this.patientData.name,
+        patient_mobile: this.patientData.mobile,
+        patient_sex: this.patientData.sex,
+        patient_marital_status: this.patientData.marital_status,
+        patient_birthday: this.patientData.birthday,
+        order_seqno: this.orderSeqno,
+        draft: JSON.stringify(draftData)
+      }).then(data => {
+        console.log(data);
+        if (data.code === 1000) {
+          if (canReturn === 1) {
+            this.$router.go(-1);
+          }
+        } else {
+          this.$Message.info("保存失败");
+        }
+      });
     }
   }
 };
