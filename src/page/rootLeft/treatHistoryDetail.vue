@@ -195,7 +195,7 @@ export default {
       examination.animalheat &&
         (ret += "体温" + examination.animalheat + "℃，");
       examination.weight && (ret += "体重" + examination.weight + "kg，");
-      examination.info && (ret += '\n' + examination.info);
+      examination.info && (ret += (ret ? '\n' : '') + examination.info);
       return ret;
     },
     recordData() {
@@ -270,7 +270,7 @@ export default {
             break;
           case "diagnosis":
             data.push(
-              { code: "中医诊断输入框", key: "diagnosis_input", val: item.val },
+              { code: "中医诊断输入框", key: "diagnosis_input", val: item.val ? (item.val + ';') : '' },
               { code: "中医诊断标签", key: "diagnosis_labels", val: [] }
             );
             break;
@@ -279,7 +279,7 @@ export default {
               {
                 code: "西医诊断输入框",
                 key: "diagnosis_xy_input",
-                val: item.val
+                val: item.val ? (item.val + ';') : ''
               },
               { code: "西医诊断标签", key: "diagnosis_xy_labels", val: [] }
             );
