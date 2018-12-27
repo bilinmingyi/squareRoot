@@ -50,7 +50,7 @@ const state = {
 
   //middle
   recipeList:[],
-  currRecipe:0,
+  currRecipe:-1,
   fjbRecipe:{},
   printPre:false,
   draftData:'',
