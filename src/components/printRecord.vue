@@ -69,7 +69,7 @@
           <div style="flex: 1;">
             <div class="menu_big_input" @click="clinicRecord(3)">
               <div class="menu_big_input1" style="width: auto">
-                <pre style="margin: 0; font-family: 'microsoft yahei';">{{examination}}</pre>
+                <pre style="white-space:pre-wrap; margin: 0; font-family: 'microsoft yahei';">{{examination}}</pre>
               </div>
             </div>
           </div>

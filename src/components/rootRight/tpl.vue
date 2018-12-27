@@ -103,8 +103,8 @@
             <span>{{tplData.allergic_history}}</span>
           </div>
           <div style="display:flex;">
-            <span class="case-label" style="flex: 3;">检查</span>
-            <div style="flex:7;margin:0;font-family:'microsoft yahei';border:0!important;">{{tplExamination}}</div>
+            <span class="case-label" style="width: 3.75rem">检查</span>
+            <div style="white-space:pre-wrap; flex:1;margin:0;font-family:'microsoft yahei';border:0!important;">{{tplExamination}}</div>
           </div>
           <div>
             <span class="case-label">西医诊断&nbsp;</span>
@@ -143,7 +143,7 @@
                 >{{item.price}}/次</span>
                 <span v-show="item.status==0" style="color:red;font-weight:bold;">暂无此药</span>
               </div>
-              <div v-if="recipeType==0">
+              <div v-if="recipeType==0" style="width: 100%">
                 <div>
                   <span class="case-label">主述&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                   <span>{{tplData.chief_complaint}}</span>
@@ -161,8 +161,8 @@
                   <span>{{tplData.allergic_history}}</span>
                 </div>
                 <div style="display:flex;">
-                  <span class="case-label" style="flex: 1;">检查</span>
-                  <div style="flex:9;margin:0;font-family:'microsoft yahei';">{{tplExamination}}</div>
+                  <span class="case-label" style="width: 4.5rem">检查</span>
+                  <div style="white-space:pre-wrap; flex:1;margin:0;font-family:'microsoft yahei';">{{tplExamination}}</div>
                 </div>
                 <div>
                   <span class="case-label">西医诊断&nbsp;</span>
@@ -172,8 +172,6 @@
                   <span class="case-label">中医诊断&nbsp;</span>
                   <span>{{tplData.diagnosis}}</span>
                 </div>
-                <div style="display:flex;">
-          </div>
               </div>
             </div>
             <div class="pb20" style="text-align:center;margin-top:2rem;">
@@ -646,7 +644,7 @@ export default {
         e.breathe && (ret += "呼吸" + e.breathe + "次/分，");
         e.animalheat && (ret += "体温" + e.animalheat + "℃，");
         e.weight && (ret += "体重" + e.weight + "kg，");
-        e.info && (ret += "\n" + e.info);
+        e.info && (ret += (ret ? '\n' : '') + e.info);
         return ret;
       } else {
         return "";
@@ -1384,7 +1382,7 @@ export default {
 .use-tpl .use-list {
   display: flex;
   flex-wrap: wrap;
-  margin-left: 2rem;
+  margin: 0 2rem;
   font-size: 1rem;
 }
 .use-tpl .use-list .use-list-li {
