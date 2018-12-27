@@ -59,11 +59,13 @@
             <span class="font-bold flex-1">中成药西药</span>
             <span
               class="t-h-d-active-import"
-              v-if="currRecipe != -1 && reciptType == 2"
+              v-if="currRecipe != -1 && reciptType == 2 && recipe.is_cloud==0"
               @click="impHistory(recipe, index)"
             >导入</span>
             <span class="t-h-d-disable-import" v-else>导入</span>
           </div>
+          <div class="t-h-d-drug-row mb5 font-bold" v-if="recipe.is_cloud==0">诊所药房</div>
+          <div class="t-h-d-drug-row mb5 font-bold" v-if="recipe.is_cloud==1">云药房</div>
           <div class="t-h-d-drug-row">
             <div
               class="t-h-d-drug-item"
@@ -230,6 +232,7 @@ export default {
           if (ids.length <= 0 || item.is_cloud == 1) return;
           let params = { status: 1 };
           params.ids = ids;
+          console.log(params)
           checkIsMatch(params, type, type == 1 ? item.is_cloud : null).then(
             res => {
               if (res.code == 1000) {

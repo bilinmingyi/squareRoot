@@ -14,7 +14,7 @@
   import {Button} from 'iview'
   import {mapState, mapActions} from 'vuex'
   import previewRecipe from '@/components/rootMiddle/previewRecipe.vue'
-  import {saveDraft, cancelOrder} from '@/fetch/api.js'
+  import {saveDraft, cancelOrder, waitingPage} from '@/fetch/api.js'
 
   export default {
     name: "fHeader",
@@ -59,7 +59,12 @@
           console.log(data)
           if (data.code === 1000) {
             if(canReturn===1){
-              this.$router.go(-1)
+              try {
+                window.location.href=waitingPage
+              }catch (e) {
+                this.$router.go(-1)
+              }
+
             }
           } else {
             this.$Message.info("保存失败");
