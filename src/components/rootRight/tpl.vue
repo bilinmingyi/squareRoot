@@ -123,7 +123,7 @@
         <div v-show="showUseTpl" class="alert-back">
           <div class="use-tpl">
             <div
-              style="text-align:center;padding-top:1rem;font-weight:900;font-size:1rem;color: #5f95da;"
+              style="text-align:center;padding-top:2rem;font-weight:900;font-size:1rem;color: #5f95da;"
             >确定使用[{{tplData.tplName}}]模板？</div>
             <div style="margin:1rem 0 0 2rem;font-weight:900;">使用模板将覆盖已编辑之信息</div>
             <div class="use-list mt10">
@@ -234,7 +234,7 @@
                     </tr>
                   </thead>
                 </table>
-                <div style="max-height:8.5rem;overflow:auto;">
+                <div style="max-height:8.5rem;overflow:auto;font-size:0.875rem !important;">
                   <table class="col100">
                     <tbody>
                       <tr v-for="(item,index) in tplEditData.items" :key="index">
@@ -263,7 +263,7 @@
                 </div>
                 <div
                   class="col100 mt10 pb10"
-                  style="border-top:#B4B4B4 solid 1px;border-bottom:#B4B4B4 solid 1px;"
+                  style="border-bottom:#B4B4B4 solid 1px;"
                 >
                   <div class="mt10 ml20">
                     <Input
@@ -293,7 +293,7 @@
                     </tr>
                   </thead>
                 </table>
-                <div style="max-height:8.5rem;overflow:auto;">
+                <div style="max-height:8.5rem;overflow:auto;font-size:0.875rem !important;">
                   <table class="col100">
                     <tbody>
                       <tr v-for="(item,index) in tplEditData.items" :key="index">
@@ -361,7 +361,7 @@
                     </tr>
                   </thead>
                 </table>
-                <div style="max-height:8.5rem;overflow:auto;">
+                <div style="max-height:8.5rem;overflow:auto;font-size:0.875rem !important;">
                   <table class="col100">
                     <tbody>
                       <tr v-for="(item,index) in tplEditData.items" :key="index">
@@ -847,8 +847,11 @@ export default {
           unit: item.unit||item.unit_stock,
           unit_stock: item.unit_stock||item.unit,
           stock: item.stock,
+          dose_once: item.dose_once,
           unit_stock: item.unit_stock,
           unit_sale: item.unit_sale,
+          unit_dose:item.unit_dose,
+          sale_dose_ratio: item.sale_dose_ratio,
           stock_sale_ratio: item.stock_sale_ratio,
           price: item.price||item.sale_price,
           sale_price: item.sale_price||item.price,
@@ -856,7 +859,9 @@ export default {
           spec: item.spec,
           alias_name: item.alias_name,
           clinic_alias_name: item.clinic_alias_name,
-          status: item.status||1
+          status: item.status||1,
+          type: item.type,
+          default_sale_price: item.default_sale_price,
         };
         self.tplEditData.items.push(newItem);
         self.tplEditData.searchListShow = false;
@@ -986,26 +991,31 @@ export default {
       if (this.recipeType !== 0) {
         this.clean_recipe();
         self.tplData.items.forEach(function(item) {
+
           var newItem = {
             category: item.category,
-            item_id: item.item_id,
+            id: item.item_id,
             name: item.alias_name||item.clinic_alias_name||item.name,
             alias_name: item.alias_name || item.name,
             clinic_alias_name: item.clinic_alias_name || item.name,
             num: item.num,
             price: item.price,
             sale_price: item.sale_price,
+            default_sale_price: item.default_sale_price||0,
             spec: item.spec,
             stock: item.stock,
             stock_sale_ratio: item.stock_sale_ratio,
-            unit: item.unit,
+            unit: item.unit||'次',
             unit_sale: item.unit_sale,
             unit_stock: item.unit_stock,
             usage: item.usage,
             dose_once:item.dose_once,
             frequency: item.frequency,
             days: item.days,
-            status: 1
+            status: 1,
+            unit_dose: item.unit_dose||'克',
+            sale_dose_ratio: item.sale_dose_ratio||0,
+            type: item.type||1,
           };
           self.add_new_medicine({ item: newItem, type: self.recipeType });
         });
@@ -1315,7 +1325,7 @@ export default {
   z-index: 1050;
   margin: 0 auto;
   position: relative;
-  top: 3rem;
+  top: 8rem;
   width: 68.75rem;
   min-height: 15rem;
   max-height: 40rem;
