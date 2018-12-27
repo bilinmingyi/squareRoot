@@ -70,7 +70,8 @@ export default {
         chief_complaint: recordData.chief_complaint,
         present_illness: recordData.present_illness,
         diagnosis: recordData.diagnosis,
-        diagnosis_xy: recordData.diagnosis_xy
+        diagnosis_xy: recordData.diagnosis_xy,
+        examination: JSON.stringify(recordData.examination)
       });
       addRecordTpl(params).then(res => {
         if (res.code == 1000) {

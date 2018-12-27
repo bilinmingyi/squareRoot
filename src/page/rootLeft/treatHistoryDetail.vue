@@ -21,7 +21,7 @@
         <div class="history-line-s" v-for="item in recordData">
           <div class="display-flex">
             <div class="history-line-key">{{item.code}}</div>
-            <div class="flex-1">{{item.val}}</div>
+            <pre class="flex-1 multiline-text-box">{{item.val}}</pre>
           </div>
         </div>
       </div>
@@ -195,7 +195,7 @@ export default {
       examination.animalheat &&
         (ret += "体温" + examination.animalheat + "℃，");
       examination.weight && (ret += "体重" + examination.weight + "kg，");
-      examination.info && (ret += examination.info);
+      examination.info && (ret += '\n' + examination.info);
       return ret;
     },
     recordData() {
@@ -392,6 +392,10 @@ export default {
 }
 .history-line-key {
   width: 2.75rem;
+}
+.multiline-text-box {
+  margin: 0;
+  font-family: "microsoft yahei";
 }
 .display-flex {
   display: flex;
