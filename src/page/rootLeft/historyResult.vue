@@ -145,7 +145,6 @@ export default {
       let arr = recipe[map[type]];
       this.clean_recipe();
       arr.forEach(item => {
-        console.log(item)
         this.add_new_medicine({ item, type });
       })
       if (type == 1) {
