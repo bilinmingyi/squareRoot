@@ -394,6 +394,7 @@ export default {
   width: 2.75rem;
 }
 .multiline-text-box {
+  white-space:pre-wrap;
   margin: 0;
   font-family: "microsoft yahei";
 }
