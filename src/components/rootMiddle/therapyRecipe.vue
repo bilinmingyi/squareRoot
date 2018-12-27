@@ -52,7 +52,7 @@
         </tbody>
       </table>
     </section>
-    <section>
+    <section class="mb50">
       <div class="pl10 pt20">
         <span class="input_label"> 处方金额：{{currentData.money}}元</span>
       </div>
