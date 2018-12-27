@@ -395,7 +395,7 @@
               <div
                 class="tpl-search-result"
                 v-show="tplEditData.searchListShow&&recipeType==1"
-                style="max-height:9.5rem;overflow:auto;"
+                style="max-height:9.5rem;overflow:auto;font-size:0.875rem;"
               >
                 <table class="col100">
                   <thead>
@@ -426,7 +426,7 @@
               <div
                 class="tpl-search-result"
                 v-show="tplEditData.searchListShow&&recipeType==2"
-                style="max-height:9.5rem;overflow:auto;"
+                style="max-height:9.5rem;overflow:auto;font-size:0.875rem;"
               >
                 <table class="col100">
                   <thead>
@@ -457,7 +457,7 @@
               <div
                 class="tpl-search-result"
                 v-show="tplEditData.searchListShow&&recipeType==4"
-                style="max-height:9.5rem;overflow:auto;"
+                style="max-height:9.5rem;overflow:auto;font-size:0.875rem;"
               >
                 <table class="col100">
                   <thead>
