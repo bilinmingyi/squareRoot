@@ -87,14 +87,6 @@
         </div>
         <div class="mt10 ml10 mb20 tpl-case" v-show="recipeType==0">
           <div>
-            <span class="case-label">既往史&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span>{{tplData.past_history}}</span>
-          </div>
-          <div>
-            <span class="case-label">过敏史&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span>{{tplData.allergic_history}}</span>
-          </div>
-          <div>
             <span class="case-label">主述&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <span>{{tplData.chief_complaint}}</span>
           </div>
@@ -103,16 +95,24 @@
             <span>{{tplData.present_illness}}</span>
           </div>
           <div>
+            <span class="case-label">既往史&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span>{{tplData.past_history}}</span>
+          </div>
+          <div>
+            <span class="case-label">过敏史&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span>{{tplData.allergic_history}}</span>
+          </div>
+          <div style="display:flex;">
+            <span class="case-label" style="flex: 3;">检查</span>
+            <div style="flex:7;margin:0;font-family:'microsoft yahei';border:0!important;">{{tplExamination}}</div>
+          </div>
+          <div>
             <span class="case-label">西医诊断&nbsp;</span>
             <span>{{tplData.diagnosis_xy}}</span>
           </div>
           <div>
             <span class="case-label">中医诊断&nbsp;</span>
             <span>{{tplData.diagnosis}}</span>
-          </div>
-          <div style="display:flex;">
-            <span class="case-label" style="flex: 3;">检查</span>
-            <div style="flex:7;margin:0;font-family:'microsoft yahei';border:0!important;">{{tplExamination}}</div>
           </div>
         </div>
         <div>
@@ -145,6 +145,14 @@
               </div>
               <div v-if="recipeType==0">
                 <div>
+                  <span class="case-label">主述&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  <span>{{tplData.chief_complaint}}</span>
+                </div>
+                <div>
+                  <span class="case-label">病史&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  <span>{{tplData.present_illness}}</span>
+                </div>
+                <div>
                   <span class="case-label">既往史&nbsp;&nbsp;&nbsp;&nbsp;</span>
                   <span>{{tplData.past_history}}</span>
                 </div>
@@ -152,13 +160,9 @@
                   <span class="case-label">过敏史&nbsp;&nbsp;&nbsp;&nbsp;</span>
                   <span>{{tplData.allergic_history}}</span>
                 </div>
-                <div>
-                  <span class="case-label">主述&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                  <span>{{tplData.chief_complaint}}</span>
-                </div>
-                <div>
-                  <span class="case-label">病史&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                  <span>{{tplData.present_illness}}</span>
+                <div style="display:flex;">
+                  <span class="case-label" style="flex: 1;">检查</span>
+                  <div style="flex:9;margin:0;font-family:'microsoft yahei';">{{tplExamination}}</div>
                 </div>
                 <div>
                   <span class="case-label">西医诊断&nbsp;</span>
@@ -169,8 +173,6 @@
                   <span>{{tplData.diagnosis}}</span>
                 </div>
                 <div style="display:flex;">
-            <span class="case-label" style="flex: 1;">检查</span>
-            <div style="flex:9;margin:0;font-family:'microsoft yahei';">{{tplExamination}}</div>
           </div>
               </div>
             </div>
@@ -1072,8 +1074,8 @@ export default {
           present_illness: self.tplData.present_illness || "",
           allergic_history: self.tplData.allergic_history || "",
           past_history: self.tplData.past_history || "",
-          examinationInfo: JSON.parse(self.tplData.examination) || {},
-          examination: JSON.parse(self.tplData.examination) || {},
+          examinationInfo: self.tplData.examination ? JSON.parse(self.tplData.examination) : {},
+          examination: self.tplData.examination ? JSON.parse(self.tplData.examination) : {},
           diagnosis_input: self.tplData.diagnosis!=''?self.tplData.diagnosis+';':'',
           diagnosis_xy_input: self.tplData.diagnosis_xy!=''?self.tplData.diagnosis_xy+';':'',
           treat_advice: self.tplData.treat_advice || "",

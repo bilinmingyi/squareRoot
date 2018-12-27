@@ -143,8 +143,8 @@ export default {
     return {
       recordTemplate: [
         { code: "主述", key: "chief_complaint" },
-        { code: "检查", key: "examination" },
         { code: "病史", key: "present_illness" },
+        { code: "检查", key: "examination" },
         { code: "西医诊断", key: "diagnosis_xy" },
         { code: "中医诊断", key: "diagnosis" }
       ],
