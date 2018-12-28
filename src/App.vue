@@ -89,6 +89,7 @@
           }
         })
       },
+      //检查草稿箱
       checkOrder(recipeList) {
         recipeList.forEach(recipe => {
           if (recipe.data.items.length === 0) {
