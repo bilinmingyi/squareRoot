@@ -186,7 +186,7 @@
                 this.add_new_medicine(
                   {
                     item:{
-                      "item_id": '',
+                      "id": '',
                       "clinic_alias_name":'',
                       "name": item.drugName.replace(/his.*/, ''),
                       "num": '',
@@ -210,7 +210,7 @@
                 this.add_new_medicine(
                   {
                     item:{
-                      "item_id": existence.id,
+                      "id": existence.id,
                       "clinic_alias_name":existence.clinic_alias_name,
                       "name": existence.name,
                       "num": item.unit == '克' ? existence.unit_stock != '克' ? Math.ceil(item.number / existence.stock_sale_ratio) : item.number : 0,
