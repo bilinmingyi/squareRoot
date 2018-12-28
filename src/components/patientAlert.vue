@@ -709,7 +709,7 @@ export default {
   width: 100%;
   height: 100%;
   background: rgba(255, 255, 255, 0.5);
-  z-index: 1999;
+  z-index: 500;
   position: fixed;
   top: 0;
   left: 0;

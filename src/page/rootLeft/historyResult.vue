@@ -148,7 +148,8 @@ export default {
         this.add_new_medicine({ item, type });
       })
       if (type == 1) {
-        this.modify_recipe_detail({ key: 'dosage', val: recipe.dosage})
+        this.modify_recipe_detail({ key: 'dosage', val: recipe.dosage});
+        this.modify_recipe_detail({ key: 'category', val: recipe.category});
       }
       this.cancelHistory();
     }
@@ -161,7 +162,7 @@ export default {
   width: 100%;
   height: 100%;
   background: rgba(255, 255, 255, 0.5);
-  z-index: 1999;
+  z-index: 500;
   position: fixed;
   top: 0;
   left: 0;

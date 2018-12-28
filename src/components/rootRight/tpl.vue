@@ -629,7 +629,7 @@ export default {
   },
   computed: {
     ...mapState({
-      recordTplChange: state => state.recordTplChange
+      tplChange: state => state.tplChange
     }),
     tplExamination: function() {
       if (this.recipeType == 0 && this.tplData.examination) {
@@ -685,7 +685,7 @@ export default {
       this.showResult = false;
       this.firstSearch();
     },
-    recordTplChange: function() {
+    tplChange: function() {
       this.showResult = false;
       this.firstSearch();
     },

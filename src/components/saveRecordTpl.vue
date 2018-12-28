@@ -45,7 +45,7 @@ export default {
   computed: {
     ...mapState({
       recordData: state => state.recordData,
-      recordTplChange: state => state.recordTplChange
+      tplChange: state => state.tplChange
     })
   },
   methods: {
@@ -76,7 +76,7 @@ export default {
       addRecordTpl(params).then(res => {
         if (res.code == 1000) {
           this.$Message.success("存为模板成功");
-          this.set_state_prop({key: 'recordTplChange', val: !this.recordTplChange})
+          this.set_state_prop({key: 'tplChange', val: !this.tplChange})
           this.hideSaveTemplate();
         } else {
           this.$Message.error(res.msg);
@@ -96,7 +96,7 @@ export default {
   width: 100%;
   height: 100%;
   background: rgba(255, 255, 255, 0.5);
-  z-index: 1999;
+  z-index: 500;
   position: fixed;
   top: 0;
   left: 0;
