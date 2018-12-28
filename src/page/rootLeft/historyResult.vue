@@ -1,5 +1,5 @@
 <template>
-  <div class="prescription_tab_bg">
+  <div class="h-r-prescription_tab_bg">
     <div
       class="d_sure_prescription"
       style="height: auto;max-height: 100vh;padding: 20px 50px; width: 800px;"
@@ -158,7 +158,7 @@ export default {
 </script>
 
 <style scoped>
-.prescription_tab_bg {
+.h-r-prescription_tab_bg {
   width: 100%;
   height: 100%;
   background: rgba(255, 255, 255, 0.5);

@@ -120,6 +120,7 @@ export default {
   flex: 60;
   margin-right: 1rem;
   background: #ffffff;
+  min-width: 46.25rem;
 }
 .right {
   flex: 20;
