@@ -22,7 +22,7 @@
       <div class="diagnosisItem">
         <label class="labelText">中医辨证</label>
         <Select filterable class="flexOne" placeholder="" v-model="ZYdiscriminate" remote
-                :remote-method="findZYdiscriminate" clearable  @on-clear="clearZYD"  @click.native="automaticZYD()">
+                :remote-method="findZYdiscriminate" :loading="ZYDLoading" clearable  @on-clear="clearZYD"  @click.native="automaticZYD()">
           <Option v-for="item in ZYDList" :value="item.bz_name" :key="item.bz_name">{{item.bz_name}}</Option>
 
         </Select>
@@ -146,7 +146,7 @@
         clearTimeout(this.searchTime)
 
         this.searchTime = setTimeout(() => {
-          if( this.XYdiagnosis.replace(/\s*/g, '') === '' && this.ZYdiagnosis.replace(/\s*/g, '') === '' &&  this.query.replace(/\s*/g, '') === ''){
+          if( this.XYdiagnosis.replace(/\s*/g, '') === '' && this.ZYdiagnosis.replace(/\s*/g, '') === '' &&  query.replace(/\s*/g, '') === ''){
             return
           }
           this.ZYDLoading=true;
