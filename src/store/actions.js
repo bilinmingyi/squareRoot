@@ -209,6 +209,9 @@ const actions = {
   },
   save_draft_data:({commit},str)=>{
     commit(mutationTypes.SAVE_DRAFT_DATA,str)
+  },
+  set_recipe_help:({commit},val)=>{
+    commit(mutationTypes.SET_RECIPE_HELP,val)
   }
   //right
 };

@@ -118,6 +118,8 @@ const loadDraft = (params) => fetch('/doctreat/treatorder/getDraft', params);
 
 const submitOrder =(params) =>fetch('/doctreat/treatorder/submitOrder',params);
 
+const canRecipeHelp =(params) => fetch('/doctreat/recipeHelp/enbaled', params);
+
 const waitingPage='/dyyzs/doctreat/waiting/listPage';
 
 //right
@@ -199,6 +201,7 @@ export {
   loadDraft,
   submitOrder,
   waitingPage,
+  canRecipeHelp,
 
   //right
   searchRecentMed,

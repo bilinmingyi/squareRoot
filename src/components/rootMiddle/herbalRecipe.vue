@@ -9,7 +9,7 @@
       </div>
       <div>
         <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
-        <button class="btn" v-if="currentData.data.category==2" @click.stop="toAssist">
+        <button class="btn" v-if="currentData.data.category==2 && canGetRecipeHelp==1" @click.stop="toAssist">
           辅助开方
         </button>
         <button class="btn" @click="print_pre()">打印处方</button>
@@ -124,7 +124,7 @@
 <script>
   import {RadioGroup, Radio, Select, Option, Input, InputNumber} from 'iview'
   import fRadio from '@/components/fRadio.vue'
-  import {mapActions} from 'vuex'
+  import {mapActions,mapState} from 'vuex'
   import saveTpl from '@/components/rootMiddle/saveRecipeTpl'
   import {herbalMedUsages, herbalRpUsages, extraFeeTypes, medFrequency} from '@/assets/js/mapType'
   import Link from "iview/src/mixins/link";
@@ -149,6 +149,9 @@
       fRadio
     },
     computed: {
+      ...mapState({
+        'canGetRecipeHelp': state=>state.canGetRecipeHelp
+      }),
       currentData: function () {
         return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
       },

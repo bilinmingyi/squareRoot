@@ -13,7 +13,7 @@
 
 <script>
 
-  import {getTreatOrderDetail, loadDraft, searchMed} from "@/fetch/api.js";
+  import {getTreatOrderDetail, loadDraft, searchMed, canRecipeHelp} from "@/fetch/api.js";
   import fLoader from "@/components/fLoader";
   import {mapState, mapActions} from "vuex";
 
@@ -36,9 +36,10 @@
     created() {
       this.init();
       this.loadDraftData();
+      this.getRecipeHelp();
     },
     methods: {
-      ...mapActions(['set_patient_info', 'set_order_seqno', 'init_recipe', 'init_recode', 'set_state_prop']),
+      ...mapActions(['set_patient_info', 'set_order_seqno', 'init_recipe', 'init_recode', 'set_state_prop','set_recipe_help']),
       init() {
         let params = {order_seqno: this.getOrderSeqno('orderSeqno')};
         this.showLoader = true;
@@ -181,6 +182,13 @@
           }
         })
 
+      },
+      getRecipeHelp(){
+        canRecipeHelp({}).then(
+          data=>{
+           this.set_recipe_help(data.data)
+          }
+        )
       }
     }
   };

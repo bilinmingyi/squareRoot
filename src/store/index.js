@@ -54,6 +54,8 @@ const state = {
   fjbRecipe:{},
   printPre:false,
   draftData:'',
+  canGetRecipeHelp:0,
+
   // right
   tplChange: false,
 };

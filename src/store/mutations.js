@@ -82,6 +82,9 @@ const mutations = {
     },
     [mutationTypes.SAVE_DRAFT_DATA](state, str) {
       state.draftData = str;
+    },
+    [mutationTypes.SET_RECIPE_HELP](state, val) {
+      state.canGetRecipeHelp=val;
     }
     //right
   }
