@@ -35,7 +35,7 @@
             </td>
           </template>
           <template v-else>
-            <td colspan="3">
+            <td colspan="3" style="color: red;">
               系统内搜索不到该材料
             </td>
           </template>
