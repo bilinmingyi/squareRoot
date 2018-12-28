@@ -104,7 +104,9 @@
           </div>
           <div style="display:flex;">
             <span class="case-label" style="width: 3.75rem">检查</span>
-            <div style="white-space:pre-wrap; flex:1;margin:0;font-family:'microsoft yahei';border:0!important;">{{tplExamination}}</div>
+            <div
+              style="white-space:pre-wrap; flex:1;margin:0;font-family:'microsoft yahei';border:0!important;"
+            >{{tplExamination}}</div>
           </div>
           <div>
             <span class="case-label">西医诊断&nbsp;</span>
@@ -129,7 +131,7 @@
             <div
               style="text-align:center;padding-top:2rem;font-weight:900;font-size:1rem;color: #5f95da;"
             >确定使用[{{tplData.tplName}}]模板？</div>
-            <div style="margin:1rem 0 0 2rem;font-weight:900;">使用模板将覆盖已编辑之信息</div>
+            <div style="margin:1rem 0 0 2rem;font-weight:900;">使用模板将覆盖已编辑之信息，<span style="color:red;">没有的药品</span>不会导入至处方</div>
             <div class="use-list mt10">
               <div
                 v-if="recipeType!=0"
@@ -141,7 +143,7 @@
                 <span
                   v-show="recipeType==4"
                 >{{item.price}}/次</span>
-                <span v-show="item.status==0" style="color:red;font-weight:bold;">暂无此药</span>
+                <span v-show="item.status!=1" style="color:red;font-weight:bold;">暂无此药</span>
               </div>
               <div v-if="recipeType==0" style="width: 100%">
                 <div>
@@ -162,7 +164,9 @@
                 </div>
                 <div style="display:flex;">
                   <span class="case-label" style="width: 4.5rem">检查</span>
-                  <div style="white-space:pre-wrap; flex:1;margin:0;font-family:'microsoft yahei';">{{tplExamination}}</div>
+                  <div
+                    style="white-space:pre-wrap; flex:1;margin:0;font-family:'microsoft yahei';"
+                  >{{tplExamination}}</div>
                 </div>
                 <div>
                   <span class="case-label">西医诊断&nbsp;</span>
@@ -628,7 +632,7 @@ export default {
       recordTplChange: state => state.recordTplChange
     }),
     tplExamination: function() {
-      if (this.recipeType == 0&&this.tplData.examination) {
+      if (this.recipeType == 0 && this.tplData.examination) {
         var e = JSON.parse(this.tplData.examination);
         var ret = "";
         (e.bloodpressure_num1 || e.bloodpressure_num2) &&
@@ -644,7 +648,7 @@ export default {
         e.breathe && (ret += "呼吸" + e.breathe + "次/分，");
         e.animalheat && (ret += "体温" + e.animalheat + "℃，");
         e.weight && (ret += "体重" + e.weight + "kg，");
-        e.info && (ret += (ret ? '\n' : '') + e.info);
+        e.info && (ret += (ret ? "\n" : "") + e.info);
         return ret;
       } else {
         return "";
@@ -1007,28 +1011,46 @@ export default {
       this.showAddTpl = false;
     },
     tplShow: function(item) {
-      this.tplData = {
-        tplName: item.name,
-        scope: item.scope,
-        items: item.items,
-        dosage: item.dosage,
-        doctor_remark: item.doctor_remark,
-        category: item.category,
-        clinic_id: item.clinic_id,
-        creator_name: item.creator_name,
-        creator_id: item.creator_id,
-        id: item.id,
-        is_cloud: item.is_cloud,
+      var self=this;
+      var ids = [];
+      var params = {};
+      item.items.forEach(function(item) {
+        ids.push(Number(item.item_id));
+      });
+      var params = { ids: ids, status: 1 };
+      searchMed(params, this.recipeType).then(function(res) {
+        if (res.code == 1000) {
+          res.data.forEach(function(i) {
+            item.items.forEach(function(e) {
+              if (e.item_id == i.id) {
+                e.status = 1;
+              }
+            });
+          });
+          self.tplData = {
+            tplName: item.name,
+            scope: item.scope,
+            items: item.items,
+            dosage: item.dosage,
+            doctor_remark: item.doctor_remark,
+            category: item.category,
+            clinic_id: item.clinic_id,
+            creator_name: item.creator_name,
+            creator_id: item.creator_id,
+            id: item.id,
+            is_cloud: item.is_cloud,
 
-        chief_complaint: item.chief_complaint, //主诉
-        present_illness: item.present_illness, //病史
-        allergic_history: item.allergic_history, //过敏史
-        past_history: item.past_history, //既往史
-        examination: item.examination, //检查
-        diagnosis: item.diagnosis, //中医诊断
-        diagnosis_xy: item.diagnosis_xy //西医诊断
-      };
-      this.showTpl = true;
+            chief_complaint: item.chief_complaint, //主诉
+            present_illness: item.present_illness, //病史
+            allergic_history: item.allergic_history, //过敏史
+            past_history: item.past_history, //既往史
+            examination: item.examination, //检查
+            diagnosis: item.diagnosis, //中医诊断
+            diagnosis_xy: item.diagnosis_xy //西医诊断
+          };
+          self.showTpl = true;
+        }
+      });
     },
     tplHide: function() {
       this.showTpl = false;
@@ -1058,12 +1080,14 @@ export default {
             dose_once: item.dose_once,
             frequency: item.frequency,
             days: item.days,
-            status: 1,
+            status: item.status||0,
             unit_dose: item.unit_dose || "克",
             sale_dose_ratio: item.sale_dose_ratio || 0,
             type: item.type || 1
           };
-          self.add_new_medicine({ item: newItem, type: self.recipeType });
+          if(newItem.status==1){
+            self.add_new_medicine({ item: newItem, type: self.recipeType });
+          }
         });
         this.showUseTpl = false;
       } else {
@@ -1072,10 +1096,18 @@ export default {
           present_illness: self.tplData.present_illness || "",
           allergic_history: self.tplData.allergic_history || "",
           past_history: self.tplData.past_history || "",
-          examinationInfo: self.tplData.examination ? JSON.parse(self.tplData.examination) : {},
-          examination: self.tplData.examination ? JSON.parse(self.tplData.examination) : {},
-          diagnosis_input: self.tplData.diagnosis!=''?self.tplData.diagnosis+';':'',
-          diagnosis_xy_input: self.tplData.diagnosis_xy!=''?self.tplData.diagnosis_xy+';':'',
+          examinationInfo: self.tplData.examination
+            ? JSON.parse(self.tplData.examination)
+            : {},
+          examination: self.tplData.examination
+            ? JSON.parse(self.tplData.examination)
+            : {},
+          diagnosis_input:
+            self.tplData.diagnosis != "" ? self.tplData.diagnosis + ";" : "",
+          diagnosis_xy_input:
+            self.tplData.diagnosis_xy != ""
+              ? self.tplData.diagnosis_xy + ";"
+              : "",
           treat_advice: self.tplData.treat_advice || "",
           diagnosis_xy_labels: [],
           diagnosis_labels: []
