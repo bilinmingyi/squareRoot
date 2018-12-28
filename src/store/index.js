@@ -55,7 +55,7 @@ const state = {
   printPre:false,
   draftData:'',
   // right
-  recordTplChange: false,
+  tplChange: false,
 };
 if (module.hot) {
   // 使 action 和 mutation 成为可热重载模块

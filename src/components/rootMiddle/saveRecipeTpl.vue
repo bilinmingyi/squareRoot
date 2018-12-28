@@ -27,7 +27,7 @@
 <script>
   import {saveMedTpl} from '@/fetch/api.js'
   import {Select, Option, Input, Button} from 'iview'
-
+  import { mapState, mapActions } from "vuex";
   export default {
     name: "saveTpl",
     data() {
@@ -37,6 +37,9 @@
       }
     },
     computed: {
+      ...mapState({
+        tplChange: state => state.tplChange
+      }),
       currentData: function () {
         return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
       },
@@ -48,6 +51,7 @@
       Button
     },
     methods: {
+      ...mapActions(['set_state_prop']),
       saveData(){
         if(this.tplName===''){
           this.$Message.info('请先填写模板名称！');
@@ -90,6 +94,7 @@
         saveMedTpl(params,this.currentData.type).then(data=>{
           if(data.code===1000){
             this.$Message.info("保存成功！");
+            this.set_state_prop({key: 'tplChange', val: !this.tplChange});
             this.hideTpl();
           }else {
             this.$Message.info(data.msg)

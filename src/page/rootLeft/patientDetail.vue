@@ -31,7 +31,7 @@
         <span class="font-bold pr10">联系电话</span>
         <span>{{patientData.mobile}}</span>
       </div>
-      <div class="mt5" v-if="canShowMoney">
+      <!-- <div class="mt5" v-if="canShowMoney">
         <span class="pr20">
           <span class="font-bold pr10">诊金</span>
           <span>{{treatPrice | priceFormat}}</span>
@@ -40,7 +40,7 @@
           <span class="font-bold pr10">总金额</span>
           <span>{{totalPrice | priceFormat}}</span>
         </span>
-      </div>
+      </div> -->
     </div>
     <edit-patient-info v-if="showEditPatientInfo" @closeModal="showEditPatientInfo = false"></edit-patient-info>
   </div>

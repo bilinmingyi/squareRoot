@@ -295,6 +295,7 @@ export default {
       });
     },
     impHistory(recipe, index) {
+      console.log(recipe, index)
       this.formatedRecipesIndex = index;
       this.historyResultShow = true;
     }

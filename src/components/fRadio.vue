@@ -1,7 +1,7 @@
 <template>
   <div class="f_radio">
     <label class="demo--label">
-      <input class="demo--radio" type="radio" v-bind="$attrs" v-on="$listeners" :name="name" :checked="$attrs.value===currVal">
+      <input class="demo--radio" type="radio" v-bind="$attrs" v-on="$listeners" :name="name" :checked="$attrs.value==currVal">
       <span class="demo--radioInput" ></span><slot></slot>
     </label>
   </div>
