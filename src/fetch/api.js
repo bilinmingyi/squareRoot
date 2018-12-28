@@ -120,6 +120,8 @@ const submitOrder =(params) =>fetch('/doctreat/treatorder/submitOrder',params);
 
 const canRecipeHelp =(params) => fetch('/doctreat/recipeHelp/enbaled', params);
 
+const pointCount =(params) => fetch('/doctreat/treat/help',params)
+
 const waitingPage='/dyyzs/doctreat/waiting/listPage';
 
 //right
@@ -202,6 +204,7 @@ export {
   submitOrder,
   waitingPage,
   canRecipeHelp,
+  pointCount,
 
   //right
   searchRecentMed,

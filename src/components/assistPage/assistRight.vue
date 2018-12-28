@@ -60,7 +60,8 @@
   import fRadio from '@/components/fRadio.vue'
   import {Button, CheckboxGroup , Checkbox} from 'iview'
   import {mapActions, mapState} from 'vuex'
-  import {getJJInfo, getFJDrugList, getHerbalList} from '@/fetch/api.js'
+  import {getJJInfo, getFJDrugList, getHerbalList, pointCount} from '@/fetch/api.js'
+  import {clinicName, clinicId} from '@/assets/js/mapType.js'
 
   export default {
     name: "assistRight",
@@ -80,6 +81,7 @@
     computed:{
       ...mapState({
         'fjbRecipe':state=>state.fjbRecipe,
+        'orderSeqno':state=>state.orderSeqno,
         'patientData':state=>state.patientData
       }),
       currentData: function () {
@@ -149,12 +151,14 @@
       importRecipe(){
         if(this.currentData.data.items.length===0){
           this.findMedByName()
+          this.pointEnd()
         }else {
           this.$Modal.confirm({
             title: '提示',
             content: '<p>导入药品将清空已选的药，确认要导入?</p>',
             onOk: ()=>{
               this.findMedByName();
+              this.pointEnd();
             },
             onCancel: ()=>{
 
@@ -239,6 +243,21 @@
       },
       historyBack(){
         this.$router.go(-1)
+      },
+      pointEnd(){
+        pointCount({
+          "platform":"pc",
+          "action":"end",
+          "end_params":{
+            "order_seqno":this.orderSeqno,
+            "clinic_name":clinicName,
+            "clinic_id":clinicId,
+            "patient_id":this.patientData.id,
+            "patient_mobile":this.patientData.mobile,
+            "is_chosen":1,
+            "chosen_recipe":this.fjbRecipe.fjName
+          }
+        })
       }
     }
   }

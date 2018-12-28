@@ -1,9 +1,16 @@
-var herbalRpUsages=[],herbalMedUsages=[],westernMedUsages=[],extraFeeTypes=[],clinicName='', medFrequency=[];
+var herbalRpUsages=[],herbalMedUsages=[],westernMedUsages=[],extraFeeTypes=[],clinicName='',clinicId='', medFrequency=[];
 try{
   clinicName=window.baseInfo.clinicName;
 }catch (e) {
   clinicName='大医联帮云诊所'
 }
+
+try{
+  clinicId=window.baseInfo.clinicId;
+}catch (e) {
+  clinicId="5"
+}
+
 try {
   herbalRpUsages=window.baseInfo.herbalRpUsages;
 }catch (e) {
@@ -81,4 +88,5 @@ module.exports= {
   extraFeeTypes,
   medFrequency,
   clinicName,
+  clinicId
 }

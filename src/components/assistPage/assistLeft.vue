@@ -50,8 +50,9 @@
 <script>
   import patientDetail from "@/page/rootLeft/patientDetail";
   import {Option, Select, Button} from 'iview'
-  import {searchDiagnosis,searchFJB} from '@/fetch/api.js'
+  import {searchDiagnosis,searchFJB,pointCount} from '@/fetch/api.js'
   import {mapActions, mapState} from 'vuex'
+  import {clinicName, clinicId} from '@/assets/js/mapType.js'
 
   export default {
     name: "assistLeft",
@@ -83,7 +84,9 @@
     },
     computed:{
       ...mapState({
-        'fjbRecipe':state=>state.fjbRecipe
+        'fjbRecipe':state=>state.fjbRecipe,
+        'orderSeqno':state=>state.orderSeqno,
+        'patientData':state=>state.patientData
       })
     },
     methods: {
@@ -208,8 +211,22 @@
         }).then(data=>{
           if(data.success){
             this.fjList=data.result;
+            this.pointStart();
           }else {
             this.$Message.info(data.error)
+          }
+        })
+      },
+      pointStart(){
+        pointCount({
+          "platform":"pc",
+          "action":"start",
+          "start_params": {
+            "order_seqno": this.orderSeqno,
+            "clinic_name": clinicName,
+            "clinic_id": clinicId,
+            "patient_id": this.patientData.id,
+            "patient_mobile": this.patientData.mobile
           }
         })
       }
