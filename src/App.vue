@@ -188,39 +188,35 @@
 <style>
   @import "assets/css/reset.css";
 
-  #app {
-    color: #2c3e50;
-    margin-top: 3.75rem;
-    padding: 1.25rem;
-    background: #F5F5F5;
-  }
-
-  .page_content {
-    display: flex;
-    min-height: calc(100vh - 8.6rem);
-  }
-
-  .hidden {
-    visibility: hidden;
-  }
-
-  .left {
-    flex: 20;
-    margin-right: 1rem;
-    background: #f2f2f2;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-  }
-
-  .middle {
-    flex: 60;
-    margin-right: 1rem;
-    background: #ffffff;
-  }
-
-  .right {
-    flex: 20;
-    background: white;
-  }
+#app {
+  color: #2c3e50;
+  margin-top: 3.75rem;
+  padding: 1.25rem;
+  background: #F5F5F5;
+}
+.page_content {
+  display: flex;
+  min-height: calc(100vh - 8.6rem);
+}
+.hidden {
+  visibility: hidden;
+}
+.left {
+  flex: 20;
+  margin-right: 1rem;
+  background: #f2f2f2;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.middle {
+  flex: 60;
+  margin-right: 1rem;
+  background: #ffffff;
+  min-width: 46.25rem;
+}
+.right {
+  flex: 20;
+  background: white;
+}
 </style>

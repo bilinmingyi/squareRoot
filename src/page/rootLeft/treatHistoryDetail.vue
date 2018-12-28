@@ -121,12 +121,14 @@
         </section>-->
       </div>
     </div>
+    <f-loader v-if="showLoader" :fixed="false"></f-loader>
 
-    <history-result 
-      v-show="formatedRecipes[formatedRecipesIndex] && formatedRecipes[formatedRecipesIndex].checkMatch && historyResultShow" 
-      :recipeDataProp="formatedRecipes[formatedRecipesIndex]"
+    <history-result
+      v-if="historyResultShow"
+      :recipeDataProp="formatedRecipe"
       :map="listMap"
-      @close="historyResultShow = false"></history-result>
+      @close="historyResultShow = false"
+    ></history-result>
   </div>
 </template>
 
@@ -134,9 +136,11 @@
 import { mapState, mapActions } from "vuex";
 import historyResult from "@/page/rootLeft/historyResult";
 import { checkIsMatch } from "@/fetch/api.js";
+import fLoader from "@/components/fLoader";
 export default {
   components: {
-    historyResult
+    historyResult,
+    fLoader
   },
   props: ["selectedOrderProp", "reciptTypeProp", "examinationInfoProp"],
   data() {
@@ -150,15 +154,15 @@ export default {
       ],
       historyResultShow: false,
       listMap: [
-          "",
-          "herbal_list",
-          "western_list",
-          "product_list",
-          "therapy_list",
-          "extra_list"
+        "",
+        "herbal_list",
+        "western_list",
+        "product_list",
+        "therapy_list",
+        "extra_list"
       ],
-      formatedRecipes: [],
-      formatedRecipesIndex: -1,
+      formatedRecipe: {},
+      showLoader: false
     };
   },
   computed: {
@@ -195,7 +199,7 @@ export default {
       examination.animalheat &&
         (ret += "体温" + examination.animalheat + "℃，");
       examination.weight && (ret += "体重" + examination.weight + "kg，");
-      examination.info && (ret += (ret ? '\n' : '') + examination.info);
+      examination.info && (ret += (ret ? "\n" : "") + examination.info);
       return ret;
     },
     recordData() {
@@ -213,47 +217,13 @@ export default {
     },
     recipe_list() {
       return this.selectedOrder.recipe_list;
-    }
-  },
-  watch: {
-    recipe_list: {
-      deep: true,
-      handler(newVal) {
-        let map = this.listMap;
-        this.formatedRecipes = [];
-        newVal.forEach((item, index) => {
-          let type = item.recipe_type;
-          let ids = [];
-          this.formatedRecipes.push(JSON.parse(JSON.stringify(item)));
-          if (!map[type]) return;
-          let formatItem = this.formatedRecipes[index];
-          formatItem[map[type]].forEach(list => {
-            ids.push(list.item_id);
-          });
-          if (ids.length <= 0 || formatItem.is_cloud == 1) return;
-          let params = { status: 1 };
-          params.ids = ids;
-          checkIsMatch(params, type, type == 1 ? formatItem.is_cloud : null).then(
-            res => {
-              if (res.code == 1000) {
-                let arr = formatItem[map[type]];
-                let data = res.data;
-                for (let i = 0, len = arr.length; i < len; i++) {
-                  let findData = data.find(dataItem => dataItem.id == arr[i].item_id);
-                  if (findData) {
-                    arr[i] = Object.assign(arr[i], findData, {is_match: 1});
-                  } else {
-                    arr[i] = Object.assign(arr[i], {is_match: 0});
-                  }
-                }
-                formatItem.checkMatch = true;
-              } else {
-                console.log(res.msg);
-              }
-            }
-          );
-        });
-      }
+    },
+    checkMatch() {
+      return (
+        Boolean(this.formatedRecipes) &&
+        Boolean(this.formatedRecipes[this.formatedRecipesIndex]) &&
+        Boolean(this.formatedRecipes[this.formatedRecipesIndex].checkMatch)
+      );
     }
   },
   methods: {
@@ -270,7 +240,11 @@ export default {
             break;
           case "diagnosis":
             data.push(
-              { code: "中医诊断输入框", key: "diagnosis_input", val: item.val ? (item.val + ';') : '' },
+              {
+                code: "中医诊断输入框",
+                key: "diagnosis_input",
+                val: item.val ? item.val + ";" : ""
+              },
               { code: "中医诊断标签", key: "diagnosis_labels", val: [] }
             );
             break;
@@ -279,7 +253,7 @@ export default {
               {
                 code: "西医诊断输入框",
                 key: "diagnosis_xy_input",
-                val: item.val ? (item.val + ';') : ''
+                val: item.val ? item.val + ";" : ""
               },
               { code: "西医诊断标签", key: "diagnosis_xy_labels", val: [] }
             );
@@ -294,10 +268,39 @@ export default {
         });
       });
     },
-    impHistory(recipe, index) {
-      console.log(recipe, index)
-      this.formatedRecipesIndex = index;
-      this.historyResultShow = true;
+    async impHistory(recipe) {
+      this.showLoader = true;
+      let recipeObj = JSON.parse(JSON.stringify(recipe));
+      let type = recipe.recipe_type;
+      let map = this.listMap;
+      let ids = [];
+      this.formatedRecipe = recipeObj;
+      if (!map[type] || recipeObj.is_cloud == 1) return;
+      recipeObj[map[type]].forEach(list => {
+        list.is_match = 0;
+        ids.push(list.item_id);
+      });
+      if (ids.length == 0) return;
+      let params = { status: 1, ids };
+      let res = await checkIsMatch(
+        params,
+        type,
+        type == 1 ? recipeObj.is_cloud : null
+      );
+      if (res.code == 1000) {
+        let data = res.data;
+        let arr = recipeObj[map[type]];
+        for (let i = 0, len = arr.length; i < len; i++) {
+          let findData = data.find(dataItem => dataItem.id == arr[i].item_id);
+          if (findData) {
+            arr[i] = Object.assign(arr[i], findData, { is_match: 1 });
+          }
+        }
+        this.showLoader = false;
+        this.historyResultShow = true;
+      } else {
+        console.log(res.msg);
+      }
     }
   }
 };
@@ -395,7 +398,7 @@ export default {
   width: 2.75rem;
 }
 .multiline-text-box {
-  white-space:pre-wrap;
+  white-space: pre-wrap;
   margin: 0;
   font-family: "microsoft yahei";
 }

@@ -109,6 +109,7 @@ export default {
   height: 100%;
 }
 .treat-history-lists {
+  min-width: 13.75rem;
   padding: 0.625rem;
   font-size: 1rem;
   background: #fff;
