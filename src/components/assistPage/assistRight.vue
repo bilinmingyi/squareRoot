@@ -115,10 +115,10 @@
         getJJInfo({
           fjCode:this.fjbRecipe.fjCode
         }).then(data=>{
-          if(data.data.success){
-            this.symptomList=data.data.result;
+          if(data.data.code===200){
+            this.symptomList=data.data.data;
           }else {
-            this.$Message.info(data.data.error)
+            this.$Message.info(data.data.message)
           }
         }).catch(error=>{
           console.log(error)
@@ -139,16 +139,19 @@
           birthday:year+'-'+month+'-'+day,
           fjType: 0
         }).then(data=>{
-          if(data.data.success){
-            this.currentFjList=data.data.result;
+          if(data.data.code===200){
+            this.currentFjList=data.data.data;
           }else {
-            this.$Message.info(data.data.error)
+            this.$Message.info(data.data.message)
           }
         }).catch(error=>{
           console.log(error)
         })
       },
       importRecipe(){
+        if(this.currentData.type!==1){
+          return
+        }
         if(this.currentData.data.items.length===0){
           this.findMedByName()
           this.pointEnd()

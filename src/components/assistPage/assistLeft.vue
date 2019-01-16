@@ -209,11 +209,12 @@
           zdNameC:this.ZYdiagnosis,
           zdNameW:this.XYdiagnosis
         }).then(data=>{
-          if(data.success){
-            this.fjList=data.result;
+          console.log(data)
+          if(data.data.code===200){
+            this.fjList=data.data.data;
             this.pointStart();
           }else {
-            this.$Message.info(data.error)
+            this.$Message.info(data.data.message)
           }
         })
       },

@@ -38,7 +38,7 @@
             <td>{{item.spec==='1克/克'?'1克':item.spec}}</td>
             <td>
               <InputNumber style="width:3.2rem" :value="item.num"
-                     @on-change="modify_medicine({key:'num',val:$event,index:index})"/>
+                           @on-change="modify_medicine({key:'num',val:$event,index:index})"/>
               <span>{{item.unit}}</span>
               <span class="num_text" v-if="currentData.data.category==2">({{item.num*item.stock_sale_ratio}}{{item.unit_sale}})</span>
             </td>
@@ -73,7 +73,7 @@
         <div class="width-240">
           <span class="input_label"> 剂数：</span>
           <InputNumber class="input_120" :value="currentData.data.dosage"
-                 @on-change="modify_recipe_detail({key:'dosage',val:$event})"/>
+                       @on-change="modify_recipe_detail({key:'dosage',val:$event})"/>
           <span class="input_label">剂</span>
         </div>
         <div class="width-240">
@@ -101,12 +101,12 @@
         <div class="width-240">
           <span class="input_label">数量：</span>
           <InputNumber class="input_120" :value="currentData.data.extra_num"
-                 @on-change="modify_recipe_detail({key:'extra_num',val:$event})"/>
+                       @on-change="modify_recipe_detail({key:'extra_num',val:$event})"/>
         </div>
         <div class="width-240">
           <span class="input_label"> 用量：</span>
           <InputNumber class="input_120" :value="currentData.data.eachDose"
-                 @on-change="modify_recipe_detail({key:'eachDose',val:$event})"/>
+                       @on-change="modify_recipe_detail({key:'eachDose',val:$event})"/>
           <span class="input_label">ml</span>
         </div>
       </div>
@@ -124,9 +124,10 @@
 <script>
   import {RadioGroup, Radio, Select, Option, Input, InputNumber} from 'iview'
   import fRadio from '@/components/fRadio.vue'
-  import {mapActions,mapState} from 'vuex'
+  import {mapActions, mapState} from 'vuex'
   import saveTpl from '@/components/rootMiddle/saveRecipeTpl'
   import {herbalMedUsages, herbalRpUsages, extraFeeTypes, medFrequency} from '@/assets/js/mapType'
+  import {saveDraft} from '@/fetch/api.js'
   import Link from "iview/src/mixins/link";
 
   export default {
@@ -150,7 +151,12 @@
     },
     computed: {
       ...mapState({
-        'canGetRecipeHelp': state=>state.canGetRecipeHelp
+        'canGetRecipeHelp': state => state.canGetRecipeHelp,
+        'recordData': state => state.recordData,
+        'recipeList': state => state.recipeList,
+        'patientData': state => state.patientData,
+        'orderSeqno': state => state.orderSeqno,
+        'currRecipe': state=> state.currRecipe
       }),
       currentData: function () {
         return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
@@ -205,6 +211,7 @@
         'modify_recipe_detail',
         'clean_recipe',
         'change_print_pre',
+        'save_draft_data'
       ]),
       print_pre: function () {
         this.change_print_pre();
@@ -266,13 +273,37 @@
         let extraItem = this.extraFeeTypes.filter((typeOne) => {
           return typeOne.name === val;
         })
-        if(extraItem[0]){
+        if (extraItem[0]) {
           this.modify_recipe_detail({key: 'extra_price', val: extraItem[0].price})
         }
 
       },
       toAssist() {
-        this.$router.push({path: 'assist'})
+        this.saveDraftData();
+        this.$router.push({path: 'assist'});
+      },
+      saveDraftData() {
+        let draftData = {
+          recipeList: this.recipeList,
+          recordData: this.recordData,
+          currRecipe: this.currRecipe
+        }
+        this.save_draft_data(JSON.stringify(draftData));
+        saveDraft({
+          "patient_name": this.patientData.name,
+          "patient_mobile": this.patientData.mobile,
+          "patient_sex": this.patientData.sex,
+          "patient_marital_status": this.patientData.marital_status,
+          "patient_birthday": this.patientData.birthday,
+          "order_seqno": this.orderSeqno,
+          "draft": JSON.stringify(draftData),
+        }).then(data => {
+          if (data.code === 1000) {
+
+          } else {
+            this.$Message.info("保存失败");
+          }
+        })
       }
     },
 
