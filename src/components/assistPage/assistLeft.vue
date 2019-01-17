@@ -8,14 +8,14 @@
       <div class="diagnosisItem">
         <label class="labelText">西医诊断</label>
         <Select filterable class="flexOne" placeholder="" v-model="XYPatientId" remote :remote-method="findXYDiagnosis"
-                :loading="XYLoading" clearable @on-clear="clearXY" @click.native="automaticXY()">
+                :loading="XYLoading" clearable @on-clear="clearXY" @click.native="automaticXY()" @on-query-change="defaultXY">
           <Option v-for="item in XYList" :value="item.parent_id" :key="item.parent_id">{{item.xy_name}}</Option>
         </Select>
       </div>
       <div class="diagnosisItem">
         <label class="labelText">中医诊断</label>
         <Select filterable class="flexOne" placeholder="" v-model="ZYPatientId" remote :remote-method="findZYDiagnosis"
-                :loading="ZYLoading" clearable @on-clear="clearZY" @click.native="automaticZY()">
+                :loading="ZYLoading" clearable @on-clear="clearZY" @click.native="automaticZY()" @on-query-change="defaultZY">
           <Option v-for="item in ZYList" :value="item.parent_id" :key="item.parent_id">{{item.zy_name}}</Option>
         </Select>
       </div>
@@ -94,6 +94,11 @@
         'select_fjb_recipe',
         'set_fj_list'
       ]),
+      defaultXY(query){
+        if(query===''){
+          this.XYdiagnosis='';
+        }
+      },
       findXYDiagnosis(query) {
         if (this.ZYdiagnosis.replace(/\s*/g, '') === '') {
           this.ZYPatientId = ''
@@ -119,6 +124,11 @@
             }
           })
         }, 300)
+      },
+      defaultZY(query){
+        if(query===''){
+          this.ZYdiagnosis=''
+        }
       },
       findZYDiagnosis(query) {
         if (this.XYdiagnosis.replace(/\s*/g, '') === '') {
@@ -146,6 +156,7 @@
           })
         }, 300)
       },
+
       findZYdiscriminate(query) {
         clearTimeout(this.searchTime)
 
@@ -210,7 +221,6 @@
           zdNameC:this.ZYdiagnosis,
           zdNameW:this.XYdiagnosis
         }).then(data=>{
-          console.log(data)
           if(data.data.code===200){
             this.set_fj_list(data.data.data);
             this.pointStart();

@@ -140,7 +140,6 @@
         getJJInfo({
           fjCode:this.fjbRecipe.fjCode
         }).then(data=>{
-          console.log(data)
           if(data.data.code===200){
             this.symptomList=data.data.data;
           }else {
@@ -271,7 +270,8 @@
                   }
                 )
               }
-            })
+            });
+            this.set_fj_list([]);
             this.$router.go(-1);
           }else {
             this.$Message.info(data.msg)
