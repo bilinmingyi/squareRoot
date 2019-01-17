@@ -28,6 +28,7 @@
     flex: 26;
     margin-right: 1rem;
     min-height: calc(100vh - 6.3rem);
+    background: #ffffff;
   }
   .assistRight{
     flex: 73;

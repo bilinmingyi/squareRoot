@@ -15,42 +15,56 @@
         <span v-else>请在左侧输入患者主诉</span>
 
       </div>
-      <div class="recipe_desc" v-if="fjbRecipe.symptom!=undefined">
-        <div>
-          {{fjbRecipe.symptom!=undefined?fjbRecipe.symptom[0]:''}}
-        </div>
-        <div class="mt15">
-          <CheckboxGroup v-model="symptomValList">
-            <Checkbox v-for="item in symptomList" :label="item.id" :key="item.id">
-              <span class="checkbox_label">{{item.jjName}}</span>
-            </Checkbox>
-          </CheckboxGroup>
-        </div>
-      </div>
       <div class="recipe_list">
-        <table class="recipe_table">
+        <table class="recipe_table recipe_table_change">
           <thead>
           <tr>
             <th style="width: 10%;">序号</th>
-            <th>药名</th>
-            <th style="width: 10%;">药量</th>
-            <th>常用量</th>
-            <th style="width: 35%">注意事项</th>
+            <th style="width: 20%">处方</th>
+            <th style="width: 55%;">症状</th>
+            <th style="width: 15%">操作</th>
+
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(item,index) in currentFjList">
+          <tr v-for="(item,index) in fjList">
             <td style="width: 10%;">{{index+1}}</td>
-            <td>{{item.drugName.replace(/his.*/,'')}}</td>
-            <td style="width: 10%;">{{item.number}}{{item.unit}}</td>
-            <td>{{item.dosageRange}}{{item.unit}}</td>
-            <td  style="width: 35%">{{item.remark}}</td>
+            <td style="width: 20%">{{item.fjName}}{{item.sourceContent}}</td>
+            <td style="width: 55%;text-align: left">
+              <div>
+                {{item.symptom[0]}}
+              </div>
+              <div v-if="currenyIndex==index">
+                <CheckboxGroup v-model="symptomValList">
+                  <Checkbox v-for="item in symptomList" :label="item.id" :key="item.id" style="display: block;margin: 0.3rem 0">
+                    <span class="checkbox_label">{{item.jjName}}</span>
+                  </Checkbox>
+                </CheckboxGroup>
+              </div>
+
+            </td>
+            <td>
+              <a @click.stop="quoteRecipe(index,item)">引用</a>
+              <a @click.stop="addAndRemove(index,item)">{{currenyIndex==index?'收起':'加减运算'}}</a>
+            </td>
           </tr>
           </tbody>
         </table>
       </div>
-
-      <Button class="use_recipe_btn" type="primary" shape="circle" v-if="currentFjList.length!=0" @click.stop="importRecipe">导入该处方</Button>
+      <section class="alert-bg" v-if="quoteShow">
+        <div class="alert-block">
+          <div class="alert-title">
+            是否引用下面处方
+          </div>
+          <div class="alert-small-title">
+            {{fjbRecipe.fjName}}{{fjbRecipe.sourceContent}}
+          </div>
+          <div class="alert-btn-block">
+            <Button type="primary" shape="circle" style="width: 6rem;" class="mr16" @click.stop="importRecipe">确定</Button>
+            <Button type="primary" shape="circle" style="width: 6rem;" ghost @click="hideQuoteShow">取消</Button>
+          </div>
+        </div>
+      </section>
 
     </section>
   </div>
@@ -70,6 +84,9 @@
         symptomList:[],
         symptomValList:[],
         currentFjList:[],
+        quoteShow:false,
+        fjbRecipe:{},
+        currenyIndex:-1,
       }
     },
     components: {
@@ -80,34 +97,41 @@
     },
     computed:{
       ...mapState({
-        'fjbRecipe':state=>state.fjbRecipe,
         'orderSeqno':state=>state.orderSeqno,
-        'patientData':state=>state.patientData
+        'patientData':state=>state.patientData,
+        'fjList': state=> state.fjList
       }),
       currentData: function () {
         return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
       },
     },
     watch:{
-      fjbRecipe:{
-        handler(newVal,oldVal){
-          if(newVal.toString()!=='{}'){
-            this.PostJJInfo();
-            this.getFJDrug()
-          }
-        }
-      },
-      symptomValList:{
+      // fjbRecipe:{
+      //   handler(newVal,oldVal){
+      //     if(newVal.toString()!=='{}'){
+      //       // this.PostJJInfo();
+      //       this.getFJDrug()
+      //     }
+      //   }
+      // },
+      // symptomValList:{
+      //   deep:true,
+      //   handler(newVal,oldVal){
+      //     this.getFJDrug()
+      //   }
+      // }
+      fjList:{
         deep:true,
-        handler(newVal,oldVal){
-          this.getFJDrug()
+        handler(newVal,oldVal) {
+          this.currenyIndex=-1;
         }
       }
     },
     methods:{
       ...mapActions([
         'clean_recipe',
-        'add_new_medicine'
+        'add_new_medicine',
+        'set_fj_list'
       ]),
       PostJJInfo(){
         this.symptomList=[];
@@ -115,6 +139,7 @@
         getJJInfo({
           fjCode:this.fjbRecipe.fjCode
         }).then(data=>{
+          console.log(data)
           if(data.data.code===200){
             this.symptomList=data.data.data;
           }else {
@@ -124,7 +149,7 @@
           console.log(error)
         })
       },
-      getFJDrug(){
+      getFJDrug(index){
         let jjcode=this.symptomValList.join(',');
         let birthDay=new Date(this.patientData.birthday);
         let year=birthDay.getFullYear();
@@ -132,7 +157,7 @@
         let day=birthDay.getDate()>9?birthDay.getDate():"0"+birthDay.getDate();
         getFJDrugList({
           fjCode:this.fjbRecipe.fjCode,
-          jjCode:jjcode,
+          jjCode:index===this.currenyIndex?jjcode:'',
           isGravidity:1,
           organizationId:'通用机构',
           sex:this.patientData.sex,
@@ -168,6 +193,14 @@
             }
           })
         }
+      },
+      quoteRecipe(index,item){
+        this.fjbRecipe=item;
+        this.getFJDrug(index);
+        this.quoteShow=true;
+      },
+      hideQuoteShow(){
+        this.quoteShow=false;
       },
       findMedByName(){
         let nameList=[];
@@ -245,8 +278,22 @@
         })
       },
       historyBack(){
+        this.set_fj_list([]);
         this.$router.go(-1)
       },
+      addAndRemove(index,item){
+        if(this.currenyIndex==index){
+          this.currenyIndex=-1;
+          this.fjbRecipe={};
+        }else {
+          this.fjbRecipe=item;
+          this.PostJJInfo()
+          this.currenyIndex=index;
+        }
+
+
+      },
+
       pointEnd(){
         pointCount({
           "platform":"pc",
@@ -303,7 +350,7 @@
   }
 
   .recipe_list {
-    margin-right: 4rem;
+    margin-right: 2.5rem;
   }
 
   .use_recipe_btn {
@@ -332,5 +379,50 @@
     color: #FC3B3B;
     border-radius: 1.25rem;
     line-height: 1.75rem;
+  }
+  .alert-bg{
+    background:rgba(255,255,255,0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .alert-block{
+    width:30rem;
+    background:rgba(255,255,255,1);
+    box-shadow:0rem 0.25rem 0.75rem 0rem rgba(0,0,0,0.2);
+    border-radius:0.25rem;
+    text-align: center;
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    -moz-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    -o-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+  }
+  .alert-title{
+    color: #5096E0;
+    font-size: 1rem;
+    font-weight:600;
+    line-height:1.63rem;
+    padding-top: 2rem;
+  }
+  .alert-small-title{
+    color: #4C4C4C;
+    font-size:1.1rem;
+    font-weight:600;
+    line-height:1.75rem;
+    padding-top: 1.5rem;
+  }
+  .alert-btn-block{
+    margin: 1.5rem 0;
+  }
+  .recipe_table_change tbody td{
+    padding: 1rem 0;
+    vertical-align: top;
   }
 </style>

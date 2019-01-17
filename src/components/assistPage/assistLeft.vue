@@ -32,17 +32,17 @@
       </div>
     </section>
     <section>
-      <div :class="['recipe_item',{'recipe_item_active':fjbRecipe.fjCode===item.fjCode}]" v-for="item in fjList" @click.stop="select_fjb_recipe(item)">
-        <div class="recipe_item_title">
-          {{item.fjName}}{{item.sourceContent}}
-        </div>
-        <div class="recipe_item_content">
-          {{item.symptom[0]}}
-        </div>
-      </div>
-      <div v-if="fjList.length===0" style="text-align: center;margin: 1rem auto">
-        暂无处方信息
-      </div>
+      <!--<div :class="['recipe_item',{'recipe_item_active':fjbRecipe.fjCode===item.fjCode}]" v-for="item in fjList" @click.stop="select_fjb_recipe(item)">-->
+        <!--<div class="recipe_item_title">-->
+          <!--{{item.fjName}}{{item.sourceContent}}-->
+        <!--</div>-->
+        <!--<div class="recipe_item_content">-->
+          <!--{{item.symptom[0]}}-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<div v-if="fjList.length===0" style="text-align: center;margin: 1rem auto">-->
+        <!--暂无处方信息-->
+      <!--</div>-->
     </section>
   </div>
 </template>
@@ -91,7 +91,8 @@
     },
     methods: {
       ...mapActions([
-        'select_fjb_recipe'
+        'select_fjb_recipe',
+        'set_fj_list'
       ]),
       findXYDiagnosis(query) {
         if (this.ZYdiagnosis.replace(/\s*/g, '') === '') {
@@ -211,7 +212,7 @@
         }).then(data=>{
           console.log(data)
           if(data.data.code===200){
-            this.fjList=data.data.data;
+            this.set_fj_list(data.data.data);
             this.pointStart();
           }else {
             this.$Message.info(data.data.message)

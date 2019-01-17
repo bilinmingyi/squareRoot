@@ -30,7 +30,7 @@ const actions = {
             frequency: "",
             extra_num: 0,
             extra_feetype: "",
-            extra_price:0,
+            extra_price: 0,
             eachDose: 0,
             items: []
           }
@@ -110,7 +110,7 @@ const actions = {
           "sale_price": item.sale_price,
           "spec": item.spec,
           "unit_stock": item.unit_stock,
-          "unit_sale":item.unit_sale,
+          "unit_sale": item.unit_sale,
           "usage": !item.usage ? '' : item.usage,
           "stock": item.stock,
           "stock_sale_ratio": item.stock_sale_ratio,
@@ -159,7 +159,7 @@ const actions = {
 
         break;
       case 6:
-        result={
+        result = {
           "remark": !item.remark ? '' : item.remark,
           "item_id": item.id,
           "name": item.clinic_alias_name != '' && item.clinic_alias_name != null ? item.clinic_alias_name : item.name,
@@ -192,26 +192,29 @@ const actions = {
   clean_recipe: ({commit}) => {
     commit(mutationTypes.CLEAN_RECIPE)
   },
-  select_fjb_recipe:({commit},obj)=>{
-    commit(mutationTypes.SELECT_FJB_RECIPE,obj)
+  select_fjb_recipe: ({commit}, obj) => {
+    commit(mutationTypes.SELECT_FJB_RECIPE, obj)
   },
-  set_order_seqno:({commit},val)=>{
-    commit(mutationTypes.SET_ORDER_SEQNO,val)
+  set_order_seqno: ({commit}, val) => {
+    commit(mutationTypes.SET_ORDER_SEQNO, val)
   },
-  change_print_pre:({commit, state})=>{
+  change_print_pre: ({commit, state}) => {
     commit(mutationTypes.CHANGE_PRINT_PRE);
   },
-  init_recipe:({commit},list) =>{
-    commit(mutationTypes.INIT_RECIPE,list)
+  init_recipe: ({commit}, list) => {
+    commit(mutationTypes.INIT_RECIPE, list)
   },
-  init_recode:({commit},obj)=>{
-    commit(mutationTypes.INIT_RECODE,obj)
+  init_recode: ({commit}, obj) => {
+    commit(mutationTypes.INIT_RECODE, obj)
   },
-  save_draft_data:({commit},str)=>{
-    commit(mutationTypes.SAVE_DRAFT_DATA,str)
+  save_draft_data: ({commit}, str) => {
+    commit(mutationTypes.SAVE_DRAFT_DATA, str)
   },
-  set_recipe_help:({commit},val)=>{
-    commit(mutationTypes.SET_RECIPE_HELP,val)
+  set_recipe_help: ({commit}, val) => {
+    commit(mutationTypes.SET_RECIPE_HELP, val)
+  },
+  set_fj_list: ({commit}, arr) => {
+    commit(mutationTypes.SET_FJ_LIST,arr)
   }
   //right
 };

@@ -84,7 +84,10 @@ const mutations = {
       state.draftData = str;
     },
     [mutationTypes.SET_RECIPE_HELP](state, val) {
-      state.canGetRecipeHelp=val;
+      state.canGetRecipeHelp = val;
+    },
+    [mutationTypes.SET_FJ_LIST](state, arr) {
+      state.fjList=arr;
     }
     //right
   }
