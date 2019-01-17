@@ -40,6 +40,7 @@
                     <span class="checkbox_label">{{item.jjName}}</span>
                   </Checkbox>
                 </CheckboxGroup>
+                <div class="pt10 pb10 font-bold" v-if="symptomList.length===0">暂无病症增加</div>
               </div>
 
             </td>
