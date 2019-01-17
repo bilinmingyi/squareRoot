@@ -55,15 +55,16 @@
     computed: {
       ...mapState({
         recipeList: state => state.recipeList,
-        currRecipe: state => state.currRecipe
+        currRecipe: state => state.currRecipe,
       })
     },
     created() {
+      let temCurrRecipe=this.currRecipe;
       if(this.recipeList.length===0){
         this.addNewRecipt(1);
         this.addNewRecipt(2);
         this.addNewRecipt(4);
-        this.change_curr_tab(-1);
+        this.change_curr_tab(temCurrRecipe);
       }
     },
     methods: {
