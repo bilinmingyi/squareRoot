@@ -9,21 +9,21 @@
         <label class="labelText">西医诊断</label>
         <Select filterable class="flexOne" placeholder="" v-model="XYPatientId" remote :remote-method="findXYDiagnosis"
                 :loading="XYLoading" clearable @on-clear="clearXY" @click.native="automaticXY()" @on-query-change="defaultXY">
-          <Option v-for="item in XYList" :value="item.parent_id" :key="item.parent_id">{{item.xy_name}}</Option>
+          <Option v-for="(item,index) in XYList" :value="item.parent_id" :key="item.parent_id+''+index">{{item.xy_name}}</Option>
         </Select>
       </div>
       <div class="diagnosisItem">
         <label class="labelText">中医诊断</label>
         <Select filterable class="flexOne" placeholder="" v-model="ZYPatientId" remote :remote-method="findZYDiagnosis"
                 :loading="ZYLoading" clearable @on-clear="clearZY" @click.native="automaticZY()" @on-query-change="defaultZY">
-          <Option v-for="item in ZYList" :value="item.parent_id" :key="item.parent_id">{{item.zy_name}}</Option>
+          <Option v-for="(item,index) in ZYList" :value="item.parent_id" :key="item.parent_id+''+index">{{item.zy_name}}</Option>
         </Select>
       </div>
       <div class="diagnosisItem">
         <label class="labelText">中医辨证</label>
         <Select filterable class="flexOne" placeholder="" v-model="ZYdiscriminate" remote
                 :remote-method="findZYdiscriminate" :loading="ZYDLoading" clearable  @on-clear="clearZYD"  @click.native="automaticZYD()">
-          <Option v-for="item in ZYDList" :value="item.bz_name" :key="item.bz_name">{{item.bz_name}}</Option>
+          <Option v-for="(item,index) in ZYDList" :value="item.bz_name" :key="item.bz_name+''+index">{{item.bz_name}}</Option>
 
         </Select>
       </div>
