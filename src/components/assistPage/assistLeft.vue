@@ -44,6 +44,7 @@
         <!--暂无处方信息-->
       <!--</div>-->
     </section>
+    <f-loader v-show="showLoader"></f-loader>
   </div>
 </template>
 
@@ -53,6 +54,7 @@
   import {searchDiagnosis,searchFJB,pointCount} from '@/fetch/api.js'
   import {mapActions, mapState} from 'vuex'
   import {clinicName, clinicId} from '@/assets/js/mapType.js'
+  import fLoader from "@/components/fLoader";
 
   export default {
     name: "assistLeft",
@@ -60,7 +62,8 @@
       patientDetail,
       Option,
       Select,
-      Button
+      Button,
+      fLoader
     },
     data() {
       return {
@@ -79,7 +82,8 @@
         ZYDLoading:false,
 
         searchTime: '',
-        fjList:[]
+        fjList:[],
+        showLoader:false
       }
     },
     computed:{
@@ -210,6 +214,7 @@
         }
       },
       searchFj(){
+        this.showLoader=true;
         if(this.XYdiagnosis.replace(/\s*/g, '') === '' && this.ZYdiagnosis.replace(/\s*/g, '') === '' && this.ZYdiscriminate.replace(/\s*/g, '') === ''){
           this.$Message.info("请先输入诊断情况");
           return
@@ -221,6 +226,7 @@
           zdNameC:this.ZYdiagnosis,
           zdNameW:this.XYdiagnosis
         }).then(data=>{
+          this.showLoader=false;
           if(data.data.code===200){
             this.set_fj_list(data.data.data);
             this.pointStart();

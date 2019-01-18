@@ -56,6 +56,7 @@
           </tbody>
         </table>
       </div>
+      <f-loader v-show="showLoader"></f-loader>
       <section class="alert-bg" v-if="quoteShow">
         <div class="alert-block">
           <div class="alert-title">
@@ -82,6 +83,7 @@
   import {mapActions, mapState} from 'vuex'
   import {getJJInfo, getFJDrugList, getHerbalList, pointCount, getFJByName, searchFJB} from '@/fetch/api.js'
   import {clinicName, clinicId} from '@/assets/js/mapType.js'
+  import fLoader from "@/components/fLoader";
 
   export default {
     name: "assistRight",
@@ -94,7 +96,8 @@
         fjbRecipe: {},
         currenyIndex: -1,
         searchName: '',
-        fjNameList:[]
+        fjNameList:[],
+        showLoader:false
       }
     },
     components: {
@@ -103,7 +106,8 @@
       CheckboxGroup,
       Checkbox,
       Option,
-      Select
+      Select,
+      fLoader
     },
     computed: {
       ...mapState({
@@ -215,6 +219,7 @@
       },
       findMedByName() {
         let nameList = [];
+        this.showLoader=true;
         this.currentFjList.forEach(item => {
           nameList.push(item.drugName.replace(/his.*/, ''))
         });
@@ -283,6 +288,7 @@
               }
             });
             this.set_fj_list([]);
+            this.showLoader=false;
             this.$router.go(-1);
           } else {
             this.$Message.info(data.msg)
