@@ -92,7 +92,7 @@ const searchFJB = (params) => axios({
   },
   data: params
 });
-  // fetch('http://47.112.12.132/medicalstock/api/services/app/fjData/SearchFJInfo', params);
+
 
 const getJJInfo = (params) => axios({
   method: 'post',
@@ -119,6 +119,18 @@ const getFJDrugList = (params) => axios({
     return ret.slice(0, -1)
   }],
 });
+// const getFJDrugListByName=(params)=>axios({
+//   method:'post',
+//   url:'http://47.112.12.132/medicalstock/api/services/app/fjData/SearchFJInfo',
+//   headers: {
+//     'Authorization':'Bearer Internal'
+//   },
+//   data: params
+// })
+
+
+
+const getFJByName = (params) => fetch('/treatmng/dytreatorder/fjbDisease', params);
 
 const getHerbalList = (params) => fetch('/stockmng/medicine/herbalList', params);
 
@@ -215,6 +227,7 @@ export {
   waitingPage,
   canRecipeHelp,
   pointCount,
+  getFJByName,
 
   //right
   searchRecentMed,
