@@ -39,7 +39,7 @@
       this.getRecipeHelp();
     },
     methods: {
-      ...mapActions(['set_patient_info', 'set_order_seqno', 'init_recipe', 'init_recode', 'set_state_prop','set_recipe_help']),
+      ...mapActions(['set_patient_info', 'set_order_seqno', 'init_recipe', 'init_recode', 'set_state_prop','set_recipe_help','change_curr_tab']),
       init() {
         let params = {order_seqno: this.getOrderSeqno('orderSeqno')};
         this.showLoader = true;
@@ -79,10 +79,11 @@
             if (data.data == '') return;
             let result = JSON.parse(data.data);
             try {
-              this.checkOrder(result.recipeList)
+              this.checkOrder(result.recipeList);
+              this.change_curr_tab(result.currRecipe!==undefined?result.currRecipe:-1);
               this.init_recode(JSON.parse(JSON.stringify(result.recordData)));
             } catch (e) {
-
+              console.log(e)
             }
 
           } else {

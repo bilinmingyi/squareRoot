@@ -55,6 +55,7 @@ const state = {
   printPre:false,
   draftData:'',
   canGetRecipeHelp:0,
+  fjList:[],
 
   // right
   tplChange: false,

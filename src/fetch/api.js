@@ -84,21 +84,31 @@ const saveMedTpl = (params, type) => {
 }
 const searchDiagnosis = (params) => fetch('/treatmng/dytreatorder/fjbDisease', params);
 
-const searchFJB = (params) => fetch('http://123.207.90.226:8088/api/services/app/fjData/SearchFJInfo', params);
+const searchFJB = (params) => axios({
+  method: 'post',
+  url: 'http://47.112.12.132/medicalstock/api/services/app/fjData/SearchFJInfo',
+  headers: {
+    'Authorization':'Bearer Internal'
+  },
+  data: params
+});
+
 
 const getJJInfo = (params) => axios({
   method: 'post',
-  url: 'http://123.207.90.226:8088/api/services/app/fjData/PostJJInfo',
+  url: 'http://47.112.12.132/medicalstock/api/services/app/fjData/PostJJInfo',
   headers: {
-    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    'Authorization':'Bearer Internal'
   },
   params: params
 });
 const getFJDrugList = (params) => axios({
   method: 'post',
-  url: 'http://123.207.90.226:8088/api/services/app/fjData/GetFJDrugList',
+  url: 'http://47.112.12.132/medicalstock/api/services/app/fjData/GetFJDrugList',
   headers: {
-    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    'Authorization':'Bearer Internal'
   },
   data: params,
   transformRequest: [function (data) {
@@ -109,6 +119,18 @@ const getFJDrugList = (params) => axios({
     return ret.slice(0, -1)
   }],
 });
+// const getFJDrugListByName=(params)=>axios({
+//   method:'post',
+//   url:'http://47.112.12.132/medicalstock/api/services/app/fjData/SearchFJInfo',
+//   headers: {
+//     'Authorization':'Bearer Internal'
+//   },
+//   data: params
+// })
+
+
+
+const getFJByName = (params) => fetch('/treatmng/dytreatorder/fjbDisease', params);
 
 const getHerbalList = (params) => fetch('/stockmng/medicine/herbalList', params);
 
@@ -205,6 +227,7 @@ export {
   waitingPage,
   canRecipeHelp,
   pointCount,
+  getFJByName,
 
   //right
   searchRecentMed,

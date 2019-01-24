@@ -8,22 +8,22 @@
       <div class="diagnosisItem">
         <label class="labelText">西医诊断</label>
         <Select filterable class="flexOne" placeholder="" v-model="XYPatientId" remote :remote-method="findXYDiagnosis"
-                :loading="XYLoading" clearable @on-clear="clearXY" @click.native="automaticXY()">
-          <Option v-for="item in XYList" :value="item.parent_id" :key="item.parent_id">{{item.xy_name}}</Option>
+                :loading="XYLoading" clearable @on-clear="clearXY" @click.native="automaticXY()" @on-query-change="defaultXY">
+          <Option v-for="(item,index) in XYList" :value="item.parent_id" :key="item.parent_id+''+index">{{item.xy_name}}</Option>
         </Select>
       </div>
       <div class="diagnosisItem">
         <label class="labelText">中医诊断</label>
         <Select filterable class="flexOne" placeholder="" v-model="ZYPatientId" remote :remote-method="findZYDiagnosis"
-                :loading="ZYLoading" clearable @on-clear="clearZY" @click.native="automaticZY()">
-          <Option v-for="item in ZYList" :value="item.parent_id" :key="item.parent_id">{{item.zy_name}}</Option>
+                :loading="ZYLoading" clearable @on-clear="clearZY" @click.native="automaticZY()" @on-query-change="defaultZY">
+          <Option v-for="(item,index) in ZYList" :value="item.parent_id" :key="item.parent_id+''+index">{{item.zy_name}}</Option>
         </Select>
       </div>
       <div class="diagnosisItem">
         <label class="labelText">中医辨证</label>
         <Select filterable class="flexOne" placeholder="" v-model="ZYdiscriminate" remote
                 :remote-method="findZYdiscriminate" :loading="ZYDLoading" clearable  @on-clear="clearZYD"  @click.native="automaticZYD()">
-          <Option v-for="item in ZYDList" :value="item.bz_name" :key="item.bz_name">{{item.bz_name}}</Option>
+          <Option v-for="(item,index) in ZYDList" :value="item.bz_name" :key="item.bz_name+''+index">{{item.bz_name}}</Option>
 
         </Select>
       </div>
@@ -32,18 +32,19 @@
       </div>
     </section>
     <section>
-      <div :class="['recipe_item',{'recipe_item_active':fjbRecipe.fjCode===item.fjCode}]" v-for="item in fjList" @click.stop="select_fjb_recipe(item)">
-        <div class="recipe_item_title">
-          {{item.fjName}}{{item.sourceContent}}
-        </div>
-        <div class="recipe_item_content">
-          {{item.symptom[0]}}
-        </div>
-      </div>
-      <div v-if="fjList.length===0" style="text-align: center;margin: 1rem auto">
-        暂无处方信息
-      </div>
+      <!--<div :class="['recipe_item',{'recipe_item_active':fjbRecipe.fjCode===item.fjCode}]" v-for="item in fjList" @click.stop="select_fjb_recipe(item)">-->
+        <!--<div class="recipe_item_title">-->
+          <!--{{item.fjName}}{{item.sourceContent}}-->
+        <!--</div>-->
+        <!--<div class="recipe_item_content">-->
+          <!--{{item.symptom[0]}}-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<div v-if="fjList.length===0" style="text-align: center;margin: 1rem auto">-->
+        <!--暂无处方信息-->
+      <!--</div>-->
     </section>
+    <f-loader v-show="showLoader"></f-loader>
   </div>
 </template>
 
@@ -53,6 +54,7 @@
   import {searchDiagnosis,searchFJB,pointCount} from '@/fetch/api.js'
   import {mapActions, mapState} from 'vuex'
   import {clinicName, clinicId} from '@/assets/js/mapType.js'
+  import fLoader from "@/components/fLoader";
 
   export default {
     name: "assistLeft",
@@ -60,7 +62,8 @@
       patientDetail,
       Option,
       Select,
-      Button
+      Button,
+      fLoader
     },
     data() {
       return {
@@ -79,7 +82,8 @@
         ZYDLoading:false,
 
         searchTime: '',
-        fjList:[]
+        fjList:[],
+        showLoader:false
       }
     },
     computed:{
@@ -91,8 +95,14 @@
     },
     methods: {
       ...mapActions([
-        'select_fjb_recipe'
+        'select_fjb_recipe',
+        'set_fj_list'
       ]),
+      defaultXY(query){
+        if(query===''){
+          this.XYdiagnosis='';
+        }
+      },
       findXYDiagnosis(query) {
         if (this.ZYdiagnosis.replace(/\s*/g, '') === '') {
           this.ZYPatientId = ''
@@ -118,6 +128,11 @@
             }
           })
         }, 300)
+      },
+      defaultZY(query){
+        if(query===''){
+          this.ZYdiagnosis=''
+        }
       },
       findZYDiagnosis(query) {
         if (this.XYdiagnosis.replace(/\s*/g, '') === '') {
@@ -145,6 +160,7 @@
           })
         }, 300)
       },
+
       findZYdiscriminate(query) {
         clearTimeout(this.searchTime)
 
@@ -198,6 +214,7 @@
         }
       },
       searchFj(){
+        this.showLoader=true;
         if(this.XYdiagnosis.replace(/\s*/g, '') === '' && this.ZYdiagnosis.replace(/\s*/g, '') === '' && this.ZYdiscriminate.replace(/\s*/g, '') === ''){
           this.$Message.info("请先输入诊断情况");
           return
@@ -209,11 +226,12 @@
           zdNameC:this.ZYdiagnosis,
           zdNameW:this.XYdiagnosis
         }).then(data=>{
-          if(data.success){
-            this.fjList=data.result;
+          this.showLoader=false;
+          if(data.data.code===200){
+            this.set_fj_list(data.data.data);
             this.pointStart();
           }else {
-            this.$Message.info(data.error)
+            this.$Message.info(data.data.message)
           }
         })
       },

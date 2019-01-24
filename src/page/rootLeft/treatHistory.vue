@@ -78,7 +78,6 @@ export default {
           ? this.recipeList[this.currRecipe].type
           : this.currRecipe;
       },
-      immediate: true
     }
   },
   methods: {

@@ -25,7 +25,7 @@
     data() {
       return {
         cancelOrderModal: false,
-        previewOrder:false
+        previewOrder: false
       }
     },
     computed: {
@@ -33,7 +33,8 @@
         'recordData': state => state.recordData,
         'recipeList': state => state.recipeList,
         'patientData': state => state.patientData,
-        'orderSeqno': state => state.orderSeqno
+        'orderSeqno': state => state.orderSeqno,
+        'currRecipe': state=> state.currRecipe
       })
     },
     methods: {
@@ -45,6 +46,7 @@
         let draftData = {
           recipeList: this.recipeList,
           recordData: this.recordData,
+          currRecipe: this.currRecipe
         }
         this.save_draft_data(JSON.stringify(draftData));
         saveDraft({
@@ -56,12 +58,11 @@
           "order_seqno": this.orderSeqno,
           "draft": JSON.stringify(draftData),
         }).then(data => {
-          console.log(data)
           if (data.code === 1000) {
-            if(canReturn===1){
+            if (canReturn === 1) {
               try {
-                window.location.href=waitingPage
-              }catch (e) {
+                window.location.href = waitingPage
+              } catch (e) {
                 this.$router.go(-1)
               }
 
@@ -129,11 +130,11 @@
           this.$Message.info(e.message)
           return
         }
-        this.previewOrder=true;
+        this.previewOrder = true;
         this.saveDraftData();
       },
-      hidePreview(){
-        this.previewOrder=false
+      hidePreview() {
+        this.previewOrder = false
       }
     }
   }
