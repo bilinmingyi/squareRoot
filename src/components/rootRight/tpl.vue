@@ -131,7 +131,10 @@
             <div
               style="text-align:center;padding-top:2rem;font-weight:900;font-size:1rem;color: #5f95da;"
             >确定使用[{{tplData.tplName}}]模板？</div>
-            <div style="margin:1rem 0 0 2rem;font-weight:900;">使用模板将覆盖已编辑之信息，<span style="color:red;">没有的药品</span>不会导入至处方</div>
+            <div style="margin:1rem 0 0 2rem;font-weight:900;">
+              使用模板将覆盖已编辑之信息，
+              <span style="color:red;">没有的药品</span>不会导入至处方
+            </div>
             <div class="use-list mt10">
               <div
                 v-if="recipeType!=0"
@@ -1011,46 +1014,72 @@ export default {
       this.showAddTpl = false;
     },
     tplShow: function(item) {
-      var self=this;
-      var ids = [];
-      var params = {};
-      item.items.forEach(function(item) {
-        ids.push(Number(item.item_id));
-      });
-      var params = { ids: ids, status: 1 };
-      searchMed(params, this.recipeType).then(function(res) {
-        if (res.code == 1000) {
-          res.data.forEach(function(i) {
-            item.items.forEach(function(e) {
-              if (e.item_id == i.id) {
-                e.status = 1;
-              }
+      if (this.recipeType != 0) {
+        var self = this;
+        var ids = [];
+        var params = {};
+        item.items.forEach(function(item) {
+          ids.push(Number(item.item_id));
+        });
+        var params = { ids: ids, status: 1 };
+        searchMed(params, this.recipeType).then(function(res) {
+          if (res.code == 1000) {
+            res.data.forEach(function(i) {
+              item.items.forEach(function(e) {
+                if (e.item_id == i.id) {
+                  e.status = 1;
+                }
+              });
             });
-          });
-          self.tplData = {
-            tplName: item.name,
-            scope: item.scope,
-            items: item.items,
-            dosage: item.dosage,
-            doctor_remark: item.doctor_remark,
-            category: item.category,
-            clinic_id: item.clinic_id,
-            creator_name: item.creator_name,
-            creator_id: item.creator_id,
-            id: item.id,
-            is_cloud: item.is_cloud,
+            self.tplData = {
+              tplName: item.name,
+              scope: item.scope,
+              items: item.items,
+              dosage: item.dosage,
+              doctor_remark: item.doctor_remark,
+              category: item.category,
+              clinic_id: item.clinic_id,
+              creator_name: item.creator_name,
+              creator_id: item.creator_id,
+              id: item.id,
+              is_cloud: item.is_cloud,
 
-            chief_complaint: item.chief_complaint, //主诉
-            present_illness: item.present_illness, //病史
-            allergic_history: item.allergic_history, //过敏史
-            past_history: item.past_history, //既往史
-            examination: item.examination, //检查
-            diagnosis: item.diagnosis, //中医诊断
-            diagnosis_xy: item.diagnosis_xy //西医诊断
-          };
-          self.showTpl = true;
-        }
-      });
+              chief_complaint: item.chief_complaint, //主诉
+              present_illness: item.present_illness, //病史
+              allergic_history: item.allergic_history, //过敏史
+              past_history: item.past_history, //既往史
+              examination: item.examination, //检查
+              diagnosis: item.diagnosis, //中医诊断
+              diagnosis_xy: item.diagnosis_xy //西医诊断
+            };
+            self.showTpl = true;
+          }
+        });
+      } else {
+        var self = this;
+        self.tplData = {
+          tplName: item.name,
+          scope: item.scope,
+          items: item.items,
+          dosage: item.dosage,
+          doctor_remark: item.doctor_remark,
+          category: item.category,
+          clinic_id: item.clinic_id,
+          creator_name: item.creator_name,
+          creator_id: item.creator_id,
+          id: item.id,
+          is_cloud: item.is_cloud,
+
+          chief_complaint: item.chief_complaint, //主诉
+          present_illness: item.present_illness, //病史
+          allergic_history: item.allergic_history, //过敏史
+          past_history: item.past_history, //既往史
+          examination: item.examination, //检查
+          diagnosis: item.diagnosis, //中医诊断
+          diagnosis_xy: item.diagnosis_xy //西医诊断
+        };
+        self.showTpl = true;
+      }
     },
     tplHide: function() {
       this.showTpl = false;
@@ -1080,12 +1109,12 @@ export default {
             dose_once: item.dose_once,
             frequency: item.frequency,
             days: item.days,
-            status: item.status||0,
+            status: item.status || 0,
             unit_dose: item.unit_dose || "克",
             sale_dose_ratio: item.sale_dose_ratio || 0,
             type: item.type || 1
           };
-          if(newItem.status==1){
+          if (newItem.status == 1) {
             self.add_new_medicine({ item: newItem, type: self.recipeType });
           }
         });
