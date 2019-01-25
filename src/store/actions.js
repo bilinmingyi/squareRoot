@@ -101,6 +101,7 @@ const actions = {
     switch (type) {
       case 1:
         result = {
+          "cloud_item_id": item.id,
           "item_id": item.id,
           "name": item.clinic_alias_name != '' && item.clinic_alias_name != null ? item.clinic_alias_name : item.name,
           "num": !item.num ? 0 : item.num,
@@ -115,7 +116,10 @@ const actions = {
           "stock": item.stock,
           "stock_sale_ratio": item.stock_sale_ratio,
           "is_match": item.status == 1 ? 1 : 0,
-          "remark": !item.remark ? '' : item.remark
+          "remark": !item.remark ? '' : item.remark,
+
+          "explain": [],
+          "types": 1
         };
         break;
       case 2:
@@ -137,6 +141,8 @@ const actions = {
           "dose_once": !item.dose_once ? '' : item.dose_once,
           "stock": item.stock,
           "is_match": item.status == 1 ? 1 : 0,
+          "cloud_item_id": item.id,
+          "types": 2
         };
         break;
       case 3:
@@ -152,7 +158,8 @@ const actions = {
           "price": item.price,
           "type": item.type,
           "usage": !item.usage ? '' : item.usage,
-          "is_match": item.status == 1 ? 1 : 0,
+          "types": 4,
+          "is_match": item.status == 1 ? 1 : 0
         };
         break;
       case 5:
@@ -169,7 +176,8 @@ const actions = {
           "stock_sale_ratio": item.stock_sale_ratio,
           "unit": item.unit_sale,
           "spec": item.spec,
-          "is_match": item.status == 1 ? 1 : 0
+          "is_match": item.status == 1 ? 1 : 0,
+          "types": 6
         };
         break;
     }
@@ -214,7 +222,7 @@ const actions = {
     commit(mutationTypes.SET_RECIPE_HELP, val)
   },
   set_fj_list: ({commit}, arr) => {
-    commit(mutationTypes.SET_FJ_LIST,arr)
+    commit(mutationTypes.SET_FJ_LIST, arr)
   }
   //right
 };

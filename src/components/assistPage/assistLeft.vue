@@ -214,12 +214,12 @@
         }
       },
       searchFj(){
-        this.showLoader=true;
+
         if(this.XYdiagnosis.replace(/\s*/g, '') === '' && this.ZYdiagnosis.replace(/\s*/g, '') === '' && this.ZYdiscriminate.replace(/\s*/g, '') === ''){
           this.$Message.info("请先输入诊断情况");
           return
         }
-
+        this.showLoader=true;
         searchFJB({
           bzName:this.ZYdiscriminate,
           symptoms:"",

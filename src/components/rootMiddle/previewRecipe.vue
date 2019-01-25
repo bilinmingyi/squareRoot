@@ -41,8 +41,9 @@
                 </div>
                 <div style="clear: both"></div>
                 <div class="preview_label">
-                  总共{{item.data.dosage}}剂（每剂{{item.data.items.length}}味）<span v-if="item.data.eachDose!=''">每次用量{{item.data.eachDose}}ml</span><span
-                  v-if="item.data.usage!=''">，{{item.data.usage}}</span>
+                  总共{{item.data.dosage}}剂（每剂{{item.data.items.length}}味）
+                  <span v-if="item.data.eachDose!=''">每次用量{{item.data.eachDose}}ml</span>
+                  <span v-if="item.data.usage!=''">，{{item.data.usage}}</span>
                 </div>
               </div>
               <div v-if="item.type===2">
