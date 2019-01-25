@@ -39,7 +39,7 @@
       this.getRecipeHelp();
     },
     methods: {
-      ...mapActions(['set_patient_info', 'set_order_seqno', 'init_recipe', 'init_recode', 'set_state_prop','set_recipe_help','change_curr_tab']),
+      ...mapActions(['set_patient_info', 'set_order_seqno', 'init_recipe', 'init_recode', 'set_state_prop', 'set_recipe_help', 'change_curr_tab']),
       init() {
         let params = {order_seqno: this.getOrderSeqno('orderSeqno')};
         this.showLoader = true;
@@ -62,7 +62,7 @@
             console.log(res.msg);
           }
 
-          this.showLoader = false;
+          // this.showLoader = false;
         });
       },
       getOrderSeqno(name) {
@@ -80,7 +80,7 @@
             let result = JSON.parse(data.data);
             try {
               this.checkOrder(result.recipeList);
-              this.change_curr_tab(result.currRecipe!==undefined?result.currRecipe:-1);
+              this.change_curr_tab(result.currRecipe !== undefined ? result.currRecipe : -1);
               this.init_recode(JSON.parse(JSON.stringify(result.recordData)));
             } catch (e) {
               console.log(e)
@@ -107,7 +107,6 @@
                 category: recipe.data.category,
                 status: 1
               }, 1).then(data => {
-
                 let recipeItems = recipe.data.items, responeItems = data.data;
                 if (data.code === 1000) {
                   for (var i = 0; i < recipeItems.length; i++) {
@@ -122,6 +121,7 @@
                     }
                   }
                   this.init_recipe(JSON.parse(JSON.stringify(recipeList)));
+                  this.showLoader = false;
                 } else {
                   this.$Message.info(res.msg)
                 }
@@ -147,6 +147,7 @@
                     }
                   }
                   this.init_recipe(JSON.parse(JSON.stringify(recipeList)));
+                  this.showLoader = false;
                 } else {
                   this.$Message.info(res.msg)
                 }
@@ -175,19 +176,21 @@
                     }
                   }
                   this.init_recipe(JSON.parse(JSON.stringify(recipeList)));
+                  this.showLoader = false;
                 } else {
                   this.$Message.info(res.msg)
                 }
               });
               break;
           }
-        })
+        });
+
 
       },
-      getRecipeHelp(){
+      getRecipeHelp() {
         canRecipeHelp({}).then(
-          data=>{
-           this.set_recipe_help(data.data)
+          data => {
+            this.set_recipe_help(data.data)
           }
         )
       }
@@ -198,35 +201,40 @@
 <style>
   @import "assets/css/reset.css";
 
-#app {
-  color: #2c3e50;
-  margin-top: 3.75rem;
-  padding: 1.25rem;
-  background: #F5F5F5;
-}
-.page_content {
-  display: flex;
-  min-height: calc(100vh - 8.6rem);
-}
-.hidden {
-  visibility: hidden;
-}
-.left {
-  flex: 20;
-  margin-right: 1rem;
-  background: #f2f2f2;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-.middle {
-  flex: 60;
-  margin-right: 1rem;
-  background: #ffffff;
-  min-width: 46.25rem;
-}
-.right {
-  flex: 20;
-  background: white;
-}
+  #app {
+    color: #2c3e50;
+    margin-top: 3.75rem;
+    padding: 1.25rem;
+    background: #F5F5F5;
+  }
+
+  .page_content {
+    display: flex;
+    min-height: calc(100vh - 8.6rem);
+  }
+
+  .hidden {
+    visibility: hidden;
+  }
+
+  .left {
+    flex: 20;
+    margin-right: 1rem;
+    background: #f2f2f2;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .middle {
+    flex: 60;
+    margin-right: 1rem;
+    background: #ffffff;
+    min-width: 46.25rem;
+  }
+
+  .right {
+    flex: 20;
+    background: white;
+  }
 </style>
