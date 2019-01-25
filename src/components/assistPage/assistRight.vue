@@ -232,7 +232,7 @@
             this.currentFjList.forEach(item => {
               var existence = {};
               for (var i = 0; i < data.data.length; i++) {
-                if (item.drugName.replace(/his.*/, '') == data.data[i].name) {
+                if (item.drugName.replace(/his.*/, '') == data.data[i].name || item.drugName.replace(/his.*/, '') == data.data[i].clinic_alias_name) {
                   existence = data.data[i];
                   break
                 }

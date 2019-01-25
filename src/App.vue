@@ -118,6 +118,8 @@
                     }
                     if (j == responeItems.length) {
                       recipeItems[i].is_match = 0;
+                    }else {
+                      recipeItems[i].is_match = 1;
                     }
                   }
                   this.init_recipe(JSON.parse(JSON.stringify(recipeList)));
@@ -144,6 +146,8 @@
                     }
                     if (j == responeItems.length) {
                       recipeItems[i].is_match = 0;
+                    }else {
+                      recipeItems[i].is_match = 1;
                     }
                   }
                   this.init_recipe(JSON.parse(JSON.stringify(recipeList)));
@@ -173,6 +177,8 @@
                     }
                     if (j == responeItems.length) {
                       recipeItems[i].is_match = 0;
+                    }else {
+                      recipeItems[i].is_match = 1;
                     }
                   }
                   this.init_recipe(JSON.parse(JSON.stringify(recipeList)));
