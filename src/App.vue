@@ -76,7 +76,10 @@
           "order_seqno": this.getOrderSeqno('orderSeqno')
         }).then(data => {
           if (data.code === 1000) {
-            if (data.data == '') return;
+            if (data.data == '') {
+              this.showLoader=false;
+              return
+              };
             let result = JSON.parse(data.data);
             try {
               this.checkOrder(result.recipeList);
