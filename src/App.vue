@@ -83,6 +83,7 @@
             let result = JSON.parse(data.data);
             try {
               this.checkOrder(result.recipeList);
+              this.showLoader=false;
               this.change_curr_tab(result.currRecipe !== undefined ? result.currRecipe : -1);
               this.init_recode(JSON.parse(JSON.stringify(result.recordData)));
             } catch (e) {
@@ -126,7 +127,6 @@
                     }
                   }
                   this.init_recipe(JSON.parse(JSON.stringify(recipeList)));
-                  this.showLoader = false;
                 } else {
                   this.$Message.info(res.msg)
                 }
@@ -154,7 +154,6 @@
                     }
                   }
                   this.init_recipe(JSON.parse(JSON.stringify(recipeList)));
-                  this.showLoader = false;
                 } else {
                   this.$Message.info(res.msg)
                 }
@@ -185,7 +184,6 @@
                     }
                   }
                   this.init_recipe(JSON.parse(JSON.stringify(recipeList)));
-                  this.showLoader = false;
                 } else {
                   this.$Message.info(res.msg)
                 }
