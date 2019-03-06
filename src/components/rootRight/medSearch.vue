@@ -2,7 +2,7 @@
   <div class="mt5 ml6 mb5">
     <div class="mb6" style="padding-right:3%;width:100%;display:flex;height:2rem;font-size:1rem;">
       <div class="col70 mr10">
-        <Input @input="searchMed()" placeholder="药品名称/拼音简码" v-model="searchName"/>
+        <Input @on-keydown="listenerKey($event)" @on-blur="curSelect=-1" @input="searchMed()" placeholder="药品名称/拼音简码" v-model="searchName"/>
       </div>
       <div class="col30">
         <Button long @click="searchMed()">搜索</Button>
@@ -10,7 +10,7 @@
     </div>
     <div class="search-result" v-show="showResult">
       <div
-        :class="[{'no-stock':item.stock<1},{'herbal-result-li':recipeType===1},{'search-result-li':recipeType!=1}]"
+        :class="[{'no-stock':item.stock<1},{'herbal-result-li':recipeType===1},{'search-result-li':recipeType!=1}, {'select-box': curSelect === index}]"
         v-for="(item,index) in showList"
         :key="index"
         @click.stop="selectItem(item)"
@@ -74,7 +74,8 @@ export default {
       currPage: 1,
       page_num: 0,
       showList: [],
-      page_size: 0
+      page_size: 0,
+      curSelect: -1,  // 当前选中的药品
     };
   },
   watch: {
@@ -198,6 +199,7 @@ export default {
       );
     },
     searchMed: function() {
+      this.curSelect = -1;
       var self = this;
       if (self.searchName == "") {
         self.searchList = [];
@@ -259,6 +261,60 @@ export default {
           }
         );
       },300);
+    },
+    listenerKey: function(event) {
+      let keyCode = event.keyCode;
+      let count = this.showList.length;
+      let cur = this.curSelect;
+      let start = event.target.selectionStart;
+      let colCount = this.recipeType == 1 ? 3 : 1;
+      switch (keyCode) {
+        case 13:
+          this.selectItem(this.showList[cur])
+          break;
+        case 37:
+          // left
+          if (cur !== -1) {
+            this.curSelect--;
+            setTimeout(() => {
+              event.target.selectionStart = event.target.selectionEnd = start;
+            })
+          }
+          break;
+        case 38:
+          // up
+          if (cur > colCount - 1) {
+            this.curSelect -= colCount;
+          } else {
+            this.curSelect = -1;
+            setTimeout(() => {
+              event.target.selectionStart = event.target.selectionEnd = start;
+            })
+          }
+          break;
+        case 39:
+          // right
+          if (cur !== -1 && cur < count - 1) {
+            this.curSelect++;
+            setTimeout(() => {
+              event.target.selectionStart = event.target.selectionEnd = start;
+            })
+          }
+          break;
+        case 40:
+          // down
+          if (cur === -1 && count > 0) {
+            this.curSelect = 0;
+            setTimeout(() => {
+              event.target.selectionStart = event.target.selectionEnd = start;
+            })
+          } else if (cur < count - colCount) {
+            this.curSelect += colCount;
+          }
+          break;
+        default:
+          return;
+      }
     }
   }
 };
@@ -296,5 +352,9 @@ export default {
   border: 0;
   background-color: #dadada;
   color: #5e5e5e;
+}
+.select-box {
+  background: #5096e0 !important;
+  color: #fff !important;
 }
 </style>
