@@ -156,11 +156,19 @@
               })
               break;
             case 2:
+              // 合并每次用量的数值与单位
+              let westernList = JSON.parse(JSON.stringify(item.data.items));
+              westernList.forEach((item) => {
+                if (item.dose_once && item.unit_dose && !/[^\d]/.test(item.dose_once)) {
+                  item.dose_once += item.unit_dose;
+                }
+              })
+
               resultList.push({
                 'recipe_type': item.type,
                 'is_cloud': 0,
                 'doctor_remark': item.data.doctor_remark,
-                'western_list': item.data.items
+                'western_list': westernList
               })
               break;
             case 4:
