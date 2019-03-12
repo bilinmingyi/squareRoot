@@ -1,9 +1,9 @@
 <template>
-  <div id="app">
+  <div id="app" :style="{'background':$route.fullPath == '/root'?'':'#f5f5f5','padding-top':$route.fullPath == '/root'?'':'1.25rem'}">
     <div class="page_content" v-if="initFinish">
       <router-view style="flex: 1;"></router-view>
       <router-view class="left" name="Left"/>
-      <div class="right_block">
+      <div class="right_block" v-if="$route.fullPath == '/root'">
         <router-view name="Header"></router-view>
         <div class="displayFlex" style="min-height: calc(100vh - 8.35rem);">
           <router-view class="middle" name="Middle"/>
@@ -42,6 +42,15 @@
       this.loadDraftData();
       this.getRecipeHelp();
     },
+    // watch:{
+    //   $route:{
+    //     deep:true,
+    //     handler:function (newVal, oldVal) {
+    //       console.log(newVal)
+    //
+    //     }
+    //   }
+    // },
     methods: {
       ...mapActions(['set_patient_info', 'set_order_seqno', 'init_recipe', 'init_recode', 'set_state_prop', 'set_recipe_help', 'change_curr_tab']),
       init() {
@@ -81,13 +90,14 @@
         }).then(data => {
           if (data.code === 1000) {
             if (data.data == '') {
-              this.showLoader=false;
+              this.showLoader = false;
               return
-              };
+            }
+            ;
             let result = JSON.parse(data.data);
             try {
               this.checkOrder(result.recipeList);
-              this.showLoader=false;
+              this.showLoader = false;
               this.change_curr_tab(result.currRecipe !== undefined ? result.currRecipe : -1);
               this.init_recode(JSON.parse(JSON.stringify(result.recordData)));
             } catch (e) {
@@ -126,7 +136,7 @@
                     }
                     if (j == responeItems.length) {
                       recipeItems[i].is_match = 0;
-                    }else {
+                    } else {
                       recipeItems[i].is_match = 1;
                     }
                   }
@@ -153,7 +163,7 @@
                     }
                     if (j == responeItems.length) {
                       recipeItems[i].is_match = 0;
-                    }else {
+                    } else {
                       recipeItems[i].is_match = 1;
                     }
                   }
@@ -183,7 +193,7 @@
                     }
                     if (j == responeItems.length) {
                       recipeItems[i].is_match = 0;
-                    }else {
+                    } else {
                       recipeItems[i].is_match = 1;
                     }
                   }
@@ -221,7 +231,7 @@
 
   .page_content {
     display: flex;
-    min-height: calc(100vh - 3.8rem);
+    min-height: calc(100vh - 5rem);
   }
 
   .hidden {
@@ -239,7 +249,7 @@
     position: relative;
   }
 
-  .right_block{
+  .right_block {
     flex: 82;
     padding-top: 1.25rem;
   }

@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 try {
-  axios.defaults.baseURL = '/yzshis';
+  axios.defaults.baseURL = '/dyyzs';
 } catch (e) {
   console.log(e)
 }

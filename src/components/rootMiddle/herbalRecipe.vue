@@ -24,7 +24,7 @@
           <th>药名</th>
           <th>规格</th>
           <th>药量</th>
-          <!--<th>常用量</th>-->
+          <th>常用量</th>
           <th>用法</th>
           <th>操作</th>
         </tr>
@@ -48,7 +48,7 @@
               系统内搜索不到该药品
             </td>
           </template>
-          <!--<td>{{item.remark}}</td>-->
+          <td>{{item.remark}}</td>
           <td>
             <Select style="width:4.25rem" :value="item.usage"
                     @on-change="modify_medicine({key:'usage',val:$event,index:index})">
