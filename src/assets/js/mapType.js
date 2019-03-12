@@ -68,7 +68,7 @@ try {
       "name": "打包",
       "code": "",
       "name_pinyin_head": "db",
-      "price": 0.01,
+      "price": 5,
       "unit": "次",
       "status": 1
     }]; // 附加项目类型

@@ -54,7 +54,8 @@ export default {
   computed: {
     ...mapState({
       showHistoryDetail: state => state.showHistoryDetail,
-      patientData: state => state.patientData
+      patientData: state => state.patientData,
+      recordData: state => state.recordData
     })
   },
   created() {
@@ -71,9 +72,9 @@ export default {
           getPatientInfo(patientInfoParams).then(res => {
             if (res.code == 1000) {
               this.set_state_prop({ key: "patientData", val: res.data });
-              this.set_record_prop({ key: 'personal_history', val: res.data.personal_history});
-              this.set_record_prop({ key: 'present_illness', val: res.data.present_illness});
-              this.set_record_prop({ key: 'allergic_history', val: res.data.allergic_history});
+              !this.recordData.personal_history && this.set_record_prop({ key: 'personal_history', val: res.data.personal_history});
+              !this.recordData.present_illness && this.set_record_prop({ key: 'present_illness', val: res.data.present_illness});
+              !this.recordData.allergic_history && this.set_record_prop({ key: 'allergic_history', val: res.data.allergic_history});
             }
           });
           break;

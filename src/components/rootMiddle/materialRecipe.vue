@@ -53,7 +53,7 @@
     </section>
     <section class="mb50">
       <div class="pl10 pt20">
-        <span class="input_label"> 处方金额：{{currentData.money}}元</span>
+        <span class="input_label"> 处方金额：{{currentData.money | priceFormat}}元</span>
       </div>
       <div class="displayFlex pl10 pt10 width-620">
         <span class="input_label pr4">医嘱：</span>

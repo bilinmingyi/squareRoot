@@ -45,16 +45,16 @@
 
       </section>
 
-      <!-- <div class="mt5" v-if="canShowMoney">
+      <div class="mt5" v-if="canShowMoney">
         <span class="pr20">
           <span class="font-bold pr10">诊金</span>
           <span>{{treatPrice | priceFormat}}</span>
         </span>
-        <span>
+        <!-- <span>
           <span class="font-bold pr10">总金额</span>
           <span>{{totalPrice | priceFormat}}</span>
-        </span>
-      </div> -->
+        </span> -->
+      </div>
     </div>
     <edit-patient-info v-if="showEditPatientInfo" @closeModal="showEditPatientInfo = false"></edit-patient-info>
   </div>

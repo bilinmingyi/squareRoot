@@ -76,24 +76,215 @@
           "order_seqno": this.getOrderSeqno('orderSeqno')
         }).then(data => {
           if (data.code === 1000) {
-            if (data.data == '') {
-              this.showLoader=false;
-              return
-              };
+            if (data.data == '') return;
             let result = JSON.parse(data.data);
             try {
-              this.checkOrder(result.recipeList);
-              this.showLoader=false;
+              if (result.recipeList && result.recordData) {
+                this.checkOrder(result.recipeList);
+                this.init_recode(JSON.parse(JSON.stringify(result.recordData)));
+              } else if (result.patientData && result.caseData && result.recipeData) {
+                // 兼容老数据
+                let recipeList = this.compatOldRecipeList(result.recipeData.recipeList);
+                let recordData = Object.assign(result.caseData, {
+                  personal_history: result.patientData.personal_history,
+                  allergic_history: result.patientData.allergic_history
+                })
+                this.checkOrder(recipeList);
+                this.init_recode(JSON.parse(JSON.stringify(recordData)));
+              }
               this.change_curr_tab(result.currRecipe !== undefined ? result.currRecipe : -1);
-              this.init_recode(JSON.parse(JSON.stringify(result.recordData)));
             } catch (e) {
               console.log(e)
             }
-
           } else {
             this.$Message.info(data.msg)
           }
+        }).then(() => {
+          this.showLoader=false;
         })
+      },
+      // 兼容老数据的recipeList
+      compatOldRecipeList (data) {
+        let recipeList = [];
+        let list = [];
+        let money = 0;
+        data.forEach((item) => {
+          switch(item.recipe_type) {
+            case 1: // 中药处方
+              list = [];
+              money = 0;
+              item.items.forEach((med) => {
+                let obj = {
+                  "cloud_item_id": med.item_id,
+                  "item_id": med.item_id,
+                  "name": med.clinic_alias_name != '' && med.clinic_alias_name != null ? med.clinic_alias_name : med.name,
+                  "num": med.num || 0,
+                  "price": item.is_cloud === 1 ? med.default_sale_price : med.sale_price,
+                  "unit": med.unit || med.unit_stock,
+                  "default_sale_price": med.default_sale_price,
+                  "sale_price": med.sale_price,
+                  "spec": med.spec,
+                  "unit_stock": med.unit_stock,
+                  "unit_sale": med.unit_sale || med.unit_stock,
+                  "usage": med.usage || '',
+                  "stock": med.stock,
+                  "stock_sale_ratio": med.stock_sale_ratio || 1,
+                  "is_match": med.status == 1 ? 1 : 0,
+                  "remark": med.remark || '',
+                  "explain": [],
+                  "types": 1
+                }
+                list.push(obj)
+                money += Number(obj.num) * Number(obj.price)
+              })
+              if (item.extra_feetype !== '' && item.extra_feetype != undefined) {
+                money = money * Number(item.dosage) + Number(item.extra_price) * Number(item.extra_num);
+              } else {
+                money += money * Number(item.dosage)
+              }
+              recipeList.push({
+                type: 1,
+                money: money,
+                data: {
+                  is_cloud: item.is_cloud,
+                  category: item.allcategory,
+                  doctor_remark: item.doctor_remark,
+                  dosage: item.dosage,
+                  usage: item.usage,
+                  frequency: item.frequency,
+                  extra_num: item.extra_num,
+                  extra_feetype: item.extra_feetype,
+                  extra_price: item.extra_price,
+                  eachDose: item.dose_once_volume,
+                  items: list,
+                }
+              })
+              break;
+            case 2: // 中成药处方
+              list = [];
+              money = 0;
+              item.items.forEach((med) => {
+                let obj = {
+                  "item_id": med.item_id,
+                  "name": med.clinic_alias_name != '' && med.clinic_alias_name != null ? med.clinic_alias_name : med.name,
+                  "num": Number(med.num) || 0,
+                  "unit": med.unit === med.unit_stock ? med.unit_stock : (med.unit === med.unit_sale ? med.unit_sale : med.unit_stock),
+                  "sale_price": med.sale_price,
+                  "spec": med.spec,
+                  "unit_stock": med.unit_stock,
+                  "unit_sale": med.unit_sale,
+                  "unit_dose": med.unit_dose,
+                  "stock_sale_ratio": med.stock_sale_ratio,
+                  "sale_dose_ratio": med.sale_dose_ratio,
+                  "usage": med.usage || '',
+                  "days": Number(med.days) || 0,
+                  "frequency": med.frequency || '',
+                  "dose_once": Number(med.dose_once) || '',
+                  "stock": med.stock,
+                  "is_match": med.status == 1 ? 1 : 0,
+                  "cloud_item_id": med.item_id,
+                  "types": 2
+                }
+                list.push(obj)
+                if (obj.unit === obj.unit_stock) {
+                  money += Number(obj.sale_price) * Number(obj.num);
+                } else if (obj.unit === obj.unit_sale) {
+                  money += Number(obj.sale_price * 1.0 / obj.stock_sale_ratio) * Number(obj.num);
+                } else {
+                  money += Number(obj.sale_price) * Number(obj.num);
+                }
+              })
+              recipeList.push({
+                type: 2,
+                money: money,
+                data: {
+                  doctor_remark: item.doctor_remark,
+                  items: list
+                }
+              })
+              break;
+            case 3: // 产品处方
+              money = 0;
+              // TODO: computed money
+              recipeList.push({
+                type: 3,
+                money: money,
+                data: {
+                  is_cloud: 0,
+                  doctor_remark: "",
+                  items: item.items
+                }
+              })
+              break;
+            case 4: // 项目处方
+              list = [];
+              money = 0;
+              item.items.forEach((med) => {
+                list.push({
+                  "unit": med.unit,
+                  "remark": med.remark || '',
+                  "item_id": med.item_id,
+                  "name": med.alias_name != '' && med.alias_name != null ? med.alias_name : med.name,
+                  "num": Number(med.num) || 0,
+                  "price": med.price,
+                  "type": med.type,
+                  "usage": med.usage || '',
+                  "types": 4,
+                  "is_match": med.is_match == 1 ? 1 : 0
+                })
+                money += Number(med.price) * Number(med.num)
+              })
+              recipeList.push({
+                type: 4,
+                money: money,
+                data: {
+                  doctor_remark: "",
+                  items: list
+                } 
+              })
+              break;
+            case 5: // 附加服务
+              // money = 0;
+              // recipeList.push({
+              //   type: 5,
+              //   money: money,
+              //   data: {
+              //     doctor_remark: "",
+              //     items: item.items
+              //   } 
+              // })
+              break;
+            case 6: // 材料处方
+              list = [];
+              money = 0;
+              item.items.forEach((med) => {
+                list.push({
+                  "remark": med.remark || '',
+                  "item_id": med.item_id,
+                  "name": med.clinic_alias_name != '' && med.clinic_alias_name != null ? med.clinic_alias_name : med.name,
+                  "num": Number(med.num) || 0,
+                  "stock": med.stock,
+                  "price": med.price,
+                  "stock_sale_ratio": med.stock_sale_ratio,
+                  "unit": med.unit,
+                  "spec": med.spec,
+                  "is_match": med.is_match == 1 ? 1 : 0,
+                  "types": 6
+                })
+                money += Number(med.price) * Number(med.num)
+              })
+              recipeList.push({
+                type: 6,
+                money: money,
+                data: {
+                  doctor_remark: "",
+                  items: list
+                } 
+              })
+              break;
+          }
+        })
+        return recipeList;
       },
       //检查草稿箱
       checkOrder(recipeList) {
