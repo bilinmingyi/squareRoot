@@ -1,4 +1,4 @@
-const url = 'http://localhost:50000';
+const url = 'http://localhost:50001';
 let ROOT;
 if (process.env.NODE_ENV === 'production') {
   //生产环境下的地址
