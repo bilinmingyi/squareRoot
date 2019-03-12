@@ -157,13 +157,13 @@ const dateFormat = function(date, fmt) {
 
 const recipeType = val => {
   var typeList=[
-    {code:1,name:"中药"},
+    {code:1,name:"中药处方"},
     {code:2,name:"中成药西药"},
-    {code:3,name:"产品"},
-    {code:4,name:"项目"},
+    {code:3,name:"产品处方"},
+    {code:4,name:"诊疗项目"},
     {code:5,name:"附加服务"},
-    {code:6,name:"材料"},
-    {code:7,name:"检验"}
+    {code:6,name:"材料处方"},
+    {code:7,name:"检验处方"}
   ];
   var result=typeList.filter(item => {
     return item.code===val

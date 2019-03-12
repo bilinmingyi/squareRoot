@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 2rem;">
+  <div class="right-block">
     <div>
       <div style="display: flex;background-color: #f2f2f2;">
         <div
@@ -87,6 +87,12 @@ export default {
 .right-content {
   background: white;
 }
+
+.right-block{
+  margin-bottom: 1.25rem;
+  box-shadow: 0px 2px 4px 0px rgba(80,150,224,0.32);
+}
+
 .prescript-title {
   height: 2rem;
   background: rgba(225, 225, 225, 1);

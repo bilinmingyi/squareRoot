@@ -121,7 +121,7 @@
   .p-d-content {
     padding: 10px;
     background: rgba(255, 255, 255, 1);
-    box-shadow: 0px 2px 4px 0px rgba(80, 150, 224, 0.2);
+    box-shadow:0px 2px 8px 0px rgba(80,150,224,0.32);
     margin-bottom: 0.4375rem;
   }
 

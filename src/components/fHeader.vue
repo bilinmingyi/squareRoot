@@ -1,17 +1,47 @@
 <template>
   <div class="content">
-    <div class="title">患者接诊</div>
-    <div>
-      <Button type="primary" shape="circle" class="btn-time" @click.stop="saveDraftData(1)">临时保存</Button>
-      <Button type="primary" shape="circle" class="btn-cancel" @click.stop="confirmCancel">取消就诊</Button>
-      <Button type="primary" shape="circle" class="btn-done" @click.stop="saveData">完成就诊</Button>
+    <div class="titleLeft">
+      <ul class="recipe_tab">
+        <li :class="['tab_li',{'currentLi': -1 === currRecipe}]" @click.stop="change_curr_tab(-1)">
+          患者病历
+          <div class="green_line" v-show="-1 === currRecipe"></div>
+        </li>
+        <li v-for="(recipe,index) in recipeList" :class="['tab_li',{'currentLi':index === currRecipe}]"
+            @click.stop="change_curr_tab(index)">
+          {{recipe.type|recipeType}}
+          <div class="green_line" v-show="index === currRecipe"></div>
+        </li>
+      </ul>
+    </div>
+    <div class="titleRight">
+      <div class="add_btn">
+        <Dropdown>
+          <div style="display:flex;align-items: center">
+            <img class="add_btn_icon" src="../assets/img/tj@2x.png">添加处方
+          </div>
+          <DropdownMenu slot="list">
+            <DropdownItem @click.stop.native="addNewRecipt(1)">中药处方</DropdownItem>
+            <DropdownItem @click.stop.native="addNewRecipt(2)">中成药西药</DropdownItem>
+            <DropdownItem @click.stop.native="addNewRecipt(4)">诊疗项目</DropdownItem>
+            <DropdownItem @click.stop.native="addNewRecipt(6)">材料处方</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </div>
+      <div class="add_btn" @click.stop="saveDraftData(1)">
+        <img class="add_btn_icon" src="../assets/img/ls@2x.png">
+        临时保存
+      </div>
+      <div class="add_btn" @click.stop="saveData">
+        <img class="add_btn_icon" src="../assets/img/wc@2x.png">
+        完成就诊
+      </div>
     </div>
     <preview-recipe v-if="previewOrder" @hidePreview="hidePreview"></preview-recipe>
   </div>
 </template>
 
 <script>
-  import {Button} from 'iview'
+  import {Button, Dropdown, DropdownMenu, DropdownItem} from 'iview'
   import {mapState, mapActions} from 'vuex'
   import previewRecipe from '@/components/rootMiddle/previewRecipe.vue'
   import {saveDraft, cancelOrder, waitingPage} from '@/fetch/api.js'
@@ -20,7 +50,10 @@
     name: "fHeader",
     components: {
       Button,
-      previewRecipe
+      previewRecipe,
+      Dropdown,
+      DropdownMenu,
+      DropdownItem
     },
     data() {
       return {
@@ -34,13 +67,14 @@
         'recipeList': state => state.recipeList,
         'patientData': state => state.patientData,
         'orderSeqno': state => state.orderSeqno,
-        'currRecipe': state=> state.currRecipe
+        'currRecipe': state => state.currRecipe
       })
     },
     methods: {
       ...mapActions([
         'change_curr_tab',
-        'save_draft_data'
+        'save_draft_data',
+        'add_new_recipt',
       ]),
       saveDraftData(canReturn) {
         let draftData = {
@@ -135,6 +169,9 @@
       },
       hidePreview() {
         this.previewOrder = false
+      },
+      addNewRecipt(type) {
+        this.add_new_recipt(type)
       }
     }
   }
@@ -143,32 +180,82 @@
 <style scoped>
   .content {
     display: flex;
+    border-bottom: 2px solid #CCCCCC;
+    margin-bottom: 1rem;
   }
 
-  .title {
-    font-size: 1.06rem;
+  .titleLeft {
+    flex: 60;
+  }
+
+  .titleRight {
+    flex: 22;
+    display: flex;
+  }
+
+  .recipe_tab {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .recipe_tab .tab_li {
+
+    width: 7.5rem;
+    height: 2.19rem;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #8C8C8C;
+    line-height: 2.19rem;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .recipe_tab .currentLi {
+    color: rgba(77, 188, 137, 1);
     font-weight: 600;
-    color: rgba(76, 76, 76, 1);
-    line-height: 1.5rem;
+  }
+
+  .recipe_add {
+    width: 3.75rem;
+    height: 2.19rem;
+    line-height: 2.19rem;
+    background: rgba(225, 225, 225, 1);
+    border-radius: 0.5rem 0.5rem 0rem 0rem;
+    color: rgba(140, 140, 140, 1);
+    font-weight: bold;
+    font-size: 1.6rem;
+    border: none;
+  }
+
+  .green_line {
+    height: 0.25rem;
+    width: 100%;
+    background: rgba(77, 188, 137, 1);
+    -webkit-transform: translateY(-0.0625rem);
+    -moz-transform: translateY(-0.0625rem);
+    -ms-transform: translateY(-0.0625rem);
+    -o-transform: translateY(-0.0625rem);
+    transform: translateY(-0.0625rem);
+  }
+
+  .add_btn{
     flex: 1;
+    font-size: 1rem;
+    color: #8C8C8C;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
     align-self: center;
+    line-height: 2.19rem;
+    height: 2.19rem;
+    cursor: pointer;
   }
 
-  .btn-time {
-    background: #5096e0;
-    border: none;
-    font-size: 1rem;
-  }
-
-  .btn-cancel {
-    background: #FC3B3B;
-    border: none;
-    font-size: 1rem;
-  }
-
-  .btn-done {
-    background: #4DBC89;
-    border: none;
-    font-size: 1rem;
+  .add_btn_icon{
+    width: 1rem;
+    height: 1rem;
+    display: inline-block;
+    align-self: center;
+    margin-right: 0.1875rem;
   }
 </style>

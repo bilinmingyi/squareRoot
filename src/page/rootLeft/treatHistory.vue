@@ -7,15 +7,14 @@
           v-for="historyItem in historyData.treatOrderList"
           @click="selectOrder(historyItem)"
         >
-          <div class="font-bold">{{ historyItem.create_time | dateFormat('yyyy-MM-dd')}}</div>
-          <div>医生：{{historyItem.doctor_name}}</div>
-          <div class="display-flex">
-            <span>西医诊断：</span>
-            <span class="flex-1">{{historyItem.diagnosis_xy}}</span>
+          <div class="displayFlex mb5">
+            <div class="flexOne">患者：{{historyItem.patient_name}}</div>
+            <div class="font-bold">{{ historyItem.create_time | dateFormat('yyyy-MM-dd')}}</div>
           </div>
+          <div class="flexOne mb5">医生：{{historyItem.doctor_name}}</div>
           <div class="display-flex">
-            <span>中医诊断：</span>
-            <span class="flex-1">{{historyItem.diagnosis}}</span>
+            <span>诊断：</span>
+            <span class="flex-1">{{historyItem.diagnosis_xy}}{{historyItem.diagnosis_xy!='' && historyItem.diagnosis!='' ? '，':''}}{{historyItem.diagnosis}}</span>
           </div>
         </li>
       </ul>
