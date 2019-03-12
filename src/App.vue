@@ -6,7 +6,7 @@
       <router-view class="left" name="Left"/>
       <div class="right_block">
         <router-view name="Header"></router-view>
-        <div class="displayFlex">
+        <div class="displayFlex" style="min-height: calc(100vh - 8.35rem);">
           <router-view class="middle" name="Middle"/>
           <router-view class="right" name="Right"/>
         </div>
@@ -230,7 +230,7 @@
   }
 
   .left {
-    flex: 20;
+    flex: 18;
     margin-right: 0.5rem;
     padding-right: 0.5rem;
     padding-top: 1.25rem;
@@ -241,7 +241,8 @@
   }
 
   .right_block{
-    flex: 80;
+    flex: 82;
+    padding-top: 1.25rem;
   }
 
   .middle {
@@ -252,7 +253,7 @@
   }
 
   .right {
-    flex: 20;
+    flex: 22;
     background: white;
   }
 </style>

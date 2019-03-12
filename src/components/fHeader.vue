@@ -11,25 +11,30 @@
           {{recipe.type|recipeType}}
           <div class="green_line" v-show="index === currRecipe"></div>
         </li>
-        <li>
-          <Dropdown>
-            <button class="recipe_add">
-              +
-            </Button>
-            <DropdownMenu slot="list">
-              <DropdownItem @click.stop.native="addNewRecipt(1)">中药处方</DropdownItem>
-              <DropdownItem @click.stop.native="addNewRecipt(2)">中成药西药</DropdownItem>
-              <DropdownItem @click.stop.native="addNewRecipt(4)">诊疗项目</DropdownItem>
-              <DropdownItem @click.stop.native="addNewRecipt(6)">材料处方</DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-        </li>
       </ul>
     </div>
     <div class="titleRight">
-      <!--<Button type="primary" shape="circle" class="btn-time" @click.stop="saveDraftData(1)">临时保存</Button>-->
-      <!--<Button type="primary" shape="circle" class="btn-cancel" @click.stop="confirmCancel">取消就诊</Button>-->
-      <!--<Button type="primary" shape="circle" class="btn-done" @click.stop="saveData">完成就诊</Button>-->
+      <div class="add_btn">
+        <Dropdown>
+          <div style="display:flex;align-items: center">
+            <img class="add_btn_icon" src="../assets/img/tj@2x.png">添加处方
+          </div>
+          <DropdownMenu slot="list">
+            <DropdownItem @click.stop.native="addNewRecipt(1)">中药处方</DropdownItem>
+            <DropdownItem @click.stop.native="addNewRecipt(2)">中成药西药</DropdownItem>
+            <DropdownItem @click.stop.native="addNewRecipt(4)">诊疗项目</DropdownItem>
+            <DropdownItem @click.stop.native="addNewRecipt(6)">材料处方</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </div>
+      <div class="add_btn" @click.stop="saveDraftData(1)">
+        <img class="add_btn_icon" src="../assets/img/ls@2x.png">
+        临时保存
+      </div>
+      <div class="add_btn" @click.stop="saveData">
+        <img class="add_btn_icon" src="../assets/img/wc@2x.png">
+        完成就诊
+      </div>
     </div>
     <preview-recipe v-if="previewOrder" @hidePreview="hidePreview"></preview-recipe>
   </div>
@@ -184,7 +189,8 @@
   }
 
   .titleRight {
-    flex: 20;
+    flex: 22;
+    display: flex;
   }
 
   .recipe_tab {
@@ -230,5 +236,26 @@
     -ms-transform: translateY(-0.0625rem);
     -o-transform: translateY(-0.0625rem);
     transform: translateY(-0.0625rem);
+  }
+
+  .add_btn{
+    flex: 1;
+    font-size: 1rem;
+    color: #8C8C8C;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    line-height: 2.19rem;
+    height: 2.19rem;
+    cursor: pointer;
+  }
+
+  .add_btn_icon{
+    width: 1rem;
+    height: 1rem;
+    display: inline-block;
+    align-self: center;
+    margin-right: 0.1875rem;
   }
 </style>
