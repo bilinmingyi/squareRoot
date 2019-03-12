@@ -1,24 +1,5 @@
 <template>
   <div>
-    <ul class="recipe_tab">
-      <li :class="['tab_li',{'currentLi': -1 === currRecipe}]" @click.stop="change_curr_tab(-1)">患者病历</li>
-      <li v-for="(recipe,index) in recipeList" :class="['tab_li',{'currentLi':index === currRecipe}]"
-          @click.stop="change_curr_tab(index)">{{recipe.type|recipeType}}
-      </li>
-      <li>
-        <Dropdown>
-          <button class="recipe_add">
-            +
-          </Button>
-          <DropdownMenu slot="list">
-            <DropdownItem @click.stop.native="addNewRecipt(1)">中药处方</DropdownItem>
-            <DropdownItem @click.stop.native="addNewRecipt(2)">中成药西药</DropdownItem>
-            <DropdownItem @click.stop.native="addNewRecipt(4)">项目处方</DropdownItem>
-            <DropdownItem @click.stop.native="addNewRecipt(6)">材料处方</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-      </li>
-    </ul>
     <component :is="currRecipe===-1?'patientrRcord':componentList[Number(recipeList[currRecipe].type)-1]"></component>
     <print-prescription v-if="currRecipe!==-1"></print-prescription>
   </div>
@@ -32,7 +13,6 @@
   import materialRecipe from '@/components/rootMiddle/materialRecipe.vue'
   import patientrRcord from '@/components/patientrRcord.vue'
   import printPrescription from '@/components/rootMiddle/printPrescription.vue'
-  import {Dropdown, DropdownMenu, DropdownItem} from 'iview'
 
   export default {
     name: "rootMiddle",
@@ -42,9 +22,6 @@
       }
     },
     components: {
-      Dropdown,
-      DropdownMenu,
-      DropdownItem,
       herbalRecipe,
       westernRecipe,
       therapyRecipe,

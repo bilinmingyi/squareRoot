@@ -28,7 +28,7 @@
             </div>
           </div>
           <section v-for="item in recipeList" class="preview_recipe">
-            <div class="preview_recipe_title">{{item.type|recipeType}}处方
+            <div class="preview_recipe_title">{{item.type|recipeType}}
               <i v-if="item.type===1">({{item.data.category===1?'饮片':'颗粒'}})</i>
             </div>
             <section class="preview_recipe_content">

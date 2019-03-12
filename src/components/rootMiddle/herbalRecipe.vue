@@ -334,6 +334,7 @@
   .herbal_head {
     display: flex;
     padding: 0.625rem;
+    padding-top: 0;
   }
 
   .num_text {

@@ -150,6 +150,7 @@
   .herbal_head {
     display: flex;
     padding: 0.625rem;
+    padding-top: 0;
   }
 
   .herbal_head_left {

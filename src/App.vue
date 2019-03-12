@@ -1,11 +1,16 @@
 <template>
   <div id="app">
-    <router-view name="Header"></router-view>
+
     <div class="page_content" v-if="initFinish">
       <router-view style="flex: 1;"></router-view>
       <router-view class="left" name="Left"/>
-      <router-view class="middle" name="Middle"/>
-      <router-view class="right" name="Right"/>
+      <div class="right_block">
+        <router-view name="Header"></router-view>
+        <div class="displayFlex">
+          <router-view class="middle" name="Middle"/>
+          <router-view class="right" name="Right"/>
+        </div>
+      </div>
     </div>
     <f-loader v-show="showLoader"></f-loader>
   </div>
@@ -211,13 +216,13 @@
   #app {
     color: #2c3e50;
     margin-top: 3.75rem;
-    padding: 1.25rem;
-    background: #F5F5F5;
+    padding: 0 1.25rem;
+    /*background: #F5F5F5;*/
   }
 
   .page_content {
     display: flex;
-    min-height: calc(100vh - 8.6rem);
+    min-height: calc(100vh - 3.8rem);
   }
 
   .hidden {
@@ -226,18 +231,24 @@
 
   .left {
     flex: 20;
-    margin-right: 1rem;
-    background: #f2f2f2;
+    margin-right: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 1.25rem;
+    border-right: 1px solid #CCCCCC;
     display: flex;
     flex-direction: column;
     position: relative;
+  }
+
+  .right_block{
+    flex: 80;
   }
 
   .middle {
     flex: 60;
     margin-right: 1rem;
     background: #ffffff;
-    min-width: 46.25rem;
+    /*min-width: 46.25rem;*/
   }
 
   .right {

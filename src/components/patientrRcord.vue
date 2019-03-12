@@ -1,7 +1,7 @@
 <template>
   <!-- 患者病历 -->
   <div class="mid-box-content">
-    <div class="mid-title-btn-box mb10 pr10 pt10">
+    <div class="mid-title-btn-box mb10 pr10">
       <button class="prescriptionBtn mr5" @click.stop="printPrescription('printCase')">打印病历</button>
       <button class="prescriptionBtn" @click.stop="showSaveTemplate()">存为模板</button>
     </div>
