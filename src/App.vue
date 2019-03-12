@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-
     <div class="page_content" v-if="initFinish">
       <router-view style="flex: 1;"></router-view>
       <router-view class="left" name="Left"/>

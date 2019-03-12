@@ -43,9 +43,10 @@
         type="primary"
         ghost
         @click.stop="changePage(0)"
+        class="mr20"
       >上一页
       </Button>
-      <Button v-show="currPage===1" disabled shape="circle">上一页</Button>
+      <Button v-show="currPage===1"  class="mr20" disabled shape="circle">上一页</Button>
       <div class="ml10"></div>
       <Button
         v-show="currPage!==page_num"
