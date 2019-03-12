@@ -82,7 +82,9 @@
         showList: [],
         page_size: 0,
         curSelect: -1,  // 当前选中的药品
-      };
+        page:1,
+        totalNum:0
+      }
     },
     watch: {
       recipeType: function () {
@@ -163,6 +165,9 @@
         });
         if (filterList.length === 0) {
           this.add_new_medicine({item: item, type: this.currRecipeData.type});
+          this.searchName = '';
+          this.curSelect = -1;
+
         } else {
           this.$Message.info("该药品已添加");
         }
@@ -210,7 +215,10 @@
         if (self.searchName == "") {
           self.searchList = [];
           self.firstSearch();
-          return;
+          return
+        }
+        if(self.searchName.replace(/\s/g,'') == ''){
+          return
         }
         var params = {};
         switch (self.recipeType) {
@@ -219,7 +227,7 @@
               medicine_name: self.searchName,
               category: self.category,
               status: 1,
-              page: 1
+              page: self.page,
             };
             break;
           }
@@ -227,20 +235,20 @@
             params = {
               medicine_name: self.searchName,
               status: 1,
-              page: 1
+              page: self.page,
             };
             break;
           }
           case 4: {
             params = {
               name: self.searchName,
-              page: 1
+              page: self.page,
             };
             break;
           }
           case 5: {
             params = {
-              page: 1,
+              page: self.page,
               query: self.searchName,
               status: 1
             };
@@ -249,7 +257,7 @@
           case 6: {
             params = {
               name: self.searchName,
-              page: 1
+              page: self.page,
             };
             break;
           }
