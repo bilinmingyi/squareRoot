@@ -40,7 +40,7 @@
     created() {
       this.init();
       this.loadDraftData();
-      this.getRecipeHelp();
+      // this.getRecipeHelp();
     },
     methods: {
       ...mapActions(['set_patient_info', 'set_order_seqno', 'init_recipe', 'init_recode', 'set_state_prop', 'set_recipe_help', 'change_curr_tab']),
@@ -389,13 +389,13 @@
 
 
       },
-      getRecipeHelp() {
-        canRecipeHelp({}).then(
-          data => {
-            this.set_recipe_help(data.data)
-          }
-        )
-      }
+      // getRecipeHelp() {
+      //   canRecipeHelp({}).then(
+      //     data => {
+      //       this.set_recipe_help(data.data)
+      //     }
+      //   )
+      // }
     }
   };
 </script>
