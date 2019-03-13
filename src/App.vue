@@ -184,6 +184,7 @@
                     for (var j = 0; j < responeItems.length; j++) {
                       if (recipeItems[i].item_id == responeItems[j].id) {
                         recipeItems[i].type = responeItems[j].type;
+                        console.log(recipeItems[i])
                         break;
                       }
                     }
