@@ -174,7 +174,30 @@
               });
               break;
             case 4:
-
+              searchMed({
+                ids:ids,
+                status: 1
+              }, 4).then(data => {
+                let recipeItems = recipe.data.items, responeItems = data.data;
+                if (data.code === 1000) {
+                  for (var i = 0; i < recipeItems.length; i++) {
+                    for (var j = 0; j < responeItems.length; j++) {
+                      if (recipeItems[i].item_id == responeItems[j].id) {
+                        recipeItems[i].type = responeItems[j].type;
+                        break;
+                      }
+                    }
+                    if (j == responeItems.length) {
+                      recipeItems[i].is_match = 0;
+                    } else {
+                      recipeItems[i].is_match = 1;
+                    }
+                  }
+                  this.init_recipe(JSON.parse(JSON.stringify(recipeList)));
+                } else {
+                  this.$Message.info(res.msg)
+                }
+              })
               break;
             case 6:
               searchMed({
