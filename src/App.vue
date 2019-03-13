@@ -40,7 +40,7 @@
     created() {
       this.init();
       this.loadDraftData();
-      this.getRecipeHelp();
+      // this.getRecipeHelp();
     },
     methods: {
       ...mapActions(['set_patient_info', 'set_order_seqno', 'init_recipe', 'init_recode', 'set_state_prop', 'set_recipe_help', 'change_curr_tab']),
@@ -98,7 +98,7 @@
               }
               this.change_curr_tab(result.currRecipe !== undefined ? result.currRecipe : -1);
             } catch (e) {
-              console.log(e)
+              console.log(e);
             }
           } else {
             this.$Message.info(data.msg)
@@ -142,9 +142,9 @@
                 money += Number(obj.num) * Number(obj.price)
               })
               if (item.extra_feetype !== '' && item.extra_feetype != undefined) {
-                money = money * Number(item.dosage) + Number(item.extra_price) * Number(item.extra_num);
+                money = money * Number(item.dosage) + Number(item.extra_price);
               } else {
-                money += money * Number(item.dosage)
+                money = money * Number(item.dosage);
               }
               recipeList.push({
                 type: 1,
@@ -215,7 +215,7 @@
                 money: money,
                 data: {
                   is_cloud: 0,
-                  doctor_remark: "",
+                  doctor_remark: item.doctor_remark,
                   items: item.items
                 }
               })
@@ -242,7 +242,7 @@
                 type: 4,
                 money: money,
                 data: {
-                  doctor_remark: "",
+                  doctor_remark: item.doctor_remark || '',
                   items: list
                 } 
               })
@@ -253,7 +253,7 @@
               //   type: 5,
               //   money: money,
               //   data: {
-              //     doctor_remark: "",
+              //     doctor_remark: item.doctor_remark,
               //     items: item.items
               //   } 
               // })
@@ -281,7 +281,7 @@
                 type: 6,
                 money: money,
                 data: {
-                  doctor_remark: "",
+                  doctor_remark: item.doctor_remark || '',
                   items: list
                 } 
               })
@@ -355,7 +355,31 @@
               });
               break;
             case 4:
-
+              searchMed({
+                ids: ids,
+                status: 1
+              }, 4).then(data => {
+                let recipeItems = recipe.data.items, responeItems = data.data;
+                if (data.code === 1000) {
+                  for (var i = 0; i < recipeItems.length; i++) {
+                    for (var j = 0; j < responeItems.length; j++) {
+                      if (recipeItems[i].item_id == responeItems[j].id) {
+                        // 更新type字段
+                        recipeItems[i].type = responeItems[j].type;
+                        break;
+                      }
+                    }
+                    if (j == responeItems.length) {
+                      recipeItems[i].is_match = 0;
+                    }else {
+                      recipeItems[i].is_match = 1;
+                    }
+                  }
+                  this.init_recipe(JSON.parse(JSON.stringify(recipeList)));
+                } else {
+                  this.$Message.info(res.msg)
+                }
+              });
               break;
             case 6:
               searchMed({
