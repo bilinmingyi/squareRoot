@@ -413,13 +413,13 @@
 
 
       },
-      getRecipeHelp() {
-        canRecipeHelp({}).then(
-          data => {
-            this.set_recipe_help(data.data)
-          }
-        )
-      }
+      // getRecipeHelp() {
+      //   canRecipeHelp({}).then(
+      //     data => {
+      //       this.set_recipe_help(data.data)
+      //     }
+      //   )
+      // }
     }
   };
 </script>
