@@ -739,3 +739,12 @@ input {
   min-height: 2.375rem !important;
   line-height: 1.875rem;
 }
+.tl{
+  text-align: left;
+}
+.tc{
+  text-align: center;
+}
+.tr{
+  text-align: right;
+}

@@ -128,10 +128,8 @@
         </div>
         <div v-if="showUseTpl" class="alert-back">
           <div class="use-tpl">
-            <div
-              style="text-align:center;padding-top:2rem;font-weight:900;font-size:1rem;color: #5f95da;"
-            >确定使用[{{tplData.tplName}}]模板？</div>
-            <div style="margin:1rem 0 0 2rem;font-weight:900;">
+            <div class="alert-title">确定使用[{{tplData.tplName}}]模板？</div>
+            <div class="mt20 mb10">
               使用模板将覆盖已编辑之信息，
               <span style="color:red;">没有的药品</span>不会导入至处方
             </div>
@@ -181,7 +179,7 @@
                 </div>
               </div>
             </div>
-            <div class="pb20" style="text-align:center;margin-top:2rem;">
+            <div class="pb10 tc mt20">
               <button class="saveBtn mr20" @click.stop="useTpl()">确认</button>
               <button class="saveBtn cancelBtn" @click.stop="useTplHide()">取消</button>
             </div>
@@ -1407,12 +1405,13 @@ export default {
   z-index: 1050;
   margin: 0 auto;
   position: relative;
-  top: 6rem;
+  top:20vh;
   width: 50rem;
-  min-height: 15rem;
+  padding: 1.25rem 3.125rem;
   max-height: 50rem;
-  font-size: 1rem;
+  font-size: 0.875rem;
   overflow: auto;
+  font-weight: bold;
 }
 .alert-back .del-tpl {
   background-color: #ffffff;
@@ -1440,15 +1439,21 @@ export default {
   font-size: 1rem;
   overflow: auto;
 }
+
+.alert-title{
+  text-align:center;
+  font-weight:900;
+  font-size:1rem;
+  color: #5f95da;
+}
+
 .use-tpl .use-list {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 2rem;
-  font-size: 1rem;
 }
 .use-tpl .use-list .use-list-li {
   width: 33.3%;
-  font-size: 1rem;
+  font-size: 0.875rem;
 }
 .search-btn {
   width: 20%;
