@@ -146,7 +146,7 @@
                 >{{item.price}}/次</span>
                 <span v-show="item.status!=1" style="color:red;font-weight:bold;">暂无此药</span>
               </div>
-              <div v-if="recipeType==0" style="width: 100%">
+              <div v-if="recipeType==0" style="width: 100%;font-weight: normal">
                 <div>
                   <span class="case-label">主述&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                   <span>{{tplData.chief_complaint}}</span>
@@ -1299,48 +1299,38 @@ export default {
 .prescript-list {
   margin: 0.3125rem 0;
   text-align: center;
-  line-height: 2rem;
+  line-height: 2.5rem;
   border-radius: 0.25rem;
-  border: 1px solid #5096e0;
+  border: 0.0625rem solid #5096e0;
   width: 100%;
-  height: 2rem;
-  font-size: 0.875rem;
-}
-.prescript-list {
-  margin: 0.3125rem 0;
-  text-align: center;
-  line-height: 2rem;
-  border-radius: 0.25rem;
-  border: 1px solid #5096e0;
-  width: 100%;
-  height: 2rem;
+  height: 2.5rem;
   font-size: 0.875rem;
 }
 .add_prescription_btn {
   width: 100%;
-  height: 40px;
-  line-height: 40px;
+  height: 2.5rem;
+  line-height: 2.5rem;
   background: #eeae1d;
   color: #fff;
-  font-size: 16px;
+  font-size: 1rem;
   text-align: center;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   display: inline-block;
 }
 .prescription_detail_btn {
   width: 100%;
-  height: 30px;
-  line-height: 30px;
-  font-size: 15px;
+  height: 1.875rem;
+  line-height: 1.875rem;
+  font-size: 0.9375rem;
   text-align: center;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   color: #fff;
   background: #eeae1d;
 }
 .search-result .herbal-result-li {
   width: 31.5%;
   height: 3.75rem;
-  border: #5096e0 solid 1px;
+  border: #5096e0 solid 0.0625rem;
   border-radius: 0.25rem;
   float: left;
   display: flex;
@@ -1354,7 +1344,7 @@ export default {
 .search-result .search-result-li {
   width: 95%;
   height: 2.5rem;
-  border: #5096e0 solid 1px;
+  border: #5096e0 solid 0.0625rem;
   border-radius: 0.25rem;
   float: left;
   margin-right: 1%;
@@ -1369,7 +1359,7 @@ export default {
   margin-left: 2%;
   width: 30%;
   height: 2rem;
-  border: #5096e0 solid 1px;
+  border: #5096e0 solid 0.0625rem;
   border-radius: 1.875rem;
   text-align: center;
   color: #5096e0;
@@ -1381,7 +1371,7 @@ export default {
   margin-left: 2%;
   width: 30%;
   height: 2rem;
-  border: #fc3b3b solid 1px;
+  border: #fc3b3b solid 0.0625rem;
   border-radius: 1.875rem;
   text-align: center;
   color: #fc3b3b;
@@ -1469,7 +1459,7 @@ export default {
 .search-input {
   width: 75%;
   height: 2rem;
-  border: #5096e0 solid 1px;
+  border: #5096e0 solid 0.0625rem;
   border-radius: 0.25rem;
   margin-right: 0.25rem;
   text-indent: 0.625rem;
@@ -1477,30 +1467,30 @@ export default {
 }
 
 .saveBtn {
-  font-size: 16px;
+  font-size: 1rem;
   color: #ffffff;
   font-weight: bold;
-  width: 140px;
+  width: 8.75rem;
   text-align: center;
-  padding: 9px 0;
+  padding: 0.5625rem 0;
   background: #5096e0;
-  border-radius: 100px;
+  border-radius: 6.25rem;
   border: none;
 }
 .cancelBtn {
   background: #ffffff;
-  border: 1px solid #5096e0;
+  border: 0.0625rem solid #5096e0;
   color: #5096e0;
 }
 .add_prescription_btn {
   width: 100%;
-  height: 40px;
-  line-height: 40px;
+  height: 2.5rem;
+  line-height: 2.5rem;
   background: #eeae1d;
   color: #fff;
-  font-size: 16px;
+  font-size: 1rem;
   text-align: center;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   display: inline-block;
 }
 tr th {
@@ -1516,18 +1506,18 @@ th {
 .diagnosis_input {
   width: 90%;
   height: 2rem;
-  border: #5096e0 solid 1px;
+  border: #5096e0 solid 0.0625rem;
   border-radius: 0.25rem;
   text-align: center;
 }
 tbody tr {
-  border-bottom: #c1c1c1 solid 1px;
+  border-bottom: #c1c1c1 solid 0.0625rem;
 }
 tbody td {
   padding: 0.625rem 0 !important;
 }
 .edit-tpl-foot {
-  border-top: #ccc solid 1px;
+  border-top: #ccc solid 0.0625rem;
   text-align: center;
   padding: 1.25rem 0;
 }
@@ -1551,8 +1541,8 @@ tbody td {
   margin-right: 1rem;
   padding-bottom: 0.5rem;
   margin-top: 0.5rem;
-  border-bottom: 1px solid #c1c1c1;
-  border-top: 1px transparent;
+  border-bottom: 0.0625rem solid #c1c1c1;
+  border-top: 0.0625rem transparent;
 }
 .case-label {
   font-weight: bold;

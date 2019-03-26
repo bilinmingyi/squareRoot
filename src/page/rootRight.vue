@@ -35,7 +35,6 @@
       <keep-alive>
         <component :is="componentLists[(Number(tabType)-1)]"></component>
       </keep-alive>
-
     </div>
   </div>
 </template>

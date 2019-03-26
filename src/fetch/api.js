@@ -201,6 +201,8 @@ const delTpl = (id, params, type) => {
   }
 }
 
+const queryClassic = (params) => fetch('/doctreat/traditionrecipe/list', params);
+
 export {
   fetch,
   cancelOrder,
@@ -235,5 +237,6 @@ export {
   searchTpl,
   updateTpl,
   delTpl,
-  searchFJB
+  searchFJB,
+  queryClassic
 }

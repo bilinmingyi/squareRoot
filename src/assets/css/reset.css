@@ -748,3 +748,6 @@ input {
 .tr{
   text-align: right;
 }
+.clear{
+  clear: both;
+}

@@ -7,7 +7,7 @@
       <div class="d_sure_prescription_title">确定导入处方？</div>
       <div class="f15 mb10 font_bold">
         导入处方将覆盖之前的编辑的信息，
-        <span class="text_red">没有的药品</span>不会导入至处方。
+        <span class="text_red">暂无药品</span>需自行更改。
       </div>
       <div class="d_Classic_prescription_quote2 clearfix">
         <div v-if="recipeData.recipe_type==1" class="flex-wrap">
@@ -94,6 +94,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+
 export default {
   props: {
     recipeDataProp: {
@@ -144,6 +145,7 @@ export default {
       let map = this.mapList;
       let arr = recipe[map[type]];
       this.clean_recipe();
+      console.log(arr)
       arr.forEach(item => {
         this.add_new_medicine({ item, type });
       })
@@ -175,7 +177,7 @@ export default {
   height: 80vh;
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 30%;
   transform: translate(-50%, -50%);
   padding: 20px;
 }
