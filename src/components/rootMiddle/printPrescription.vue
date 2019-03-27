@@ -42,7 +42,7 @@
           </div>
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
             <span style="font-weight: bolder">费别：</span>
-            自费
+            {{isYB==0?'自费':'医保'}}
           </div>
         </div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
@@ -272,7 +272,7 @@ export default {
   },
   computed: {
     ...mapGetters(["currRecipeData"]),
-    ...mapState(["patientData", "recordData","printPre", 'orderSeqno', 'doctorName']),
+    ...mapState(["patientData", "recordData","printPre", 'orderSeqno', 'doctorName',"isYB"]),
     recipeType: function() {
       return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
     },

@@ -31,7 +31,7 @@
             {{new Date() | dateFormat('yyyy-MM-dd')}}
           </div>
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
-            <span style="font-weight: bolder">费别：自费</span>
+            <span style="font-weight: bolder">费别：{{isYB==0?'自费':'医保'}}</span>
           </div>
         </div>
 
@@ -109,7 +109,8 @@ export default {
       patientData: state => state.patientData,
       recordData: state => state.recordData,
       orderSeqno: state => state.orderSeqno,
-      doctorName: state => state.doctorName
+      doctorName: state => state.doctorName,
+      isYB: state => state.isYB
     }),
     examination() {
       // 计算检查结果

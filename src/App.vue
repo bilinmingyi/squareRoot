@@ -61,6 +61,7 @@
             this.set_state_prop({key: 'isFirst', val: data.is_first});
             this.set_state_prop({key: 'treatPrice', val: data.treat_price});
             this.set_state_prop({key: 'doctorName', val: data.doctor_name});
+            this.set_state_prop({key: 'isYB', val: data.pay_category})
             this.initFinish = true;
           } else {
             console.log(res.msg);

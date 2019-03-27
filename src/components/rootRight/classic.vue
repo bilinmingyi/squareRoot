@@ -6,7 +6,7 @@
           <Input placeholder="请输入经典方剂名称" @input="searchClassic" v-model="queryName"/>
         </div>
         <div class="col30">
-          <Button long @click.stop  ="searchClassic">搜索</Button>
+          <Button long @click.stop="searchClassic">搜索</Button>
         </div>
       </div>
       <div>

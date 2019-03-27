@@ -12,6 +12,7 @@ const state = {
   treatPrice: 0, // 诊金
   showHistoryDetail: false, // 显示就诊历史
   orderSeqno:'',
+  isYB:0,
   clinicName: '',
   doctorName: '',
   patientData: {
