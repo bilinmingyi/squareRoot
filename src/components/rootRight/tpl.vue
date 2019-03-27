@@ -117,7 +117,7 @@
             <span>{{tplData.diagnosis}}</span>
           </div>
         </div>
-        <div>
+        <div class="pb10">
           <button class="prescription_detail_save mr2" @click.stop="useTplShow()">使用模板</button>
           <button
             class="prescription_detail_save"
@@ -125,13 +125,16 @@
             @click.stop="editTplShow()"
           >编辑模板</button>
           <button class="prescription_detail_del" @click.stop="delTplShow()">删除模板</button>
+          <div class="clear"></div>
         </div>
         <div v-if="showUseTpl" class="alert-back">
           <div class="use-tpl">
             <div class="alert-title">确定使用[{{tplData.tplName}}]模板？</div>
             <div class="mt20 mb10">
-              使用模板将覆盖已编辑之信息，
-              <span style="color:red;">没有的药品</span>不会导入至处方
+              使用模板将覆盖已编辑之信息
+              <span v-if="recipeType!=0">
+                <strong style="color:red;">，没有的药品</strong>不会导入至处方
+              </span>
             </div>
             <div class="use-list mt10">
               <div

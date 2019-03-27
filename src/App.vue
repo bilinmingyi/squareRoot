@@ -82,6 +82,7 @@
           if (data.code === 1000) {
             if (data.data == '') return;
             let result = JSON.parse(data.data);
+
             try {
               if (result.recipeList && result.recordData) {
                 this.checkOrder(result.recipeList);
@@ -109,6 +110,7 @@
       },
       // 兼容老数据的recipeList
       compatOldRecipeList (data) {
+        console.log(data)
         let recipeList = [];
         let list = [];
         let money = 0;
