@@ -110,7 +110,6 @@
       },
       // 兼容老数据的recipeList
       compatOldRecipeList (data) {
-        console.log(data)
         let recipeList = [];
         let list = [];
         let money = 0;

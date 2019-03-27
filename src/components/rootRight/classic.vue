@@ -3,10 +3,10 @@
     <div class="content" v-show="!classicPage">
       <div class="displayFlex">
         <div class="col70 mr10">
-          <Input placeholder="请输入经典方剂名称" v-model="queryName"/>
+          <Input placeholder="请输入经典方剂名称" @input="searchClassic" v-model="queryName"/>
         </div>
         <div class="col30">
-          <Button long>搜索</Button>
+          <Button long @click.stop  ="searchClassic">搜索</Button>
         </div>
       </div>
       <div>
@@ -168,6 +168,10 @@
         } else {
           return
         }
+      },
+      searchClassic(){
+        this.page = 1;
+        this.getData();
       },
       showClassicDetail(item) {
         this.classicDetail.name = item.name;
