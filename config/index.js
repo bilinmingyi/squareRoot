@@ -43,7 +43,7 @@ module.exports = {
 
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'dyyzs/public/squareRoot',
+    assetsSubDirectory: 'yzshis/public/squareRoot',
     assetsPublicPath: '/',
 
     /**
