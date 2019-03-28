@@ -17,7 +17,7 @@
 
 <script>
 
-  import {getTreatOrderDetail, loadDraft, searchMed, canRecipeHelp} from "@/fetch/api.js";
+  import {getTreatOrderDetail, loadDraft, searchMed, canRecipeHelp, getDoctorInfor} from "@/fetch/api.js";
   import fLoader from "@/components/fLoader";
   import {mapState, mapActions} from "vuex";
 
@@ -52,6 +52,9 @@
           if (res.code === 1000) {
             let data = res.data;
             let patientData = this.patientData;
+            //获取医生科室
+            this.getDoctorData(data.doctor_id);
+
             Object.keys(patientData).forEach((item) => {
               let val = data['patient_' + item]
               if (val != null) {
@@ -415,13 +418,18 @@
 
 
       },
-      // getRecipeHelp() {
-      //   canRecipeHelp({}).then(
-      //     data => {
-      //       this.set_recipe_help(data.data)
-      //     }
-      //   )
-      // }
+      getDoctorData(id){
+        getDoctorInfor({
+          id:id
+        }).then(res => {
+          let data = res.data;
+          if(res.code == 1000){
+            this.set_state_prop({key: 'department', val: data.department});
+          }else {
+            this.$Message.info(res.msg)
+          }
+        })
+      }
     }
   };
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="right-block">
     <div>
-      <div style="display: flex;background-color: #f2f2f2;">
+      <div style="display: flex;">
         <div
           v-show="recipeType==1||recipeType==2||recipeType==4||recipeType==6"
           style="flex: 1;"

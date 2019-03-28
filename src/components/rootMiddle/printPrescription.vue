@@ -38,9 +38,6 @@
             {{patientData.age}}
           </div>
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
-            <span style="font-weight: bolder">科室：</span>
-          </div>
-          <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
             <span style="font-weight: bolder">费别：</span>
             {{isYB==0?'自费':'医保'}}
           </div>
@@ -53,6 +50,9 @@
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
             <span style="font-weight: bolder">电话：</span>
             {{patientData.mobile}}
+          </div>
+          <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
+            <span style="font-weight: bolder">科室：{{department}}</span>
           </div>
         </div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
@@ -272,7 +272,7 @@ export default {
   },
   computed: {
     ...mapGetters(["currRecipeData"]),
-    ...mapState(["patientData", "recordData","printPre", 'orderSeqno', 'doctorName',"isYB"]),
+    ...mapState(["patientData", "recordData","printPre", 'orderSeqno', 'doctorName',"isYB","department"]),
     recipeType: function() {
       return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
     },

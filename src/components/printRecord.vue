@@ -24,7 +24,7 @@
         </div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
-            <span style="font-weight: bolder">科室：</span>
+            <span style="font-weight: bolder">科室：{{department}}</span>
           </div>
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
             <span style="font-weight: bolder">日期：</span>
@@ -110,7 +110,8 @@ export default {
       recordData: state => state.recordData,
       orderSeqno: state => state.orderSeqno,
       doctorName: state => state.doctorName,
-      isYB: state => state.isYB
+      isYB: state => state.isYB,
+      department: state => state.department
     }),
     examination() {
       // 计算检查结果

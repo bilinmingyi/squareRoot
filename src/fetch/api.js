@@ -73,6 +73,8 @@ const checkIsMatch = (params, type, recipe) => {
 const addRecordTpl = params => fetch('/doctreat/tpl/casehistory/add', params);
 
 //middle
+const getDoctorInfor = params => fetch('/clinicmng/user/doctorInfo',params);
+
 const saveMedTpl = (params, type) => {
   if (type === 1) {
     return fetch('/doctreat/tpl/herbal/add', params);
@@ -144,7 +146,7 @@ const canRecipeHelp =(params) => fetch('/doctreat/recipeHelp/enbaled', params);
 
 const pointCount =(params) => fetch('/doctreat/treat/help',params)
 
-const waitingPage='/dyyzs/doctreat/waiting/listPage';
+const waitingPage='/yzshis/doctreat/waiting/listPage';
 
 //right
 const searchRecentMed = (params, type) => {
@@ -218,6 +220,7 @@ export {
   addRecordTpl,
 
   // middle
+  getDoctorInfor,
   saveMedTpl,
   searchDiagnosis,
   getJJInfo,

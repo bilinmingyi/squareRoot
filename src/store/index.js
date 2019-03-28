@@ -13,6 +13,7 @@ const state = {
   showHistoryDetail: false, // 显示就诊历史
   orderSeqno:'',
   isYB:0,
+  department:'',
   clinicName: '',
   doctorName: '',
   patientData: {
