@@ -621,7 +621,9 @@ input {
 .font-16 {
   font-size: 1rem;
 }
-
+.font-18 {
+  font-size: 1.125rem;
+}
 /* font-weight */
 .font-bold {
   font-weight: bold;
