@@ -295,8 +295,6 @@
                       placeholder="输入药品名称/编码/拼音码"
                       v-model="tplEditData.searchName"
                       @input="tplMedSearch()"
-                      <!--ref="herbal_input"-->
-                      <!--@on-keydown="listenerKey($event, 'herbal')"-->
                       clearable
                     />
                   </div>
@@ -383,8 +381,6 @@
                       placeholder="输入药品名称/编码/拼音码"
                       v-model="tplEditData.searchName"
                       @input="tplMedSearch()"
-                      <!--ref="western_input"-->
-                      <!--@on-keydown="listenerKey($event, 'western')"-->
                       clearable
                     />
                   </div>
@@ -429,8 +425,6 @@
                       placeholder="输入药品名称/编码/拼音码"
                       v-model="tplEditData.searchName"
                       @input="tplMedSearch()"
-                      <!--ref="therapy_input"-->
-                      <!--@on-keydown="listenerKey($event, 'therapy')"-->
                       clearable
                     />
                   </div>
