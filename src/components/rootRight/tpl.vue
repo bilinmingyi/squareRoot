@@ -295,6 +295,8 @@
                       placeholder="输入药品名称/编码/拼音码"
                       v-model="tplEditData.searchName"
                       @input="tplMedSearch()"
+                      <!--ref="herbal_input"-->
+                      <!--@on-keydown="listenerKey($event, 'herbal')"-->
                       clearable
                     />
                   </div>
@@ -381,6 +383,8 @@
                       placeholder="输入药品名称/编码/拼音码"
                       v-model="tplEditData.searchName"
                       @input="tplMedSearch()"
+                      <!--ref="western_input"-->
+                      <!--@on-keydown="listenerKey($event, 'western')"-->
                       clearable
                     />
                   </div>
@@ -425,6 +429,8 @@
                       placeholder="输入药品名称/编码/拼音码"
                       v-model="tplEditData.searchName"
                       @input="tplMedSearch()"
+                      <!--ref="therapy_input"-->
+                      <!--@on-keydown="listenerKey($event, 'therapy')"-->
                       clearable
                     />
                   </div>
@@ -446,6 +452,7 @@
                   </tr>
                   </thead>
                 </table>
+                <!--ref="herbal_scroll"-->
                 <div class="tpl-search-list">
                   <table class="col100">
                     <tbody>
@@ -480,7 +487,8 @@
                   </tr>
                   </thead>
                 </table>
-                <div class="tpl-search-list">
+                <!--ref="western_scroll"-->
+                <div class="tpl-search-list" >
                   <table class="col100">
                     <tbody>
                     <tr
@@ -510,7 +518,8 @@
                   </tr>
                   </thead>
                 </table>
-                <div class="tpl-search-list">
+                <!--ref="therapy_scroll"-->
+                <div class="tpl-search-list" >
                   <table class="col100">
                     <tbody>
                     <tr
@@ -650,7 +659,8 @@
           doctor_remark: "",
           searchName: "",
           searchLists: [],
-          searchListShow: false
+          searchListShow: false,
+          currIndex: -1
         },
         tplType: [{name: "个人", scope: 1}, {name: "共享", scope: 0}]
       };
@@ -1320,7 +1330,48 @@
         this.showEditTpl = false;
         this.tplEditData.tplSearchList = [];
         this.tplEditData.searchListShow = false;
-      }
+      },
+      // listenerKey(event, type) {
+      //   console.log(event)
+      //   let keyCode = event.keyCode;
+      //   let index = this.tplEditData.currIndex;
+      //   let data = this.tplEditData.items;
+      //   let dropDownDiv = this.$refs[type + "_scroll"];
+      //   let self = this;
+      //
+      //   if (!dropDownDiv || !data) {
+      //     return
+      //   }
+      //
+      //   let input = this.$refs[type + "_input"]
+      //
+      //   switch (keyCode) {
+      //     case 13:
+      //       index != 0 && self.editTplAddList(data[index])
+      //       break;
+      //     case 38:
+      //       if (index > -1) {
+      //         index--;
+      //       } else {
+      //
+      //       }
+      //       break;
+      //     case 40:
+      //       if (index < data.length) {
+      //         index++;
+      //       }
+      //       break;
+      //     default:
+      //       return
+      //   }
+      //   setTimeout(() => {
+      //     if(data.length > 0){
+      //       input.selectionStart = input.target.value.length;
+      //     }
+      //   })
+      //   this.tplEditData.currIndex = index;
+      //   // dropDownDiv.scrollTop = index>3;
+      // }
     }
   };
 </script>
@@ -1586,7 +1637,7 @@
   }
 
   .tpl-search-list {
-    max-height: 8.5rem;
+    max-height: 8rem;
     overflow: auto;
   }
 
