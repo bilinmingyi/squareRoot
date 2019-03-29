@@ -88,6 +88,7 @@
         </div>
       </div>
     </section>
+    <f-loader v-if="showLoading"></f-loader>
   </div>
 </template>
 
@@ -95,16 +96,19 @@
   import {Button} from 'iview'
   import {mapState} from 'vuex'
   import {submitOrder, waitingPage} from '@/fetch/api.js'
+  import fLoader from '@/components/fLoader.vue'
 
   export default {
     name: "previewRecipe",
     data() {
       return {
-        allPrice: 0
+        allPrice: 0,
+        showLoading: false
       }
     },
     components: {
-      Button
+      Button,
+      fLoader
     },
     computed: {
       ...mapState({
@@ -136,7 +140,9 @@
         this.$emit('hidePreview')
       },
       submitOrder() {
+
         let recipeList = JSON.parse(JSON.stringify(this.recipeList)), resultList = [];
+        this.showLoading = true;
         recipeList.forEach(item => {
           switch (item.type) {
             case 1:
@@ -206,16 +212,20 @@
         }).then(data => {
           if (data.code === 1000) {
             try {
-              window.location.href=waitingPage
-            }catch (e) {
+              window.location.href = waitingPage
+            } catch (e) {
               this.$router.go(-1);
             }
           } else if (data.code === 500011) {
+            this.showLoading = false;
             this.$Message.info("药品不存在！");
             return
           } else {
+            this.showLoading = false;
             this.$Message.info("提交失败--" + data.msg)
           }
+        }).catch(error => {
+          this.showLoading = false;
         })
       }
     }
