@@ -26,7 +26,8 @@
             class="mt10"
             style="text-align:center;font-size:1rem;"
             v-show="showList.length<1"
-          >暂无模板</div>
+          >暂无模板
+          </div>
           <div class="pt15" style="clear:both;display:flex;justify-content:center;">
             <Button
               v-show="currPage!==1"
@@ -34,7 +35,8 @@
               type="primary"
               ghost
               @click.stop="changePage(0)"
-            >上一页</Button>
+            >上一页
+            </Button>
             <Button v-show="currPage===1" disabled shape="circle">上一页</Button>
             <div class="ml10"></div>
             <Button
@@ -43,7 +45,8 @@
               type="primary"
               ghost
               @click.stop="changePage(1)"
-            >下一页</Button>
+            >下一页
+            </Button>
             <Button v-show="currPage===page_num" disabled shape="circle">下一页</Button>
           </div>
         </div>
@@ -106,7 +109,8 @@
             <span class="case-label" style="width: 3.75rem">检查</span>
             <div
               style="white-space:pre-wrap; flex:1;margin:0;font-family:'microsoft yahei';border:0!important;"
-            >{{tplExamination}}</div>
+            >{{tplExamination}}
+            </div>
           </div>
           <div>
             <span class="case-label">西医诊断&nbsp;</span>
@@ -123,7 +127,8 @@
             class="prescription_detail_save"
             v-show="recipeType!==0"
             @click.stop="editTplShow()"
-          >编辑模板</button>
+          >编辑模板
+          </button>
           <button class="prescription_detail_del" @click.stop="delTplShow()">删除模板</button>
         </div>
         <div v-if="showUseTpl" class="alert-back">
@@ -169,7 +174,8 @@
                   <span class="case-label" style="width: 4.5rem">检查</span>
                   <div
                     style="white-space:pre-wrap; flex:1;margin:0;font-family:'microsoft yahei';"
-                  >{{tplExamination}}</div>
+                  >{{tplExamination}}
+                  </div>
                 </div>
                 <div>
                   <span class="case-label">西医诊断&nbsp;</span>
@@ -472,7 +478,7 @@
                   </thead>
                 </table>
                 <!--ref="western_scroll"-->
-                <div class="tpl-search-list" >
+                <div class="tpl-search-list">
                   <table class="col100">
                     <tbody>
                     <tr
@@ -503,7 +509,7 @@
                   </thead>
                 </table>
                 <!--ref="therapy_scroll"-->
-                <div class="tpl-search-list" >
+                <div class="tpl-search-list">
                   <table class="col100">
                     <tbody>
                     <tr
@@ -646,7 +652,8 @@
           searchListShow: false,
           currIndex: -1
         },
-        tplType: [{name: "个人", scope: 1}, {name: "共享", scope: 0}]
+        tplType: [{name: "个人", scope: 1}, {name: "共享", scope: 0}],
+        currShowTpl: {}
       };
     },
     computed: {
@@ -1036,73 +1043,33 @@
         this.showAddTpl = false;
       },
       tplShow: function (item) {
-        this.tplEditData.searchName ="";
-        if (this.recipeType != 0) {
-          var self = this;
-          var ids = [];
-          var params = {};
-          item.items.forEach(function (item) {
-            ids.push(Number(item.item_id));
-          });
-          var params = {ids: ids, status: 1};
-          searchMed(params, this.recipeType).then(function (res) {
-            if (res.code == 1000) {
-              res.data.forEach(function (i) {
-                item.items.forEach(function (e) {
-                  if (e.item_id == i.id) {
-                    e.status = 1;
-                  }
-                });
-              });
-              self.tplData = {
-                tplName: item.name,
-                scope: item.scope,
-                items: item.items,
-                dosage: item.dosage,
-                doctor_remark: item.doctor_remark,
-                category: item.category,
-                clinic_id: item.clinic_id,
-                creator_name: item.creator_name,
-                creator_id: item.creator_id,
-                id: item.id,
-                is_cloud: item.is_cloud,
+        this.tplEditData.searchName = "";
+        this.currShowTpl = item;
 
-                chief_complaint: item.chief_complaint, //主诉
-                present_illness: item.present_illness, //病史
-                allergic_history: item.allergic_history, //过敏史
-                past_history: item.past_history, //既往史
-                examination: item.examination, //检查
-                diagnosis: item.diagnosis, //中医诊断
-                diagnosis_xy: item.diagnosis_xy //西医诊断
-              };
-              self.showTpl = true;
-            }
-          });
-        } else {
-          var self = this;
-          self.tplData = {
-            tplName: item.name,
-            scope: item.scope,
-            items: item.items,
-            dosage: item.dosage,
-            doctor_remark: item.doctor_remark,
-            category: item.category,
-            clinic_id: item.clinic_id,
-            creator_name: item.creator_name,
-            creator_id: item.creator_id,
-            id: item.id,
-            is_cloud: item.is_cloud,
+        var self = this;
+        self.tplData = {
+          tplName: item.name,
+          scope: item.scope,
+          items: item.items,
+          dosage: item.dosage,
+          doctor_remark: item.doctor_remark,
+          category: item.category,
+          clinic_id: item.clinic_id,
+          creator_name: item.creator_name,
+          creator_id: item.creator_id,
+          id: item.id,
+          is_cloud: item.is_cloud,
 
-            chief_complaint: item.chief_complaint, //主诉
-            present_illness: item.present_illness, //病史
-            allergic_history: item.allergic_history, //过敏史
-            past_history: item.past_history, //既往史
-            examination: item.examination, //检查
-            diagnosis: item.diagnosis, //中医诊断
-            diagnosis_xy: item.diagnosis_xy //西医诊断
-          };
-          self.showTpl = true;
-        }
+          chief_complaint: item.chief_complaint, //主诉
+          present_illness: item.present_illness, //病史
+          allergic_history: item.allergic_history, //过敏史
+          past_history: item.past_history, //既往史
+          examination: item.examination, //检查
+          diagnosis: item.diagnosis, //中医诊断
+          diagnosis_xy: item.diagnosis_xy //西医诊断
+        };
+        self.showTpl = true;
+
       },
       tplHide: function () {
         this.showTpl = false;
@@ -1174,7 +1141,33 @@
         }
       },
       useTplShow: function () {
-        this.showUseTpl = true;
+        var self = this;
+        var ids = [];
+        var items = self.currShowTpl.items;
+        this.currShowTpl.items.forEach(function (item) {
+          ids.push(Number(item.item_id));
+        });
+        var params = {ids: ids, status: 1};
+
+        searchMed(params, this.recipeType).then(function (res) {
+          if (res.code == 1000) {
+            items.forEach((item) => {
+              for (var i = 0, len = res.data.length;i < len;i++){
+                if(item.item_id == res.data[i].id){
+                  item.status = 1;
+                  break;
+                }
+              }
+
+              if(i == len){
+                item.status =0;
+              }
+            });
+            self.showUseTpl = true;
+          }else {
+            self.$Message.info(res.msg)
+          }
+        });
       },
       useTplHide: function () {
         this.showUseTpl = false;
@@ -1187,22 +1180,24 @@
       },
       editTplShow: function () {
         var self = this;
-        this.tplEditData.tplName = this.tplData.tplName;
-        this.tplEditData.scope = this.tplData.scope;
-        this.tplEditData.is_cloud = this.tplData.is_cloud;
-        if (this.recipeType !== 0) {
-          this.tplEditData.items = (function (items) {
+        self.tplEditData.searchName = "";
+        self.tplEditData.tplName = self.tplData.tplName;
+        self.tplEditData.scope = self.tplData.scope;
+        self.tplEditData.is_cloud = self.tplData.is_cloud;
+
+        if (self.recipeType !== 0) {
+          self.tplEditData.items = (function (items) {
             var newArr = [];
             items.forEach(function (item) {
               newArr.push(item);
             });
             return newArr;
-          })(this.tplData.items);
+          })(self.tplData.items);
         }
 
-        this.tplEditData.dosage = this.tplData.dosage;
-        this.tplEditData.doctor_remark = this.tplData.doctor_remark;
-        this.showEditTpl = true;
+        self.tplEditData.dosage = self.tplData.dosage;
+        self.tplEditData.doctor_remark = self.tplData.doctor_remark;
+        self.showEditTpl = true;
       },
       editTplHide: function () {
         this.showEditTpl = false;
