@@ -37,6 +37,7 @@
       </div>
     </div>
     <preview-recipe v-if="previewOrder" @hidePreview="hidePreview"></preview-recipe>
+    <f-loader v-if="showLoading"></f-loader>
   </div>
 </template>
 
@@ -45,6 +46,7 @@
   import {mapState, mapActions} from 'vuex'
   import previewRecipe from '@/components/rootMiddle/previewRecipe.vue'
   import {saveDraft, cancelOrder, waitingPage} from '@/fetch/api.js'
+  import fLoader from '@/components/fLoader.vue'
 
   export default {
     name: "fHeader",
@@ -53,12 +55,14 @@
       previewRecipe,
       Dropdown,
       DropdownMenu,
-      DropdownItem
+      DropdownItem,
+      fLoader
     },
     data() {
       return {
         cancelOrderModal: false,
-        previewOrder: false
+        previewOrder: false,
+        showLoading: false
       }
     },
     computed: {
@@ -77,6 +81,9 @@
         'add_new_recipt',
       ]),
       saveDraftData(canReturn) {
+        if(canReturn === 1){
+          this.showLoading = true;
+        }
         let draftData = {
           recipeList: this.recipeList,
           recordData: this.recordData,
@@ -95,7 +102,7 @@
           if (data.code === 1000) {
             if (canReturn === 1) {
               try {
-                window.location.href = waitingPage
+                window.location.href = waitingPage;
               } catch (e) {
                 this.$router.go(-1)
               }
