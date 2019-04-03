@@ -656,7 +656,8 @@
           searchListShow: false,
           currIndex: -1
         },
-        tplType: [{name: "个人", scope: 1}, {name: "共享", scope: 0}]
+        tplType: [{name: "个人", scope: 1}, {name: "共享", scope: 0}],
+        currShowTpl: {}
       };
     },
     computed: {
@@ -1046,72 +1047,33 @@
         this.showAddTpl = false;
       },
       tplShow: function (item) {
-        if (this.recipeType != 0) {
-          var self = this;
-          var ids = [];
-          var params = {};
-          item.items.forEach(function (item) {
-            ids.push(Number(item.item_id));
-          });
-          var params = {ids: ids, status: 1};
-          searchMed(params, this.recipeType).then(function (res) {
-            if (res.code == 1000) {
-              res.data.forEach(function (i) {
-                item.items.forEach(function (e) {
-                  if (e.item_id == i.id) {
-                    e.status = 1;
-                  }
-                });
-              });
-              self.tplData = {
-                tplName: item.name,
-                scope: item.scope,
-                items: item.items,
-                dosage: item.dosage,
-                doctor_remark: item.doctor_remark,
-                category: item.category,
-                clinic_id: item.clinic_id,
-                creator_name: item.creator_name,
-                creator_id: item.creator_id,
-                id: item.id,
-                is_cloud: item.is_cloud,
+        this.tplEditData.searchName = "";
+        this.currShowTpl = item;
 
-                chief_complaint: item.chief_complaint, //主诉
-                present_illness: item.present_illness, //病史
-                allergic_history: item.allergic_history, //过敏史
-                past_history: item.past_history, //既往史
-                examination: item.examination, //检查
-                diagnosis: item.diagnosis, //中医诊断
-                diagnosis_xy: item.diagnosis_xy //西医诊断
-              };
-              self.showTpl = true;
-            }
-          });
-        } else {
-          var self = this;
-          self.tplData = {
-            tplName: item.name,
-            scope: item.scope,
-            items: item.items,
-            dosage: item.dosage,
-            doctor_remark: item.doctor_remark,
-            category: item.category,
-            clinic_id: item.clinic_id,
-            creator_name: item.creator_name,
-            creator_id: item.creator_id,
-            id: item.id,
-            is_cloud: item.is_cloud,
+        var self = this;
+        self.tplData = {
+          tplName: item.name,
+          scope: item.scope,
+          items: item.items,
+          dosage: item.dosage,
+          doctor_remark: item.doctor_remark,
+          category: item.category,
+          clinic_id: item.clinic_id,
+          creator_name: item.creator_name,
+          creator_id: item.creator_id,
+          id: item.id,
+          is_cloud: item.is_cloud,
 
-            chief_complaint: item.chief_complaint, //主诉
-            present_illness: item.present_illness, //病史
-            allergic_history: item.allergic_history, //过敏史
-            past_history: item.past_history, //既往史
-            examination: item.examination, //检查
-            diagnosis: item.diagnosis, //中医诊断
-            diagnosis_xy: item.diagnosis_xy //西医诊断
-          };
-          self.showTpl = true;
-        }
+          chief_complaint: item.chief_complaint, //主诉
+          present_illness: item.present_illness, //病史
+          allergic_history: item.allergic_history, //过敏史
+          past_history: item.past_history, //既往史
+          examination: item.examination, //检查
+          diagnosis: item.diagnosis, //中医诊断
+          diagnosis_xy: item.diagnosis_xy //西医诊断
+        };
+        self.showTpl = true;
+
       },
       tplHide: function () {
         this.showTpl = false;
@@ -1183,7 +1145,33 @@
         }
       },
       useTplShow: function () {
-        this.showUseTpl = true;
+        var self = this;
+        var ids = [];
+        var items = self.currShowTpl.items;
+        this.currShowTpl.items.forEach(function (item) {
+          ids.push(Number(item.item_id));
+        });
+        var params = {ids: ids, status: 1};
+
+        searchMed(params, this.recipeType).then(function (res) {
+          if (res.code == 1000) {
+            items.forEach((item) => {
+              for (var i = 0, len = res.data.length;i < len;i++){
+                if(item.item_id == res.data[i].id){
+                  item.status = 1;
+                  break;
+                }
+              }
+
+              if(i == len){
+                item.status =0;
+              }
+            });
+            self.showUseTpl = true;
+          }else {
+            self.$Message.info(res.msg)
+          }
+        });
       },
       useTplHide: function () {
         this.showUseTpl = false;
@@ -1196,22 +1184,24 @@
       },
       editTplShow: function () {
         var self = this;
-        this.tplEditData.tplName = this.tplData.tplName;
-        this.tplEditData.scope = this.tplData.scope;
-        this.tplEditData.is_cloud = this.tplData.is_cloud;
-        if (this.recipeType !== 0) {
-          this.tplEditData.items = (function (items) {
+        self.tplEditData.searchName = "";l
+        self.tplEditData.tplName = self.tplData.tplName;
+        self.tplEditData.scope = self.tplData.scope;
+        self.tplEditData.is_cloud = self.tplData.is_cloud;
+
+        if (self.recipeType !== 0) {
+          self.tplEditData.items = (function (items) {
             var newArr = [];
             items.forEach(function (item) {
               newArr.push(item);
             });
             return newArr;
-          })(this.tplData.items);
+          })(self.tplData.items);
         }
 
-        this.tplEditData.dosage = this.tplData.dosage;
-        this.tplEditData.doctor_remark = this.tplData.doctor_remark;
-        this.showEditTpl = true;
+        self.tplEditData.dosage = self.tplData.dosage;
+        self.tplEditData.doctor_remark = self.tplData.doctor_remark;
+        self.showEditTpl = true;
       },
       editTplHide: function () {
         this.showEditTpl = false;
