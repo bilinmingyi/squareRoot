@@ -14,6 +14,7 @@ const state = {
   orderSeqno:'',
   isYB:0,
   department:'',
+  ybCardNo:'',
   clinicName: '',
   doctorName: '',
   patientData: {

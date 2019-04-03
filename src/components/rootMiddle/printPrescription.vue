@@ -17,7 +17,7 @@
         </div>
       </section>
       <div style="font-size: 12px;font-weight: normal;">医疗证/医保卡号：
-        <!--{{ybCardNo}}-->
+        {{ybCardNo}}
       </div>
       <section
         style="border-bottom: #000000 solid 2px;border-top: #000000 solid 2px;padding: 10px 0px;font-size: 12px;"
@@ -43,15 +43,15 @@
           </div>
         </div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
-          <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
+          <div style="flex: 3;-webkit-flex: 3;-ms-flex: 3;">
             <span style="font-weight: bolder">病历号：</span>
             {{orderSeqno}}
           </div>
-          <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
+          <div style="flex: 2;-webkit-flex: 2;-ms-flex: 2;">
             <span style="font-weight: bolder">电话：</span>
             {{patientData.mobile}}
           </div>
-          <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
+          <div style="flex: 2;-webkit-flex: 2;-ms-flex: 2;">
             <span style="font-weight: bolder">科室：{{department}}</span>
           </div>
         </div>
@@ -272,7 +272,7 @@ export default {
   },
   computed: {
     ...mapGetters(["currRecipeData"]),
-    ...mapState(["patientData", "recordData","printPre", 'orderSeqno', 'doctorName',"isYB","department"]),
+    ...mapState(["patientData", "recordData","printPre", 'orderSeqno', 'doctorName', "isYB", "department", "ybCardNo"]),
     recipeType: function() {
       return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
     },

@@ -64,7 +64,8 @@
             this.set_state_prop({key: 'isFirst', val: data.is_first});
             this.set_state_prop({key: 'treatPrice', val: data.treat_price});
             this.set_state_prop({key: 'doctorName', val: data.doctor_name});
-            this.set_state_prop({key: 'isYB', val: data.pay_category})
+            this.set_state_prop({key: 'isYB', val: data.pay_category});
+            this.set_state_prop({key: 'ybCardNo', val: data.yb_card_no});
             this.initFinish = true;
           } else {
             console.log(res.msg);
@@ -109,16 +110,16 @@
             this.$Message.info(data.msg)
           }
         }).then(() => {
-          this.showLoader=false;
+          this.showLoader = false;
         })
       },
       // 兼容老数据的recipeList
-      compatOldRecipeList (data) {
+      compatOldRecipeList(data) {
         let recipeList = [];
         let list = [];
         let money = 0;
         data.forEach((item) => {
-          switch(item.recipe_type) {
+          switch (item.recipe_type) {
             case 1: // 中药处方
               list = [];
               money = 0;
@@ -249,7 +250,7 @@
                 data: {
                   doctor_remark: item.doctor_remark || '',
                   items: list
-                } 
+                }
               })
               break;
             case 5: // 附加服务
@@ -288,7 +289,7 @@
                 data: {
                   doctor_remark: item.doctor_remark || '',
                   items: list
-                } 
+                }
               })
               break;
           }
@@ -322,7 +323,7 @@
                     }
                     if (j == responeItems.length) {
                       recipeItems[i].is_match = 0;
-                    }else {
+                    } else {
                       recipeItems[i].is_match = 1;
                     }
                   }
@@ -349,7 +350,7 @@
                     }
                     if (j == responeItems.length) {
                       recipeItems[i].is_match = 0;
-                    }else {
+                    } else {
                       recipeItems[i].is_match = 1;
                     }
                   }
@@ -376,7 +377,7 @@
                     }
                     if (j == responeItems.length) {
                       recipeItems[i].is_match = 0;
-                    }else {
+                    } else {
                       recipeItems[i].is_match = 1;
                     }
                   }
@@ -403,7 +404,7 @@
                     }
                     if (j == responeItems.length) {
                       recipeItems[i].is_match = 0;
-                    }else {
+                    } else {
                       recipeItems[i].is_match = 1;
                     }
                   }
@@ -418,14 +419,14 @@
 
 
       },
-      getDoctorData(id){
+      getDoctorData(id) {
         getDoctorInfor({
-          id:id
+          id: id
         }).then(res => {
           let data = res.data;
-          if(res.code == 1000){
-            this.set_state_prop({key: 'department', val: data.department});
-          }else {
+          if (res.code == 1000) {
+            this.set_state_prop({key: 'department', val: data ? data.department : ''});
+          } else {
             this.$Message.info(res.msg)
           }
         })
@@ -464,7 +465,7 @@
     position: relative;
   }
 
-  .right_block{
+  .right_block {
     flex: 82;
     padding-top: 1.25rem;
   }
