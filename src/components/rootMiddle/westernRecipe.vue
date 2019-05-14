@@ -33,7 +33,7 @@
             <td>{{item.spec}}</td>
             <td>
               <InputNumber style="width:3.2rem;" :value="item.num"
-                     @on-change="modify_medicine({key:'num',val:$event,index:index})"/>
+                           @on-change="modify_medicine({key:'num',val:$event,index:index})"/>
             </td>
             <td>
               <Select style="width:3.125rem" :value="item.unit"
@@ -50,7 +50,7 @@
             </td>
             <td>
               <InputNumber style="width:3.2rem" :value="Number(item.dose_once)"
-                     @on-change="modify_medicine({key:'dose_once',val:$event,index:index})"/>
+                           @on-change="modify_medicine({key:'dose_once',val:$event,index:index})"/>
               <span class="unitText">{{item.unit_dose}}</span>
             </td>
             <td>
@@ -61,7 +61,7 @@
             </td>
             <td>
               <InputNumber style="width:3.2rem" :value="item.days"
-                     @on-change="modify_medicine({key:'days',val:$event,index:index})"/>
+                           @on-change="modify_medicine({key:'days',val:$event,index:index})"/>
             </td>
           </template>
           <template v-else>
@@ -106,7 +106,7 @@
     data() {
       return {
         medFrequency: medFrequency,
-        showAddTpl:false
+        showAddTpl: false
       }
     },
     components: {
@@ -131,7 +131,7 @@
         deep: true,
         handler: function (newVal, oldVal) {
           let allPrice = 0;
-          newVal.map((item,index) => {
+          newVal.map((item, index) => {
             if (item.unit === item.unit_stock) {
               allPrice += Number(item.sale_price) * Number(item.num);
             } else if (item.unit === item.unit_sale) {
@@ -140,7 +140,7 @@
               allPrice += Number(item.sale_price) * Number(item.num);
             }
           })
-          setTimeout(()=>{
+          setTimeout(() => {
             this.modify_recipe({key: 'money', val: Number(allPrice).toFixed(2)})
           })
         }
@@ -155,7 +155,7 @@
         'modify_recipe',
         'change_print_pre',
       ]),
-      print_pre: function(){
+      print_pre: function () {
         this.change_print_pre();
       },
       cancelRecipe() {
@@ -172,32 +172,36 @@
       },
       change_unit(event, index) {
         let currItems = this.currentData.data.items[index];
-        this.modify_medicine({key:'unit',val:event,index:index})
+        this.modify_medicine({key: 'unit', val: event, index: index})
         if (currItems.num !== '' && currItems.num !== 0) {
           if (event === currItems.unit_stock) {
-            this.modify_medicine({key:'num',val:Math.ceil(currItems.num*1.0/currItems.stock_sale_ratio),index:index})
+            this.modify_medicine({
+              key: 'num',
+              val: Math.ceil(currItems.num * 1.0 / currItems.stock_sale_ratio),
+              index: index
+            })
           } else if (event === currItems.unit_sale) {
-            this.modify_medicine({key:'num',val:Math.ceil(currItems.num*currItems.stock_sale_ratio),index:index})
+            this.modify_medicine({key: 'num', val: Math.ceil(currItems.num * currItems.stock_sale_ratio), index: index})
           }
         }
 
       },
-      saveTplData(){
-        if(this.currentData.data.items.length===0){
+      saveTplData() {
+        if (this.currentData.data.items.length === 0) {
           this.$Message.info("请先至少添加一个药品！");
           return
         }
-        let itemList=this.currentData.data.items;
-        for(var i=0;i<itemList.length;i++){
-          if(itemList[i].num==='' || itemList[i].num===0){
-            this.$Message.info("药品【"+itemList[i].name+"】的药量为空！")
+        let itemList = this.currentData.data.items;
+        for (var i = 0; i < itemList.length; i++) {
+          if (itemList[i].num === '' || itemList[i].num === 0) {
+            this.$Message.info("药品【" + itemList[i].name + "】的药量为空！")
             return
           }
         }
-        this.showAddTpl=true;
+        this.showAddTpl = true;
       },
-      hideTplShow(){
-        this.showAddTpl=false;
+      hideTplShow() {
+        this.showAddTpl = false;
       }
     }
   }

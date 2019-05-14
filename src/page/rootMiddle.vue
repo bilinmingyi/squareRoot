@@ -38,7 +38,8 @@
     created() {
       let temCurrRecipe=this.currRecipe;
       if(this.recipeList.length===0){
-        this.addNewRecipt(1);
+        this.addNewRecipt(1,1);
+        this.addNewRecipt(1,2);
         this.addNewRecipt(2);
         this.addNewRecipt(4);
         this.change_curr_tab(temCurrRecipe);
@@ -49,8 +50,8 @@
         'add_new_recipt',
         'change_curr_tab'
       ]),
-      addNewRecipt(type) {
-        this.add_new_recipt(type)
+      addNewRecipt(type, category) {
+        this.add_new_recipt({type, category})
       }
     }
   }

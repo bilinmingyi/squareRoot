@@ -2,16 +2,16 @@
   <div>
     <section class="herbal_head">
       <div class="herbal_head_left">
-        <f-radio value=1 :name="'herCate'" :currVal="currentData.data.category" @change="changeCategory($event)">饮片
-        </f-radio>
-        <f-radio value=2 :name="'herCate'" :currVal="currentData.data.category" @change="changeCategory($event)">颗粒
-        </f-radio>
+<!--        <f-radio value=1 :name="'herCate'" :currVal="currentData.data.category" @change="changeCategory($event)">饮片-->
+<!--        </f-radio>-->
+<!--        <f-radio value=2 :name="'herCate'" :currVal="currentData.data.category" @change="changeCategory($event)">颗粒-->
+<!--        </f-radio>-->
       </div>
       <div>
         <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
-        <button class="btn" v-if="currentData.data.category==2 && canGetRecipeHelp==1" @click.stop="toAssist">
-          辅助开方
-        </button>
+<!--        <button class="btn" v-if="currentData.data.category==2 && canGetRecipeHelp==1" @click.stop="toAssist">-->
+<!--          辅助开方-->
+<!--        </button>-->
         <button class="btn" @click="print_pre()">打印处方</button>
         <button class="btn btn_print" @click.stop="saveTplData">存为模板</button>
       </div>
@@ -39,7 +39,7 @@
             <td>
               <InputNumber style="width:3.2rem" :value="item.num"
                            @on-change="modify_medicine({key:'num',val:$event,index:index})"/>
-              <span>{{item.unit}}</span>
+              <span class="unitText">{{item.unit}}</span>
               <span class="num_text" v-if="currentData.data.category==2">({{item.num*item.stock_sale_ratio}}{{item.unit_sale}})</span>
             </td>
           </template>
@@ -346,5 +346,10 @@
   .herbal_head_left {
     flex: 1;
     align-self: center;
+  }
+  .unitText {
+    min-width: 2rem;
+    display: inline-block;
+    text-align: left;
   }
 </style>

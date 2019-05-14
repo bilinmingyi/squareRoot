@@ -8,7 +8,7 @@
         </li>
         <li v-for="(recipe,index) in recipeList" :class="['tab_li',{'currentLi':index === currRecipe}]"
             @click.stop="change_curr_tab(index)">
-          {{recipe.type|recipeType}}
+          {{recipe.type|recipeType(recipe.data.category)}}
           <div class="green_line" v-show="index === currRecipe"></div>
         </li>
       </ul>
@@ -20,7 +20,8 @@
             <img class="add_btn_icon" src="../assets/img/tj@2x.png">添加处方
           </div>
           <DropdownMenu slot="list">
-            <DropdownItem @click.stop.native="addNewRecipt(1)">中药处方</DropdownItem>
+            <DropdownItem @click.stop.native="addNewRecipt(1, 1)">中药饮片</DropdownItem>
+            <DropdownItem @click.stop.native="addNewRecipt(1, 2)">配方颗粒</DropdownItem>
             <DropdownItem @click.stop.native="addNewRecipt(2)">中成药西药</DropdownItem>
             <DropdownItem @click.stop.native="addNewRecipt(4)">诊疗项目</DropdownItem>
             <DropdownItem @click.stop.native="addNewRecipt(6)">材料处方</DropdownItem>
@@ -81,7 +82,7 @@
         'add_new_recipt',
       ]),
       saveDraftData(canReturn) {
-        if(canReturn === 1){
+        if (canReturn === 1) {
           this.showLoading = true;
         }
         let draftData = {
@@ -178,8 +179,8 @@
       hidePreview() {
         this.previewOrder = false
       },
-      addNewRecipt(type) {
-        this.add_new_recipt(type)
+      addNewRecipt(type, category) {
+        this.add_new_recipt({type, category})
       }
     }
   }
@@ -246,7 +247,7 @@
     transform: translateY(-0.0625rem);
   }
 
-  .add_btn{
+  .add_btn {
     flex: 1;
     font-size: 1rem;
     color: #8C8C8C;
@@ -259,7 +260,7 @@
     cursor: pointer;
   }
 
-  .add_btn_icon{
+  .add_btn_icon {
     width: 1rem;
     height: 1rem;
     display: inline-block;

@@ -14,7 +14,7 @@ const actions = {
   },
 
   //middle
-  add_new_recipt: ({commit, state}, type) => {
+  add_new_recipt: ({commit, state}, {type, category}) => {
     let item = {};
     switch (type) {
       case 1://重要处方
@@ -23,7 +23,7 @@ const actions = {
           money: 0,
           data: {
             is_cloud: 0,
-            category: "1",
+            category: category ? category.toString() : '1',
             doctor_remark: "",
             dosage: 1,
             usage: "",

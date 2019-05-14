@@ -28,28 +28,28 @@ const calcAge = (t) => {
   var born = new Date(t);
 
   if (born > today.getTime()) {
-      return -1;
+    return -1;
   }
   var age = today.getFullYear() - born.getFullYear();
   if ((today.getMonth() * 100 + today.getDate()) - (born.getMonth() * 100 + born.getDate()) < 0) {
-      age -= 1;
-      if (age < 0) {
-          age = 0;
-      }
+    age -= 1;
+    if (age < 0) {
+      age = 0;
+    }
   }
   return age;
 }
 
 /**
  * @desc 字典查询函数
- * 
+ *
  * @param {Array} dict    // {code: CODE, name: NAME}
  * @param {String | Number} code
  * @return {ALL} name
- * 
+ *
  * @example
  * codeToName([{code: a, name: 'this is a'}], 'a')    // 'this is a'
- */ 
+ */
 
 const codeToName = (dict, code) => {
   var dict = dict || [];
@@ -114,13 +114,13 @@ const priceFormat = (price, currency, decimals) => {
  * ss：秒
  * S：毫秒
  */
-const dateFormat = function(date, fmt) {
+const dateFormat = function (date, fmt) {
   if (!Date.prototype.Format) {
     Object.defineProperty(Date.prototype, "Format", {
       enumerable: false,
       configurable: false,
       writable: false,
-      value: function(fmt) {
+      value: function (fmt) {
         var f = fmt != null ? fmt : "yyyy-MM-dd hh:mm:ss";
         var o = {
           "q+": Math.floor((this.getMonth() + 3) / 3), // 季度
@@ -155,19 +155,25 @@ const dateFormat = function(date, fmt) {
   return d.getTime() === d.getTime() ? d.Format(fmt) : '';
 };
 
-const recipeType = val => {
-  var typeList=[
-    {code:1,name:"中药处方"},
-    {code:2,name:"中成药西药"},
-    {code:3,name:"产品处方"},
-    {code:4,name:"诊疗项目"},
-    {code:5,name:"附加服务"},
-    {code:6,name:"材料处方"},
-    {code:7,name:"检验处方"}
+const recipeType = (val, category) => {
+  var typeList = [
+    {code: 1, name: "中药处方"},
+    {code: 2, name: "中成药西药"},
+    {code: 3, name: "产品处方"},
+    {code: 4, name: "诊疗项目"},
+    {code: 5, name: "附加服务"},
+    {code: 6, name: "材料处方"}
   ];
-  var result=typeList.filter(item => {
-    return item.code===val
+  var result = typeList.filter(item => {
+    return item.code === val
   });
+  if (val == 1) {
+    if (category == 1) {
+      return '中药饮片'
+    } else if (category == 2) {
+      return '配方颗粒'
+    }
+  }
   return result[0].name;
 }
 
