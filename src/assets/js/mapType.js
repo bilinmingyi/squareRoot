@@ -1,19 +1,33 @@
-var herbalRpUsages=[],herbalMedUsages=[],westernMedUsages=[],extraFeeTypes=[],clinicName='',clinicId='', medFrequency=[];
-try{
-  clinicName=window.baseInfo.clinicName;
-}catch (e) {
-  clinicName='大医联帮云诊所'
-}
+var herbalRpUsages = [], herbalMedUsages = [], westernMedUsages = [], extraFeeTypes = [], clinicName = '',
+  clinicId = '', medFrequency = [], userId = '', userName = '';
 
-try{
-  clinicId=window.baseInfo.clinicId;
-}catch (e) {
-  clinicId="5"
+try {
+  userId = window.baseInfo.userId
+} catch (e) {
+  userId = '2'
 }
 
 try {
-  herbalRpUsages=window.baseInfo.herbalRpUsages;
-}catch (e) {
+  userName = window.baseInfo.userName
+} catch (e) {
+  userName = 'demo2'
+}
+
+try {
+  clinicName = window.baseInfo.clinicName;
+} catch (e) {
+  clinicName = '大医联帮云诊所'
+}
+
+try {
+  clinicId = window.baseInfo.clinicId;
+} catch (e) {
+  clinicId = "5"
+}
+
+try {
+  herbalRpUsages = window.baseInfo.herbalRpUsages;
+} catch (e) {
   herbalRpUsages = [
     {
       "id": 15,
@@ -28,8 +42,8 @@ try {
 }
 
 try {
-  herbalMedUsages=window.baseInfo.herbalMedUsages
-}catch (e) {
+  herbalMedUsages = window.baseInfo.herbalMedUsages
+} catch (e) {
   herbalMedUsages = [
     {
       "id": 7,
@@ -42,9 +56,9 @@ try {
       "creator": "sys"
     }]; // 中药用法
 }
-try{
-  westernMedUsages=window.baseInfo.westernMedUsages;
-}catch (e) {
+try {
+  westernMedUsages = window.baseInfo.westernMedUsages;
+} catch (e) {
   westernMedUsages = [
     {
       "id": 104,
@@ -58,8 +72,8 @@ try{
     }]; // 成药用法
 }
 try {
-  extraFeeTypes=window.baseInfo.extraFeeTypes
-}catch (e) {
+  extraFeeTypes = window.baseInfo.extraFeeTypes
+} catch (e) {
   extraFeeTypes = [
     {
       "id": 15,
@@ -73,15 +87,16 @@ try {
       "status": 1
     }]; // 附加项目类型
 }
-try{
-  medFrequency=window.baseInfo.medFrequency;
-}catch (e) {
+try {
+  medFrequency = window.baseInfo.medFrequency;
+} catch (e) {
   medFrequency = [{"name": "每天一次"}, {"name": "每天两次"}, {"name": "每天三次"}, {"name": "每天四次"}, {"name": "两天一次"}, {"name": "每周一次"}, {"name": "饭前"}, {"name": "饭后"}, {"name": "睡前"}, {"name": "医嘱"}];
 }
 
 
-
-module.exports= {
+module.exports = {
+  userName,
+  userId,
   herbalMedUsages,
   herbalRpUsages,
   westernMedUsages,

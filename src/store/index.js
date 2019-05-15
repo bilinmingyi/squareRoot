@@ -17,6 +17,9 @@ const state = {
   ybCardNo:'',
   clinicName: '',
   doctorName: '',
+  clinicId: '',
+  doctorId: '',
+  appointOrderSeqno: '',
   patientData: {
     id: null,
     name: "",
@@ -32,7 +35,7 @@ const state = {
     blood_abo: 0,
     blood_rh: 0
   },
-  
+
   recordData: {
     // 患者病历
     chief_complaint: '',    // 主述

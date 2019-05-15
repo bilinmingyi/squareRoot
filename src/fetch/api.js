@@ -211,6 +211,8 @@ const saveMedTpl = (params, type) => {
   }
 }
 
+const wisdomyb = params => fetch('https://localhost:9000/wisdomyb/audit', params)
+
 const queryClassic = (params) => fetch('/doctreat/traditionrecipe/list', params);
 
 export {
@@ -241,6 +243,7 @@ export {
   canRecipeHelp,
   pointCount,
   getFJByName,
+  wisdomyb,
 
   //right
   searchRecentMed,

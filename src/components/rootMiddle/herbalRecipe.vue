@@ -2,17 +2,17 @@
   <div>
     <section class="herbal_head">
       <div class="herbal_head_left">
-<!--        <f-radio value=1 :name="'herCate'" :currVal="currentData.data.category" @change="changeCategory($event)">饮片-->
-<!--        </f-radio>-->
-<!--        <f-radio value=2 :name="'herCate'" :currVal="currentData.data.category" @change="changeCategory($event)">颗粒-->
-<!--        </f-radio>-->
+        <!--        <f-radio value=1 :name="'herCate'" :currVal="currentData.data.category" @change="changeCategory($event)">饮片-->
+        <!--        </f-radio>-->
+        <!--        <f-radio value=2 :name="'herCate'" :currVal="currentData.data.category" @change="changeCategory($event)">颗粒-->
+        <!--        </f-radio>-->
       </div>
       <div>
         <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
-<!--        <button class="btn" v-if="currentData.data.category==2 && canGetRecipeHelp==1" @click.stop="toAssist">-->
-<!--          辅助开方-->
-<!--        </button>-->
-        <button class="btn btn_yb_check">医保处方审核</button>
+        <!--        <button class="btn" v-if="currentData.data.category==2 && canGetRecipeHelp==1" @click.stop="toAssist">-->
+        <!--          辅助开方-->
+        <!--        </button>-->
+        <button class="btn btn_yb_check" @click.stop="examineYB">医保处方审核</button>
         <button class="btn" @click="print_pre()">打印处方</button>
         <button class="btn btn_print" @click.stop="saveTplData">存为模板</button>
       </div>
@@ -34,7 +34,6 @@
         <tr v-for="(item,index) in currentData.data.items">
           <td>{{index+1}}</td>
           <td>{{item.name}}</td>
-
           <template v-if="item.is_match===1">
             <td>{{item.spec==='1克/克'?'1克':item.spec}}</td>
             <td>
@@ -119,6 +118,7 @@
       </div>
     </section>
     <save-tpl v-if="showAddTpl" @hideTpl="hideTplShow"></save-tpl>
+    <wisdomYb :url="windowUrl" @close="hideWis" v-if="wisdomShow"></wisdomYb>
   </div>
 </template>
 
@@ -127,8 +127,9 @@
   import fRadio from '@/components/fRadio.vue'
   import {mapActions, mapState} from 'vuex'
   import saveTpl from '@/components/rootMiddle/saveRecipeTpl'
-  import {herbalMedUsages, herbalRpUsages, extraFeeTypes, medFrequency} from '@/assets/js/mapType'
-  import {saveDraft} from '@/fetch/api.js'
+  import wisdomYb from '@/components/wisdomyb.vue'
+  import {herbalMedUsages, herbalRpUsages, extraFeeTypes, medFrequency, userName, userId} from '@/assets/js/mapType'
+  import {saveDraft, wisdomyb} from '@/fetch/api.js'
   import Link from "iview/src/mixins/link";
 
   export default {
@@ -136,7 +137,9 @@
     data() {
       return {
         medFrequency: medFrequency,
-        showAddTpl: false
+        showAddTpl: false,
+        windowUrl: '',
+        wisdomShow: false
       };
     },
     components: {
@@ -148,7 +151,8 @@
       Input,
       InputNumber,
       saveTpl,
-      fRadio
+      fRadio,
+      wisdomYb
     },
     computed: {
       ...mapState({
@@ -157,7 +161,11 @@
         'recipeList': state => state.recipeList,
         'patientData': state => state.patientData,
         'orderSeqno': state => state.orderSeqno,
-        'currRecipe': state=> state.currRecipe
+        'currRecipe': state => state.currRecipe,
+        'clinicId': state => state.clinicId,
+        'doctorId': state => state.doctorId,
+        'appointOrderSeqno': state => state.appointOrderSeqno,
+        'ybCardNo': state => state.ybCardNo
       }),
       currentData: function () {
         return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
@@ -205,6 +213,7 @@
     },
     methods: {
       ...mapActions([
+        'change_curr_tab',
         'cancel_recipe',
         'modify_medicine',
         'modify_recipe',
@@ -305,6 +314,104 @@
             this.$Message.info("保存失败");
           }
         })
+      },
+      examineYB() {
+        if (this.recordData.diagnosis_xy === '') {
+          this.change_curr_tab(-1)
+          this.$Message.info("请先选择西医诊断!");
+          return
+        }
+        let diagnoses = this.recordData.diagnosis_xy_labels.map((item) => {
+          return {
+            "diagnose_code": item.code,
+            "diagnose_desc": item.name
+          }
+        })
+        let itemList = this.currentData.data.items
+        for (let i = 0, len = itemList.length; i < len; i++) {
+          if (itemList[i].yb_code === '') {
+            this.$Message.info("药品" + itemList[i].name + "不属于医保范畴!")
+            return;
+          }
+        }
+
+        let medList = itemList.map(med => {
+          let fre = {}
+          if (this.currentData.data.frequency) {
+            fre = this.findInFre(this.currentData.data.frequency)
+          } else {
+            fre = {code: 'qd', name: '每天一次', ratio: 1}
+          }
+          return {
+            "yb_code": med.yb_code,
+            "medicine_id": med.item_id,
+            "name": med.name,
+            "price": med.price * currRecipe.dosage,
+            "num": med.num * currRecipe.dosage,
+            "dose_unit": med.unit,
+            "amount": Number(med.price) * Number(med.num) * Number(currRecipe.dosage),
+            "use_day": Math.ceil(Number(currRecipe.dosage) / fre.ratio),
+            "single_dose_number": med.num,
+            "single_dose_unit": med.unit,
+            "single_take_number": med.num,
+            "single_take_unit": med.unit,
+            "take_medical_number": med.num * currRecipe.dosage,
+            "take_medical_unit": med.unit,
+            "frequence": fre.code
+          }
+        })
+
+        let params = {
+          "clinic_id": this.clinicId,
+          "doctor_id": this.doctorId,
+          "user_id": userId,
+          "user_name": userName,
+          "appoint_order_seqno": this.appointOrderSeqno,
+          "card_no": this.ybCardNo,
+          "recipe_id": new Date().getTime().toString() + Math.ceil(Math.random() * 1000).toString(),
+          "diagnoses": diagnoses,
+          "medicines": medList
+        }
+        wisdomyb(params).then(res => {
+          if (res.code === 1000) {
+            if (res.data.success == 'F') {
+              this.$Message.info(res.data.error_msg)
+            } else if (res.data.success == 'T' && res.data.result.length == 0) {
+              this.$Message.info("审核通过！")
+            } else if (res.data.success == 'T' && res.data.result.length != 0) {
+              this.wisdomShow = true
+              this.windowUrl = res.data.window_url
+            }
+          } else {
+            this.$Message.info(res.msg)
+          }
+        }).catch(error => {
+          console.log(error)
+          this.$Message.info('网络出错！')
+        })
+      },
+      findInFre(val) {
+        let list = [
+          {code: 'qd', name: '每天一次', ratio: 1},
+          {code: 'bid', name: '每天两次', ratio: 2},
+          {code: 'tid', name: '每天三次', ratio: 3},
+          {code: 'qid', name: '每天四次', ratio: 4},
+          {code: 'qod', name: '两天一次', ratio: 0.5},
+          {code: 'qw', name: '每周一次', ratio: 1 / 7},
+          {code: '', name: '饭前', ratio: 3},
+          {code: '', name: '饭后', ratio: 3},
+          {code: 'hs', name: '睡前', ratio: 1},
+          {code: 'OTH', name: '医嘱', ratio: 1}
+        ]
+        for (let i = 0, len = list.length; i < len; i++) {
+          if (list[i].name == val) {
+            return list[i]
+          }
+        }
+        return {}
+      },
+      hideWis () {
+        this.wisdomShow = false
       }
     },
 
@@ -352,6 +459,7 @@
     flex: 1;
     align-self: center;
   }
+
   .unitText {
     min-width: 2rem;
     display: inline-block;

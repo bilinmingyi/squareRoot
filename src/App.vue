@@ -65,6 +65,9 @@
             this.set_state_prop({key: 'doctorName', val: data.doctor_name});
             this.set_state_prop({key: 'isYB', val: data.pay_category});
             this.set_state_prop({key: 'ybCardNo', val: data.yb_card_no});
+            this.set_state_prop({key: 'appointOrderSeqno', val: data.appoint_order_seqno})
+            this.set_state_prop({key: 'clinicId', val: data.clinic_id})
+            this.set_state_prop({key: 'doctorId', val: data.doctor_id})
             this.initFinish = true;
           } else {
             console.log(res.msg);
