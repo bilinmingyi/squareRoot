@@ -58,6 +58,15 @@
                   <span v-if="med.stock<=0" style="color: red">无库存</span>
                 </div>
               </div>
+              <div v-if="item.type===3">
+                <div v-for="med in item.data.items">
+                  <span class="pr5">{{med.name}}</span>
+                  <span class="pr5">{{med.spec}}</span>
+                  <span class="pr5">{{med.num}}{{med.unit}}</span>
+                  <span class="pr5">{{med.remark}}</span>
+                  <span v-if="med.stock<=0" style="color: red">无库存</span>
+                </div>
+              </div>
               <div v-if="item.type===4">
                 <div v-for="med in item.data.items">
                   <span class="pr5">{{med.name}}</span>
