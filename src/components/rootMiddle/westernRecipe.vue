@@ -4,6 +4,7 @@
       <div class="herbal_head_left"></div>
       <div>
         <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
+        <button class="btn btn_yb_check">医保处方审核</button>
         <button class="btn" @click="print_pre()">打印处方</button>
         <button class="btn btn_print" @click.stop="saveTplData">存为模板</button>
       </div>
@@ -226,6 +227,10 @@
   .btn_print {
     border-color: #4DBC89;
     color: #4DBC89;
+  }
+
+  .btn_yb_check {
+    padding: 0 0.625rem;
   }
 
   .herbal_head {

@@ -145,7 +145,6 @@ export default {
       let map = this.mapList;
       let arr = recipe[map[type]];
       this.clean_recipe();
-      console.log(arr)
       arr.forEach(item => {
         this.add_new_medicine({ item, type });
       })

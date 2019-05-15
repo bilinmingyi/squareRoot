@@ -101,6 +101,7 @@ const actions = {
     switch (type) {
       case 1:
         result = {
+          "yb_code": item.yb_cata_code ? item.yb_cata_code : '',
           "cloud_item_id": item.id,
           "item_id": item.id,
           "name": item.clinic_alias_name != '' && item.clinic_alias_name != null ? item.clinic_alias_name : item.name,
@@ -124,6 +125,7 @@ const actions = {
         break;
       case 2:
         result = {
+          "yb_code": item.yb_cata_code ? item.yb_cata_code : '',
           "item_id": item.id,
           "name": item.clinic_alias_name != '' && item.clinic_alias_name != null ? item.clinic_alias_name : item.name,
           "num": !item.num ? 0 : item.num,
