@@ -23,6 +23,7 @@
             <DropdownItem @click.stop.native="addNewRecipt(1, 1)">中药饮片</DropdownItem>
             <DropdownItem @click.stop.native="addNewRecipt(1, 2)">配方颗粒</DropdownItem>
             <DropdownItem @click.stop.native="addNewRecipt(2)">中成药西药</DropdownItem>
+            <DropdownItem @click.stop.native="addNewRecipt(3)">产品处方</DropdownItem>
             <DropdownItem @click.stop.native="addNewRecipt(4)">诊疗项目</DropdownItem>
             <DropdownItem @click.stop.native="addNewRecipt(6)">材料处方</DropdownItem>
           </DropdownMenu>

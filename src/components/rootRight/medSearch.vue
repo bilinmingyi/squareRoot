@@ -21,7 +21,7 @@
           <br>
           {{item.spec}}
         </div>
-        <div v-show="recipeType==2">
+        <div v-show="recipeType==2 || recipeType==3">
           {{item.clinic_alias_name == '' ? item.name : item.clinic_alias_name}}
           {{item.spec}}
         </div>
@@ -46,7 +46,7 @@
         class="mr20"
       >上一页
       </Button>
-      <Button v-show="currPage===1"  class="mr20" disabled shape="circle">上一页</Button>
+      <Button v-show="currPage===1" class="mr20" disabled shape="circle">上一页</Button>
       <div class="ml10"></div>
       <Button
         v-show="currPage<page_num"
@@ -83,8 +83,8 @@
         showList: [],
         page_size: 0,
         curSelect: -1,  // 当前选中的药品
-        page:1,
-        totalNum:0
+        page: 1,
+        totalNum: 0
       }
     },
     watch: {
@@ -218,7 +218,7 @@
           self.firstSearch();
           return
         }
-        if(self.searchName.replace(/\s/g,'') == ''){
+        if (self.searchName.replace(/\s/g, '') == '') {
           return
         }
         var params = {};

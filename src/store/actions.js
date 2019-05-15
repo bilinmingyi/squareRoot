@@ -148,7 +148,27 @@ const actions = {
         };
         break;
       case 3:
-
+        result = {
+          "item_id": item.id,
+          "name": item.clinic_alias_name != '' && item.clinic_alias_name != null ? item.clinic_alias_name : item.name,
+          "num": !item.num ? 0 : item.num,
+          "unit": item.unit === item.unit_stock ? item.unit_stock : (item.unit === item.unit_sale ? item.unit_sale : item.unit_stock),
+          "sale_price": item.sale_price,
+          "spec": item.spec,
+          "unit_stock": item.unit_stock,
+          "unit_sale": item.unit_sale,
+          "unit_dose": item.unit_dose,
+          "stock_sale_ratio": item.stock_sale_ratio,
+          "sale_dose_ratio": item.sale_dose_ratio,
+          "usage": !item.usage ? '' : item.usage,
+          "days": !item.days ? 0 : item.days,
+          "frequency": !item.frequency ? '' : item.frequency,
+          "dose_once": !item.dose_once ? '' : item.dose_once,
+          "stock": item.stock,
+          "is_match": item.status == 1 ? 1 : 0,
+          "cloud_item_id": item.id,
+          "types": 2
+        }
         break;
       case 4:
         result = {

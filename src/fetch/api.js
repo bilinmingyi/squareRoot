@@ -73,24 +73,15 @@ const checkIsMatch = (params, type, recipe) => {
 const addRecordTpl = params => fetch('/doctreat/tpl/casehistory/add', params);
 
 //middle
-const getDoctorInfor = params => fetch('/clinicmng/user/doctorInfo',params);
+const getDoctorInfor = params => fetch('/clinicmng/user/doctorInfo', params);
 
-const saveMedTpl = (params, type) => {
-  if (type === 1) {
-    return fetch('/doctreat/tpl/herbal/add', params);
-  } else if (type === 2) {
-    return fetch('/doctreat/tpl/western/add', params);
-  } else if (type === 4) {
-    return fetch('/doctreat/tpl/therapy/add', params);
-  }
-}
 const searchDiagnosis = (params) => fetch('/treatmng/dytreatorder/fjbDisease', params);
 
 const searchFJB = (params) => axios({
   method: 'post',
   url: 'http://47.112.12.132/medicalstock/api/services/app/fjData/SearchFJInfo',
   headers: {
-    'Authorization':'Bearer Internal'
+    'Authorization': 'Bearer Internal'
   },
   data: params
 });
@@ -101,7 +92,7 @@ const getJJInfo = (params) => axios({
   url: 'http://47.112.12.132/medicalstock/api/services/app/fjData/PostJJInfo',
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-    'Authorization':'Bearer Internal'
+    'Authorization': 'Bearer Internal'
   },
   params: params
 });
@@ -110,7 +101,7 @@ const getFJDrugList = (params) => axios({
   url: 'http://47.112.12.132/medicalstock/api/services/app/fjData/GetFJDrugList',
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-    'Authorization':'Bearer Internal'
+    'Authorization': 'Bearer Internal'
   },
   data: params,
   transformRequest: [function (data) {
@@ -131,7 +122,6 @@ const getFJDrugList = (params) => axios({
 // })
 
 
-
 const getFJByName = (params) => fetch('/treatmng/dytreatorder/fjbDisease', params);
 
 const getHerbalList = (params) => fetch('/stockmng/medicine/herbalList', params);
@@ -140,13 +130,13 @@ const saveDraft = (params) => fetch('/doctreat/treatorder/save', params);
 
 const loadDraft = (params) => fetch('/doctreat/treatorder/getDraft', params);
 
-const submitOrder =(params) =>fetch('/doctreat/treatorder/submitOrder',params);
+const submitOrder = (params) => fetch('/doctreat/treatorder/submitOrder', params);
 
-const canRecipeHelp =(params) => fetch('/doctreat/recipeHelp/enbaled', params);
+const canRecipeHelp = (params) => fetch('/doctreat/recipeHelp/enbaled', params);
 
-const pointCount =(params) => fetch('/doctreat/treat/help',params)
+const pointCount = (params) => fetch('/doctreat/treat/help', params)
 
-const waitingPage='/yzshis/doctreat/waiting/listPage';
+const waitingPage = '/yzshis/doctreat/waiting/listPage';
 
 //right
 const searchRecentMed = (params, type) => {
@@ -154,6 +144,8 @@ const searchRecentMed = (params, type) => {
     return fetch('/doctreat/herbal/recent', params);
   } else if (type === 2) {
     return fetch('/doctreat/western/recent', params);
+  } else if (type == 3) {
+    return fetch('/doctreat/western/recent', params); // 产品最近使用接口
   } else if (type === 4) {
     return fetch('/doctreat/therapy/recent', params);
   } else if (type === 6) {
@@ -165,6 +157,8 @@ const searchMed = (params, type) => {
     return fetch('/stockmng/medicine/herbalList', params);
   } else if (type === 2) {
     return fetch('/stockmng/medicine/westernList', params);
+  } else if (type === 3) {
+    return fetch('/stockmng/medicine/westernList', params); // 产品查药接口
   } else if (type === 4) {
     return fetch('/clinicmng/therapy/list', params);
   } else if (type === 6) {
@@ -176,6 +170,8 @@ const searchTpl = (params, type) => {
     return fetch('/doctreat/tpl/herbal/list', params);
   } else if (type === 2) {
     return fetch('/doctreat/tpl/western/list', params);
+  } else if (type === 3) {
+    // return fetch('/doctreat/tpl/western/list', params); // 产品模板列表接口
   } else if (type === 4) {
     return fetch('/doctreat/tpl/therapy/list', params);
   } else if (type === 0) {
@@ -187,6 +183,8 @@ const updateTpl = (params, type) => {
     return fetch('/doctreat/tpl/herbal/update', params);
   } else if (type === 2) {
     return fetch('/doctreat/tpl/western/update', params);
+  } else if (type === 3) {
+    // return fetch('/doctreat/tpl/western/update', params); // 产品模板更新接口
   } else if (type === 4) {
     return fetch('/doctreat/tpl/therapy/update', params);
   }
@@ -200,6 +198,16 @@ const delTpl = (id, params, type) => {
     return fetch('/doctreat/tpl/therapy/delete?tplId=' + id, params);
   } else if (type === 0) {
     return fetch('/doctreat/tpl/casehistory/delete?tplId=' + id, params);
+  }
+}
+
+const saveMedTpl = (params, type) => {
+  if (type === 1) {
+    return fetch('/doctreat/tpl/herbal/add', params);
+  } else if (type === 2) {
+    return fetch('/doctreat/tpl/western/add', params);
+  } else if (type === 4) {
+    return fetch('/doctreat/tpl/therapy/add', params);
   }
 }
 

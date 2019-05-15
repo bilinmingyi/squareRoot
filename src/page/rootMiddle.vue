@@ -11,6 +11,7 @@
   import westernRecipe from '@/components/rootMiddle/westernRecipe.vue'
   import therapyRecipe from '@/components/rootMiddle/therapyRecipe.vue'
   import materialRecipe from '@/components/rootMiddle/materialRecipe.vue'
+  import productRecipe from '@/components/rootMiddle/productRecipe.vue'
   import patientrRcord from '@/components/patientrRcord.vue'
   import printPrescription from '@/components/rootMiddle/printPrescription.vue'
 
@@ -18,7 +19,7 @@
     name: "rootMiddle",
     data() {
       return {
-        componentList:['herbalRecipe','westernRecipe','','therapyRecipe','','materialRecipe']
+        componentList:['herbalRecipe','westernRecipe','productRecipe','therapyRecipe','','materialRecipe']
       }
     },
     components: {
@@ -27,6 +28,7 @@
       therapyRecipe,
       materialRecipe,
       patientrRcord,
+      productRecipe,
       printPrescription
     },
     computed: {

@@ -3,12 +3,13 @@
     <div>
       <div style="display: flex;">
         <div
-          v-show="recipeType==1||recipeType==2||recipeType==4||recipeType==6"
+          v-show="recipeType==1||recipeType==2||recipeType==3||recipeType==4||recipeType==6"
           style="flex: 1;"
           :class="['prescript-title',{'current-tab':tabType == 1}]"
           @click.stop="changeTab(1)"
         >
           <span v-show="recipeType==1||recipeType==2">药品搜索</span>
+          <span v-show="recipeType==3">产品搜索</span>
           <span v-show="recipeType==4">项目搜索</span>
           <span v-show="recipeType==6">材料搜索</span>
         </div>
@@ -54,8 +55,8 @@
     },
     data() {
       return {
-        tabType:1,
-        componentLists:['medSearch','tpl','classic']
+        tabType: 1,
+        componentLists: ['medSearch', 'tpl', 'classic']
       };
     },
     created() {
@@ -81,7 +82,7 @@
       }
     },
     methods: {
-      changeTab(type){
+      changeTab(type) {
         this.tabType = type;
       }
     }

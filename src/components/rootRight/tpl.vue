@@ -784,7 +784,7 @@
     methods: {
       ...mapActions(["add_new_medicine", "clean_recipe", "set_record_prop"]),
       firstSearch: function () {
-        if (this.recipeType != 6) {
+        if (this.recipeType != 6 && this.recipeType !=3) {
           this.tplSearch();
           this.showResult = true;
         }
