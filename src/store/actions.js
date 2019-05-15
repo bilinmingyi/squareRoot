@@ -167,7 +167,8 @@ const actions = {
           "stock": item.stock,
           "is_match": item.status == 1 ? 1 : 0,
           "cloud_item_id": item.id,
-          "types": 2
+          "remark": !item.remark ? '' : item.remark,
+          "types": 3
         }
         break;
       case 4:

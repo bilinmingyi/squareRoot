@@ -12,6 +12,7 @@
         >
           <span v-show="recipeType==1">中药处方笺</span>
           <span v-show="recipeType==2">中成药西药笺</span>
+          <span v-show="recipeType==3">产品处方笺</span>
           <span v-show="recipeType==4">项目处方笺</span>
           <span v-show="recipeType==6">材料处方笺</span>
         </div>
@@ -117,6 +118,25 @@
           </div>
           <div style="clear: both;"></div>
         </div>
+<!--        这里未绑定正确的产品处方笺-->
+        <div v-show="recipeType==3">
+          <div style="width: 100%;height: auto;margin-bottom: 5px;">
+            <div
+              style="line-height: 24px;"
+              v-for="(itemOne,index) in (currRecipeData.data.items||[])"
+              :key="index"
+            >
+              <span style="margin-right: 30px;">{{itemOne.name}}</span>
+              <span style="margin-right: 8px;">{{itemOne.spec}}</span>
+              <span style="margin-right: 8px;">{{itemOne.num}}{{itemOne.unit}}</span>
+              <span style="margin-right: 8px;" v-if="itemOne.usage!=''">用法：{{itemOne.usage}}</span>
+              <span style="margin-right: 8px;">{{itemOne.frequency}}</span>
+              <span style="margin-right: 8px;" v-if="itemOne.days!=0">{{itemOne.days}}天</span>
+              <span v-if="itemOne.dose_once!=''">每次：{{itemOne.dose_once}}{{itemOne.unit_dose}}</span>
+            </div>
+          </div>
+          <div style="clear: both;"></div>
+        </div>
         <div v-show="recipeType==4">
           <div style="width: 100%;height: auto;margin-bottom: 15px;">
             <div
@@ -193,7 +213,7 @@
       </section>
       <section
         style="font-size: 12px;padding: 10px 0px;flex-direction: row;-webkit-flex-direction: row;"
-        v-show="recipeType==1 || recipeType==2 || recipeType==6"
+        v-show="recipeType==1 || recipeType==2 || recipeType==3 || recipeType==6"
       >
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
@@ -251,9 +271,6 @@
           <span style="flex: 5;-webkit-flex: 5">1、本处方当日有效
             <br>2、取药时请当面核对药品名称、规格、数量
             <br>3、延长处方用量时间原因：慢性病、老年病、外地、其他
-          </span>
-          <span style="flex: 5;-webkit-flex: 5" v-show="recipeType==4">1、取药时请当面核对药品名称、规格、数量
-            <br>2、延长处方用量时间原因：慢性病、老年病、外地、其他
           </span>
         </div>
       </section>
