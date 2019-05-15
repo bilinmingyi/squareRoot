@@ -12,7 +12,7 @@
         <!--        <button class="btn" v-if="currentData.data.category==2 && canGetRecipeHelp==1" @click.stop="toAssist">-->
         <!--          辅助开方-->
         <!--        </button>-->
-        <button class="btn btn_yb_check" @click.stop="examineYB">医保处方审核</button>
+        <button class="btn btn_yb_check" @click.stop="examineYB" v-if="isYB">医保处方审核</button>
         <button class="btn" @click="print_pre()">打印处方</button>
         <button class="btn btn_print" @click.stop="saveTplData">存为模板</button>
       </div>
@@ -156,6 +156,7 @@
     },
     computed: {
       ...mapState({
+        'isYB': state => state.isYB,
         'canGetRecipeHelp': state => state.canGetRecipeHelp,
         'recordData': state => state.recordData,
         'recipeList': state => state.recipeList,
