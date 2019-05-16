@@ -158,7 +158,7 @@ const searchMed = (params, type) => {
   } else if (type === 2) {
     return fetch('/stockmng/medicine/westernList', params);
   } else if (type === 3) {
-    return fetch('/stockmng/medicine/westernList', params); // 产品查药接口
+    return fetch('/stockmng/medicine/productList', params); // 产品查药接口
   } else if (type === 4) {
     return fetch('/clinicmng/therapy/list', params);
   } else if (type === 6) {

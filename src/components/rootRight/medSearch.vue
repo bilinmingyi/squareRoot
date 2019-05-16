@@ -240,6 +240,13 @@
             };
             break;
           }
+          case 3:
+            params = {
+              medicine_name: self.searchName,
+              status: 1,
+              page: self.page,
+            }
+            break;
           case 4: {
             params = {
               name: self.searchName,
