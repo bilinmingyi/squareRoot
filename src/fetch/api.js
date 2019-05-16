@@ -145,7 +145,7 @@ const searchRecentMed = (params, type) => {
   } else if (type === 2) {
     return fetch('/doctreat/western/recent', params);
   } else if (type == 3) {
-    return fetch('/doctreat/western/recent', params); // 产品最近使用接口
+    return fetch('/doctreat/product/recent', params); // 产品最近使用接口
   } else if (type === 4) {
     return fetch('/doctreat/therapy/recent', params);
   } else if (type === 6) {
