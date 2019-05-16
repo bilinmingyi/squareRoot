@@ -28,7 +28,7 @@
             v-show="showList.length<1"
           >暂无模板
           </div>
-          <div class="pt15" style="clear:both;display:flex;justify-content:center;">
+          <div class="pt15 pageBtn">
             <Button
               v-show="currPage!==1"
               shape="circle"
@@ -80,7 +80,8 @@
             </span>
           </div>
         </div>
-        <div class="mt10 ml6 mr6" v-show="recipeType==1" style="clear:both;">
+        <div class="clear"></div>
+        <div class="mt10 ml6 mr6" v-show="recipeType==1">
           <span>剂数：</span>
           <span>{{tplData.dosage}}剂</span>
         </div>
@@ -482,7 +483,7 @@
                   </thead>
                 </table>
                 <!--ref="western_scroll"-->
-                <div class="tpl-search-list" >
+                <div class="tpl-search-list">
                   <table class="col100">
                     <tbody>
                     <tr
@@ -513,7 +514,7 @@
                   </thead>
                 </table>
                 <!--ref="therapy_scroll"-->
-                <div class="tpl-search-list" >
+                <div class="tpl-search-list">
                   <table class="col100">
                     <tbody>
                     <tr
@@ -784,7 +785,7 @@
     methods: {
       ...mapActions(["add_new_medicine", "clean_recipe", "set_record_prop"]),
       firstSearch: function () {
-        if (this.recipeType != 6 && this.recipeType !=3) {
+        if (this.recipeType != 6 && this.recipeType != 3) {
           this.tplSearch();
           this.showResult = true;
         }
@@ -1156,19 +1157,19 @@
         searchMed(params, this.recipeType).then(function (res) {
           if (res.code == 1000) {
             items.forEach((item) => {
-              for (var i = 0, len = res.data.length;i < len;i++){
-                if(item.item_id == res.data[i].id){
+              for (var i = 0, len = res.data.length; i < len; i++) {
+                if (item.item_id == res.data[i].id) {
                   item.status = 1;
                   break;
                 }
               }
 
-              if(i == len){
-                item.status =0;
+              if (i == len) {
+                item.status = 0;
               }
             });
             self.showUseTpl = true;
-          }else {
+          } else {
             self.$Message.info(res.msg)
           }
         });
@@ -1184,7 +1185,8 @@
       },
       editTplShow: function () {
         var self = this;
-        self.tplEditData.searchName = "";l
+        self.tplEditData.searchName = "";
+        l
         self.tplEditData.tplName = self.tplData.tplName;
         self.tplEditData.scope = self.tplData.scope;
         self.tplEditData.is_cloud = self.tplData.is_cloud;
@@ -1640,5 +1642,14 @@
 
   .case-label {
     font-weight: bold;
+  }
+
+  .pageBtn {
+    clear: both;
+    display: flex;
+    justify-content: center;
+  }
+  .clear {
+    clear: bottom;
   }
 </style>

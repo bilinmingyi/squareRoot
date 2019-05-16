@@ -36,7 +36,7 @@
       </div>
       <div class="mt10" style="text-align:center;font-size:1rem;" v-show="searchList.length<1">暂无药品</div>
     </div>
-    <div class="pt15" style="clear:both;display:flex;justify-content:center;">
+    <div class="pt15 pageBtn">
       <Button
         v-show="currPage!==1"
         shape="circle"
@@ -374,5 +374,11 @@
   .select-box {
     background: #5096e0 !important;
     color: #fff !important;
+  }
+
+  .pageBtn {
+    clear: both;
+    display: flex;
+    justify-content: center;
   }
 </style>

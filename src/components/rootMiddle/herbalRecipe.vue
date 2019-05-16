@@ -2,9 +2,9 @@
   <div>
     <section class="herbal_head">
       <div class="herbal_head_left">
-        <f-radio value=0 :name="'herCate'" :currVal="currentData.data.is_cloud" @change="changeCategory($event)">诊所药房
+        <f-radio value=0 :name="'herCate' + currRecipe" :currVal="currentData.data.is_cloud" @change="changeCategory($event)">诊所药房
         </f-radio>
-        <f-radio value=1 :name="'herCate'" :currVal="currentData.data.is_cloud" @change="changeCategory($event)">云药房
+        <f-radio value=1 :name="'herCate' + currRecipe" :currVal="currentData.data.is_cloud" @change="changeCategory($event)">云药房
         </f-radio>
       </div>
       <div>
