@@ -13,11 +13,12 @@
         <thead>
         <tr>
           <th>序号</th>
+          <th>类别</th>
           <th>药名</th>
           <th>规格</th>
           <th>总量</th>
           <th>单位</th>
-          <th>用法</th>
+<!--          <th>用法</th>-->
 <!--          <th>每次用量</th>-->
 <!--          <th>频次</th>-->
 <!--          <th>天数</th>-->
@@ -28,6 +29,7 @@
         <tbody>
         <tr v-for="(item,index) in currentData.data.items">
           <td>{{index+1}}</td>
+          <td>{{item.category}}</td>
           <td>{{item.name}}</td>
 
           <template v-if="item.is_match===1">
@@ -43,7 +45,6 @@
                 <Option :value="item.unit_sale" key="item.unit_sale">{{item.unit_sale}}</Option>
               </Select>
             </td>
-            <td>
             <td>
               <Input type="text" :value="item.remark"
                      @on-change="modify_medicine({key:'remark',val:$event.target.value,index:index})"/>

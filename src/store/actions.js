@@ -156,6 +156,7 @@ const actions = {
           "unit": item.unit === item.unit_stock ? item.unit_stock : (item.unit === item.unit_sale ? item.unit_sale : item.unit_stock),
           "sale_price": item.sale_price,
           "spec": item.spec,
+          "category": item.category,
           "unit_stock": item.unit_stock,
           "unit_sale": item.unit_sale,
           "unit_dose": item.unit_dose,
