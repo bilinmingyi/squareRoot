@@ -41,6 +41,7 @@ const actions = {
           type: 2,
           money: 0,
           data: {
+            is_cloud: 0,
             doctor_remark: "",
             items: []
           }

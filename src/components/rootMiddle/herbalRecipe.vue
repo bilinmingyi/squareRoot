@@ -2,10 +2,10 @@
   <div>
     <section class="herbal_head">
       <div class="herbal_head_left">
-        <!--        <f-radio value=1 :name="'herCate'" :currVal="currentData.data.category" @change="changeCategory($event)">饮片-->
-        <!--        </f-radio>-->
-        <!--        <f-radio value=2 :name="'herCate'" :currVal="currentData.data.category" @change="changeCategory($event)">颗粒-->
-        <!--        </f-radio>-->
+        <f-radio value=0 :name="'herCate'" :currVal="currentData.data.is_cloud" @change="changeCategory($event)">诊所药房
+        </f-radio>
+        <f-radio value=1 :name="'herCate'" :currVal="currentData.data.is_cloud" @change="changeCategory($event)">云药房
+        </f-radio>
       </div>
       <div>
         <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
@@ -241,13 +241,13 @@
       },
       changeCategory(event) {
         if (this.currentData.data.items.length === 0) {
-          this.modify_recipe_detail({key: 'category', val: event.target.value})
+          this.modify_recipe_detail({key: 'is_cloud', val: event.target.value})
         } else {
           this.$Modal.confirm({
             title: '提示',
-            content: '<p>切换药类型将清空已选的药，确认要切换?</p>',
+            content: '<p>切换药品来源将清空已选的药，确认要切换?</p>',
             onOk: () => {
-              this.modify_recipe_detail({key: 'category', val: event.target.value})
+              this.modify_recipe_detail({key: 'is_cloud', val: event.target.value})
               this.clean_recipe();
             },
             onCancel: () => {
