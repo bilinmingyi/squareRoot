@@ -87,7 +87,10 @@ const mutations = {
       state.canGetRecipeHelp = val;
     },
     [mutationTypes.SET_FJ_LIST](state, arr) {
-      state.fjList=arr;
+      state.fjList = arr;
+    },
+    [mutationTypes.SET_CLOUD_SHOP](state, arr) {
+      state.cloudShopList = arr
     }
     //right
   }

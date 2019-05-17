@@ -248,6 +248,9 @@ const actions = {
   },
   set_fj_list: ({commit}, arr) => {
     commit(mutationTypes.SET_FJ_LIST, arr)
+  },
+  set_cloud_shop: ({commit}, arr) => {
+    commit(mutationTypes.SET_CLOUD_SHOP, arr)
   }
   //right
 };

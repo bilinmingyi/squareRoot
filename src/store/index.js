@@ -11,10 +11,10 @@ const state = {
   isFirst: "1", // 是否初诊
   treatPrice: 0, // 诊金
   showHistoryDetail: false, // 显示就诊历史
-  orderSeqno:'',
-  isYB:0,
-  department:'',
-  ybCardNo:'',
+  orderSeqno: '',
+  isYB: 0,
+  department: '',
+  ybCardNo: '',
   clinicName: '',
   doctorName: '',
   clinicId: '',
@@ -55,13 +55,14 @@ const state = {
   },
 
   //middle
-  recipeList:[],
-  currRecipe:-1,
-  fjbRecipe:{},
-  printPre:false,
-  draftData:'',
-  canGetRecipeHelp:0,
-  fjList:[],
+  recipeList: [],
+  currRecipe: -1,
+  fjbRecipe: {},
+  printPre: false,
+  draftData: '',
+  canGetRecipeHelp: 0,
+  fjList: [],
+  cloudShopList: [],
 
   // right
   tplChange: false,
