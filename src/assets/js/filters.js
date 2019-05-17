@@ -177,11 +177,28 @@ const recipeType = (val, category) => {
   return result[0].name;
 }
 
+const productCategory = (val) => {
+  var categoryList = [
+    {code: 1, name: '中药协定方'},
+    {code: 2, name: '养生产品'},
+    {code: 3, name: '医疗器械'}
+  ]
+  var result = categoryList.filter(item => {
+    return item.code === val
+  });
+  if(result.length === 0){
+    return ''
+  } else {
+    return result[0].name
+  }
+}
+
 module.exports = {
   fullTime,
   recipeType,
   calcAge,
   parseSex,
   priceFormat,
-  dateFormat
+  dateFormat,
+  productCategory
 }

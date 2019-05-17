@@ -18,10 +18,6 @@
           <th>规格</th>
           <th>总量</th>
           <th>单位</th>
-<!--          <th>用法</th>-->
-<!--          <th>每次用量</th>-->
-<!--          <th>频次</th>-->
-<!--          <th>天数</th>-->
           <th>说明</th>
           <th>操作</th>
         </tr>
@@ -29,7 +25,7 @@
         <tbody>
         <tr v-for="(item,index) in currentData.data.items">
           <td>{{index+1}}</td>
-          <td>{{item.category}}</td>
+          <td>{{item.category|productCategory}}</td>
           <td>{{item.name}}</td>
 
           <template v-if="item.is_match===1">
@@ -49,27 +45,6 @@
               <Input type="text" :value="item.remark"
                      @on-change="modify_medicine({key:'remark',val:$event.target.value,index:index})"/>
             </td>
-<!--            <td>-->
-<!--              <Select style="width:4.5rem" :value="item.usage"-->
-<!--                      @on-change="modify_medicine({key:'usage',val:$event,index:index})">-->
-<!--                <Option v-for="item in westernMedUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>-->
-<!--              </Select>-->
-<!--            </td>-->
-<!--            <td>-->
-<!--              <InputNumber style="width:3.2rem" :value="Number(item.dose_once)"-->
-<!--                           @on-change="modify_medicine({key:'dose_once',val:$event,index:index})"/>-->
-<!--              <span class="unitText">{{item.unit_dose}}</span>-->
-<!--            </td>-->
-<!--            <td>-->
-<!--              <Select style="width:5.5rem" :value="item.frequency"-->
-<!--                      @on-change="modify_medicine({key:'frequency',val:$event,index:index})">-->
-<!--                <Option v-for="item in medFrequency" :value="item.name" :key="item.name">{{ item.name }}</Option>-->
-<!--              </Select>-->
-<!--            </td>-->
-<!--            <td>-->
-<!--              <InputNumber style="width:3.2rem" :value="item.days"-->
-<!--                           @on-change="modify_medicine({key:'days',val:$event,index:index})"/>-->
-<!--            </td>-->
           </template>
           <template v-else>
             <td colspan="7" style="color: red;">系统内搜索不到该药品</td>
