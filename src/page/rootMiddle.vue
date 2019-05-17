@@ -19,7 +19,7 @@
     name: "rootMiddle",
     data() {
       return {
-        componentList:['herbalRecipe','westernRecipe','productRecipe','therapyRecipe','','materialRecipe']
+        componentList: ['herbalRecipe', 'westernRecipe', 'productRecipe', 'therapyRecipe', '', 'materialRecipe']
       }
     },
     components: {
@@ -37,13 +37,14 @@
         currRecipe: state => state.currRecipe,
       })
     },
-    created() {
-      let temCurrRecipe=this.currRecipe;
-      if(this.recipeList.length===0){
-        this.addNewRecipt(1,1);
-        this.addNewRecipt(1,2);
+    mounted() {
+      let temCurrRecipe = this.currRecipe;
+      if (this.recipeList.length === 0) {
+        this.addNewRecipt(1, 1);
+        this.addNewRecipt(1, 2);
         this.addNewRecipt(2);
         this.addNewRecipt(4);
+        // this.addNewRecipt(3);
         this.change_curr_tab(temCurrRecipe);
       }
     },

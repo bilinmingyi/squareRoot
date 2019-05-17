@@ -186,6 +186,14 @@
                 'western_list': westernList
               })
               break;
+            case 3:
+              resultList.push({
+                'recipe_type': item.type,
+                'is_cloud': 0,
+                'doctor_remark': item.data.doctor_remark,
+                'product_list': item.data.items
+              })
+              break;
             case 4:
               resultList.push({
                 'recipe_type': item.type,

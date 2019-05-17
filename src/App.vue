@@ -29,7 +29,7 @@
     data() {
       return {
         showLoader: false,
-        initFinish: false,
+        initFinish: false
       };
     },
     computed: {
@@ -93,6 +93,7 @@
             try {
               if (result.recipeList && result.recordData) {
                 this.checkOrder(result.recipeList);
+                this.init_recipe(JSON.parse(JSON.stringify(result.recipeList)));
                 this.init_recode(JSON.parse(JSON.stringify(result.recordData)));
               } else if (result.patientData && result.caseData && result.recipeData) {
                 // 兼容老数据
@@ -102,6 +103,7 @@
                   allergic_history: result.patientData.allergic_history
                 })
                 this.checkOrder(recipeList);
+                this.init_recipe(JSON.parse(JSON.stringify(recipeList)));
                 this.init_recode(JSON.parse(JSON.stringify(recordData)));
               }
               this.change_curr_tab(result.currRecipe !== undefined ? result.currRecipe : -1);
@@ -421,7 +423,6 @@
                 ids: ids,
                 status: 1
               }, 6).then(data => {
-
                 let recipeItems = recipe.data.items, responeItems = data.data;
                 if (data.code === 1000) {
                   for (var i = 0; i < recipeItems.length; i++) {

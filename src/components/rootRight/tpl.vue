@@ -703,7 +703,7 @@
           : this.currRecipeData.data.category;
       }
     },
-    created() {
+    mounted() {
       this.firstSearch();
     },
     watch: {
@@ -785,10 +785,7 @@
     methods: {
       ...mapActions(["add_new_medicine", "clean_recipe", "set_record_prop"]),
       firstSearch: function () {
-        if (this.recipeType != 6 && this.recipeType != 3) {
           this.tplSearch();
-          this.showResult = true;
-        }
       },
       changePage: function (flag) {
         if (flag == 0) {
@@ -809,6 +806,11 @@
       tplSearch: function () {
         var self = this;
         var params = {};
+        if (this.recipeType != 6 && this.recipeType != 3) {
+          this.showResult = true;
+        } else {
+          return
+        }
         switch (self.recipeType) {
           case 0: {
             params = {
@@ -843,13 +845,15 @@
           }
         }
         clearTimeout(this.timer);
-        this.timer = setTimeout(() => {
-          searchTpl(params, this.recipeType).then(function (res) {
-            if (res.code == 1000) {
-              self.tplSearchList = res.data;
-              self.showResult = true;
-            }
-          });
+        self.timer = setTimeout(() => {
+          if (this.recipeType != 6 && this.recipeType != 3) {
+            searchTpl(params, self.recipeType).then(function (res) {
+              if (res.code == 1000) {
+                self.tplSearchList = res.data;
+                self.showResult = true;
+              }
+            });
+          }
         }, 300);
       },
       addTpl: function () {
