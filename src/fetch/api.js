@@ -215,6 +215,10 @@ const wisdomyb = params => fetch('https://localhost:9000/wisdomyb/audit', params
 
 const queryClassic = (params) => fetch('/doctreat/traditionrecipe/list', params);
 
+const fetchOptionConfig = params => fetch('/clinic/optionConfig', params);
+
+const fetchMedshopList = params => fetch('/clinicmng/medshopList', params)
+
 export {
   fetch,
   cancelOrder,
@@ -244,6 +248,8 @@ export {
   pointCount,
   getFJByName,
   wisdomyb,
+  fetchOptionConfig,
+  fetchMedshopList,
 
   //right
   searchRecentMed,

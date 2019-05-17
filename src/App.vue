@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="page_content" v-if="initFinish">
-<!--      <router-view style="flex: 1;"></router-view>-->
+      <!--      <router-view style="flex: 1;"></router-view>-->
       <router-view class="left" name="Left"/>
       <div class="right_block">
         <router-view name="Header"></router-view>
@@ -17,7 +17,14 @@
 
 <script>
 
-  import {getTreatOrderDetail, loadDraft, searchMed, canRecipeHelp, getDoctorInfor} from "@/fetch/api.js";
+  import {
+    getTreatOrderDetail,
+    loadDraft,
+    searchMed,
+    getDoctorInfor,
+    fetchOptionConfig,
+    fetchMedshopList
+  } from "@/fetch/api.js";
   import fLoader from "@/components/fLoader";
   import {mapState, mapActions} from "vuex";
 
@@ -40,6 +47,7 @@
     created() {
       this.init();
       this.loadDraftData();
+      this.getMedShop()
     },
     methods: {
       ...mapActions(['set_patient_info', 'set_order_seqno', 'init_recipe', 'init_recode', 'set_state_prop', 'set_recipe_help', 'change_curr_tab']),
@@ -458,6 +466,59 @@
             this.set_state_prop({key: 'department', val: data ? data.department : ''});
           } else {
             this.$Message.info(res.msg)
+          }
+        })
+      },
+      getMedShop() {
+        Promise.all([fetchOptionConfig({}), fetchMedshopList({})]).then(res => {
+          let list = []
+          if (res[0].code === 1000 && res[1].code === 1000) {
+            let keys = Object.keys(res[0].data)
+            keys.forEach(key => {
+              if(key != 'goods_order_deliver_price'){
+                if(res[0].data[key]){
+                  let items = res[1].data.filter((shop) => {
+                    return shop.id == res[0].data[key]
+                  })
+                  switch (key) {
+                    case 'yp_medshop_id':
+                      items.length > 0 ? list.push({type: 1, name: items[0].name, category: 1}) : list.push({type: 1, name: '', category: 1})
+                      break
+                    case 'kl_medshop_id':
+                      items.length > 0 ? list.push({type: 1, name: items[0].name, category: 2}) : list.push({type: 1, name: '', category: 2})
+                      break
+                    case 'xy_medshop_id':
+                      items.length > 0 ? list.push({type: 2, name: items[0].name}) : list.push({type: 2, name: ''})
+                      break
+                    case 'cp_medshop_id':
+                      items.length > 0 ? list.push({type: 3, name: items[0].name}) : list.push({type: 3, name: ''})
+                      break
+                  }
+                }else {
+                  switch (key) {
+                    case 'yp_medshop_id':
+                      list.push({type: 1, name: '', category: 1})
+                      break
+                    case 'kl_medshop_id':
+                      list.push({type: 1, name: '', category: 2})
+                      break
+                    case 'xy_medshop_id':
+                      list.push({type: 2, name: ''})
+                      break
+                    case 'cp_medshop_id':
+                      list.push({type: 3, name: ''})
+                      break
+                  }
+                }
+              }
+            })
+            console.log(list)
+          } else {
+            if (res[0].code !== 1000) {
+              this.$Message.info(res[0].msg)
+            } else {
+              this.$Message.info(res[1].msg)
+            }
           }
         })
       }
