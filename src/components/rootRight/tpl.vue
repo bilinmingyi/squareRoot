@@ -223,12 +223,13 @@
               <label class="ml20" for="edit-tpl-name">模板名称：</label>
               <Input
                 name="tpl-name"
+                id="edit-tpl-name"
                 v-model="tplEditData.tplName"
                 placeholder="必填"
                 style="width: 9.375rem;"
               />
               <label class="ml20" for="edit-tpl-scope">模板类别：</label>
-              <Select name="edit-tpl-scope" style="width:7.5rem;" v-model="tplEditData.scope">
+              <Select name="edit-tpl-scope" style="width:7.5rem;" v-model="tplEditData.scope" id="edit-tpl-scope">
                 <Option
                   v-for="(item,index) in tplType"
                   :key="index"

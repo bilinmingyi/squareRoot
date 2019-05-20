@@ -34,7 +34,9 @@
         >{{item.clinic_alias_name||item.name}}&emsp;({{item.price||item.sale_price}}元/{{item.unit_sale}})
         </div>
       </div>
-      <div class="mt10" style="text-align:center;font-size:1rem;" v-show="searchList.length<1">暂无药品</div>
+      <div class="mt10" style="text-align:center;font-size:1rem;" v-show="searchList.length<1">
+        {{isFirst ? '请搜索药品' : '暂无药品'}}
+      </div>
     </div>
     <div class="pt15 pageBtn">
       <Button
@@ -84,7 +86,17 @@
         page_size: 0,
         curSelect: -1,  // 当前选中的药品
         page: 1,
-        totalNum: 0
+        totalNum: 0,
+        isFirst: true
+      }
+    },
+    computed: {
+      ...mapGetters(["currRecipeData"]),
+      recipeType: function () {
+        return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
+      },
+      isCloud: function () {
+        return this.currRecipeData === undefined ? 0 : this.currRecipeData.data.is_cloud;
       }
     },
     watch: {
@@ -93,7 +105,7 @@
         this.showResult = false;
         this.firstSearch();
       },
-      category: function () {
+      isCloud: function () {
         this.searchName = "";
         this.showResult = false;
         this.firstSearch();
@@ -144,17 +156,7 @@
         }
       }
     },
-    computed: {
-      ...mapGetters(["currRecipeData"]),
-      recipeType: function () {
-        return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
-      },
-      category: function () {
-        return this.currRecipeData === undefined
-          ? 1
-          : this.currRecipeData.data.category;
-      }
-    },
+
     created() {
       this.firstSearch();
     },
@@ -198,10 +200,12 @@
           {
             category: self.category
           },
-          self.recipeType
+          self.recipeType,
+          self.isCloud
         ).then(
           function (res) {
             if (res.code == 1000) {
+              self.isFirst = true
               self.searchList = res.data;
             }
           },
@@ -275,6 +279,7 @@
           searchMed(params, this.recipeType).then(
             function (res) {
               if (res.code == 1000) {
+                self.isFirst = false
                 self.searchList = res.data;
               }
             },

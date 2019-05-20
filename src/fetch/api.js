@@ -139,13 +139,25 @@ const pointCount = (params) => fetch('/doctreat/treat/help', params)
 const waitingPage = '/yzshis/doctreat/waiting/listPage';
 
 //right
-const searchRecentMed = (params, type) => {
+const searchRecentMed = (params, type, isCloud) => {
   if (type === 1) {
-    return fetch('/doctreat/herbal/recent', params);
+    if (isCloud == 1) {
+      return fetch('/doctreat/dyherbal/recent', params)
+    } else {
+      return fetch('/doctreat/herbal/recent', params);
+    }
   } else if (type === 2) {
-    return fetch('/doctreat/western/recent', params);
+    if (isCloud == 1) {
+      return fetch('/doctreat/dywestern/recent', params)
+    } else {
+      return fetch('/doctreat/western/recent', params);
+    }
   } else if (type == 3) {
-    return fetch('/doctreat/product/recent', params); // 产品最近使用接口
+    if (isCloud == 1) {
+      return fetch('/doctreat/dyproduct/recent', params);
+    } else {
+      return fetch('/doctreat/product/recent', params);
+    }
   } else if (type === 4) {
     return fetch('/doctreat/therapy/recent', params);
   } else if (type === 6) {
