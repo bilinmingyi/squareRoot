@@ -11,19 +11,32 @@
     </div>
     <div class="search-result" v-show="showResult">
       <div
-        :class="[{'no-stock':item.stock<1},{'herbal-result-li':recipeType===1},{'search-result-li':recipeType!=1}, {'select-box': curSelect === index}]"
+        :class="[{'no-stock':item.stock<1 && isCloud!=1},{'herbal-result-li':recipeType===1},{'search-result-li':recipeType!=1}, {'select-box': curSelect === index}]"
         v-for="(item,index) in showList"
         :key="index"
         @click.stop="selectItem(item)"
       >
         <div v-show="recipeType==1">
-          {{item.clinic_alias_name =='' ? item.name : item.clinic_alias_name}}
-          <br>
-          {{item.spec}}
+          <div v-if="isCloud == 1">
+            {{item.alias_name || item.name}}
+            <br>
+            {{item.spec}}
+          </div>
+          <div v-else>
+            {{item.clinic_alias_name || item.name}}
+            <br>
+            {{item.spec}}
+          </div>
         </div>
         <div v-show="recipeType==2 || recipeType==3">
-          {{item.clinic_alias_name == '' ? item.name : item.clinic_alias_name}}
-          {{item.spec}}
+          <div v-if="isCloud == 1">
+            {{item.alias_name  || item.name}}
+            ({{item.spec}})
+          </div>
+          <div v-else>
+            {{item.clinic_alias_name  || item.name}}
+            ({{item.spec}})
+          </div>
         </div>
         <div
           v-show="recipeType==4"
@@ -228,28 +241,55 @@
         var params = {};
         switch (self.recipeType) {
           case 1: {
-            params = {
-              medicine_name: self.searchName,
-              category: self.category,
-              status: 1,
-              page: self.page,
-            };
+            if(self.isCloud == 1){
+              params = {
+                query: self.searchName,
+                category: self.category,
+                status: 1,
+                page: self.page,
+              }
+            } else {
+              params = {
+                medicine_name: self.searchName,
+                category: self.category,
+                status: 1,
+                page: self.page,
+              };
+            }
             break;
           }
           case 2: {
-            params = {
-              medicine_name: self.searchName,
-              status: 1,
-              page: self.page,
-            };
+            if (self.isCloud == 1) {
+              params = {
+                query: self.searchName,
+                status: 1,
+                page: self.page,
+              };
+            } else {
+              params = {
+                medicine_name: self.searchName,
+                status: 1,
+                page: self.page,
+              };
+            }
+
             break;
           }
           case 3:
-            params = {
-              medicine_name: self.searchName,
-              status: 1,
-              page: self.page,
+            if (self.isCloud == 1) {
+              params = {
+                query: self.searchName,
+                status: 1,
+                page: self.page,
+              }
+            } else {
+              params = {
+                medicine_name: self.searchName,
+                status: 1,
+                page: self.page,
+              }
             }
+
             break;
           case 4: {
             params = {
@@ -276,7 +316,7 @@
         }
         clearTimeout(this.timer);
         this.timer = setTimeout(() => {
-          searchMed(params, this.recipeType).then(
+          searchMed(params, this.recipeType, self.isCloud).then(
             function (res) {
               if (res.code == 1000) {
                 self.isFirst = false

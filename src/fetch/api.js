@@ -141,36 +141,24 @@ const waitingPage = '/yzshis/doctreat/waiting/listPage';
 //right
 const searchRecentMed = (params, type, isCloud) => {
   if (type === 1) {
-    if (isCloud == 1) {
-      return fetch('/doctreat/dyherbal/recent', params)
-    } else {
-      return fetch('/doctreat/herbal/recent', params);
-    }
+    return isCloud == 1 ? fetch('/doctreat/dyherbal/recent', params) : fetch('/doctreat/herbal/recent', params)
   } else if (type === 2) {
-    if (isCloud == 1) {
-      return fetch('/doctreat/dywestern/recent', params)
-    } else {
-      return fetch('/doctreat/western/recent', params);
-    }
+    return isCloud == 1 ? fetch('/doctreat/dywestern/recent', params) : fetch('/doctreat/western/recent', params)
   } else if (type == 3) {
-    if (isCloud == 1) {
-      return fetch('/doctreat/dyproduct/recent', params);
-    } else {
-      return fetch('/doctreat/product/recent', params);
-    }
+    return isCloud == 1 ? fetch('/doctreat/dyproduct/recent', params) : fetch('/doctreat/product/recent', params)
   } else if (type === 4) {
     return fetch('/doctreat/therapy/recent', params);
   } else if (type === 6) {
     return fetch('/doctreat/material/recent', params);
   }
 }
-const searchMed = (params, type) => {
+const searchMed = (params, type, isCloud) => {
   if (type === 1) {
-    return fetch('/stockmng/medicine/herbalList', params);
+    return isCloud == 1 ? fetch('/stockmng/dyHerbal/list', params) : fetch('/stockmng/medicine/herbalList', params)
   } else if (type === 2) {
-    return fetch('/stockmng/medicine/westernList', params);
+    return isCloud == 1 ? fetch('/stockmng/dyWestern/list', params) : fetch('/stockmng/medicine/westernList', params)
   } else if (type === 3) {
-    return fetch('/stockmng/medicine/productList', params); // 产品查药接口
+    return isCloud == 1 ? fetch('/stockmng/dyProduct/list', params) : fetch('/stockmng/medicine/productList', params)
   } else if (type === 4) {
     return fetch('/clinicmng/therapy/list', params);
   } else if (type === 6) {
