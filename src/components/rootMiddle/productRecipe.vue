@@ -1,11 +1,17 @@
 <template>
   <div>
     <section class="herbal_head">
-      <div class="herbal_head_left"></div>
+      <div class="herbal_head_left">
+        <f-radio value=0 :name="'herCate'" :currVal="currentData.data.is_cloud" @change="changeCategory($event)">诊所药房
+        </f-radio>
+        <f-radio value=1 :name="'herCate'" :currVal="currentData.data.is_cloud" @change="changeCategory($event)"
+                 v-if="currentCloud.name != ''">{{currentCloud.name}}
+        </f-radio>
+      </div>
       <div>
         <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
         <button class="btn" @click="print_pre()">打印处方</button>
-<!--        <button class="btn btn_print" @click.stop="saveTplData">存为模板</button>-->
+        <!--        <button class="btn btn_print" @click.stop="saveTplData">存为模板</button>-->
       </div>
     </section>
     <section>
@@ -73,21 +79,19 @@
                @on-change="modify_recipe_detail({key:'doctor_remark',val:$event.target.value})"/>
       </div>
     </section>
-<!--    <save-tpl v-if="showAddTpl" @hideTpl="hideTplShow"></save-tpl>-->
+    <!--    <save-tpl v-if="showAddTpl" @hideTpl="hideTplShow"></save-tpl>-->
   </div>
 </template>
 
 <script>
-  import {westernMedUsages, medFrequency} from '@/assets/js/mapType'
-  // import saveTpl from '@/components/rootMiddle/saveRecipeTpl'
-  import {mapActions} from 'vuex'
+  import fRadio from '@/components/fRadio.vue'
+  import {mapActions, mapState} from 'vuex'
   import {Select, Option, Input, InputNumber} from 'iview'
 
   export default {
     name: "productRecipe",
     data() {
       return {
-        medFrequency: medFrequency,
         showAddTpl: false
       }
     },
@@ -96,17 +100,34 @@
       Option,
       Input,
       // saveTpl,
-      InputNumber
+      InputNumber,
+      fRadio
     },
     computed: {
-      westernMedUsages: function () {
-        return westernMedUsages.filter(item => {
-          return item.status === 1;
-        })
-      },
+      ...mapState({
+        'cloudShopList': state => state.cloudShopList
+      }),
       currentData: function () {
         return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
       },
+      currentCloud: function () {
+        let list = this.cloudShopList
+        let type = this.currentData.type
+        let category
+        if (type == 1) {
+          category = this.currentData.data.category
+        }
+        let result = list.filter(item => {
+          return item.type == type
+        }).filter(item => {
+          if (item.type == 1) {
+            return item.category == category
+          } else {
+            return item
+          }
+        })
+        return result[0]
+      }
     },
     watch: {
       'currentData.data.items': {
@@ -135,6 +156,7 @@
         'cancel_medicine',
         'modify_recipe_detail',
         'modify_recipe',
+        'clean_recipe',
         'change_print_pre',
       ]),
       print_pre: function () {
@@ -166,8 +188,24 @@
             this.modify_medicine({key: 'num', val: Math.ceil(currItems.num * currItems.stock_sale_ratio), index: index})
           }
         }
-
       },
+      changeCategory(event) {
+        if (this.currentData.data.items.length === 0) {
+          this.modify_recipe_detail({key: 'is_cloud', val: event.target.value})
+        } else {
+          this.$Modal.confirm({
+            title: '提示',
+            content: '<p>切换药品来源将清空已选的药，确认要切换?</p>',
+            onOk: () => {
+              this.modify_recipe_detail({key: 'is_cloud', val: event.target.value})
+              this.clean_recipe();
+            },
+            onCancel: () => {
+              this.$forceUpdate()
+            }
+          })
+        }
+      }
       // saveTplData() {
       //   if (this.currentData.data.items.length === 0) {
       //     this.$Message.info("请先至少添加一个药品！");

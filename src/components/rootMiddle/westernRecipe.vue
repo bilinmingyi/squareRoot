@@ -1,7 +1,13 @@
 <template>
   <div>
     <section class="herbal_head">
-      <div class="herbal_head_left"></div>
+      <div class="herbal_head_left">
+        <f-radio value=0 :name="'herCate'" :currVal="currentData.data.is_cloud" @change="changeCategory($event)">诊所药房
+        </f-radio>
+        <f-radio value=1 :name="'herCate'" :currVal="currentData.data.is_cloud" @change="changeCategory($event)"
+                 v-if="currentCloud.name != ''">{{currentCloud.name}}
+        </f-radio>
+      </div>
       <div>
         <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
         <button class="btn btn_yb_check" @click.stop="examineYB" v-if="isYB">医保处方审核</button>
@@ -99,6 +105,7 @@
 
 <script>
   import {westernMedUsages, medFrequency, userName, userId} from '@/assets/js/mapType'
+  import fRadio from '@/components/fRadio.vue'
   import saveTpl from '@/components/rootMiddle/saveRecipeTpl'
   import wisdomYb from '@/components/wisdomyb.vue'
   import {mapActions, mapState} from 'vuex'
@@ -121,7 +128,8 @@
       Input,
       saveTpl,
       InputNumber,
-      wisdomYb
+      wisdomYb,
+      fRadio
     },
     computed: {
       ...mapState({
@@ -130,7 +138,8 @@
         'clinicId': state => state.clinicId,
         'doctorId': state => state.doctorId,
         'appointOrderSeqno': state => state.appointOrderSeqno,
-        'ybCardNo': state => state.ybCardNo
+        'ybCardNo': state => state.ybCardNo,
+        'cloudShopList': state => state.cloudShopList
       }),
       westernMedUsages: function () {
         return westernMedUsages.filter(item => {
@@ -140,6 +149,24 @@
       currentData: function () {
         return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
       },
+      currentCloud: function () {
+        let list = this.cloudShopList
+        let type = this.currentData.type
+        let category
+        if (type == 1) {
+          category = this.currentData.data.category
+        }
+        let result = list.filter(item => {
+          return item.type == type
+        }).filter(item => {
+          if (item.type == 1) {
+            return item.category == category
+          } else {
+            return item
+          }
+        })
+        return result[0]
+      }
     },
     watch: {
       'currentData.data.items': {
@@ -168,11 +195,29 @@
         'modify_medicine',
         'cancel_medicine',
         'modify_recipe_detail',
+        'clean_recipe',
         'modify_recipe',
         'change_print_pre',
       ]),
       print_pre: function () {
         this.change_print_pre();
+      },
+      changeCategory(event) {
+        if (this.currentData.data.items.length === 0) {
+          this.modify_recipe_detail({key: 'is_cloud', val: event.target.value})
+        } else {
+          this.$Modal.confirm({
+            title: '提示',
+            content: '<p>切换药品来源将清空已选的药，确认要切换?</p>',
+            onOk: () => {
+              this.modify_recipe_detail({key: 'is_cloud', val: event.target.value})
+              this.clean_recipe();
+            },
+            onCancel: () => {
+              this.$forceUpdate()
+            }
+          })
+        }
       },
       cancelRecipe() {
         this.$Modal.confirm({
@@ -315,7 +360,7 @@
         }
         return {}
       },
-      hideWis () {
+      hideWis() {
         this.wisdomShow = false
       }
     }

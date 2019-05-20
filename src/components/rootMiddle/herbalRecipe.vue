@@ -4,7 +4,7 @@
       <div class="herbal_head_left">
         <f-radio value=0 :name="'herCate'" :currVal="currentData.data.is_cloud" @change="changeCategory($event)">诊所药房
         </f-radio>
-        <f-radio value=1 :name="'herCate'" :currVal="currentData.data.is_cloud" @change="changeCategory($event)">云药房
+        <f-radio value=1 :name="'herCate'" :currVal="currentData.data.is_cloud" @change="changeCategory($event)" v-if="currentCloud.name != ''">{{currentCloud.name}}
         </f-radio>
       </div>
       <div>
@@ -166,10 +166,30 @@
         'clinicId': state => state.clinicId,
         'doctorId': state => state.doctorId,
         'appointOrderSeqno': state => state.appointOrderSeqno,
-        'ybCardNo': state => state.ybCardNo
+        'ybCardNo': state => state.ybCardNo,
+        'cloudShopList': state => state.cloudShopList
       }),
       currentData: function () {
         return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
+      },
+
+      currentCloud: function () {
+        let list = this.cloudShopList
+        let type = this.currentData.type
+        let category
+        if (type == 1) {
+          category = this.currentData.data.category
+        }
+        let result = list.filter(item => {
+          return item.type == type
+        }).filter(item => {
+          if(item.type == 1){
+            return item.category == category
+          }else{
+            return item
+          }
+        })
+        return result[0]
       },
 
       herbalMedUsages: function () {
@@ -255,8 +275,6 @@
             }
           })
         }
-
-
       },
       saveTplData() {
         if (this.currentData.data.items.length === 0) {
@@ -411,7 +429,7 @@
         }
         return {}
       },
-      hideWis () {
+      hideWis() {
         this.wisdomShow = false
       }
     },
