@@ -141,16 +141,27 @@ export default {
     },
     saveHistory() {
       let recipe = this.recipeData;
+      console.log(recipe)
       let type = recipe.recipe_type;
       let map = this.mapList;
       let arr = recipe[map[type]];
       this.clean_recipe();
-      arr.forEach(item => {
-        this.add_new_medicine({ item, type });
-      })
       if (type == 1) {
         this.modify_recipe_detail({ key: 'dosage', val: recipe.dosage});
         this.modify_recipe_detail({ key: 'category', val: recipe.category});
+        this.modify_recipe_detail({ key: 'is_cloud', val: recipe.is_cloud});
+      } else if(type == 2 || type == 3) {
+        this.modify_recipe_detail({ key: 'is_cloud', val: recipe.is_cloud});
+      }
+      if(type == 2){
+        arr.forEach(item => {
+          item.dose_once = item.dose_once.replace(/\D*/g,'')
+          this.add_new_medicine({ item, type });
+        })
+      }else {
+        arr.forEach(item => {
+          this.add_new_medicine({ item, type });
+        })
       }
       this.cancelHistory();
     }

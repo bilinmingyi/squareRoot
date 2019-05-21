@@ -98,6 +98,7 @@ const actions = {
     commit(mutationTypes.CANCEL_RECIPE)
   },
   add_new_medicine: ({commit, state}, {item, type}) => {
+
     let result = {};
     switch (type) {
       case 1:
@@ -117,7 +118,7 @@ const actions = {
           "usage": !item.usage ? '' : item.usage,
           "stock": item.stock,
           "stock_sale_ratio": item.stock_sale_ratio,
-          "is_match": item.status == 1 ? 1 : 0,
+          "is_match":  Number(state.recipeList[state.currRecipe].data.is_cloud) === 1 ? 1 : item.status == 1 ? 1 : 0,
           "remark": !item.remark ? '' : item.remark,
 
           "explain": [],
@@ -143,7 +144,7 @@ const actions = {
           "frequency": !item.frequency ? '' : item.frequency,
           "dose_once": !item.dose_once ? '' : item.dose_once,
           "stock": item.stock,
-          "is_match": item.status == 1 ? 1 : 0,
+          "is_match":  Number(state.recipeList[state.currRecipe].data.is_cloud) === 1 ? 1 : item.status == 1 ? 1 : 0,
           "cloud_item_id": item.id,
           "types": 2
         };
@@ -167,7 +168,7 @@ const actions = {
           // "frequency": !item.frequency ? '' : item.frequency,
           // "dose_once": !item.dose_once ? '' : item.dose_once,
           "stock": item.stock,
-          "is_match": item.status == 1 ? 1 : 0,
+          "is_match": Number(state.recipeList[state.currRecipe].data.is_cloud) === 1 ? 1 : item.status == 1 ? 1 : 0,
           "cloud_item_id": item.id,
           "remark": !item.remark ? '' : item.remark,
           "types": 3
@@ -206,8 +207,6 @@ const actions = {
         };
         break;
     }
-
-
     commit(mutationTypes.ADD_NEW_MEDICINE, result)
   },
   modify_medicine: ({commit}, {key, val, index}) => {

@@ -45,18 +45,22 @@ const getDiseaseList = (params, type) => {
   }
 }
 
-const checkIsMatch = (params, type, recipe) => {
+const checkIsMatch = (params, type, cloud) => {
   switch (type) {
     case 1:
-      return (recipe.is_cloud == 1)
+      return (Number(cloud) == 1)
         ? fetch('/stockmng/dyHerbal/list', params)
         : fetch('/stockmng/medicine/herbalList', params)
       break;
     case 2:
-      return fetch('/stockmng/medicine/westernList', params);
+      return (Number(cloud) == 1)
+        ? fetch('/stockmng/dyWestern/list', params)
+        : fetch('/stockmng/medicine/westernList', params)
       break;
     case 3:
-      return fetch('/stockmng/dyProduct/list', params);
+      return (Number(cloud) == 1)
+        ? fetch('/stockmng/dyProduct/list', params)
+        : fetch('/stockmng/medicine/productList', params)
       break;
     case 4:
       return fetch('/clinicmng/therapy/list', params);
