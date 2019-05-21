@@ -30,11 +30,11 @@
         </div>
         <div v-show="recipeType==2 || recipeType==3">
           <div v-if="isCloud == 1">
-            {{item.alias_name  || item.name}}
+            {{item.alias_name || item.name}}
             ({{item.spec}})
           </div>
           <div v-else>
-            {{item.clinic_alias_name  || item.name}}
+            {{item.clinic_alias_name || item.name}}
             ({{item.spec}})
           </div>
         </div>
@@ -110,9 +110,19 @@
       },
       isCloud: function () {
         return this.currRecipeData === undefined ? 0 : this.currRecipeData.data.is_cloud;
+      },
+      category: function () {
+        return this.currRecipeData === undefined
+          ? 1
+          : this.currRecipeData.data.category;
       }
     },
     watch: {
+      category: function () {
+        this.searchName = "";
+        this.showResult = false;
+        this.firstSearch();
+      },
       recipeType: function () {
         this.searchName = "";
         this.showResult = false;
@@ -241,7 +251,7 @@
         var params = {};
         switch (self.recipeType) {
           case 1: {
-            if(self.isCloud == 1){
+            if (self.isCloud == 1) {
               params = {
                 query: self.searchName,
                 category: self.category,

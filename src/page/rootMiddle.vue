@@ -44,7 +44,6 @@
         this.addNewRecipt(1, 2);
         this.addNewRecipt(2);
         this.addNewRecipt(4);
-        // this.addNewRecipt(3);
         this.change_curr_tab(temCurrRecipe);
       }
     },

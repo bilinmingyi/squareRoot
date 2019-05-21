@@ -80,6 +80,7 @@
               scope:this.tplType,
               items:this.currentData.data.items,
               doctor_remark:this.currentData.data.doctor_remark,
+              is_cloud:this.currentData.data.is_cloud
             }
             break;
           case 4:

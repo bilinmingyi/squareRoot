@@ -191,13 +191,13 @@
       },
       changeCategory(event) {
         if (this.currentData.data.items.length === 0) {
-          this.modify_recipe_detail({key: 'is_cloud', val: event.target.value})
+          this.modify_recipe_detail({key: 'is_cloud', val: Number(event.target.value)})
         } else {
           this.$Modal.confirm({
             title: '提示',
             content: '<p>切换药品来源将清空已选的药，确认要切换?</p>',
             onOk: () => {
-              this.modify_recipe_detail({key: 'is_cloud', val: event.target.value})
+              this.modify_recipe_detail({key: 'is_cloud', val: Number(event.target.value)})
               this.clean_recipe();
             },
             onCancel: () => {

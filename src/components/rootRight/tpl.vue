@@ -698,6 +698,9 @@
       recipeType: function () {
         return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
       },
+      isCloud: function () {
+        return this.currRecipeData === undefined ? 0 : this.currRecipeData.data.is_cloud;
+      },
       category: function () {
         return this.currRecipeData === undefined
           ? 1
@@ -708,6 +711,12 @@
       this.firstSearch();
     },
     watch: {
+      isCloud: function () {
+        this.showTpl = false;
+        this.searchTplName = "";
+        this.showResult = false;
+        this.firstSearch();
+      },
       recipeType: function () {
         this.showTpl = false;
         this.searchTplName = "";
@@ -786,7 +795,7 @@
     methods: {
       ...mapActions(["add_new_medicine", "clean_recipe", "set_record_prop"]),
       firstSearch: function () {
-          this.tplSearch();
+        this.tplSearch();
       },
       changePage: function (flag) {
         if (flag == 0) {
@@ -824,7 +833,7 @@
           case 1: {
             params = {
               category: self.category,
-              is_cloud: 0,
+              is_cloud: self.isCloud,
               name: self.searchTplName,
               page: 1
             };
@@ -833,6 +842,7 @@
           case 2: {
             params = {
               name: self.searchTplName,
+              is_cloud: self.isCloud,
               page: 1
             };
             break;
@@ -1654,6 +1664,7 @@
     display: flex;
     justify-content: center;
   }
+
   .clear {
     clear: bottom;
   }
