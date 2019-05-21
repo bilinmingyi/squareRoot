@@ -314,8 +314,13 @@
           if (recipe.data.items.length === 0) {
             return
           }
+          let is_cloud = Number(recipe.data.is_cloud)
           let ids = recipe.data.items.map(med => {
-            return med.item_id
+            if (is_cloud === 1) {
+              return med.cloud_item_id
+            } else {
+              return med.item_id
+            }
           });
           switch (recipe.type) {
             case 1:
@@ -323,22 +328,38 @@
                 ids: ids,
                 category: recipe.data.category,
                 status: 1
-              }, 1).then(data => {
+              }, 1, is_cloud).then(data => {
                 let recipeItems = recipe.data.items, responeItems = data.data;
                 if (data.code === 1000) {
-                  for (var i = 0; i < recipeItems.length; i++) {
-                    for (var j = 0; j < responeItems.length; j++) {
-                      if (recipeItems[i].item_id == responeItems[j].id) {
-                        recipeItems[i].stock = responeItems[j].stock;
-                        break;
+                  if(is_cloud === 1){
+                    for (var i = 0; i < recipeItems.length; i++) {
+                      for (var j = 0; j < responeItems.length; j++) {
+                        if (recipeItems[i].cloud_item_id == responeItems[j].id) {
+                          break;
+                        }
+                      }
+                      if (j == responeItems.length) {
+                        recipeItems[i].is_match = 0;
+                      } else {
+                        recipeItems[i].is_match = 1;
                       }
                     }
-                    if (j == responeItems.length) {
-                      recipeItems[i].is_match = 0;
-                    } else {
-                      recipeItems[i].is_match = 1;
+                  } else {
+                    for (var i = 0; i < recipeItems.length; i++) {
+                      for (var j = 0; j < responeItems.length; j++) {
+                        if (recipeItems[i].item_id == responeItems[j].id) {
+                          recipeItems[i].stock = responeItems[j].stock;
+                          break;
+                        }
+                      }
+                      if (j == responeItems.length) {
+                        recipeItems[i].is_match = 0;
+                      } else {
+                        recipeItems[i].is_match = 1;
+                      }
                     }
                   }
+
                   this.init_recipe(JSON.parse(JSON.stringify(recipeList)));
                 } else {
                   this.$Message.info(res.msg)
@@ -349,21 +370,36 @@
               searchMed({
                 ids: ids,
                 status: 1
-              }, 2).then(data => {
+              }, 2, is_cloud).then(data => {
 
                 let recipeItems = recipe.data.items, responeItems = data.data;
                 if (data.code === 1000) {
-                  for (var i = 0; i < recipeItems.length; i++) {
-                    for (var j = 0; j < responeItems.length; j++) {
-                      if (recipeItems[i].item_id == responeItems[j].id) {
-                        recipeItems[i].stock = responeItems[j].stock;
-                        break;
+                  if (is_cloud === 1) {
+                    for (var i = 0; i < recipeItems.length; i++) {
+                      for (var j = 0; j < responeItems.length; j++) {
+                        if (recipeItems[i].cloud_item_id == responeItems[j].id) {
+                          break;
+                        }
+                      }
+                      if (j == responeItems.length) {
+                        recipeItems[i].is_match = 0;
+                      } else {
+                        recipeItems[i].is_match = 1;
                       }
                     }
-                    if (j == responeItems.length) {
-                      recipeItems[i].is_match = 0;
-                    } else {
-                      recipeItems[i].is_match = 1;
+                  } else {
+                    for (var i = 0; i < recipeItems.length; i++) {
+                      for (var j = 0; j < responeItems.length; j++) {
+                        if (recipeItems[i].item_id == responeItems[j].id) {
+                          recipeItems[i].stock = responeItems[j].stock;
+                          break;
+                        }
+                      }
+                      if (j == responeItems.length) {
+                        recipeItems[i].is_match = 0;
+                      } else {
+                        recipeItems[i].is_match = 1;
+                      }
                     }
                   }
                   this.init_recipe(JSON.parse(JSON.stringify(recipeList)));
@@ -376,23 +412,39 @@
               searchMed({
                 ids: ids,
                 status: 1
-              }, 3).then(data => {
+              }, 3, is_cloud).then(data => {
 
                 let recipeItems = recipe.data.items, responeItems = data.data;
                 if (data.code === 1000) {
-                  for (var i = 0; i < recipeItems.length; i++) {
-                    for (var j = 0; j < responeItems.length; j++) {
-                      if (recipeItems[i].item_id == responeItems[j].id) {
-                        recipeItems[i].stock = responeItems[j].stock;
-                        break;
+                  if (is_cloud === 1) {
+                    for (var i = 0; i < recipeItems.length; i++) {
+                      for (var j = 0; j < responeItems.length; j++) {
+                        if (recipeItems[i].cloud_item_id == responeItems[j].id) {
+                          break;
+                        }
+                      }
+                      if (j == responeItems.length) {
+                        recipeItems[i].is_match = 0;
+                      } else {
+                        recipeItems[i].is_match = 1;
                       }
                     }
-                    if (j == responeItems.length) {
-                      recipeItems[i].is_match = 0;
-                    } else {
-                      recipeItems[i].is_match = 1;
+                  } else {
+                    for (var i = 0; i < recipeItems.length; i++) {
+                      for (var j = 0; j < responeItems.length; j++) {
+                        if (recipeItems[i].item_id == responeItems[j].id) {
+                          recipeItems[i].stock = responeItems[j].stock;
+                          break;
+                        }
+                      }
+                      if (j == responeItems.length) {
+                        recipeItems[i].is_match = 0;
+                      } else {
+                        recipeItems[i].is_match = 1;
+                      }
                     }
                   }
+
                   this.init_recipe(JSON.parse(JSON.stringify(recipeList)));
                 } else {
                   this.$Message.info(res.msg)
@@ -475,17 +527,25 @@
           if (res[0].code === 1000 && res[1].code === 1000) {
             let keys = Object.keys(res[0].data)
             keys.forEach(key => {
-              if(key != 'goods_order_deliver_price'){
-                if(res[0].data[key]){
+              if (key != 'goods_order_deliver_price') {
+                if (res[0].data[key]) {
                   let items = res[1].data.filter((shop) => {
                     return shop.id == res[0].data[key]
                   })
                   switch (key) {
                     case 'yp_medshop_id':
-                      items.length > 0 ? list.push({type: 1, name: items[0].name, category: 1}) : list.push({type: 1, name: '', category: 1})
+                      items.length > 0 ? list.push({type: 1, name: items[0].name, category: 1}) : list.push({
+                        type: 1,
+                        name: '',
+                        category: 1
+                      })
                       break
                     case 'kl_medshop_id':
-                      items.length > 0 ? list.push({type: 1, name: items[0].name, category: 2}) : list.push({type: 1, name: '', category: 2})
+                      items.length > 0 ? list.push({type: 1, name: items[0].name, category: 2}) : list.push({
+                        type: 1,
+                        name: '',
+                        category: 2
+                      })
                       break
                     case 'xy_medshop_id':
                       items.length > 0 ? list.push({type: 2, name: items[0].name}) : list.push({type: 2, name: ''})
@@ -494,7 +554,7 @@
                       items.length > 0 ? list.push({type: 3, name: items[0].name}) : list.push({type: 3, name: ''})
                       break
                   }
-                }else {
+                } else {
                   switch (key) {
                     case 'yp_medshop_id':
                       list.push({type: 1, name: '', category: 1})

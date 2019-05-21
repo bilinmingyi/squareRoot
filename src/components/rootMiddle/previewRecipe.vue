@@ -181,7 +181,7 @@
 
               resultList.push({
                 'recipe_type': item.type,
-                'is_cloud': 0,
+                'is_cloud': item.data.is_cloud,
                 'doctor_remark': item.data.doctor_remark,
                 'western_list': westernList
               })
@@ -189,7 +189,7 @@
             case 3:
               resultList.push({
                 'recipe_type': item.type,
-                'is_cloud': 0,
+                'is_cloud': item.data.is_cloud,
                 'doctor_remark': item.data.doctor_remark,
                 'product_list': item.data.items
               })

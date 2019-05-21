@@ -1201,7 +1201,6 @@
       editTplShow: function () {
         var self = this;
         self.tplEditData.searchName = "";
-        l
         self.tplEditData.tplName = self.tplData.tplName;
         self.tplEditData.scope = self.tplData.scope;
         self.tplEditData.is_cloud = self.tplData.is_cloud;

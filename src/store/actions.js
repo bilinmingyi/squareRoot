@@ -104,7 +104,7 @@ const actions = {
         result = {
           "yb_code": item.yb_cata_code ? item.yb_cata_code : '',
           "cloud_item_id": item.id,
-          "item_id": item.id,
+          "item_id": Number(state.recipeList[state.currRecipe].data.is_cloud) === 1 ? 0 : item.id,
           "name": Number(state.recipeList[state.currRecipe].data.is_cloud) === 1 ? (item.alias_name ? item.alias_name : item.name) : (item.clinic_alias_name ? item.clinic_alias_name : item.name),
           "num": !item.num ? 0 : item.num,
           "price": Number(state.recipeList[state.currRecipe].data.is_cloud) === 1 ? item.default_sale_price : item.sale_price,
@@ -127,7 +127,7 @@ const actions = {
       case 2:
         result = {
           "yb_code": item.yb_cata_code ? item.yb_cata_code : '',
-          "item_id": item.id,
+          "item_id": Number(state.recipeList[state.currRecipe].data.is_cloud) === 1 ? 0 : item.id,
           "name": Number(state.recipeList[state.currRecipe].data.is_cloud) === 1 ? (item.alias_name ? item.alias_name : item.name) : (item.clinic_alias_name ? item.clinic_alias_name : item.name),
           "num": !item.num ? 0 : item.num,
           "unit": item.unit === item.unit_stock ? item.unit_stock : (item.unit === item.unit_sale ? item.unit_sale : item.unit_stock),
@@ -150,7 +150,7 @@ const actions = {
         break;
       case 3:
         result = {
-          "item_id": item.id,
+          "item_id": Number(state.recipeList[state.currRecipe].data.is_cloud) === 1 ? 0 : item.id,
           "name": Number(state.recipeList[state.currRecipe].data.is_cloud) === 1 ? (item.alias_name ? item.alias_name : item.name) : (item.clinic_alias_name ? item.clinic_alias_name : item.name),
           "num": !item.num ? 0 : item.num,
           "unit": item.unit === item.unit_stock ? item.unit_stock : (item.unit === item.unit_sale ? item.unit_sale : item.unit_stock),
