@@ -5,7 +5,7 @@
         <f-radio value=0 :name="'herCate'" :currVal="currentData.data.is_cloud" @change="changeCategory($event)">诊所药房
         </f-radio>
         <f-radio value=1 :name="'herCate'" :currVal="currentData.data.is_cloud" @change="changeCategory($event)"
-                 v-if="currentCloud.name != ''">{{currentCloud.name}}
+                 v-if="currentCloud ? currentCloud.name != '' : 0">{{currentCloud ? currentCloud.name : ''}}
         </f-radio>
       </div>
       <div>
