@@ -218,7 +218,7 @@
             <span v-show="showEditTpl">编辑模板</span>
             <span v-show="showAddTpl">添加模板</span>
           </div>
-          <div style="position:relative;">
+          <div style="position:relative;font-size: 0.875rem">
             <div class="mt10 ml20">
               <label class="ml20" for="edit-tpl-name">模板名称：</label>
               <Input
@@ -237,12 +237,18 @@
                 >{{item.name}}
                 </Option>
               </Select>
+              <label class="ml20" for="edit-tpl-source">药品来源：</label>
+              <Select name="edit-tpl-scope" style="width:7.5rem;" id="edit-tpl-source" disabled    v-model="tplEditData.isCloud">
+                <Option :value="0">诊所药房</Option>
+                <Option :value="1">云药房</Option>
+              </Select>
+              <div class="mt10 inline-block" v-show="recipeType===1">
+                <span class="ml20">药品类型：</span>
+                <span v-show="category==1">饮片</span>
+                <span v-show="category==2">颗粒</span>
+              </div>
             </div>
-            <div class="mt10 ml20" v-show="recipeType===1">
-              <span class="ml20">药品类型：</span>
-              <span v-show="category==1">饮片</span>
-              <span v-show="category==2">颗粒</span>
-            </div>
+
             <div class="mt10 ml20 mr20">
               <!--中药列表-->
               <div v-show="recipeType===1">
@@ -648,6 +654,7 @@
         },
         tplEditData: {
           category: 1,
+          isCloud: 0,
           tplName: "",
           scope: 0,
           items: [],
@@ -778,11 +785,6 @@
           }
         }
       },
-      "tplEditData.items": {
-        deep: true,
-        handler: function () {
-        }
-      },
       "tplEditData.searchLists": {
         deep: true,
         handler: function () {
@@ -870,6 +872,7 @@
       addTpl: function () {
         this.tplEditData = {
           category: this.category,
+          isCloud: this.isCloud,
           tplName: "",
           scope: 0,
           items: [],
@@ -916,7 +919,7 @@
         }
         clearTimeout(this.timer);
         this.timer = setTimeout(() => {
-          searchMed(params, self.recipeType).then(
+          searchMed(params, self.recipeType, self.isCloud).then(
             function (res) {
               if (res.code == 1000) {
                 self.tplEditData.searchLists = res.data;
@@ -1005,7 +1008,7 @@
               dosage: self.tplEditData.dosage,
               doctor_remark: self.tplEditData.doctor_remark,
               category: self.category,
-              is_cloud: 0
+              is_cloud: self.isCloud
             };
             break;
           }
@@ -1017,7 +1020,7 @@
               dosage: self.tplEditData.dosage,
               doctor_remark: self.tplEditData.doctor_remark,
               category: 1,
-              is_cloud: 0
+              is_cloud: self.isCloud
             };
             break;
           }
@@ -1167,9 +1170,13 @@
         this.currShowTpl.items.forEach(function (item) {
           ids.push(Number(item.item_id));
         });
-        var params = {ids: ids, status: 1};
+        if (this.recipeType == 1) {
+          var params = {ids: ids, status: 1, category: self.category};
+        } else {
+          var params = {ids: ids, status: 1};
+        }
 
-        searchMed(params, this.recipeType).then(function (res) {
+        searchMed(params, this.recipeType, self.isCloud).then(function (res) {
           if (res.code == 1000) {
             items.forEach((item) => {
               for (var i = 0, len = res.data.length; i < len; i++) {
@@ -1203,7 +1210,7 @@
         self.tplEditData.searchName = "";
         self.tplEditData.tplName = self.tplData.tplName;
         self.tplEditData.scope = self.tplData.scope;
-        self.tplEditData.is_cloud = self.tplData.is_cloud;
+        self.tplEditData.isCloud = self.tplData.is_cloud;
 
         if (self.recipeType !== 0) {
           self.tplEditData.items = (function (items) {
@@ -1330,48 +1337,7 @@
         this.showEditTpl = false;
         this.tplEditData.tplSearchList = [];
         this.tplEditData.searchListShow = false;
-      },
-      // listenerKey(event, type) {
-      //   console.log(event)
-      //   let keyCode = event.keyCode;
-      //   let index = this.tplEditData.currIndex;
-      //   let data = this.tplEditData.items;
-      //   let dropDownDiv = this.$refs[type + "_scroll"];
-      //   let self = this;
-      //
-      //   if (!dropDownDiv || !data) {
-      //     return
-      //   }
-      //
-      //   let input = this.$refs[type + "_input"]
-      //
-      //   switch (keyCode) {
-      //     case 13:
-      //       index != 0 && self.editTplAddList(data[index])
-      //       break;
-      //     case 38:
-      //       if (index > -1) {
-      //         index--;
-      //       } else {
-      //
-      //       }
-      //       break;
-      //     case 40:
-      //       if (index < data.length) {
-      //         index++;
-      //       }
-      //       break;
-      //     default:
-      //       return
-      //   }
-      //   setTimeout(() => {
-      //     if(data.length > 0){
-      //       input.selectionStart = input.target.value.length;
-      //     }
-      //   })
-      //   this.tplEditData.currIndex = index;
-      //   // dropDownDiv.scrollTop = index>3;
-      // }
+      }
     }
   };
 </script>
@@ -1666,5 +1632,8 @@
 
   .clear {
     clear: bottom;
+  }
+  .inline-block{
+    display: inline-block;
   }
 </style>

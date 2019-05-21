@@ -149,12 +149,16 @@
         this.$emit('hidePreview')
       },
       submitOrder() {
-
         let recipeList = JSON.parse(JSON.stringify(this.recipeList)), resultList = [];
         this.showLoading = true;
         recipeList.forEach(item => {
           switch (item.type) {
             case 1:
+              if (item.data.is_cloud == 1) {
+                item.data.items.map(med => {
+                  med.item_id = 0
+                })
+              }
               resultList.push({
                 'recipe_type': item.type,
                 'is_cloud': item.data.is_cloud,
@@ -173,9 +177,12 @@
             case 2:
               // 合并每次用量的数值与单位
               let westernList = JSON.parse(JSON.stringify(item.data.items));
-              westernList.forEach((item) => {
-                if (item.dose_once && item.unit_dose && !/[^\d]/.test(item.dose_once)) {
-                  item.dose_once += item.unit_dose;
+              westernList.forEach((med) => {
+                if (med.dose_once && med.unit_dose && !/[^\d]/.test(med.dose_once)) {
+                  med.dose_once += med.unit_dose;
+                }
+                if (item.data.is_cloud == 1) {
+                  med.item_id = 0
                 }
               })
 
@@ -187,6 +194,12 @@
               })
               break;
             case 3:
+              if (item.data.is_cloud == 1) {
+                item.data.items.map(med => {
+                  med.item_id = 0
+                })
+              }
+
               resultList.push({
                 'recipe_type': item.type,
                 'is_cloud': item.data.is_cloud,
