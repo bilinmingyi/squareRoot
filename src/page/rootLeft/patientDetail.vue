@@ -47,7 +47,7 @@
 
       <div class="mt5" v-if="canShowMoney">
         <span class="pr20">
-          <span class="font-bold pr10">诊金</span>
+          <span class="font-bold pr10">诊金(挂号费)</span>
           <span>{{treatPrice | priceFormat}}</span>
         </span>
         <!-- <span>

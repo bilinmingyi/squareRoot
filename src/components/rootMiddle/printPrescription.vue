@@ -103,22 +103,33 @@
         <div v-show="recipeType==2">
           <div style="width: 100%;height: auto;margin-bottom: 5px;">
             <div
-              style="line-height: 24px;"
+              style="line-height: 24px;display: flex;"
               v-for="(itemOne,index) in (currRecipeData.data.items||[])"
               :key="index"
             >
-              <span style="margin-right: 30px;">{{itemOne.name}}</span>
-              <span style="margin-right: 8px;">{{itemOne.spec}}</span>
-              <span style="margin-right: 8px;">{{itemOne.num}}{{itemOne.unit}}</span>
-              <span style="margin-right: 8px;" v-if="itemOne.usage!=''">用法：{{itemOne.usage}}</span>
-              <span style="margin-right: 8px;">{{itemOne.frequency}}</span>
-              <span style="margin-right: 8px;" v-if="itemOne.days!=0">{{itemOne.days}}天</span>
-              <span v-if="itemOne.dose_once!=''">每次：{{itemOne.dose_once}}{{itemOne.unit_dose}}</span>
+              <div style="margin-right: 8px;">{{index+1}}、</div>
+              <div style="flex: 1;-webkit-flex: 1">
+                <div>
+                  <span style="margin-right: 8px;">{{itemOne.name}}</span>
+                  <span style="margin-right: 8px;">
+                    {{itemOne.unit == itemOne.unit_stock
+                    ? itemOne.sale_dose_ratio+''+itemOne.unit_dose+'*'+itemOne.stock_sale_ratio+''+itemOne.unit_sale
+                    : itemOne.sale_dose_ratio+''+itemOne.unit_dose+'*'+'1'+itemOne.unit_sale}}
+                  </span>
+                  <span style="margin-right: 8px;">{{itemOne.num}}{{itemOne.unit}}</span>
+                </div>
+                <div>
+                  <span style="margin-right: 8px;" v-if="itemOne.usage!=''">用法：{{itemOne.usage}}</span>
+                  <span style="margin-right: 8px;">{{itemOne.frequency}}</span>
+                  <span style="margin-right: 8px;" v-if="itemOne.days!=0">{{itemOne.days}}天</span>
+                  <span v-if="itemOne.dose_once!=''">每次：{{itemOne.dose_once}}{{itemOne.unit_dose}}</span>
+                </div>
+              </div>
             </div>
           </div>
           <div style="clear: both;"></div>
         </div>
-<!--        这里未绑定正确的产品处方笺-->
+        <!--        这里未绑定正确的产品处方笺-->
         <div v-show="recipeType==3">
           <div style="width: 100%;height: auto;margin-bottom: 5px;">
             <div
@@ -126,8 +137,13 @@
               v-for="(itemOne,index) in (currRecipeData.data.items||[])"
               :key="index"
             >
+              <span style="margin-right: 8px;">{{index+1}}、</span>
               <span style="margin-right: 30px;">{{itemOne.name}}</span>
-              <span style="margin-right: 8px;">{{itemOne.spec}}</span>
+              <span style="margin-right: 8px;">
+                 {{itemOne.unit == itemOne.unit_stock
+                    ? itemOne.sale_dose_ratio+''+itemOne.unit_dose+'*'+itemOne.stock_sale_ratio+''+itemOne.unit_sale
+                    : itemOne.sale_dose_ratio+''+itemOne.unit_dose+'*'+'1'+itemOne.unit_sale}}
+              </span>
               <span style="margin-right: 8px;">{{itemOne.num}}{{itemOne.unit}}</span>
               <span>{{itemOne.remark}}</span>
             </div>
@@ -142,6 +158,7 @@
               :key="index"
             >
               <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
+                <span style="margin-right: 8px;">{{index+1}}、</span>
                 <span style="margin-right: 30px;">{{itemOne.name}}</span>
                 <span style="padding-right: 30px;">{{itemOne.price}}元/次</span>
                 <span>{{itemOne.num}}次</span>
@@ -157,6 +174,7 @@
               :key="index"
             >
               <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
+                <span style="margin-right: 8px;">{{index+1}}、</span>
                 <span style="margin-right: 30px;">{{itemOne.name}}</span>
                 <span style="padding-right: 30px;">{{itemOne.num}}{{itemOne.unit}}</span>
                 <span>{{itemOne.remark}}</span>
@@ -275,60 +293,61 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapState } from "vuex";
-import {clinicName} from '@/assets/js/mapType.js'
-export default {
-  name: "printPrescription",
-  data(){
-    return {
-      clinicName: clinicName,
-    }
-  },
-  computed: {
-    ...mapGetters(["currRecipeData"]),
-    ...mapState(["patientData", "recordData","printPre", 'orderSeqno', 'doctorName', "isYB", "department", "ybCardNo"]),
-    recipeType: function() {
-      return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
-    },
-    category: function() {
-      return this.currRecipeData === undefined
-        ? 1
-        : this.currRecipeData.data.category;
-    },
-    getCurrDate: function() {
-      var d = new Date();
-      return d.getFullYear() + "-" + (d.getMonth() + 1)+'-' + d.getDate();
-    }
-  },
-  watch:{
-      printPre: function(){
-          this.printPrescription();
+  import {mapGetters, mapState} from "vuex";
+  import {clinicName} from '@/assets/js/mapType.js'
+
+  export default {
+    name: "printPrescription",
+    data() {
+      return {
+        clinicName: clinicName,
       }
-  },
-  methods: {
-    printPrescription: function() {
-      setTimeout(function() {
-        var el = document.getElementById('print');
-        var iframe = document.createElement("IFRAME");
-        var doc = null;
-        iframe.setAttribute(
-          "style",
-          "position:absolute;width:0px;height:0px;left:-500px;top:-500px;"
-        );
-        document.body.appendChild(iframe);
-        doc = iframe.contentWindow.document;
-        doc.write("<LINK rel='stylesheet' type='text/css'>");
-        doc.write("<div>" + el.innerHTML + "</div>");
-        doc.close();
-        iframe.contentWindow.focus();
-        iframe.contentWindow.print();
-        if (navigator.userAgent.indexOf("MSIE") > 0) {
-          document.body.removeChild(iframe);
-        }
-      }, 30);
+    },
+    computed: {
+      ...mapGetters(["currRecipeData"]),
+      ...mapState(["patientData", "recordData", "printPre", 'orderSeqno', 'doctorName', "isYB", "department", "ybCardNo"]),
+      recipeType: function () {
+        return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
+      },
+      category: function () {
+        return this.currRecipeData === undefined
+          ? 1
+          : this.currRecipeData.data.category;
+      },
+      getCurrDate: function () {
+        var d = new Date();
+        return d.getFullYear() + "-" + (d.getMonth() + 1) + '-' + d.getDate();
+      }
+    },
+    watch: {
+      printPre: function () {
+        this.printPrescription();
+      }
+    },
+    methods: {
+      printPrescription: function () {
+        setTimeout(function () {
+          var el = document.getElementById('print');
+          var iframe = document.createElement("IFRAME");
+          var doc = null;
+          iframe.setAttribute(
+            "style",
+            "position:absolute;width:0px;height:0px;left:-500px;top:-500px;"
+          );
+          document.body.appendChild(iframe);
+          doc = iframe.contentWindow.document;
+          doc.write("<LINK rel='stylesheet' type='text/css'>");
+          doc.write("<div>" + el.innerHTML + "</div>");
+          doc.close();
+          iframe.contentWindow.focus();
+          iframe.contentWindow.print();
+          if (navigator.userAgent.indexOf("MSIE") > 0) {
+            document.body.removeChild(iframe);
+          }
+        }, 30);
+      }
     }
-  }
-};
+  };
 </script>
 
 <style scoped>
