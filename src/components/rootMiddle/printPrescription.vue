@@ -129,10 +129,7 @@
               <span style="margin-right: 30px;">{{itemOne.name}}</span>
               <span style="margin-right: 8px;">{{itemOne.spec}}</span>
               <span style="margin-right: 8px;">{{itemOne.num}}{{itemOne.unit}}</span>
-              <span style="margin-right: 8px;" v-if="itemOne.usage!=''">用法：{{itemOne.usage}}</span>
-              <span style="margin-right: 8px;">{{itemOne.frequency}}</span>
-              <span style="margin-right: 8px;" v-if="itemOne.days!=0">{{itemOne.days}}天</span>
-              <span v-if="itemOne.dose_once!=''">每次：{{itemOne.dose_once}}{{itemOne.unit_dose}}</span>
+              <span>{{itemOne.remark}}</span>
             </div>
           </div>
           <div style="clear: both;"></div>
