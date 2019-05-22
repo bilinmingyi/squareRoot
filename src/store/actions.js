@@ -118,9 +118,8 @@ const actions = {
           "usage": !item.usage ? '' : item.usage,
           "stock": item.stock,
           "stock_sale_ratio": item.stock_sale_ratio,
-          "is_match":  Number(state.recipeList[state.currRecipe].data.is_cloud) === 1 ? 1 : item.status == 1 ? 1 : 0,
+          "is_match":  Number(state.recipeList[state.currRecipe].data.is_cloud) === 1 ? (item.status !== undefined ? item.status : 1) : item.status == 1 ? 1 : 0,
           "remark": !item.remark ? '' : item.remark,
-
           "explain": [],
           "types": 1
         };

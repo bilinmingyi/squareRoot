@@ -128,7 +128,13 @@ const getFJDrugList = (params) => axios({
 
 const getFJByName = (params) => fetch('/treatmng/dytreatorder/fjbDisease', params);
 
-const getHerbalList = (params) => fetch('/stockmng/medicine/herbalList', params);
+const getHerbalList = (params, isCloud) => {
+  if (isCloud == 1) {
+    return fetch('/stockmng/dyHerbal/list', params);
+  } else {
+    return fetch('/stockmng/medicine/herbalList', params);
+  }
+}
 
 const saveDraft = (params) => fetch('/doctreat/treatorder/save', params);
 

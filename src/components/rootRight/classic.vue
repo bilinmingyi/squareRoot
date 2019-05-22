@@ -195,12 +195,12 @@
           "names": names
         }
         this.showLoader = true;
-        let res = await getHerbalList(params);
+        let res = await getHerbalList(params, this.recipeList[this.currRecipe].data.is_cloud);
         if (res.code === 1000) {
           this.classicDetail.component.forEach(item => {
             var existence = {};
             for (var i = 0, len = res.data.length; i < len; i++) {
-              if (item.name == res.data[i].name || item.name == res.data[i].clinic_alias_name) {
+              if (item.name == res.data[i].name || item.name == res.data[i].clinic_alias_name || item.name == res.data[i].alias_name) {
                 existence = res.data[i];
                 break
               }
@@ -228,7 +228,7 @@
             } else {
               this.checkList.push({
                 "id": existence.id,
-                "clinic_alias_name": existence.clinic_alias_name,
+                "clinic_alias_name": existence.clinic_alias_name || existence.alias_name,
                 "name": existence.name,
                 "num": existence.unit_stock == "g" || existence.unit_stock == "克" ? item.dosage : 0,
                 "unit": existence.unit_stock,
