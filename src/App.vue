@@ -513,9 +513,11 @@
         getDoctorInfor({
           id: id
         }).then(res => {
+          console.log(res)
           let data = res.data;
           if (res.code == 1000) {
             this.set_state_prop({key: 'department', val: data ? data.department : ''});
+            this.set_state_prop({key: 'departmentCode', val: data ? data.department_code : ''})
           } else {
             this.$Message.info(res.msg)
           }

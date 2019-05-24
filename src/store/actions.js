@@ -127,6 +127,7 @@ const actions = {
       case 2:
         result = {
           "yb_code": item.yb_cata_code ? item.yb_cata_code : '',
+          "code": item.code ? item.code : '',
           "item_id": item.id,
           "name": Number(state.recipeList[state.currRecipe].data.is_cloud) === 1 ? (item.alias_name ? item.alias_name : item.name) : (item.clinic_alias_name ? item.clinic_alias_name : item.name),
           "num": !item.num ? 0 : item.num,

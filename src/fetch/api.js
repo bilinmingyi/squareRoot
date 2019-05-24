@@ -125,6 +125,8 @@ const getFJDrugList = (params) => axios({
 //   data: params
 // })
 
+const auditrecipe = (params) => fetch('/doctreat/auditrecipe', params)
+
 
 const getFJByName = (params) => fetch('/treatmng/dytreatorder/fjbDisease', params);
 
@@ -260,6 +262,7 @@ export {
   wisdomyb,
   fetchOptionConfig,
   fetchMedshopList,
+  auditrecipe,
 
   //right
   searchRecentMed,

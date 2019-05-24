@@ -89,11 +89,22 @@
         </div>
       </div>
       <div class="content_right">
-        <div class="content_right_item mr20">
-          <Button size="large" @click.stop="submitOrder">确定无误</Button>
+        <div class="content_right_first">
+          <div class="content_right_item mr20">
+            <Button size="large" @click.stop="submitOrder">确定无误</Button>
+          </div>
+          <div class="content_right_item">
+            <Button size="large" @click="returnToModify">返回修改</Button>
+          </div>
         </div>
-        <div class="content_right_item">
-          <Button size="large" @click="returnToModify">返回修改</Button>
+        <div class="content_right_second" v-if="resultList.length!==0">
+          <p>处方审核信息</p>
+          <div class="trial_block">
+           <div v-for="(item, index) in resultList">
+             <div class="font-bold">{{index+1}}、{{item.name}}</div>
+             <div>{{item.result.auditResult}}</div>
+           </div>
+          </div>
         </div>
       </div>
     </section>
@@ -104,7 +115,7 @@
 <script>
   import {Button} from 'iview'
   import {mapState} from 'vuex'
-  import {submitOrder, waitingPage} from '@/fetch/api.js'
+  import {submitOrder, waitingPage, auditrecipe} from '@/fetch/api.js'
   import fLoader from '@/components/fLoader.vue'
 
   export default {
@@ -112,7 +123,8 @@
     data() {
       return {
         allPrice: 0,
-        showLoading: false
+        showLoading: false,
+        resultList: []
       }
     },
     components: {
@@ -128,7 +140,11 @@
           return item.data.items.length !== 0
         }),
         "draftData": state => state.draftData,
-        "treatPrice": state => state.treatPrice
+        "treatPrice": state => state.treatPrice,
+
+        "department": state => state.department,
+        "departmentCode": state => state.departmentCode,
+        "doctorName": state => state.doctorName
       })
     },
     watch: {
@@ -143,6 +159,69 @@
           this.allPrice = Number(allMoney).toFixed(2);
         }
       }
+    },
+    created() {
+      let promiseList = []
+      this.recipeList.forEach(item => {
+        if (item.type == 2) {
+          let presNo = new Date().getTime() + '' + Math.ceil(Math.random() * 1000)
+          let list = item.data.items.map(med => {
+            return {
+              'presNo': presNo,
+              'deptCode': this.departmentCode,
+              'deptName': this.department,
+              'doctorName': this.doctorName,
+              'diagnosis': this.recordData.diagnosis_xy,
+              'patientCode': this.patientData.id,
+              'patientName': this.patientData.name,
+              'patientSex': this.patientData.sex == 1 ? '男' : '女',
+              'patientAge': this.patientData.age,
+              'drugCode': med.code,
+              'drugName': med.name,
+              'drugSpecs': med.spec,
+              'drugDosage': med.sale_dose_ratio,
+              'drugDosageUnitName': med.unit_dose,
+              'drugQty': med.num,
+              'drugUnit': med.unit,
+              'drugUsageName': med.usage,
+              'drugPerDos': med.dose_once,
+              'dosageUnit': med.unit_dose,
+              'frequencyCode': med.frequency ? this.findInFre(med.frequency) : 'qd',
+              'presActDays': med.days
+            }
+          })
+          promiseList.push(auditrecipe({
+            "audit_items": list
+          }))
+        }
+      })
+      Promise.all(promiseList).then(res => {
+        let numList = ['一', '二', '三', '四', '五']
+        res.forEach((re, index) => {
+          if (re.code == 1000) {
+            this.resultList.push({
+              'name': '中成药西药处方('+numList[index]+')',
+              'result': {
+                auditLevel: re.data.auditLevel,
+                auditResult: re.data.auditResult,
+                auditStatus: re.data.auditStatus,
+                auditStatusCode: re.data.auditStatusCode
+              }
+            })
+          } else {
+            this.resultList.push({
+              'name': '中成药西药处方('+numList[index]+')',
+              'result': {
+                auditLevel: '',
+                auditResult: '调用审方接口失败',
+                auditStatus: '',
+                auditStatusCode: ''
+              }
+            })
+          }
+        })
+        console.log(res)
+      })
     },
     methods: {
       returnToModify() {
@@ -257,7 +336,27 @@
         }).catch(error => {
           this.showLoading = false;
         })
-      }
+      },
+      findInFre(val) {
+        let list = [
+          {code: 'qd', name: '每天一次', ratio: 1},
+          {code: 'bid', name: '每天两次', ratio: 2},
+          {code: 'tid', name: '每天三次', ratio: 3},
+          {code: 'qid', name: '每天四次', ratio: 4},
+          {code: 'qod', name: '两天一次', ratio: 0.5},
+          {code: 'qw', name: '每周一次', ratio: 1 / 7},
+          {code: '', name: '饭前', ratio: 3},
+          {code: '', name: '饭后', ratio: 3},
+          {code: 'hs', name: '睡前', ratio: 1},
+          {code: 'OTH', name: '医嘱', ratio: 1}
+        ]
+        for (let i = 0, len = list.length; i < len; i++) {
+          if (list[i].name == val) {
+            return list[i].code
+          }
+        }
+        return 'qd'
+      },
     }
   }
 </script>
@@ -283,10 +382,30 @@
   .content_right {
     flex: 1;
     background: #fbfbfb;
-    text-align: center;
     padding-top: 12vh;
+  }
+
+  .content_right_first {
     display: flex;
     justify-content: center;
+  }
+
+  .content_right_second {
+    padding: 2rem 1rem;
+  }
+
+  .content_right_second p {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+
+  .trial_block {
+    border: 1px solid #CCCCCC;
+    border-radius: 4px;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+    margin: 0.6rem 0;
   }
 
   .content_right_item {
