@@ -110,19 +110,20 @@
               <div style="margin-right: 8px;">{{index+1}}、</div>
               <div style="flex: 1;-webkit-flex: 1">
                 <div>
-                  <span style="margin-right: 8px;">{{itemOne.name}}</span>
-                  <span style="margin-right: 8px;">
+                  <span style="margin-right: 15px;">{{itemOne.name}}</span>
+                  <span style="margin-right: 15px;">
                     {{itemOne.unit == itemOne.unit_stock
                     ? itemOne.sale_dose_ratio+''+itemOne.unit_dose+'*'+itemOne.stock_sale_ratio+''+itemOne.unit_sale
                     : itemOne.sale_dose_ratio+''+itemOne.unit_dose+'*'+'1'+itemOne.unit_sale}}
                   </span>
-                  <span style="margin-right: 8px;">{{itemOne.num}}{{itemOne.unit}}</span>
+                  <span style="margin-right: 15px;">{{itemOne.num}}{{itemOne.unit}}</span>
                 </div>
-                <div>
-                  <span style="margin-right: 8px;" v-if="itemOne.usage!=''">用法：{{itemOne.usage}}</span>
+                <div style="margin-left: 15px">
+                  用法:
+                  <span style="margin-right: 8px;" v-if="itemOne.dose_once!=''">{{itemOne.dose_once}}{{itemOne.unit_dose}}</span>
+                  <span style="margin-right: 8px;" v-if="itemOne.usage!=''">{{itemOne.usage}}</span>
                   <span style="margin-right: 8px;">{{itemOne.frequency}}</span>
-                  <span style="margin-right: 8px;" v-if="itemOne.days!=0">{{itemOne.days}}天</span>
-                  <span v-if="itemOne.dose_once!=''">每次：{{itemOne.dose_once}}{{itemOne.unit_dose}}</span>
+                  <span v-if="itemOne.days!=0">{{itemOne.days}}天</span>
                 </div>
               </div>
             </div>
