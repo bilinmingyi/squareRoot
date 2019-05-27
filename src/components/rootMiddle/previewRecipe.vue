@@ -160,69 +160,69 @@
         }
       }
     },
-    created() {
-      let promiseList = []
-      this.recipeList.forEach(item => {
-        if (item.type == 2) {
-          let presNo = new Date().getTime() + '' + Math.ceil(Math.random() * 1000)
-          let list = item.data.items.map(med => {
-            return {
-              'presNo': presNo,
-              'deptCode': this.departmentCode,
-              'deptName': this.department,
-              'doctorName': this.doctorName,
-              'diagnosis': this.recordData.diagnosis_xy,
-              'patientCode': this.patientData.id,
-              'patientName': this.patientData.name,
-              'patientSex': this.patientData.sex == 1 ? '男' : '女',
-              'patientAge': this.patientData.age,
-              'drugCode': med.code,
-              'drugName': med.name,
-              'drugSpecs': med.spec,
-              'drugDosage': med.sale_dose_ratio,
-              'drugDosageUnitName': med.unit_dose,
-              'drugQty': med.num,
-              'drugUnit': med.unit,
-              'drugUsageName': med.usage,
-              'drugPerDos': med.dose_once,
-              'dosageUnit': med.unit_dose,
-              'frequencyCode': med.frequency ? this.findInFre(med.frequency) : 'qd',
-              'presActDays': med.days
-            }
-          })
-          promiseList.push(auditrecipe({
-            "audit_items": list
-          }))
-        }
-      })
-      Promise.all(promiseList).then(res => {
-        let numList = ['一', '二', '三', '四', '五']
-        res.forEach((re, index) => {
-          if (re.code == 1000) {
-            this.resultList.push({
-              'name': '中成药西药处方('+numList[index]+')',
-              'result': {
-                auditLevel: re.data.auditLevel,
-                auditResult: re.data.auditResult,
-                auditStatus: re.data.auditStatus,
-                auditStatusCode: re.data.auditStatusCode
-              }
-            })
-          } else {
-            this.resultList.push({
-              'name': '中成药西药处方('+numList[index]+')',
-              'result': {
-                auditLevel: '',
-                auditResult: '调用审方接口失败',
-                auditStatus: '',
-                auditStatusCode: ''
-              }
-            })
-          }
-        })
-        console.log(res)
-      })
-    },
+    // created() {
+    //   let promiseList = []
+    //   this.recipeList.forEach(item => {
+    //     if (item.type == 2) {
+    //       let presNo = new Date().getTime() + '' + Math.ceil(Math.random() * 1000)
+    //       let list = item.data.items.map(med => {
+    //         return {
+    //           'presNo': presNo,
+    //           'deptCode': this.departmentCode,
+    //           'deptName': this.department,
+    //           'doctorName': this.doctorName,
+    //           'diagnosis': this.recordData.diagnosis_xy,
+    //           'patientCode': this.patientData.id,
+    //           'patientName': this.patientData.name,
+    //           'patientSex': this.patientData.sex == 1 ? '男' : '女',
+    //           'patientAge': this.patientData.age,
+    //           'drugCode': med.code,
+    //           'drugName': med.name,
+    //           'drugSpecs': med.spec,
+    //           'drugDosage': med.sale_dose_ratio,
+    //           'drugDosageUnitName': med.unit_dose,
+    //           'drugQty': med.num,
+    //           'drugUnit': med.unit,
+    //           'drugUsageName': med.usage,
+    //           'drugPerDos': med.dose_once,
+    //           'dosageUnit': med.unit_dose,
+    //           'frequencyCode': med.frequency ? this.findInFre(med.frequency) : 'qd',
+    //           'presActDays': med.days
+    //         }
+    //       })
+    //       promiseList.push(auditrecipe({
+    //         "audit_items": list
+    //       }))
+    //     }
+    //   })
+    //   Promise.all(promiseList).then(res => {
+    //     let numList = ['一', '二', '三', '四', '五']
+    //     res.forEach((re, index) => {
+    //       if (re.code == 1000) {
+    //         this.resultList.push({
+    //           'name': '中成药西药处方('+numList[index]+')',
+    //           'result': {
+    //             auditLevel: re.data.auditLevel,
+    //             auditResult: re.data.auditResult,
+    //             auditStatus: re.data.auditStatus,
+    //             auditStatusCode: re.data.auditStatusCode
+    //           }
+    //         })
+    //       } else {
+    //         this.resultList.push({
+    //           'name': '中成药西药处方('+numList[index]+')',
+    //           'result': {
+    //             auditLevel: '',
+    //             auditResult: '调用审方接口失败',
+    //             auditStatus: '',
+    //             auditStatusCode: ''
+    //           }
+    //         })
+    //       }
+    //     })
+    //     console.log(res)
+    //   })
+    // },
     methods: {
       returnToModify() {
         this.$emit('hidePreview')

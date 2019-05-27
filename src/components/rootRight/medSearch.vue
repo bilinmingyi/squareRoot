@@ -109,12 +109,10 @@
         return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
       },
       isCloud: function () {
-        return this.currRecipeData === undefined ? 0 : this.currRecipeData.data.is_cloud;
+        return this.currRecipeData === undefined ? 0 : (this.currRecipeData.data.is_cloud === undefined ? 0 : this.currRecipeData.data.is_cloud);
       },
       category: function () {
-        return this.currRecipeData === undefined
-          ? 1
-          : this.currRecipeData.data.category;
+        return this.currRecipeData === undefined ? 1 : (this.currRecipeData.data.category === undefined ? 1 : this.currRecipeData.data.category);
       }
     },
     watch: {
