@@ -2,13 +2,13 @@
   <div class="edit-patient-info">
     <div class="e-p-i-container">
       <div class="e-p-i-header mt10">
-        <span class="e-p-i-title">编辑患者资料</span>
+        <span class="e-p-i-title">编辑{{clinicType == 6 ? '客户' : '患者'}}资料</span>
         <Icon @click="closeModal" type="ios-close-circle-outline" class="e-p-i-close-icon"/>
       </div>
       <div class="e-p-i-content">
         <div class="e-p-i-content-row">
           <div class="e-p-i-content-item pr50">
-            <div class="e-p-i-content-item-key">患者姓名</div>
+            <div class="e-p-i-content-item-key">{{clinicType == 6 ? '客户' : '患者'}}姓名</div>
             <Input
               class="e-p-i-content-item-val"
               :value="localPatientData.name"
@@ -37,7 +37,7 @@
             ></Date-picker>
           </div>
           <div class="e-p-i-content-item">
-            <div class="e-p-i-content-item-key">患者性别</div>
+            <div class="e-p-i-content-item-key">{{clinicType == 6 ? '客户' : '患者'}}性别</div>
             <Select
               class="e-p-i-content-item-val"
               :value="localPatientData.sex"
@@ -154,7 +154,8 @@ export default {
       recordData: state => state.recordData,
       recipeList: state => state.recipeList,
       patientData: state => state.patientData,
-      orderSeqno: state => state.orderSeqno
+      orderSeqno: state => state.orderSeqno,
+      clinicType: state => state.clinicType
     })
   },
   created() {

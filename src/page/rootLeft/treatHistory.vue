@@ -8,7 +8,7 @@
           @click="selectOrder(historyItem)"
         >
           <div class="displayFlex mb5">
-            <div class="flexOne">患者：{{historyItem.patient_name}}</div>
+            <div class="flexOne">{{clinicType == 6 ? '客户' : '患者'}}：{{historyItem.patient_name}}</div>
             <div class="font-bold">{{ historyItem.create_time | dateFormat('yyyy-MM-dd')}}</div>
           </div>
           <div class="flexOne mb5">医生：{{historyItem.doctor_name}}</div>
@@ -60,7 +60,8 @@ export default {
       showHistoryDetail: state => state.showHistoryDetail,
       currRecipe: state => state.currRecipe,
       recipeList: state => state.recipeList,
-      patientData: state => state.patientData
+      patientData: state => state.patientData,
+      clinicType: state => state.clinicType
     }),
     historyData() {
       return this.historyDataProp;

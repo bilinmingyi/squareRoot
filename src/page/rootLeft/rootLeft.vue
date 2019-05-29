@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="root-left-title">
-      <span>患者资料</span>
+      <span>{{clinicType == 6 ? '客户' : '患者'}}资料</span>
     </div>
     <patient-detail v-show="!showHistoryDetail"></patient-detail>
     <div class="root-left-history">
@@ -55,7 +55,8 @@ export default {
     ...mapState({
       showHistoryDetail: state => state.showHistoryDetail,
       patientData: state => state.patientData,
-      recordData: state => state.recordData
+      recordData: state => state.recordData,
+      clinicType: state => state.clinicType
     })
   },
   created() {

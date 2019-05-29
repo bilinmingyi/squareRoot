@@ -35,11 +35,11 @@
       </section>
       <section v-else>
           <div class="p-d-content-li pt6 pb10">
-            <span class="font-bold">患者性别</span>
+            <span class="font-bold">{{clinicType == 6 ? '客户' : '患者'}}性别</span>
             <span class="pl16">{{patientData.sex | parseSex}}</span>
           </div>
           <div class="p-d-content-li pt10 no_border">
-            <span class="font-bold">患者年龄</span>
+            <span class="font-bold">{{clinicType == 6 ? '客户' : '患者'}}年龄</span>
             <span class="pl16">{{patientData.birthday | calcAge}}岁</span>
           </div>
 
@@ -89,7 +89,8 @@
       ...mapState({
         isFirst: state => state.isFirst,
         treatPrice: state => state.treatPrice,
-        patientData: state => state.patientData
+        patientData: state => state.patientData,
+        clinicType: state => state.clinicType
       }),
       ...mapGetters(['totalPrice']),
     },

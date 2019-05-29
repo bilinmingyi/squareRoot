@@ -77,7 +77,7 @@
         </section>
         <section v-if="recipe.recipe_type==3">
           <div class="history-title">
-            <span class="font-bold flex-1">产品处方</span>
+            <span class="font-bold flex-1">{{clinicType == 6 ? '营养处方' : '产品处方'}}</span>
             <span
               class="t-h-d-active-import"
               v-if="currRecipe != -1 && reciptType == 3"
@@ -171,7 +171,8 @@
     },
     computed: {
       ...mapState({
-        currRecipe: state => state.currRecipe
+        currRecipe: state => state.currRecipe,
+        clinicType: state => state.clinicType
       }),
       selectedOrder() {
         return this.selectedOrderProp;
