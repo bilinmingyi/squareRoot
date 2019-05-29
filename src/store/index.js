@@ -17,6 +17,7 @@ const state = {
   departmentCode: '',
   ybCardNo: '',
   clinicName: '',
+  clinicType: 0,
   doctorName: '',
   clinicId: '',
   doctorId: '',

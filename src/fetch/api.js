@@ -77,6 +77,8 @@ const checkIsMatch = (params, type, cloud) => {
 const addRecordTpl = params => fetch('/doctreat/tpl/casehistory/add', params);
 
 //middle
+const fetchClinic = params => fetch('/clinic/info', params)
+
 const getDoctorInfor = params => fetch('/clinicmng/user/doctorInfo', params);
 
 const searchDiagnosis = (params) => fetch('/treatmng/dytreatorder/fjbDisease', params);
@@ -90,7 +92,6 @@ const searchFJB = (params) => axios({
   data: params
 });
 
-
 const getJJInfo = (params) => axios({
   method: 'post',
   url: 'http://47.112.12.132/medicalstock/api/services/app/fjData/PostJJInfo',
@@ -100,6 +101,7 @@ const getJJInfo = (params) => axios({
   },
   params: params
 });
+
 const getFJDrugList = (params) => axios({
   method: 'post',
   url: 'http://47.112.12.132/medicalstock/api/services/app/fjData/GetFJDrugList',
@@ -263,6 +265,7 @@ export {
   fetchOptionConfig,
   fetchMedshopList,
   auditrecipe,
+  fetchClinic,
 
   //right
   searchRecentMed,
