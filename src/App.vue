@@ -49,6 +49,7 @@
       this.loadDraftData();
       this.getMedShop()
     },
+
     methods: {
       ...mapActions(['set_patient_info', 'set_order_seqno', 'init_recipe', 'init_recode', 'set_state_prop', 'set_recipe_help', 'change_curr_tab', 'set_cloud_shop']),
       init() {
