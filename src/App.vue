@@ -43,16 +43,17 @@ export default {
   computed: {
     ...mapState({
       patientData: state => state.patientData,
+      clinicType: state => state.clinicType
     })
   },
   created() {
     this.init();
     this.getClinicData()
-    this.loadDraftData();
     this.getMedShop();
+    this.loadDraftData();
   },
   methods: {
-    ...mapActions(['set_patient_info', 'set_order_seqno', 'init_recipe', 'init_recode', 'set_state_prop', 'set_recipe_help', 'change_curr_tab', 'set_cloud_shop']),
+    ...mapActions(['set_patient_info', 'set_order_seqno', 'init_recipe', 'init_recode', 'set_state_prop', 'set_recipe_help', 'change_curr_tab', 'set_cloud_shop', 'add_new_recipt']),
     init() {
       let params = {order_seqno: this.getOrderSeqno('orderSeqno')};
       this.showLoader = true;
@@ -97,7 +98,18 @@ export default {
         "order_seqno": this.getOrderSeqno('orderSeqno')
       }).then(data => {
         if (data.code === 1000) {
-          if (data.data == '') return;
+          if (data.data == '') {
+            if (this.clinicType === 6) {
+              this.addNewRecipt(3);
+              this.addNewRecipt(4);
+            } else {
+              this.addNewRecipt(1, 1);
+              this.addNewRecipt(1, 2);
+              this.addNewRecipt(2);
+              this.addNewRecipt(4);
+            }
+            return
+          }
           let result = JSON.parse(data.data);
 
           try {
@@ -508,8 +520,6 @@ export default {
             break;
         }
       });
-
-
     },
     getDoctorData(id) {
       getDoctorInfor({
@@ -589,16 +599,18 @@ export default {
       fetchClinic().then(
         res => {
           if (res.code === 1000) {
-            this.set_state_prop({key: 'clinicType', val: res.data ? res.data.type : 0});
+            this.set_state_prop({key: 'clinicType', val: res.data ? 6 : 0});
           } else {
             this.$Message.info(res.msg)
           }
-          console.log(res)
         }
       ).catch(error => {
         console.log(error)
       })
     },
+    addNewRecipt(type, category) {
+      this.add_new_recipt({type, category})
+    }
   }
 };
 </script>

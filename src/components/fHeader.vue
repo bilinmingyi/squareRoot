@@ -3,12 +3,12 @@
     <div class="titleLeft">
       <ul class="recipe_tab">
         <li :class="['tab_li',{'currentLi': -1 === currRecipe}]" @click.stop="change_curr_tab(-1)">
-          患者病历
+          {{clinicType == 6 ? '健康档案' : '患者病历'}}
           <div class="green_line" v-show="-1 === currRecipe"></div>
         </li>
         <li v-for="(recipe,index) in recipeList" :class="['tab_li',{'currentLi':index === currRecipe}]"
             @click.stop="change_curr_tab(index)">
-          {{recipe.type|recipeType(recipe.data.category)}}
+          {{recipe.type|recipeType(recipe.data.category, clinicType)}}
           <div class="green_line" v-show="index === currRecipe"></div>
         </li>
       </ul>
@@ -20,12 +20,12 @@
             <img class="add_btn_icon" src="../assets/img/tj@2x.png">添加处方
           </div>
           <DropdownMenu slot="list">
-            <DropdownItem @click.stop.native="addNewRecipt(1, 1)">中药饮片</DropdownItem>
-            <DropdownItem @click.stop.native="addNewRecipt(1, 2)">配方颗粒</DropdownItem>
-            <DropdownItem @click.stop.native="addNewRecipt(2)">中成药西药</DropdownItem>
+            <DropdownItem @click.stop.native="addNewRecipt(1, 1)" v-if="clinicType!=6">中药饮片</DropdownItem>
+            <DropdownItem @click.stop.native="addNewRecipt(1, 2)" v-if="clinicType!=6">配方颗粒</DropdownItem>
+            <DropdownItem @click.stop.native="addNewRecipt(2)" v-if="clinicType!=6">中成药西药</DropdownItem>
             <DropdownItem @click.stop.native="addNewRecipt(4)">诊疗项目</DropdownItem>
-            <DropdownItem @click.stop.native="addNewRecipt(3)">产品处方</DropdownItem>
-            <DropdownItem @click.stop.native="addNewRecipt(6)">材料处方</DropdownItem>
+            <DropdownItem @click.stop.native="addNewRecipt(3)">{{clinicType== 6 ? '营养处方' : '产品处方'}}</DropdownItem>
+            <DropdownItem @click.stop.native="addNewRecipt(6)" v-if="clinicType!=6">材料处方</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>
@@ -73,7 +73,8 @@
         'recipeList': state => state.recipeList,
         'patientData': state => state.patientData,
         'orderSeqno': state => state.orderSeqno,
-        'currRecipe': state => state.currRecipe
+        'currRecipe': state => state.currRecipe,
+        'clinicType': state => state.clinicType
       })
     },
     methods: {
