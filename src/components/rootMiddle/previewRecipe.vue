@@ -19,17 +19,17 @@
               <div class="flexOne">{{recordData.chief_complaint}}</div>
             </div>
             <div class="displayFlex mt5 mb5">
-              <div class="preview_label">西医诊断：</div>
+              <div class="preview_label">{{clinicType == 6 ? '诊断结果' : '西医诊断'}}：</div>
               <div class="flexOne">{{recordData.diagnosis_xy}}</div>
             </div>
-            <div class="displayFlex mt5 mb5">
+            <div class="displayFlex mt5 mb5" v-if="clinicType != 6">
               <div class="preview_label">中医诊断：</div>
               <div class="flexOne">{{recordData.diagnosis}}</div>
             </div>
           </div>
           <section v-for="item in recipeList" class="preview_recipe">
-            <div class="preview_recipe_title">{{item.type|recipeType}}
-              <i v-if="item.type===1">({{item.data.category===1?'饮片':'颗粒'}})</i>
+            <div class="preview_recipe_title">{{item.type|recipeType(item.data.category, clinicType)}}
+<!--              <i v-if="item.type===1">({{item.data.category===1?'饮片':'颗粒'}})</i>-->
             </div>
             <section class="preview_recipe_content">
               <div v-if="item.type===1">
@@ -144,7 +144,8 @@
 
         "department": state => state.department,
         "departmentCode": state => state.departmentCode,
-        "doctorName": state => state.doctorName
+        "doctorName": state => state.doctorName,
+        "clinicType": state => state.clinicType
       })
     },
     watch: {

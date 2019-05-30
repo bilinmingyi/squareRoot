@@ -6,7 +6,7 @@
       </div>
       <div class="history-title display-flex">
         <div class="flex-1">
-          <span class="font-bold">就诊时间：{{selectedOrder.create_time | dateFormat('yyyy-MM-dd')}}</span>
+          <span class="font-bold">{{clinicType == 6 ? '咨询' : '就诊'}}时间：{{selectedOrder.create_time | dateFormat('yyyy-MM-dd')}}</span>
         </div>
         <div>
           <span
@@ -210,7 +210,13 @@
       recordData() {
         let [selectedOrder, examination] = [this.selectedOrder, this.examination];
         let data = this.recordTemplate;
-        return data.map(item => {
+        return data.filter(item => {
+          if(this.clinicType == 6 && item.code == '中医诊断'){
+            return
+          }
+          if(this.clinicType == 6 && item.code == '西医诊断'){
+            item.code = '诊断结果'
+          }
           item.val =
             item.code !== "检查"
               ? selectedOrder[item.key]

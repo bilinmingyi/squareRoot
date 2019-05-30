@@ -11,7 +11,7 @@
             <div class="flexOne">{{clinicType == 6 ? '客户' : '患者'}}：{{historyItem.patient_name}}</div>
             <div class="font-bold">{{ historyItem.create_time | dateFormat('yyyy-MM-dd')}}</div>
           </div>
-          <div class="flexOne mb5">医生：{{historyItem.doctor_name}}</div>
+          <div class="flexOne mb5">{{clinicType == 6 ? '营养师' : '医生'}}：{{historyItem.doctor_name}}</div>
           <div class="display-flex">
             <span>诊断：</span>
             <span class="flex-1">{{historyItem.diagnosis_xy}}{{historyItem.diagnosis_xy!='' && historyItem.diagnosis!='' ? '，':''}}{{historyItem.diagnosis}}</span>

@@ -2,7 +2,7 @@
   <!-- 患者病历 -->
   <div class="mid-box-content">
     <div class="mid-title-btn-box mb10 pr10">
-      <button class="prescriptionBtn mr5" @click.stop="printPrescription('printCase')">打印病历</button>
+      <button class="prescriptionBtn mr5" @click.stop="printPrescription('printCase')">打印{{clinicType == 6 ? '档案' : '病历'}}</button>
       <button class="prescriptionBtn" @click.stop="showSaveTemplate()">存为模板</button>
     </div>
     <hr class="mid-hr">
@@ -88,7 +88,7 @@
     </div>
     <div class="mt10 mid-record-item">
       <div class="text-justify mid-record-item-key">
-        <span>西医诊断：</span>
+        <span>{{clinicType == 6 ? '诊断结果' : '西医诊断'}}：</span>
       </div>
       <div class="mid-record-item-val">
         <div class="diagnosis-input-box" @click.stop="$refs.diagnosis_xy_input.focus()">
@@ -126,7 +126,7 @@
         </div>
       </div>
     </div>
-    <div class="mt10 mid-record-item" @click.stop="$refs.diagnosis_input.focus()">
+    <div class="mt10 mid-record-item" @click.stop="$refs.diagnosis_input.focus()" v-if="clinicType != 6">
       <div class="text-justify mid-record-item-key">
         <span>中医诊断：</span>
       </div>
@@ -232,7 +232,8 @@ export default {
   },
   computed: {
     ...mapState({
-      recordData: state => state.recordData
+      recordData: state => state.recordData,
+      clinicType: state => state.clinicType
     }),
     examination() {
       // 计算检查结果
