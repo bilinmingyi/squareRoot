@@ -108,6 +108,7 @@ export default {
               this.addNewRecipt(2);
               this.addNewRecipt(4);
             }
+            this.change_curr_tab(-1)
             return
           }
           let result = JSON.parse(data.data);
@@ -599,7 +600,7 @@ export default {
       fetchClinic().then(
         res => {
           if (res.code === 1000) {
-            this.set_state_prop({key: 'clinicType', val: res.data ? 6 : 0});
+            this.set_state_prop({key: 'clinicType', val: res.data ? res.data.type : 0});
           } else {
             this.$Message.info(res.msg)
           }

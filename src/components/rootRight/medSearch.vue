@@ -303,6 +303,7 @@
             params = {
               name: self.searchName,
               page: self.page,
+              status: 1
             };
             break;
           }
@@ -318,6 +319,7 @@
             params = {
               name: self.searchName,
               page: self.page,
+              status: 1
             };
             break;
           }

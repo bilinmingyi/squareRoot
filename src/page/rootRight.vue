@@ -41,7 +41,7 @@
 </template>
 
 <script>
-  import {mapGetters, mapActions} from "vuex";
+  import {mapGetters, mapState} from "vuex";
   import medSearch from "@/components/rootRight/medSearch.vue";
   import tpl from "@/components/rootRight/tpl.vue";
   import classic from "@/components/rootRight/classic.vue"
@@ -67,7 +67,10 @@
       }
     },
     computed: {
-      ...mapGetters(["currRecipeData", "clinicType"]),
+      ...mapState({
+        clinicType: state => state.clinicType
+      }),
+      ...mapGetters(["currRecipeData"]),
       recipeType: function () {
         return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
       }
