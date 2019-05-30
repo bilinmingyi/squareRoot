@@ -54,7 +54,7 @@
       <div class="tpl-show mt5" style="font-size:0.875rem;" v-show="showTpl">
         <div class="prescription_detail_btn" @click="tplHide()">返回</div>
         <div class="ml6 mr16 mt16" style="font-size:0.875rem;border-bottom: 1px solid #4c89db;">
-          <span style="font-weight:900;">处方模板：</span>
+          <span style="font-weight:900;">{{recipeType == 0 ? (clinicType == 6 ? '档案' : '病历') :'处方'}}模板：</span>
           <span>{{tplData.tplName}}</span>
           <span v-show="tplData.scope==0" style="float:right;">共享模板</span>
           <span v-show="tplData.scope==1" style="float:right;">个人模板</span>
@@ -114,11 +114,11 @@
             </div>
           </div>
           <div>
-            <span class="case-label">西医诊断&nbsp;</span>
+            <span class="case-label">{{clinicType == 6 ? '诊断结果' : '西医诊断'}}&nbsp;</span>
             <span>{{tplData.diagnosis_xy}}</span>
           </div>
-          <div>
-            <span class="case-label">中医诊断&nbsp;</span>
+          <div v-if="clinicType!=6">
+            <span class="case-label" >中医诊断&nbsp;</span>
             <span>{{tplData.diagnosis}}</span>
           </div>
         </div>
@@ -180,10 +180,10 @@
                   </div>
                 </div>
                 <div>
-                  <span class="case-label">西医诊断&nbsp;</span>
+                  <span class="case-label">{{clinicType == 6 ? '诊断结果' : '西医诊断'}}&nbsp;</span>
                   <span>{{tplData.diagnosis_xy}}</span>
                 </div>
-                <div>
+                <div v-if="clinicType != 6">
                   <span class="case-label">中医诊断&nbsp;</span>
                   <span>{{tplData.diagnosis}}</span>
                 </div>
@@ -671,7 +671,8 @@
     },
     computed: {
       ...mapState({
-        tplChange: state => state.tplChange
+        tplChange: state => state.tplChange,
+        clinicType: state => state.clinicType
       }),
       tplExamination: function () {
         if (this.recipeType == 0 && this.tplData.examination) {
@@ -1131,11 +1132,12 @@
           });
           this.showUseTpl = false;
         } else {
+          console.log(self.tplData)
           var data = {
             chief_complaint: self.tplData.chief_complaint || "",
             present_illness: self.tplData.present_illness || "",
             allergic_history: self.tplData.allergic_history || "",
-            past_history: self.tplData.past_history || "",
+            personal_history: self.tplData.past_history || "",
             examinationInfo: self.tplData.examination
               ? JSON.parse(self.tplData.examination)
               : {},
@@ -1164,7 +1166,8 @@
       useTplShow: function () {
         var self = this;
         if (this.recipeType === 0) {
-          this.useTpl();
+          self.showUseTpl = true;
+          // this.useTpl();
           return
         }
         var ids = [];

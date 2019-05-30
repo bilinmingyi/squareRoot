@@ -20,7 +20,7 @@
           @click.stop="changeTab(2)"
         >
           <span v-show="recipeType!=0">处方模板</span>
-          <span v-show="recipeType==0">病历模板</span>
+          <span v-show="recipeType==0">{{clinicType == 6 ? '病历' : '档案'}}模板</span>
         </div>
         <div
           style="flex: 1;"
@@ -67,7 +67,7 @@
       }
     },
     computed: {
-      ...mapGetters(["currRecipeData"]),
+      ...mapGetters(["currRecipeData", "clinicType"]),
       recipeType: function () {
         return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
       }
