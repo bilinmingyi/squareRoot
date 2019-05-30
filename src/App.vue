@@ -600,7 +600,7 @@ export default {
       fetchClinic().then(
         res => {
           if (res.code === 1000) {
-            this.set_state_prop({key: 'clinicType', val: res.data ? 6 : 0});
+            this.set_state_prop({key: 'clinicType', val: res.data ? res.data.type : 0});
           } else {
             this.$Message.info(res.msg)
           }
