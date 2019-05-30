@@ -12,7 +12,7 @@
         >
           <span v-show="recipeType==1">中药处方笺</span>
           <span v-show="recipeType==2">中成药西药笺</span>
-          <span v-show="recipeType==3">产品处方笺</span>
+          <span v-show="recipeType==3">{{clinicType == 6 ? '营养' : '产品'}}处方笺</span>
           <span v-show="recipeType==4">项目处方笺</span>
           <span v-show="recipeType==6">材料处方笺</span>
         </div>
@@ -45,7 +45,7 @@
         </div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
           <div style="flex: 3;-webkit-flex: 3;-ms-flex: 3;">
-            <span style="font-weight: bolder">病历号：</span>
+            <span style="font-weight: bolder">{{clinicType==6?'咨询':'病历'}}号：</span>
             {{orderSeqno}}
           </div>
           <div style="flex: 2;-webkit-flex: 2;-ms-flex: 2;">
@@ -239,7 +239,7 @@
             <span style="font-weight: bolder">调配：</span>
           </div>
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
-            <span style="font-weight: bolder">医师：</span>
+            <span style="font-weight: bolder">{{clinicType==6?'营养师':'医师'}}：</span>
             {{doctorName}}
             <!--<span>${controllers.AuthController.userName}</span>-->
           </div>
@@ -306,7 +306,7 @@
     },
     computed: {
       ...mapGetters(["currRecipeData"]),
-      ...mapState(["patientData", "recordData", "printPre", 'orderSeqno', 'doctorName', "isYB", "department", "ybCardNo"]),
+      ...mapState(["patientData", "recordData", "printPre", 'orderSeqno', 'doctorName', "isYB", "department", "ybCardNo", 'clinicType']),
       recipeType: function () {
         return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
       },

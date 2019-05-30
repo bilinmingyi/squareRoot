@@ -75,10 +75,10 @@
           </div>
         </div>
         <div style="margin-bottom: 10px;margin-top: 10px;display: flex">
-          <div style="width: 80px;text-align: right;padding-right: 6px">西医诊断：</div>
+          <div style="width: 80px;text-align: right;padding-right: 6px">{{clinicType == 6 ? '诊断结果' : '西医诊断'}}：</div>
           <div style="flex: 1">{{recordData.diagnosis_xy}}</div>
         </div>
-        <div style="margin-bottom: 10px;margin-top: 10px;display: flex">
+        <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="clinicType != 6">
           <div style="width: 80px;text-align: right;padding-right: 6px">中医诊断：</div>
           <div style="flex: 1">{{recordData.diagnosis}}</div>
         </div>
@@ -86,7 +86,7 @@
       <section style="font-size: 12px;display: flex;margin-top: 20px">
         <div style="flex: 1;"></div>
         <div style="padding-right: 50px">
-          <span>医生名称：{{doctorName}}</span>
+          <span>{{clinicType == 6 ? '营养师' : '医生'}}名称：{{doctorName}}</span>
         </div>
       </section>
     </section>
@@ -111,7 +111,8 @@ export default {
       orderSeqno: state => state.orderSeqno,
       doctorName: state => state.doctorName,
       isYB: state => state.isYB,
-      department: state => state.department
+      department: state => state.department,
+      clinicType: state => state.clinicType
     }),
     examination() {
       // 计算检查结果
