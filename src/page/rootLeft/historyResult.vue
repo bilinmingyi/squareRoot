@@ -13,12 +13,12 @@
         <div v-if="recipeData.recipe_type==1" class="flex-wrap">
           <div class="mb5" style="width: 33.3%" v-for="(item,index) in recipeData.herbal_list">
             <span v-if="item.is_match==0">
-              <span>{{item.name}}</span>
+              <span>{{item.alias_name || item.clinic_alias_name ? item.alias_name || item.clinic_alias_name : item.name}}</span>
               <span class="pl10">({{item.num}}{{item.unit}}/{{item.usage}})</span>
               <span style="color: red;">暂无此药</span>
             </span>
             <span v-else>
-              <span>{{item.name}}</span>
+              <span>{{item.alias_name || item.clinic_alias_name ? item.alias_name || item.clinic_alias_name : item.name}}</span>
               <span class="pl10">({{item.num}}{{item.unit}}/{{item.usage}})</span>
             </span>
           </div>
@@ -26,12 +26,12 @@
         <div v-if="recipeData.recipe_type==2" class="flex-wrap">
           <div class="mb5" style="width: 100%" v-for="(item,index) in recipeData.western_list">
             <span v-if="item.is_match==0">
-              <span>{{item.name}}</span>
+              <span>{{item.alias_name || item.clinic_alias_name ? item.alias_name || item.clinic_alias_name : item.name}}</span>
               <span class="pl10">({{item.num}}{{item.unit}}/{{item.usage}})</span>
               <span style="color: red;">暂无此药</span>
             </span>
             <span v-else>
-              <span>{{item.name}}</span>
+              <span>{{item.alias_name || item.clinic_alias_name ? item.alias_name || item.clinic_alias_name : item.name}}</span>
               <span class="pl10">({{item.num}}{{item.unit}}/{{item.usage}})</span>
             </span>
           </div>
@@ -52,14 +52,14 @@
         <div v-if="recipeData.recipe_type==4" class="flex-wrap">
           <div class="mb5" style="width: 100%" v-for="(item,index) in recipeData.therapy_list">
             <span v-if="item.is_match==0">
-              <span>{{item.name}}</span>
+              <span>{{item.alias_name || item.clinic_alias_name ? item.alias_name || item.clinic_alias_name : item.name}}</span>
               <span
                 class="pl10"
               >{{item.num}}{{item.unit}}&nbsp;&nbsp;({{item.price}}元/{{item.unit}})</span>
               <span style="color: red;">暂无此项目</span>
             </span>
             <span v-else>
-              <span>{{item.name}}</span>
+              <span>{{item.alias_name || item.clinic_alias_name ? item.alias_name || item.clinic_alias_name : item.name}}</span>
               <span
                 class="pl10"
               >{{item.num}}{{item.unit}}&nbsp;&nbsp;({{item.price}}元/{{item.unit}})</span>
