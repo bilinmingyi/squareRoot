@@ -118,7 +118,7 @@ const actions = {
           "usage": !item.usage ? '' : item.usage,
           "stock": item.stock,
           "stock_sale_ratio": item.stock_sale_ratio,
-          "is_match":  Number(state.recipeList[state.currRecipe].data.is_cloud) === 1 ? (item.status !== undefined ? item.status : 1) : item.status == 1 ? 1 : 0,
+          "is_match": item.is_match === undefined ? 1 : item.is_match,
           "remark": !item.remark ? '' : item.remark,
           "explain": [],
           "types": 1
@@ -144,7 +144,7 @@ const actions = {
           "frequency": !item.frequency ? '' : item.frequency,
           "dose_once": !item.dose_once ? '' : item.dose_once,
           "stock": item.stock,
-          "is_match":  Number(state.recipeList[state.currRecipe].data.is_cloud) === 1 ? 1 : item.status == 1 ? 1 : 0,
+          "is_match":  item.is_match === undefined ? 1 : item.is_match,
           "cloud_item_id": item.id,
           "types": 2
         };
@@ -168,7 +168,7 @@ const actions = {
           // "frequency": !item.frequency ? '' : item.frequency,
           // "dose_once": !item.dose_once ? '' : item.dose_once,
           "stock": item.stock,
-          "is_match": Number(state.recipeList[state.currRecipe].data.is_cloud) === 1 ? 1 : item.status == 1 ? 1 : 0,
+          "is_match": item.is_match === undefined ? 1 : item.is_match,
           "cloud_item_id": item.id,
           "remark": !item.remark ? '' : item.remark,
           "types": 3
@@ -185,7 +185,7 @@ const actions = {
           "type": item.type,
           "usage": !item.usage ? '' : item.usage,
           "types": 4,
-          "is_match": item.status == 1 ? 1 : 0
+          "is_match": item.is_match === undefined ? 1 : item.is_match,
         };
         break;
       case 5:
@@ -202,7 +202,7 @@ const actions = {
           "stock_sale_ratio": item.stock_sale_ratio,
           "unit": item.unit_sale,
           "spec": item.spec,
-          "is_match": item.status == 1 ? 1 : 0,
+          "is_match": item.is_match === undefined ? 1 : item.is_match,
           "types": 6
         };
         break;

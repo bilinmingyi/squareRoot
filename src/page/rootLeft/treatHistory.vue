@@ -36,6 +36,7 @@
     </div>
     <treat-history-detail
       v-show="showHistoryDetail"
+      :recipeClinicId="recipeClinicId"
       :selectedOrderProp="historyData.selectedOrder"
       :reciptTypeProp="historyData.reciptType"
       :examinationInfoProp="historyData.examinationInfo"
@@ -53,6 +54,7 @@ export default {
   props: ['historyDataProp', 'historyFinish'],
   data() {
     return {
+      recipeClinicId: -1
     };
   },
   computed: {
@@ -83,6 +85,7 @@ export default {
   methods: {
     ...mapActions(["set_state_prop", "set_examination_info"]),
     selectOrder(item) {
+      this.recipeClinicId = item.clinic_id
       this.historyData.selectedOrder = item;
 
       this.historyData.examinationInfo = item.examination

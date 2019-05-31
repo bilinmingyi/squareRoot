@@ -149,9 +149,9 @@ export default {
       if (type == 1) {
         this.modify_recipe_detail({ key: 'dosage', val: recipe.dosage});
         this.modify_recipe_detail({ key: 'category', val: recipe.category});
-        this.modify_recipe_detail({ key: 'is_cloud', val: recipe.is_cloud});
+        this.modify_recipe_detail({ key: 'is_cloud', val: Number(recipe.is_cloud)});
       } else if(type == 2 || type == 3) {
-        this.modify_recipe_detail({ key: 'is_cloud', val: recipe.is_cloud});
+        this.modify_recipe_detail({ key: 'is_cloud', val: Number(recipe.is_cloud)});
       }
       if(type == 2){
         arr.forEach(item => {

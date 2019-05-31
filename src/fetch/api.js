@@ -31,7 +31,7 @@ const getPatientInfo = params => fetch('treatmng/patient/detail', params);
 
 const updatePatientInfo = params => fetch('treatmng/patient/update', params);
 
-const getHistoryRecipes = params => fetch('/treatmng/patient/history/list', params);
+const getHistoryRecipes = params => fetch('/doctreat/treatorder/history', params);
 
 const getCaseHistory = () => fetch('/doctreat/casehistory/detail');
 

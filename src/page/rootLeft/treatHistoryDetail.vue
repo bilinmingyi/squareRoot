@@ -39,7 +39,7 @@
               </span>
             </span>
             <span
-              v-if="currRecipe != -1 && reciptType == 1"
+              v-if="currRecipe != -1 && reciptType == 1 && recipe.category == recipeList[currRecipe].data.category"
               class="t-h-d-active-import"
               @click="impHistory(recipe, index)"
             >导入</span>
@@ -95,7 +95,7 @@
         </section>
         <section v-if="recipe.recipe_type==4">
           <div class="history-title">
-            <span class="font-bold flex-1">项目处方</span>
+            <span class="font-bold flex-1">诊疗项目</span>
             <span
               class="t-h-d-active-import"
               v-if="currRecipe != -1 && reciptType == 4"
@@ -136,203 +136,232 @@
 </template>
 
 <script>
-  import {mapState, mapActions} from "vuex";
-  import historyResult from "@/page/rootLeft/historyResult";
-  import {checkIsMatch} from "@/fetch/api.js";
-  import fLoader from "@/components/fLoader";
+import {mapState, mapActions} from "vuex";
+import historyResult from "@/page/rootLeft/historyResult";
+import {checkIsMatch} from "@/fetch/api.js";
+import fLoader from "@/components/fLoader";
 
-  export default {
-    components: {
-      historyResult,
-      fLoader
+export default {
+  components: {
+    historyResult,
+    fLoader
+  },
+  props: ["selectedOrderProp", "reciptTypeProp", "examinationInfoProp", "recipeClinicId"],
+  data() {
+    return {
+      recordTemplate: [
+        {code: "主述", key: "chief_complaint"},
+        {code: "病史", key: "present_illness"},
+        {code: "检查", key: "examination"},
+        {code: "西医诊断", key: "diagnosis_xy"},
+        {code: "中医诊断", key: "diagnosis"}
+      ],
+      historyResultShow: false,
+      listMap: [
+        "",
+        "herbal_list",
+        "western_list",
+        "product_list",
+        "therapy_list",
+        "extra_list"
+      ],
+      formatedRecipe: {},
+      showLoader: false
+    };
+  },
+  computed: {
+    ...mapState({
+      currRecipe: state => state.currRecipe,
+      clinicType: state => state.clinicType,
+      recipeList: state => state.recipeList,
+      clinicId: state => state.clinicId
+    }),
+    selectedOrder() {
+      return this.selectedOrderProp;
     },
-    props: ["selectedOrderProp", "reciptTypeProp", "examinationInfoProp"],
-    data() {
-      return {
-        recordTemplate: [
-          {code: "主述", key: "chief_complaint"},
-          {code: "病史", key: "present_illness"},
-          {code: "检查", key: "examination"},
-          {code: "西医诊断", key: "diagnosis_xy"},
-          {code: "中医诊断", key: "diagnosis"}
-        ],
-        historyResultShow: false,
-        listMap: [
-          "",
-          "herbal_list",
-          "western_list",
-          "product_list",
-          "therapy_list",
-          "extra_list"
-        ],
-        formatedRecipe: {},
-        showLoader: false
-      };
+    reciptType() {
+      return this.reciptTypeProp;
     },
-    computed: {
-      ...mapState({
-        currRecipe: state => state.currRecipe,
-        clinicType: state => state.clinicType
-      }),
-      selectedOrder() {
-        return this.selectedOrderProp;
-      },
-      reciptType() {
-        return this.reciptTypeProp;
-      },
-      examinationInfo() {
-        return this.examinationInfoProp;
-      },
-      examination() {
-        // 计算检查结果
-        var examination = this.examinationInfo;
-        var ret = "";
-        (examination.bloodpressure_num1 || examination.bloodpressure_num2) &&
-        (ret +=
-          "血压" +
-          examination.bloodpressure_num1 +
-          "/" +
-          examination.bloodpressure_num2 +
-          "mmHg，");
-        examination.bloodglucose &&
-        (ret += "血糖" + examination.bloodglucose + "mg/ml，");
-        examination.trioxypurine &&
-        (ret += "尿酸" + examination.trioxypurine + "umol/L，");
-        examination.heartrate &&
-        (ret += "心率" + examination.heartrate + "次/分，");
-        examination.breathe && (ret += "呼吸" + examination.breathe + "次/分，");
-        examination.animalheat &&
-        (ret += "体温" + examination.animalheat + "℃，");
-        examination.weight && (ret += "体重" + examination.weight + "kg，");
-        examination.info && (ret += (ret ? "\n" : "") + examination.info);
-        return ret;
-      },
-      recordData() {
-        let [selectedOrder, examination] = [this.selectedOrder, this.examination];
-        let data = this.recordTemplate;
-        return data.filter(item => {
-          if(this.clinicType == 6 && item.code == '中医诊断'){
-            return
-          }
-          if(this.clinicType == 6 && item.code == '西医诊断'){
-            item.code = '诊断结果'
-          }
-          item.val =
-            item.code !== "检查"
-              ? selectedOrder[item.key]
-              ? selectedOrder[item.key]
-              : ""
-              : examination;
-          return item;
+    examinationInfo() {
+      return this.examinationInfoProp;
+    },
+    examination() {
+      // 计算检查结果
+      var examination = this.examinationInfo;
+      var ret = "";
+      (examination.bloodpressure_num1 || examination.bloodpressure_num2) &&
+      (ret +=
+        "血压" +
+        examination.bloodpressure_num1 +
+        "/" +
+        examination.bloodpressure_num2 +
+        "mmHg，");
+      examination.bloodglucose &&
+      (ret += "血糖" + examination.bloodglucose + "mg/ml，");
+      examination.trioxypurine &&
+      (ret += "尿酸" + examination.trioxypurine + "umol/L，");
+      examination.heartrate &&
+      (ret += "心率" + examination.heartrate + "次/分，");
+      examination.breathe && (ret += "呼吸" + examination.breathe + "次/分，");
+      examination.animalheat &&
+      (ret += "体温" + examination.animalheat + "℃，");
+      examination.weight && (ret += "体重" + examination.weight + "kg，");
+      examination.info && (ret += (ret ? "\n" : "") + examination.info);
+      return ret;
+    },
+    recordData() {
+      let [selectedOrder, examination] = [this.selectedOrder, this.examination];
+      let data = this.recordTemplate;
+      return data.filter(item => {
+        if (this.clinicType == 6 && item.code == '中医诊断') {
+          return
+        }
+        if (this.clinicType == 6 && item.code == '西医诊断') {
+          item.code = '诊断结果'
+        }
+        item.val =
+          item.code !== "检查"
+            ? selectedOrder[item.key]
+            ? selectedOrder[item.key]
+            : ""
+            : examination;
+        return item;
+      });
+    },
+    recipe_list() {
+      return this.selectedOrder.recipe_list;
+    },
+    checkMatch() {
+      return (
+        Boolean(this.formatedRecipes) &&
+        Boolean(this.formatedRecipes[this.formatedRecipesIndex]) &&
+        Boolean(this.formatedRecipes[this.formatedRecipesIndex].checkMatch)
+      );
+    }
+  },
+  methods: {
+    ...mapActions(["set_state_prop", "set_record_prop"]),
+    historyDetailsBack() {
+      this.set_state_prop({key: "showHistoryDetail", val: false});
+    },
+    // && recipe.is_cloud==0
+    importHistoryRecord(order) {
+      let data = JSON.parse(JSON.stringify(this.recordData));
+      data.forEach(item => {
+        switch (item.key) {
+          case "examination":
+            item.val = this.examinationInfo;
+            break;
+          case "diagnosis":
+            data.push(
+              {
+                code: "中医诊断输入框",
+                key: "diagnosis_input",
+                val: item.val ? item.val + ";" : ""
+              },
+              {code: "中医诊断标签", key: "diagnosis_labels", val: []}
+            );
+            break;
+          case "diagnosis_xy":
+            data.push(
+              {
+                code: "西医诊断输入框",
+                key: "diagnosis_xy_input",
+                val: item.val ? item.val + ";" : ""
+              },
+              {code: "西医诊断标签", key: "diagnosis_xy_labels", val: []}
+            );
+            break;
+        }
+      });
+
+      data.forEach(item => {
+        this.set_record_prop({
+          key: item.key,
+          val: item.val
         });
-      },
-      recipe_list() {
-        return this.selectedOrder.recipe_list;
-      },
-      checkMatch() {
-        return (
-          Boolean(this.formatedRecipes) &&
-          Boolean(this.formatedRecipes[this.formatedRecipesIndex]) &&
-          Boolean(this.formatedRecipes[this.formatedRecipesIndex].checkMatch)
-        );
+      });
+    },
+    async impHistory(recipe) {
+      this.showLoader = true;
+      let recipeObj = JSON.parse(JSON.stringify(recipe));
+      let type = recipe.recipe_type;
+      let map = this.listMap;
+      let ids = [];
+      let names = []
+      this.formatedRecipe = recipeObj;
+      if (!map[type]) return;
+      if (recipeObj.is_cloud == 1) {
+        recipeObj[map[type]].forEach(list => {
+          list.is_match = 0;
+          ids.push(list.cloud_item_id);
+          names.push(list.name)
+        });
+      } else {
+        recipeObj[map[type]].forEach(list => {
+          list.is_match = 0;
+          ids.push(list.item_id);
+          names.push(list.name)
+        });
       }
-    },
-    methods: {
-      ...mapActions(["set_state_prop", "set_record_prop"]),
-      historyDetailsBack() {
-        this.set_state_prop({key: "showHistoryDetail", val: false});
-      },
-      // && recipe.is_cloud==0
-      importHistoryRecord(order) {
-        let data = JSON.parse(JSON.stringify(this.recordData));
-        data.forEach(item => {
-          switch (item.key) {
-            case "examination":
-              item.val = this.examinationInfo;
-              break;
-            case "diagnosis":
-              data.push(
-                {
-                  code: "中医诊断输入框",
-                  key: "diagnosis_input",
-                  val: item.val ? item.val + ";" : ""
-                },
-                {code: "中医诊断标签", key: "diagnosis_labels", val: []}
-              );
-              break;
-            case "diagnosis_xy":
-              data.push(
-                {
-                  code: "西医诊断输入框",
-                  key: "diagnosis_xy_input",
-                  val: item.val ? item.val + ";" : ""
-                },
-                {code: "西医诊断标签", key: "diagnosis_xy_labels", val: []}
-              );
-              break;
-          }
-        });
 
-        data.forEach(item => {
-          this.set_record_prop({
-            key: item.key,
-            val: item.val
-          });
-        });
-      },
-      async impHistory(recipe) {
-        this.showLoader = true;
-        let recipeObj = JSON.parse(JSON.stringify(recipe));
-        let type = recipe.recipe_type;
-        let map = this.listMap;
-        let ids = [];
-        this.formatedRecipe = recipeObj;
-        if (!map[type]) return;
-        if (recipeObj.is_cloud == 1) {
-          recipeObj[map[type]].forEach(list => {
-            list.is_match = 0;
-            ids.push(list.cloud_item_id);
-          });
+      if (ids.length == 0) return;
+
+      let params;
+      if (recipeObj.is_cloud == 1) {
+        params = {status: 1, names}
+      } else {
+        if (this.recipeClinicId == this.clinicId) {
+          params = {status: 1, ids}
         } else {
-          recipeObj[map[type]].forEach(list => {
-            list.is_match = 0;
-            ids.push(list.item_id);
-          });
+          params = {status: 1,names}
         }
 
-        if (ids.length == 0) return;
-        let params = {status: 1, ids};
-        let res = await checkIsMatch(
-          params,
-          type,
-          recipeObj.is_cloud ? recipeObj.is_cloud : 0
-        );
-        if (res.code == 1000) {
-          let data = res.data;
-          let arr = recipeObj[map[type]];
-          if (recipeObj.is_cloud == 1) {
-            for (let i = 0, len = arr.length; i < len; i++) {
-              let findData = data.find(dataItem => dataItem.id == arr[i].cloud_item_id);
-              if (findData) {
-                arr[i] = Object.assign(arr[i], findData, {is_match: 1});
-              }
+      }
+      if (recipeObj.recipe_type === 1) {
+        params = Object.assign(params, {category: recipeObj.category})
+      }
+
+      let res = await checkIsMatch(
+        params,
+        type,
+        recipeObj.is_cloud ? recipeObj.is_cloud : 0
+      );
+      if (res.code == 1000) {
+        let data = res.data;
+        let arr = recipeObj[map[type]];
+        if (recipeObj.is_cloud == 1) {
+          for (let i = 0, len = arr.length; i < len; i++) {
+            let findData = data.find(dataItem => dataItem.name == arr[i].name || dataItem.alias_name == arr[i].name);
+            if (findData) {
+              arr[i] = Object.assign(arr[i], findData, {is_match: 1});
             }
-          } else {
+          }
+        } else {
+          if(this.recipeClinicId == this.clinicId){
             for (let i = 0, len = arr.length; i < len; i++) {
               let findData = data.find(dataItem => dataItem.id == arr[i].item_id);
               if (findData) {
                 arr[i] = Object.assign(arr[i], findData, {is_match: 1});
               }
             }
+          } else {
+            for (let i = 0, len = arr.length; i < len; i++) {
+              let findData = data.find(dataItem => dataItem.name == arr[i].name || dataItem.clinic_alias_name == arr[i].name);
+              if (findData) {
+                arr[i] = Object.assign(arr[i], findData, {is_match: 1});
+              }
+            }
           }
-          this.showLoader = false;
-          this.historyResultShow = true;
-        } else {
-          console.log(res.msg);
         }
+        this.showLoader = false;
+        this.historyResultShow = true;
+      } else {
+        console.log(res.msg);
       }
     }
-  };
+  }
+};
 </script>
 
 <style scoped>

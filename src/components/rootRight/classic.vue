@@ -192,7 +192,8 @@
         });
         let params = {
           "category": this.recipeList[this.currRecipe].data.category,
-          "names": names
+          "names": names,
+          "status": 1
         }
         this.showLoader = true;
         let res = await getHerbalList(params, this.recipeList[this.currRecipe].data.is_cloud);
@@ -221,6 +222,7 @@
                 "unit_sale": '',
                 "usage": '',
                 "stock": '',
+                "is_match": 0,
                 "stock_sale_ratio": '',
                 "status": 0,
                 "remark": ""
@@ -238,6 +240,7 @@
                 "unit_stock": existence.unit_stock,
                 "unit_sale": existence.unit_sale,
                 "usage": '',
+                "is_match": 1,
                 "stock": existence.stock,
                 "stock_sale_ratio": existence.stock_sale_ratio,
                 "status": 1,

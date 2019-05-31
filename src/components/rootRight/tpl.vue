@@ -118,7 +118,7 @@
             <span>{{tplData.diagnosis_xy}}</span>
           </div>
           <div v-if="clinicType!=6">
-            <span class="case-label" >中医诊断&nbsp;</span>
+            <span class="case-label">中医诊断&nbsp;</span>
             <span>{{tplData.diagnosis}}</span>
           </div>
         </div>
@@ -139,7 +139,7 @@
             <div class="mt20 mb10">
               使用模板将覆盖已编辑之信息
               <span v-if="recipeType!=0">
-                <strong style="color:red;">，没有的药品</strong>不会导入至处方
+                <strong style="color:red;">，暂无药品</strong>需要自行更改。
               </span>
             </div>
             <div class="use-list mt10">
@@ -153,7 +153,7 @@
                 <span
                   v-show="recipeType==4"
                 >{{item.price}}/次</span>
-                <span v-show="item.status!=1" style="color:red;font-weight:bold;">暂无此药</span>
+                <span v-show="item.is_match!=1" style="color:red;font-weight:bold;">暂无此药</span>
               </div>
               <div v-if="recipeType==0" style="width: 100%;font-weight: normal">
                 <div>
@@ -238,7 +238,8 @@
                 </Option>
               </Select>
               <label class="ml20" for="edit-tpl-source">药品来源：</label>
-              <Select name="edit-tpl-scope" style="width:7.5rem;" id="edit-tpl-source" disabled    v-model="tplEditData.isCloud">
+              <Select name="edit-tpl-scope" style="width:7.5rem;" id="edit-tpl-source" disabled
+                      v-model="tplEditData.isCloud">
                 <Option :value="0">诊所药房</Option>
                 <Option :value="1">云药房</Option>
               </Select>
@@ -587,764 +588,782 @@
 </template>
 
 <script>
-  import {
-    westernMedUsages,
-    herbalMedUsages,
-    herbalRpUsages,
-    medFrequency
-  } from "@/assets/js/mapType";
-  import {mapState, mapGetters, mapActions} from "vuex";
-  import {Input, Button, Select, Option, Icon, InputNumber} from "iview";
-  import {
-    searchTpl,
-    updateTpl,
-    delTpl,
-    saveMedTpl,
-    searchMed
-  } from "@/fetch/api.js";
+import {
+  westernMedUsages,
+  herbalMedUsages,
+  herbalRpUsages,
+  medFrequency
+} from "@/assets/js/mapType";
+import {mapState, mapGetters, mapActions} from "vuex";
+import {Input, Button, Select, Option, Icon, InputNumber} from "iview";
+import {
+  searchTpl,
+  updateTpl,
+  delTpl,
+  saveMedTpl,
+  searchMed
+} from "@/fetch/api.js";
 
-  export default {
-    name: "tpl",
-    components: {
-      Input,
-      Button,
-      Select,
-      Option,
-      Icon,
-      InputNumber
-    },
-    data() {
-      return {
-        showResult: false,
-        timer: null,
-        currPage: 1,
-        page_num: 1,
-        showList: [],
-        page_size: 0,
-        westernMedUsages: westernMedUsages,
-        medFrequency: medFrequency,
-        showAddTpl: false,
-        showDelTpl: false,
-        showEditTpl: false,
-        showUseTpl: false,
-        searchTplName: "",
-        tplSearchList: [],
-        searchMedicineList: [],
-        showTpl: false,
-        tplData: {
-          category: 0,
-          clinic_id: 0,
-          creator_name: "",
-          creator_id: "",
-          id: 0,
-          tplName: "",
-          scope: 0,
-          items: [],
-          dosage: 0,
-          doctor_remark: "",
+export default {
+  name: "tpl",
+  components: {
+    Input,
+    Button,
+    Select,
+    Option,
+    Icon,
+    InputNumber
+  },
+  data() {
+    return {
+      showResult: false,
+      timer: null,
+      currPage: 1,
+      page_num: 1,
+      showList: [],
+      page_size: 0,
+      westernMedUsages: westernMedUsages,
+      medFrequency: medFrequency,
+      showAddTpl: false,
+      showDelTpl: false,
+      showEditTpl: false,
+      showUseTpl: false,
+      searchTplName: "",
+      tplSearchList: [],
+      searchMedicineList: [],
+      showTpl: false,
+      tplData: {
+        category: 0,
+        clinic_id: 0,
+        creator_name: "",
+        creator_id: "",
+        id: 0,
+        tplName: "",
+        scope: 0,
+        items: [],
+        dosage: 0,
+        doctor_remark: "",
 
-          chief_complaint: "", //主诉
-          present_illness: "", //病史
-          allergic_history: "", //过敏史
-          past_history: "", //既往史
-          examination: "", //检查
-          diagnosis: "", //中医诊断
-          diagnosis_xy: "", //西医诊断
-          treat_advice: "" //处理意见
-        },
-        tplEditData: {
-          category: 1,
-          isCloud: 0,
-          tplName: "",
-          scope: 0,
-          items: [],
-          dosage: 0,
-          doctor_remark: "",
-          searchName: "",
-          searchLists: [],
-          searchListShow: false,
-          currIndex: -1
-        },
-        tplType: [{name: "个人", scope: 1}, {name: "共享", scope: 0}],
-        currShowTpl: {}
-      };
-    },
-    computed: {
-      ...mapState({
-        tplChange: state => state.tplChange,
-        clinicType: state => state.clinicType
-      }),
-      tplExamination: function () {
-        if (this.recipeType == 0 && this.tplData.examination) {
-          var e = JSON.parse(this.tplData.examination);
-          var ret = "";
-          (e.bloodpressure_num1 || e.bloodpressure_num2) &&
-          (ret +=
-            "血压" +
-            e.bloodpressure_num1 +
-            "/" +
-            e.bloodpressure_num2 +
-            "mmHg，");
-          e.bloodglucose && (ret += "血糖" + e.bloodglucose + "mg/ml，");
-          e.trioxypurine && (ret += "尿酸" + e.trioxypurine + "umol/L，");
-          e.heartrate && (ret += "心率" + e.heartrate + "次/分，");
-          e.breathe && (ret += "呼吸" + e.breathe + "次/分，");
-          e.animalheat && (ret += "体温" + e.animalheat + "℃，");
-          e.weight && (ret += "体重" + e.weight + "kg，");
-          e.info && (ret += (ret ? "\n" : "") + e.info);
-          return ret;
-        } else {
-          return "";
-        }
+        chief_complaint: "", //主诉
+        present_illness: "", //病史
+        allergic_history: "", //过敏史
+        past_history: "", //既往史
+        examination: "", //检查
+        diagnosis: "", //中医诊断
+        diagnosis_xy: "", //西医诊断
+        treat_advice: "" //处理意见
       },
-      herbalMedUsages: function () {
-        return herbalMedUsages.filter(item => {
-          return item.status === 1;
-        });
+      tplEditData: {
+        category: 1,
+        isCloud: 0,
+        tplName: "",
+        scope: 0,
+        items: [],
+        dosage: 0,
+        doctor_remark: "",
+        searchName: "",
+        searchLists: [],
+        searchListShow: false,
+        currIndex: -1
       },
-      ...mapGetters(["currRecipeData"]),
-      recipeType: function () {
-        return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
-      },
-      isCloud: function () {
-        return this.currRecipeData === undefined ? 0 : (this.currRecipeData.data.is_cloud === undefined ? 0 : this.currRecipeData.data.is_cloud);
-      },
-      category: function () {
-        return this.currRecipeData === undefined ? 1 : (this.currRecipeData.data.category === undefined ? 1 : this.currRecipeData.data.category);
+      tplType: [{name: "个人", scope: 1}, {name: "共享", scope: 0}],
+      currShowTpl: {}
+    };
+  },
+  computed: {
+    ...mapState({
+      tplChange: state => state.tplChange,
+      clinicType: state => state.clinicType
+    }),
+    tplExamination: function () {
+      if (this.recipeType == 0 && this.tplData.examination) {
+        var e = JSON.parse(this.tplData.examination);
+        var ret = "";
+        (e.bloodpressure_num1 || e.bloodpressure_num2) &&
+        (ret +=
+          "血压" +
+          e.bloodpressure_num1 +
+          "/" +
+          e.bloodpressure_num2 +
+          "mmHg，");
+        e.bloodglucose && (ret += "血糖" + e.bloodglucose + "mg/ml，");
+        e.trioxypurine && (ret += "尿酸" + e.trioxypurine + "umol/L，");
+        e.heartrate && (ret += "心率" + e.heartrate + "次/分，");
+        e.breathe && (ret += "呼吸" + e.breathe + "次/分，");
+        e.animalheat && (ret += "体温" + e.animalheat + "℃，");
+        e.weight && (ret += "体重" + e.weight + "kg，");
+        e.info && (ret += (ret ? "\n" : "") + e.info);
+        return ret;
+      } else {
+        return "";
       }
     },
-    mounted() {
+    herbalMedUsages: function () {
+      return herbalMedUsages.filter(item => {
+        return item.status === 1;
+      });
+    },
+    ...mapGetters(["currRecipeData"]),
+    recipeType: function () {
+      return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
+    },
+    isCloud: function () {
+      return this.currRecipeData === undefined ? 0 : (this.currRecipeData.data.is_cloud === undefined ? 0 : this.currRecipeData.data.is_cloud);
+    },
+    category: function () {
+      return this.currRecipeData === undefined ? 1 : (this.currRecipeData.data.category === undefined ? 1 : this.currRecipeData.data.category);
+    }
+  },
+  mounted() {
+    this.firstSearch();
+  },
+  watch: {
+    isCloud: function () {
+      this.showTpl = false;
+      this.searchTplName = "";
+      this.showResult = false;
       this.firstSearch();
     },
-    watch: {
-      isCloud: function () {
-        this.showTpl = false;
-        this.searchTplName = "";
-        this.showResult = false;
-        this.firstSearch();
-      },
-      recipeType: function () {
-        this.showTpl = false;
-        this.searchTplName = "";
-        this.showResult = false;
-        this.firstSearch();
-      },
-      category: function () {
-        this.showTpl = false;
-        this.searchTplName = "";
-        this.showResult = false;
-        this.firstSearch();
-      },
-      tplChange: function () {
-        this.showResult = false;
-        this.firstSearch();
-      },
-      tplSearchList: function () {
-        if (this.recipeType === 1) {
-          this.page_size = 10;
+    recipeType: function () {
+      this.showTpl = false;
+      this.searchTplName = "";
+      this.showResult = false;
+      this.firstSearch();
+    },
+    category: function () {
+      this.showTpl = false;
+      this.searchTplName = "";
+      this.showResult = false;
+      this.firstSearch();
+    },
+    tplChange: function () {
+      this.showResult = false;
+      this.firstSearch();
+    },
+    tplSearchList: function () {
+      if (this.recipeType === 1) {
+        this.page_size = 10;
+      } else {
+        this.page_size = 10;
+      }
+      this.currPage = 1;
+      this.page_num = Number(
+        (this.tplSearchList.length / this.page_size).toFixed(0)
+      );
+      if (this.page_num * this.page_size < this.tplSearchList.length) {
+        this.page_num++;
+      }
+      if (this.page_num == 1) {
+        this.showList = this.tplSearchList.slice(0);
+      } else {
+        if (this.currPage == this.page_num) {
+          this.showList = this.tplSearchList.slice(
+            this.page_size * (this.currPage - 1)
+          );
         } else {
-          this.page_size = 10;
+          this.showList = this.tplSearchList.slice(
+            this.page_size * (this.currPage - 1),
+            this.page_size * this.currPage
+          );
         }
-        this.currPage = 1;
-        this.page_num = Number(
-          (this.tplSearchList.length / this.page_size).toFixed(0)
-        );
-        if (this.page_num * this.page_size < this.tplSearchList.length) {
-          this.page_num++;
-        }
-        if (this.page_num == 1) {
-          this.showList = this.tplSearchList.slice(0);
+      }
+      this.showResult = true;
+    },
+    currPage: function () {
+      if (this.page_num == 1) {
+        this.showList = this.tplSearchList.slice(0, -1);
+      } else {
+        if (this.currPage == this.page_num) {
+          this.showList = this.tplSearchList.slice(
+            this.page_size * (this.currPage - 1)
+          );
         } else {
-          if (this.currPage == this.page_num) {
-            this.showList = this.tplSearchList.slice(
-              this.page_size * (this.currPage - 1)
-            );
-          } else {
-            this.showList = this.tplSearchList.slice(
-              this.page_size * (this.currPage - 1),
-              this.page_size * this.currPage
-            );
-          }
-        }
-        this.showResult = true;
-      },
-      currPage: function () {
-        if (this.page_num == 1) {
-          this.showList = this.tplSearchList.slice(0, -1);
-        } else {
-          if (this.currPage == this.page_num) {
-            this.showList = this.tplSearchList.slice(
-              this.page_size * (this.currPage - 1)
-            );
-          } else {
-            this.showList = this.tplSearchList.slice(
-              this.page_size * (this.currPage - 1),
-              this.page_size * this.currPage
-            );
-          }
-        }
-      },
-      "tplEditData.searchLists": {
-        deep: true,
-        handler: function () {
-          if (this.tplEditData.searchLists.length >= 1) {
-            this.tplEditData.searchListShow = true;
-          }
+          this.showList = this.tplSearchList.slice(
+            this.page_size * (this.currPage - 1),
+            this.page_size * this.currPage
+          );
         }
       }
     },
-    methods: {
-      ...mapActions(["add_new_medicine", "clean_recipe", "set_record_prop"]),
-      firstSearch: function () {
-        this.tplSearch();
-      },
-      changePage: function (flag) {
-        if (flag == 0) {
-          if (this.currPage == 1) {
-            this.currPage = 1;
-          } else {
-            this.currPage--;
-          }
+    "tplEditData.searchLists": {
+      deep: true,
+      handler: function () {
+        if (this.tplEditData.searchLists.length >= 1) {
+          this.tplEditData.searchListShow = true;
         }
-        if (flag == 1) {
-          if (this.currPage == this.page_num) {
-            this.currPage = this.page_num;
-          } else {
-            this.currPage++;
-          }
-        }
-      },
-      tplSearch: function () {
-        var self = this;
-        var params = {};
-        if (this.recipeType != 6 && this.recipeType != 3) {
-          this.showResult = true;
+      }
+    }
+  },
+  methods: {
+    ...mapActions(["add_new_medicine", "clean_recipe", "set_record_prop"]),
+    firstSearch: function () {
+      this.tplSearch();
+    },
+    changePage: function (flag) {
+      if (flag == 0) {
+        if (this.currPage == 1) {
+          this.currPage = 1;
         } else {
-          return
+          this.currPage--;
         }
-        switch (self.recipeType) {
-          case 0: {
-            params = {
-              name: self.searchTplName,
-              scope: 1,
-              page: 1
-            };
-            break;
-          }
-          case 1: {
-            params = {
-              category: self.category,
-              is_cloud: self.isCloud,
-              name: self.searchTplName,
-              page: 1
-            };
-            break;
-          }
-          case 2: {
-            params = {
-              name: self.searchTplName,
-              is_cloud: self.isCloud,
-              page: 1
-            };
-            break;
-          }
-          case 4: {
-            params = {
-              name: self.searchTplName,
-              page: 1
-            };
-            break;
-          }
+      }
+      if (flag == 1) {
+        if (this.currPage == this.page_num) {
+          this.currPage = this.page_num;
+        } else {
+          this.currPage++;
         }
-        clearTimeout(this.timer);
-        self.timer = setTimeout(() => {
-          if (this.recipeType != 6 && this.recipeType != 3) {
-            searchTpl(params, self.recipeType).then(function (res) {
-              if (res.code == 1000) {
-                self.tplSearchList = res.data;
-                self.showResult = true;
-              }
-            });
-          }
-        }, 300);
-      },
-      addTpl: function () {
-        this.tplEditData = {
-          category: this.category,
-          isCloud: this.isCloud,
-          tplName: "",
-          scope: 0,
-          items: [],
-          dosage: 0,
-          doctor_remark: "",
-          searchName: "",
-          searchLists: [],
-          searchListShow: false
-        };
-        this.showAddTpl = true;
-      },
-      tplMedSearch: function () {
-        var self = this;
-        var params = {};
-        if (self.tplEditData.searchName == "") {
-          this.tplEditData.searchListShow = false;
-          return;
+      }
+    },
+    tplSearch: function () {
+      var self = this;
+      var params = {};
+      if (this.recipeType != 6 && this.recipeType != 3) {
+        this.showResult = true;
+      } else {
+        return
+      }
+      switch (self.recipeType) {
+        case 0: {
+          params = {
+            name: self.searchTplName,
+            scope: 1,
+            page: 1
+          };
+          break;
         }
-        switch (this.recipeType) {
-          case 1: {
-            params = {
-              category: self.category,
-              medicine_name: self.tplEditData.searchName,
-              page: 1,
-              status: 1
-            };
-            break;
-          }
-          case 2: {
-            params = {
-              medicine_name: self.tplEditData.searchName,
-              status: 1,
-              page: 1
-            };
-            break;
-          }
-          case 4: {
-            params = {
-              name: self.tplEditData.searchName,
-              page: 1
-            };
-            break;
-          }
+        case 1: {
+          params = {
+            category: self.category,
+            is_cloud: self.isCloud,
+            name: self.searchTplName,
+            page: 1
+          };
+          break;
         }
-        clearTimeout(this.timer);
-        this.timer = setTimeout(() => {
-          searchMed(params, self.recipeType, self.isCloud).then(
-            function (res) {
-              if (res.code == 1000) {
-                self.tplEditData.searchLists = res.data;
-              }
-            },
-            function (err) {
-              console.log(err);
+        case 2: {
+          params = {
+            name: self.searchTplName,
+            is_cloud: self.isCloud,
+            page: 1
+          };
+          break;
+        }
+        case 4: {
+          params = {
+            name: self.searchTplName,
+            page: 1
+          };
+          break;
+        }
+      }
+      clearTimeout(this.timer);
+      self.timer = setTimeout(() => {
+        if (this.recipeType != 6 && this.recipeType != 3) {
+          searchTpl(params, self.recipeType).then(function (res) {
+            if (res.code == 1000) {
+              self.tplSearchList = res.data;
+              self.showResult = true;
             }
-          );
-        });
-      },
-      editTplAddList: function (item) {
-        var self = this;
-
-        for (let i = 0, len = self.tplEditData.items.length; i < len; i++) {
-          if (self.tplEditData.items[i].name == item.name) {
-            self.$Message.info("该药品已在列表中")
-
-            self.tplEditData.searchLists = [];
-            self.tplEditData.searchListShow = false;
-            self.tplEditData.searchName = "";
-            return
-          }
+          });
         }
-
-        var newItem = {
-          item_id: item.id,
-          name: item.alias_name || item.clinic_alias_name || item.name,
-          num: 0,
-          unit: item.unit || item.unit_stock,
-          unit_stock: item.unit_stock || item.unit,
-          stock: item.stock,
-          dose_once: item.dose_once,
-          unit_stock: item.unit_stock,
-          unit_sale: item.unit_sale,
-          unit_dose: item.unit_dose,
-          sale_dose_ratio: item.sale_dose_ratio,
-          stock_sale_ratio: item.stock_sale_ratio,
-          price: item.price || item.sale_price,
-          sale_price: item.sale_price || item.price,
-          usage: 0,
-          spec: item.spec,
-          alias_name: item.alias_name,
-          clinic_alias_name: item.clinic_alias_name,
-          status: item.status || 1,
-          type: item.type,
-          days: 0,
-          default_sale_price: item.default_sale_price
-        };
-        self.tplEditData.items.push(newItem);
-        self.tplEditData.searchListShow = false;
-        self.tplEditData.searchLists = [];
-        self.tplEditData.searchName = "";
-
-      },
-      delEditTplLists: function (index) {
-        this.tplEditData.items.splice(index, 1);
-      },
-      saveTplAdd: function () {
-        var self = this;
-        var params = {};
-        var flag = true;
-        if (self.tplEditData.tplName == "") {
-          alert("请填写模板名称");
-          return;
+      }, 300);
+    },
+    addTpl: function () {
+      this.tplEditData = {
+        category: this.category,
+        isCloud: this.isCloud,
+        tplName: "",
+        scope: 0,
+        items: [],
+        dosage: 0,
+        doctor_remark: "",
+        searchName: "",
+        searchLists: [],
+        searchListShow: false
+      };
+      this.showAddTpl = true;
+    },
+    tplMedSearch: function () {
+      var self = this;
+      var params = {};
+      if (self.tplEditData.searchName == "") {
+        this.tplEditData.searchListShow = false;
+        return;
+      }
+      switch (this.recipeType) {
+        case 1: {
+          params = {
+            category: self.category,
+            medicine_name: self.tplEditData.searchName,
+            page: 1,
+            status: 1
+          };
+          break;
         }
-        if (self.tplEditData.items.length < 1) {
-          alert("请输入至少一个药品/项目");
-          return;
+        case 2: {
+          params = {
+            medicine_name: self.tplEditData.searchName,
+            status: 1,
+            page: 1
+          };
+          break;
         }
-        self.tplEditData.items.forEach(function (e) {
-          if (e.num < 1) {
-            flag = false;
-          }
-        });
-        if (!flag) {
-          alert("药品/项目数量必须大于零");
-          return;
+        case 4: {
+          params = {
+            name: self.tplEditData.searchName,
+            page: 1
+          };
+          break;
         }
-        switch (this.recipeType) {
-          case 1: {
-            params = {
-              name: self.tplEditData.tplName,
-              scope: self.tplEditData.scope,
-              items: self.tplEditData.items,
-              dosage: self.tplEditData.dosage,
-              doctor_remark: self.tplEditData.doctor_remark,
-              category: self.category,
-              is_cloud: self.isCloud
-            };
-            break;
-          }
-          case 2: {
-            params = {
-              name: self.tplEditData.tplName,
-              scope: self.tplEditData.scope,
-              items: self.tplEditData.items,
-              dosage: self.tplEditData.dosage,
-              doctor_remark: self.tplEditData.doctor_remark,
-              category: 1,
-              is_cloud: self.isCloud
-            };
-            break;
-          }
-          case 4: {
-            params = {
-              name: self.tplEditData.tplName,
-              scope: self.tplEditData.scope,
-              items: self.tplEditData.items,
-              dosage: self.tplEditData.dosage,
-              is_cloud: 0,
-              doctor_remark: self.tplEditData.doctor_remark
-            };
-          }
-        }
-        saveMedTpl(params, this.recipeType).then(
+      }
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => {
+        searchMed(params, self.recipeType, self.isCloud).then(
           function (res) {
             if (res.code == 1000) {
-              self.tplEditData = {
-                category: self.category,
-                tplName: "",
-                scope: 0,
-                items: [],
-                dosage: 0,
-                doctor_remark: "",
-                searchName: "",
-                searchLists: [],
-                searchListShow: false
-              };
-              self.showAddTpl = false;
-              self.firstSearch();
-            } else {
-              alert("添加失败，" + "res.msg");
+              self.tplEditData.searchLists = res.data;
             }
           },
           function (err) {
             console.log(err);
           }
         );
-      },
-      cancelTplAdd: function () {
-        this.tplEditData.searchListShow = false;
-        this.tplEditData.searchLists = [];
-        this.showAddTpl = false;
-      },
-      tplShow: function (item) {
-        this.tplEditData.searchName = "";
-        this.currShowTpl = item;
+      });
+    },
+    editTplAddList: function (item) {
+      var self = this;
 
-        var self = this;
-        self.tplData = {
-          tplName: item.name,
-          scope: item.scope,
-          items: item.items,
-          dosage: item.dosage,
-          doctor_remark: item.doctor_remark,
-          category: item.category,
-          clinic_id: item.clinic_id,
-          creator_name: item.creator_name,
-          creator_id: item.creator_id,
-          id: item.id,
-          is_cloud: item.is_cloud,
+      for (let i = 0, len = self.tplEditData.items.length; i < len; i++) {
+        if (self.tplEditData.items[i].name == item.name) {
+          self.$Message.info("该药品已在列表中")
 
-          chief_complaint: item.chief_complaint, //主诉
-          present_illness: item.present_illness, //病史
-          allergic_history: item.allergic_history, //过敏史
-          past_history: item.past_history, //既往史
-          examination: item.examination, //检查
-          diagnosis: item.diagnosis, //中医诊断
-          diagnosis_xy: item.diagnosis_xy //西医诊断
-        };
-        self.showTpl = true;
-
-      },
-      tplHide: function () {
-        this.showTpl = false;
-      },
-      useTpl: function () {
-        var self = this;
-        if (this.recipeType !== 0) {
-          this.clean_recipe();
-          self.tplData.items.forEach(function (item) {
-            var newItem = {
-              category: item.category,
-              id: item.item_id,
-              name: item.alias_name || item.clinic_alias_name || item.name,
-              alias_name: item.alias_name || item.name,
-              clinic_alias_name: item.clinic_alias_name || item.name,
-              num: item.num,
-              price: item.price,
-              sale_price: item.sale_price,
-              default_sale_price: item.default_sale_price || 0,
-              spec: item.spec,
-              stock: item.stock,
-              stock_sale_ratio: item.stock_sale_ratio,
-              unit: item.unit || "次",
-              unit_sale: item.unit_sale,
-              unit_stock: item.unit_stock,
-              usage: item.usage,
-              dose_once: item.dose_once,
-              frequency: item.frequency,
-              days: item.days,
-              status: item.status || 0,
-              unit_dose: item.unit_dose || "克",
-              sale_dose_ratio: item.sale_dose_ratio || 0,
-              type: item.type || 1
-            };
-            if (newItem.status == 1) {
-              self.add_new_medicine({item: newItem, type: self.recipeType});
-            }
-          });
-          this.showUseTpl = false;
-        } else {
-          console.log(self.tplData)
-          var data = {
-            chief_complaint: self.tplData.chief_complaint || "",
-            present_illness: self.tplData.present_illness || "",
-            allergic_history: self.tplData.allergic_history || "",
-            personal_history: self.tplData.past_history || "",
-            examinationInfo: self.tplData.examination
-              ? JSON.parse(self.tplData.examination)
-              : {},
-            examination: self.tplData.examination
-              ? JSON.parse(self.tplData.examination)
-              : {},
-            diagnosis_input:
-              self.tplData.diagnosis != "" ? self.tplData.diagnosis + ";" : "",
-            diagnosis_xy_input:
-              self.tplData.diagnosis_xy != ""
-                ? self.tplData.diagnosis_xy + ";"
-                : "",
-            treat_advice: self.tplData.treat_advice || "",
-            diagnosis_xy_labels: [],
-            diagnosis_labels: []
-          };
-          Object.keys(data).forEach(function (k) {
-            self.set_record_prop({
-              key: k,
-              val: data[k]
-            });
-          });
-          self.showUseTpl = false;
-        }
-      },
-      useTplShow: function () {
-        var self = this;
-        if (this.recipeType === 0) {
-          self.showUseTpl = true;
-          // this.useTpl();
+          self.tplEditData.searchLists = [];
+          self.tplEditData.searchListShow = false;
+          self.tplEditData.searchName = "";
           return
         }
-        var ids = [];
-        var items = self.currShowTpl.items;
-        this.currShowTpl.items.forEach(function (item) {
-          ids.push(Number(item.item_id));
+      }
+
+      var newItem = {
+        item_id: item.id,
+        name: item.alias_name || item.clinic_alias_name || item.name,
+        num: 0,
+        unit: item.unit || item.unit_stock,
+        unit_stock: item.unit_stock || item.unit,
+        stock: item.stock,
+        dose_once: item.dose_once,
+        unit_stock: item.unit_stock,
+        unit_sale: item.unit_sale,
+        unit_dose: item.unit_dose,
+        sale_dose_ratio: item.sale_dose_ratio,
+        stock_sale_ratio: item.stock_sale_ratio,
+        price: item.price || item.sale_price,
+        sale_price: item.sale_price || item.price,
+        usage: 0,
+        spec: item.spec,
+        alias_name: item.alias_name,
+        clinic_alias_name: item.clinic_alias_name,
+        status: item.status || 1,
+        type: item.type,
+        days: 0,
+        default_sale_price: item.default_sale_price
+      };
+      self.tplEditData.items.push(newItem);
+      self.tplEditData.searchListShow = false;
+      self.tplEditData.searchLists = [];
+      self.tplEditData.searchName = "";
+
+    },
+    delEditTplLists: function (index) {
+      this.tplEditData.items.splice(index, 1);
+    },
+    saveTplAdd: function () {
+      var self = this;
+      var params = {};
+      var flag = true;
+      if (self.tplEditData.tplName == "") {
+        alert("请填写模板名称");
+        return;
+      }
+      if (self.tplEditData.items.length < 1) {
+        alert("请输入至少一个药品/项目");
+        return;
+      }
+      self.tplEditData.items.forEach(function (e) {
+        if (e.num < 1) {
+          flag = false;
+        }
+      });
+      if (!flag) {
+        alert("药品/项目数量必须大于零");
+        return;
+      }
+      switch (this.recipeType) {
+        case 1: {
+          params = {
+            name: self.tplEditData.tplName,
+            scope: self.tplEditData.scope,
+            items: self.tplEditData.items,
+            dosage: self.tplEditData.dosage,
+            doctor_remark: self.tplEditData.doctor_remark,
+            category: self.category,
+            is_cloud: self.isCloud
+          };
+          break;
+        }
+        case 2: {
+          params = {
+            name: self.tplEditData.tplName,
+            scope: self.tplEditData.scope,
+            items: self.tplEditData.items,
+            dosage: self.tplEditData.dosage,
+            doctor_remark: self.tplEditData.doctor_remark,
+            category: 1,
+            is_cloud: self.isCloud
+          };
+          break;
+        }
+        case 4: {
+          params = {
+            name: self.tplEditData.tplName,
+            scope: self.tplEditData.scope,
+            items: self.tplEditData.items,
+            dosage: self.tplEditData.dosage,
+            is_cloud: 0,
+            doctor_remark: self.tplEditData.doctor_remark
+          };
+        }
+      }
+      saveMedTpl(params, this.recipeType).then(
+        function (res) {
+          if (res.code == 1000) {
+            self.tplEditData = {
+              category: self.category,
+              tplName: "",
+              scope: 0,
+              items: [],
+              dosage: 0,
+              doctor_remark: "",
+              searchName: "",
+              searchLists: [],
+              searchListShow: false
+            };
+            self.showAddTpl = false;
+            self.firstSearch();
+          } else {
+            alert("添加失败，" + "res.msg");
+          }
+        },
+        function (err) {
+          console.log(err);
+        }
+      );
+    },
+    cancelTplAdd: function () {
+      this.tplEditData.searchListShow = false;
+      this.tplEditData.searchLists = [];
+      this.showAddTpl = false;
+    },
+    tplShow: function (item) {
+      this.tplEditData.searchName = "";
+      this.currShowTpl = item;
+
+      var self = this;
+      self.tplData = {
+        tplName: item.name,
+        scope: item.scope,
+        items: item.items,
+        dosage: item.dosage,
+        doctor_remark: item.doctor_remark,
+        category: item.category,
+        clinic_id: item.clinic_id,
+        creator_name: item.creator_name,
+        creator_id: item.creator_id,
+        id: item.id,
+        is_cloud: item.is_cloud,
+
+        chief_complaint: item.chief_complaint, //主诉
+        present_illness: item.present_illness, //病史
+        allergic_history: item.allergic_history, //过敏史
+        past_history: item.past_history, //既往史
+        examination: item.examination, //检查
+        diagnosis: item.diagnosis, //中医诊断
+        diagnosis_xy: item.diagnosis_xy //西医诊断
+      };
+      self.showTpl = true;
+
+    },
+    tplHide: function () {
+      this.showTpl = false;
+    },
+    useTpl: function () {
+      var self = this;
+      if (this.recipeType !== 0) {
+        this.clean_recipe();
+        self.tplData.items.forEach(function (item) {
+          var newItem = {
+            category: item.category,
+            id: item.item_id,
+            name: item.alias_name || item.clinic_alias_name || item.name,
+            alias_name: item.alias_name || item.name,
+            clinic_alias_name: item.clinic_alias_name || item.name,
+            num: item.num,
+            price: item.price,
+            sale_price: item.sale_price,
+            default_sale_price: item.default_sale_price || 0,
+            spec: item.spec,
+            stock: item.stock,
+            stock_sale_ratio: item.stock_sale_ratio,
+            unit: item.unit || "次",
+            unit_sale: item.unit_sale,
+            unit_stock: item.unit_stock,
+            usage: item.usage,
+            dose_once: item.dose_once,
+            frequency: item.frequency,
+            days: item.days,
+            status: item.status || 0,
+            is_match: item.is_match,
+            unit_dose: item.unit_dose || "克",
+            sale_dose_ratio: item.sale_dose_ratio || 0,
+            type: item.type || 1
+          };
+
+          self.add_new_medicine({item: newItem, type: self.recipeType});
+
         });
-        if (this.recipeType == 1) {
-          var params = {ids: ids, status: 1, category: self.category};
+        this.showUseTpl = false;
+      } else {
+        var data = {
+          chief_complaint: self.tplData.chief_complaint || "",
+          present_illness: self.tplData.present_illness || "",
+          allergic_history: self.tplData.allergic_history || "",
+          personal_history: self.tplData.past_history || "",
+          examinationInfo: self.tplData.examination
+            ? JSON.parse(self.tplData.examination)
+            : {},
+          examination: self.tplData.examination
+            ? JSON.parse(self.tplData.examination)
+            : {},
+          diagnosis_input:
+            self.tplData.diagnosis != "" ? self.tplData.diagnosis + ";" : "",
+          diagnosis_xy_input:
+            self.tplData.diagnosis_xy != ""
+              ? self.tplData.diagnosis_xy + ";"
+              : "",
+          treat_advice: self.tplData.treat_advice || "",
+          diagnosis_xy_labels: [],
+          diagnosis_labels: []
+        };
+        Object.keys(data).forEach(function (k) {
+          self.set_record_prop({
+            key: k,
+            val: data[k]
+          });
+        });
+        self.showUseTpl = false;
+      }
+    },
+    useTplShow: function () {
+      var self = this;
+      if (this.recipeType === 0) {
+        self.showUseTpl = true;
+        // this.useTpl();
+        return
+      }
+      var ids = [], names = [], params = {};
+      var items = self.currShowTpl.items;
+      this.currShowTpl.items.forEach(function (item) {
+        ids.push(Number(item.item_id));
+        names.push(item.name)
+      });
+      if (this.recipeType == 1) {
+        if (self.isCloud == 1) {
+          params = {names: names, status: 1, category: self.category}
         } else {
-          var params = {ids: ids, status: 1};
+          params = {ids: ids, status: 1, category: self.category};
         }
 
-        searchMed(params, this.recipeType, self.isCloud).then(function (res) {
-          if (res.code == 1000) {
-            items.forEach((item) => {
+      } else {
+        if (self.isCloud == 1) {
+          params = {names: names, status: 1}
+        } else {
+          params = {ids: ids, status: 1};
+        }
+      }
+
+      searchMed(params, this.recipeType, self.isCloud).then(function (res) {
+        if (res.code == 1000) {
+          items.forEach((item) => {
+            if (self.isCloud == 1) {
               for (var i = 0, len = res.data.length; i < len; i++) {
-                if (item.item_id == res.data[i].id) {
-                  item.status = 1;
+                if (item.name == res.data[i].name || item.name == res.data[i].alias_name) {
+                  item.is_match = 1
                   break;
                 }
               }
-
-              if (i == len) {
-                item.status = 0;
+            } else {
+              for (var i = 0, len = res.data.length; i < len; i++) {
+                if (item.item_id == res.data[i].id) {
+                  item.is_match = 1
+                  break;
+                }
               }
-            });
-            self.showUseTpl = true;
-          } else {
-            self.$Message.info(res.msg)
-          }
-        });
-      },
-      useTplHide: function () {
-        this.showUseTpl = false;
-      },
-      delTplShow: function () {
-        this.showDelTpl = true;
-      },
-      delTplHide: function () {
-        this.showDelTpl = false;
-      },
-      editTplShow: function () {
-        var self = this;
-        self.tplEditData.searchName = "";
-        self.tplEditData.tplName = self.tplData.tplName;
-        self.tplEditData.scope = self.tplData.scope;
-        self.tplEditData.isCloud = self.tplData.is_cloud;
-
-        if (self.recipeType !== 0) {
-          self.tplEditData.items = (function (items) {
-            var newArr = [];
-            items.forEach(function (item) {
-              newArr.push(item);
-            });
-            return newArr;
-          })(self.tplData.items);
-        }
-
-        self.tplEditData.dosage = self.tplData.dosage;
-        self.tplEditData.doctor_remark = self.tplData.doctor_remark;
-        self.showEditTpl = true;
-      },
-      editTplHide: function () {
-        this.showEditTpl = false;
-      },
-      delTpl: function () {
-        var self = this;
-        delTpl(self.tplData.id, {}, self.recipeType).then(function (res) {
-          if (res.code == 1000) {
-            self.showDelTpl = false;
-            self.showTpl = false;
-            self.firstSearch();
-          } else {
-            alert("删除失败 " + res.msg);
-            self.showDelTpl = false;
-          }
-        });
-      },
-      saveTplEdit: function () {
-        var self = this;
-        var params = {};
-        var flag = true;
-        if (self.tplEditData.tplName == "") {
-          alert("请填写模板名称");
-          return;
-        }
-        if (self.tplEditData.items.length < 1) {
-          alert("请输入至少一个药品/项目");
-          return;
-        }
-        self.tplEditData.items.forEach(function (e) {
-          if (e.num < 1) {
-            flag = false;
-          }
-        });
-        if (!flag) {
-          alert("药品/项目数量必须大于零");
-          return;
-        }
-        switch (this.recipeType) {
-          case 1: {
-            params = {
-              category: self.category,
-              name: self.tplEditData.tplName,
-              scope: self.tplEditData.scope,
-              items: self.tplEditData.items,
-              dosage: self.tplEditData.dosage,
-              doctor_remark: self.tplEditData.doctor_remark,
-              clinic_id: self.tplData.clinic_id,
-              creator_name: self.tplData.creator_name,
-              creator_id: self.tplData.creator_id,
-              id: self.tplData.id,
-              is_cloud: self.tplData.is_cloud
-            };
-            break;
-          }
-          case 2: {
-            params = {
-              name: self.tplEditData.tplName,
-              scope: self.tplEditData.scope,
-              items: self.tplEditData.items,
-              dosage: self.tplEditData.dosage,
-              doctor_remark: self.tplEditData.doctor_remark,
-              clinic_id: self.tplData.clinic_id,
-              creator_name: self.tplData.creator_name,
-              creator_id: self.tplData.creator_id,
-              id: self.tplData.id,
-              is_cloud: 0
-            };
-          }
-          case 4: {
-            params = {
-              name: self.tplEditData.tplName,
-              scope: self.tplEditData.scope,
-              items: self.tplEditData.items,
-              doctor_remark: self.tplEditData.doctor_remark,
-              clinic_id: self.tplData.clinic_id,
-              creator_name: self.tplData.creator_name,
-              creator_id: self.tplData.creator_id,
-              id: self.tplData.id,
-              is_cloud: 0
-            };
-          }
-        }
-        updateTpl(params, this.recipeType).then(
-          function (res) {
-            if (res.code == 1000) {
-              self.tplData = {
-                category: 0,
-                clinic_id: 0,
-                creator_name: "",
-                creator_id: "",
-                id: 0,
-                tplName: "",
-                scope: 0,
-                items: [],
-                dosage: 0,
-                doctor_remark: ""
-              };
-              self.firstSearch();
-              self.showEditTpl = false;
-              self.showTpl = false;
             }
-          },
-          function (error) {
-            console.log(error);
-          }
-        );
-      },
-      cancelTplEdit: function () {
-        this.showEditTpl = false;
-        this.tplEditData.tplSearchList = [];
-        this.tplEditData.searchListShow = false;
+            if (i == len) {
+              item.is_match = 0;
+            }
+          });
+          self.showUseTpl = true;
+        } else {
+          self.$Message.info(res.msg)
+        }
+      });
+    },
+    useTplHide: function () {
+      this.showUseTpl = false;
+    },
+    delTplShow: function () {
+      this.showDelTpl = true;
+    },
+    delTplHide: function () {
+      this.showDelTpl = false;
+    },
+    editTplShow: function () {
+      var self = this;
+      self.tplEditData.searchName = "";
+      self.tplEditData.tplName = self.tplData.tplName;
+      self.tplEditData.scope = self.tplData.scope;
+      self.tplEditData.isCloud = self.tplData.is_cloud;
+
+      if (self.recipeType !== 0) {
+        self.tplEditData.items = (function (items) {
+          var newArr = [];
+          items.forEach(function (item) {
+            newArr.push(item);
+          });
+          return newArr;
+        })(self.tplData.items);
       }
+
+      self.tplEditData.dosage = self.tplData.dosage;
+      self.tplEditData.doctor_remark = self.tplData.doctor_remark;
+      self.showEditTpl = true;
+    },
+    editTplHide: function () {
+      this.showEditTpl = false;
+    },
+    delTpl: function () {
+      var self = this;
+      delTpl(self.tplData.id, {}, self.recipeType).then(function (res) {
+        if (res.code == 1000) {
+          self.showDelTpl = false;
+          self.showTpl = false;
+          self.firstSearch();
+        } else {
+          alert("删除失败 " + res.msg);
+          self.showDelTpl = false;
+        }
+      });
+    },
+    saveTplEdit: function () {
+      var self = this;
+      var params = {};
+      var flag = true;
+      if (self.tplEditData.tplName == "") {
+        alert("请填写模板名称");
+        return;
+      }
+      if (self.tplEditData.items.length < 1) {
+        alert("请输入至少一个药品/项目");
+        return;
+      }
+      self.tplEditData.items.forEach(function (e) {
+        if (e.num < 1) {
+          flag = false;
+        }
+      });
+      if (!flag) {
+        alert("药品/项目数量必须大于零");
+        return;
+      }
+      switch (this.recipeType) {
+        case 1: {
+          params = {
+            category: self.category,
+            name: self.tplEditData.tplName,
+            scope: self.tplEditData.scope,
+            items: self.tplEditData.items,
+            dosage: self.tplEditData.dosage,
+            doctor_remark: self.tplEditData.doctor_remark,
+            clinic_id: self.tplData.clinic_id,
+            creator_name: self.tplData.creator_name,
+            creator_id: self.tplData.creator_id,
+            id: self.tplData.id,
+            is_cloud: self.tplData.is_cloud
+          };
+          break;
+        }
+        case 2: {
+          params = {
+            name: self.tplEditData.tplName,
+            scope: self.tplEditData.scope,
+            items: self.tplEditData.items,
+            dosage: self.tplEditData.dosage,
+            doctor_remark: self.tplEditData.doctor_remark,
+            clinic_id: self.tplData.clinic_id,
+            creator_name: self.tplData.creator_name,
+            creator_id: self.tplData.creator_id,
+            id: self.tplData.id,
+            is_cloud: 0
+          };
+        }
+        case 4: {
+          params = {
+            name: self.tplEditData.tplName,
+            scope: self.tplEditData.scope,
+            items: self.tplEditData.items,
+            doctor_remark: self.tplEditData.doctor_remark,
+            clinic_id: self.tplData.clinic_id,
+            creator_name: self.tplData.creator_name,
+            creator_id: self.tplData.creator_id,
+            id: self.tplData.id,
+            is_cloud: 0
+          };
+        }
+      }
+      updateTpl(params, this.recipeType).then(
+        function (res) {
+          if (res.code == 1000) {
+            self.tplData = {
+              category: 0,
+              clinic_id: 0,
+              creator_name: "",
+              creator_id: "",
+              id: 0,
+              tplName: "",
+              scope: 0,
+              items: [],
+              dosage: 0,
+              doctor_remark: ""
+            };
+            self.firstSearch();
+            self.showEditTpl = false;
+            self.showTpl = false;
+          }
+        },
+        function (error) {
+          console.log(error);
+        }
+      );
+    },
+    cancelTplEdit: function () {
+      this.showEditTpl = false;
+      this.tplEditData.tplSearchList = [];
+      this.tplEditData.searchListShow = false;
     }
-  };
+  }
+};
 </script>
 
 <style scoped>
@@ -1638,7 +1657,8 @@
   .clear {
     clear: bottom;
   }
-  .inline-block{
+
+  .inline-block {
     display: inline-block;
   }
 </style>
