@@ -323,7 +323,7 @@ export default {
       })
       return recipeList;
     },
-    //检查草稿箱
+    // 检查草稿箱
     checkOrder(recipeList) {
       recipeList.forEach(recipe => {
         if (recipe.data.items.length === 0) {
@@ -600,7 +600,7 @@ export default {
       fetchClinic().then(
         res => {
           if (res.code === 1000) {
-            this.set_state_prop({key: 'clinicType', val: res.data ? res.data.type : 0});
+            this.set_state_prop({key: 'clinicType', val: res.data.service_type ? res.data.service_type : 0});
           } else {
             this.$Message.info(res.msg)
           }
