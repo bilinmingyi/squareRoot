@@ -545,7 +545,7 @@ export default {
 <style scoped>
 .mid-box-content {
   background: #fff;
-  padding-bottom: 180px;
+  padding-bottom: 60px;
 }
 .mid-title-btn-box {
   display: flex;

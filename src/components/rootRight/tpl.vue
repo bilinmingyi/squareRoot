@@ -89,7 +89,7 @@
           <span>医嘱：</span>
           <span>{{tplData.doctor_remark}}</span>
         </div>
-        <div class="mt10 ml10 mb20 tpl-case" v-show="recipeType==0">
+        <div class="mt10 ml10 mb20 tpl-case tpl-content" v-show="recipeType==0">
           <div>
             <span class="case-label">主述&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <span>{{tplData.chief_complaint}}</span>
@@ -155,7 +155,7 @@
                 >{{item.price}}/次</span>
                 <span v-show="item.is_match!=1" style="color:red;font-weight:bold;">暂无此药</span>
               </div>
-              <div v-if="recipeType==0" style="width: 100%;font-weight: normal">
+              <div v-if="recipeType==0" class="record-content">
                 <div>
                   <span class="case-label">主述&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                   <span>{{tplData.chief_complaint}}</span>
@@ -1441,7 +1441,6 @@ export default {
     color: #5096e0;
     float: left;
     background-color: transparent;
-    font-size: 1rem;
   }
 
   .prescription_detail_del {
@@ -1454,7 +1453,6 @@ export default {
     color: #fc3b3b;
     float: left;
     background-color: transparent;
-    font-size: 1rem;
   }
 
   .alert-back {
@@ -1472,15 +1470,20 @@ export default {
     box-shadow: 0 0.25rem 1rem 0.25rem rgba(0, 0, 0, 0.2);
     border-radius: 0.25rem;
     z-index: 1050;
-    margin: 0 auto;
     position: relative;
-    top: 20vh;
+    top: 50%;
+    left: 50%;
     width: 50rem;
     padding: 1.25rem 3.125rem;
     max-height: 50rem;
     font-size: 0.875rem;
     overflow: auto;
     font-weight: bold;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
   }
 
   .alert-back .del-tpl {
@@ -1660,5 +1663,17 @@ export default {
 
   .inline-block {
     display: inline-block;
+  }
+
+  .tpl-content {
+    max-height: calc(100vh - 21rem);
+    overflow-y: scroll;
+  }
+
+  .record-content {
+    width: 100%;
+    font-weight: normal;
+    max-height: 50vh;
+    overflow-y: scroll;
   }
 </style>
