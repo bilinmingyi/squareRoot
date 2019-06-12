@@ -92,7 +92,7 @@
               v-for="(itemOne,index) in (currRecipeData.data.items||[])"
               :key="index"
             >
-              <span style="margin-right: 8px;">{{itemOne.name}}</span>
+              <span style="margin-right: 8px;">{{itemOne.name}}{{category==2 ? '颗粒' : ''}}</span>
               <span>{{itemOne.num}}</span>
               <span style="margin-right: 8px;">{{itemOne.unit_stock||itemOne.unit}}</span>
               <span>{{itemOne.usage}}</span>
