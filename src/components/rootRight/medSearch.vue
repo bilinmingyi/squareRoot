@@ -1,6 +1,6 @@
 <template>
-  <div class="mt5 ml6 mb5">
-    <div class="mb6" style="padding-right:3%;width:100%;display:flex;height:2rem;font-size:1rem;">
+  <div class="mt5 ml6 mb5 search-block">
+    <div class="mb6 search-box">
       <div class="col70 mr10">
         <Input @on-keydown="listenerKey($event)" @on-blur="curSelect=-1" @input="searchMed()" placeholder="药品名称/拼音简码"
                v-model="searchName"/>
@@ -9,6 +9,9 @@
         <Button long @click="searchMed()">搜索</Button>
       </div>
     </div>
+
+    <f-loader v-if="showLoading" :fixed="false"></f-loader>
+
     <div class="search-result" v-show="showResult">
       <div
         :class="[{'no-stock':item.stock<1 && isCloud!=1},{'herbal-result-li':recipeType===1},{'search-result-li':recipeType!=1}, {'select-box': curSelect === index}]"
@@ -77,156 +80,297 @@
 </template>
 
 <script>
-  import {Input, Button} from "iview";
-  import {mapGetters, mapActions} from "vuex";
-  import {searchMed, searchRecentMed} from "@/fetch/api.js";
+import {Input, Button} from "iview";
+import {mapGetters, mapActions} from "vuex";
+import {searchMed, searchRecentMed} from "@/fetch/api.js";
+import fLoader from "@/components/fLoader";
 
-  export default {
-    name: "medSearch",
-    components: {
-      Button,
-      Input
+export default {
+  name: "medSearch",
+  components: {
+    Button,
+    Input,
+    fLoader
+  },
+  data() {
+    return {
+      showResult: false,
+      timer: null,
+      searchName: "",
+      searchList: [],
+      currPage: 1,
+      page_num: 0,
+      showList: [],
+      page_size: 0,
+      curSelect: -1,  // 当前选中的药品
+      page: 1,
+      totalNum: 0,
+      isFirst: true,
+      showLoading: false
+    }
+  },
+  computed: {
+    ...mapGetters(["currRecipeData"]),
+    recipeType: function () {
+      return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
     },
-    data() {
-      return {
-        showResult: false,
-        timer: null,
-        searchName: "",
-        searchList: [],
-        currPage: 1,
-        page_num: 0,
-        showList: [],
-        page_size: 0,
-        curSelect: -1,  // 当前选中的药品
-        page: 1,
-        totalNum: 0,
-        isFirst: true
-      }
+    isCloud: function () {
+      return this.currRecipeData === undefined ? 0 : (this.currRecipeData.data.is_cloud === undefined ? 0 : this.currRecipeData.data.is_cloud);
     },
-    computed: {
-      ...mapGetters(["currRecipeData"]),
-      recipeType: function () {
-        return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
-      },
-      isCloud: function () {
-        return this.currRecipeData === undefined ? 0 : (this.currRecipeData.data.is_cloud === undefined ? 0 : this.currRecipeData.data.is_cloud);
-      },
-      category: function () {
-        return this.currRecipeData === undefined ? 1 : (this.currRecipeData.data.category === undefined ? 1 : this.currRecipeData.data.category);
-      }
-    },
-    watch: {
-      category: function () {
-        this.searchName = "";
-        this.showResult = false;
-        this.firstSearch();
-      },
-      recipeType: function () {
-        this.searchName = "";
-        this.showResult = false;
-        this.firstSearch();
-      },
-      isCloud: function () {
-        this.searchName = "";
-        this.showResult = false;
-        this.firstSearch();
-      },
-      searchList: function () {
-        if (this.recipeType === 1) {
-          this.page_size = 18;
-        } else {
-          this.page_size = 10;
-        }
-        this.currPage = 1;
-        this.page_num = Number(
-          (this.searchList.length / this.page_size).toFixed(0)
-        );
-        if (this.page_num * this.page_size < this.searchList.length) {
-          this.page_num++;
-        }
-        if (this.page_num == 1) {
-          this.showList = this.searchList.slice(0);
-        } else {
-          if (this.currPage == this.page_num) {
-            this.showList = this.searchList.slice(
-              this.page_size * (this.currPage - 1)
-            );
-          } else {
-            this.showList = this.searchList.slice(
-              this.page_size * (this.currPage - 1),
-              this.page_size * this.currPage
-            );
-          }
-        }
-        this.showResult = true;
-      },
-      currPage: function () {
-        if (this.page_num == 1) {
-          this.showList = this.searchList.slice(0, -1);
-        } else {
-          if (this.currPage == this.page_num) {
-            this.showList = this.searchList.slice(
-              this.page_size * (this.currPage - 1)
-            );
-          } else {
-            this.showList = this.searchList.slice(
-              this.page_size * (this.currPage - 1),
-              this.page_size * this.currPage
-            );
-          }
-        }
-      }
-    },
-
-    created() {
+    category: function () {
+      return this.currRecipeData === undefined ? 1 : (this.currRecipeData.data.category === undefined ? 1 : this.currRecipeData.data.category);
+    }
+  },
+  watch: {
+    category: function () {
+      this.searchName = "";
+      this.showResult = false;
       this.firstSearch();
     },
-    methods: {
-      ...mapActions(["add_new_medicine"]),
-      selectItem: function (item) {
-        let filterList = this.currRecipeData.data.items.filter(med => {
-          return item.id === med.item_id;
-        });
-        if (filterList.length === 0) {
-          this.add_new_medicine({item: item, type: this.currRecipeData.type});
-          this.searchName = '';
-          this.curSelect = -1;
-
+    recipeType: function () {
+      this.searchName = "";
+      this.showResult = false;
+      this.firstSearch();
+    },
+    isCloud: function () {
+      this.searchName = "";
+      this.showResult = false;
+      this.firstSearch();
+    },
+    searchList: function () {
+      if (this.recipeType === 1) {
+        this.page_size = 18;
+      } else {
+        this.page_size = 10;
+      }
+      this.currPage = 1;
+      this.page_num = Number(
+        (this.searchList.length / this.page_size).toFixed(0)
+      );
+      if (this.page_num * this.page_size < this.searchList.length) {
+        this.page_num++;
+      }
+      if (this.page_num == 1) {
+        this.showList = this.searchList.slice(0);
+      } else {
+        if (this.currPage == this.page_num) {
+          this.showList = this.searchList.slice(
+            this.page_size * (this.currPage - 1)
+          );
         } else {
-          this.$Message.info("该药品已添加");
+          this.showList = this.searchList.slice(
+            this.page_size * (this.currPage - 1),
+            this.page_size * this.currPage
+          );
         }
-      },
-      changePage: function (flag) {
-        if (flag == 0) {
-          if (this.currPage == 1) {
-            this.currPage = 1;
-          } else {
-            this.currPage--;
+      }
+      this.showResult = true;
+    },
+    currPage: function () {
+      if (this.page_num == 1) {
+        this.showList = this.searchList.slice(0, -1);
+      } else {
+        if (this.currPage == this.page_num) {
+          this.showList = this.searchList.slice(
+            this.page_size * (this.currPage - 1)
+          );
+        } else {
+          this.showList = this.searchList.slice(
+            this.page_size * (this.currPage - 1),
+            this.page_size * this.currPage
+          );
+        }
+      }
+    }
+  },
+
+  created() {
+    this.firstSearch();
+  },
+  methods: {
+    ...mapActions(["add_new_medicine"]),
+    selectItem: function (item) {
+      let filterList = this.currRecipeData.data.items.filter(med => {
+        return item.id === med.item_id;
+      });
+      if (filterList.length === 0) {
+        this.add_new_medicine({item: item, type: this.currRecipeData.type});
+        this.searchName = '';
+        this.curSelect = -1;
+
+      } else {
+        this.$Message.info("该药品已添加");
+      }
+    },
+    changePage: function (flag) {
+      if (flag == 0) {
+        if (this.currPage == 1) {
+          this.currPage = 1;
+        } else {
+          this.currPage--;
+        }
+      }
+      if (flag == 1) {
+        if (this.currPage == this.page_num) {
+          this.currPage = this.page_num;
+        } else {
+          this.currPage++;
+        }
+      }
+    },
+    firstSearch: function () {
+      if (this.recipeType === 0) {
+        return;
+      }
+      var self = this, params = {};
+      self.showLoading = true
+      if (self.recipeType === 1) {
+        params = {
+          page: 1,
+          page_size: 18,
+          status: 1,
+          category: self.category
+        }
+      } else {
+        params = {
+          page: 1,
+          page_size: 10,
+          status: 1
+        }
+      }
+      Promise.all([
+        searchMed(params, self.recipeType, self.isCloud),
+        searchRecentMed({category: self.category}, self.recipeType, self.isCloud)
+      ]).then(res => {
+        if (res[0].code === 1000 && res[1].code === 1000) {
+          self.showLoading = false
+          var resultList = JSON.parse(JSON.stringify(res[1].data))
+          for (let i = 0, len = res[0].data.length; i < len && resultList.length < params.page_size; i++) {
+            if (!res[1].data.some(med => med.id === res[0].data[i].id)) {
+              resultList.push(res[0].data[i])
+            }
           }
+          self.isFirst = true
+          self.searchList = resultList
         }
-        if (flag == 1) {
-          if (this.currPage == this.page_num) {
-            this.currPage = this.page_num;
+      }).catch(error => {
+        self.showLoading = false
+        console.log(error)
+      })
+
+      // searchRecentMed(
+      //   {
+      //     category: self.category
+      //   },
+      //   self.recipeType,
+      //   self.isCloud
+      // ).then(
+      //   function (res) {
+      //     if (res.code == 1000) {
+      //       self.isFirst = true
+      //       self.searchList = res.data;
+      //     }
+      //   },
+      //   function (error) {
+      //     console.log(error);
+      //   }
+      // )
+    },
+    searchMed: function () {
+      this.curSelect = -1;
+      var self = this;
+      if (self.searchName == "") {
+        // self.searchList = [];
+        // self.firstSearch();
+        return
+      }
+      if (self.searchName.replace(/\s/g, '') == '') {
+        return
+      }
+      var params = {};
+      switch (self.recipeType) {
+        case 1: {
+          if (self.isCloud == 1) {
+            params = {
+              query: self.searchName,
+              category: self.category,
+              status: 1,
+              page: self.page,
+            }
           } else {
-            this.currPage++;
+            params = {
+              medicine_name: self.searchName,
+              category: self.category,
+              status: 1,
+              page: self.page,
+            };
           }
+          break;
         }
-      },
-      firstSearch: function () {
-        if (this.recipeType === 0) {
-          return;
+        case 2: {
+          if (self.isCloud == 1) {
+            params = {
+              query: self.searchName,
+              status: 1,
+              page: self.page,
+            };
+          } else {
+            params = {
+              medicine_name: self.searchName,
+              status: 1,
+              page: self.page,
+            };
+          }
+
+          break;
         }
-        var self = this;
-        searchRecentMed(
-          {
-            category: self.category
-          },
-          self.recipeType,
-          self.isCloud
-        ).then(
+        case 3:
+          if (self.isCloud == 1) {
+            params = {
+              query: self.searchName,
+              status: 1,
+              page: self.page,
+            }
+          } else {
+            params = {
+              medicine_name: self.searchName,
+              status: 1,
+              page: self.page,
+            }
+          }
+
+          break;
+        case 4: {
+          params = {
+            name: self.searchName,
+            page: self.page,
+            status: 1
+          };
+          break;
+        }
+        case 5: {
+          params = {
+            page: self.page,
+            query: self.searchName,
+            status: 1
+          };
+          break;
+        }
+        case 6: {
+          params = {
+            name: self.searchName,
+            page: self.page,
+            status: 1
+          };
+          break;
+        }
+      }
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => {
+        searchMed(params, self.recipeType, self.isCloud).then(
           function (res) {
             if (res.code == 1000) {
-              self.isFirst = true
+              self.isFirst = false
               self.searchList = res.data;
             }
           },
@@ -234,169 +378,71 @@
             console.log(error);
           }
         );
-      },
-      searchMed: function () {
-        this.curSelect = -1;
-        var self = this;
-        if (self.searchName == "") {
-          self.searchList = [];
-          self.firstSearch();
-          return
-        }
-        if (self.searchName.replace(/\s/g, '') == '') {
-          return
-        }
-        var params = {};
-        switch (self.recipeType) {
-          case 1: {
-            if (self.isCloud == 1) {
-              params = {
-                query: self.searchName,
-                category: self.category,
-                status: 1,
-                page: self.page,
-              }
-            } else {
-              params = {
-                medicine_name: self.searchName,
-                category: self.category,
-                status: 1,
-                page: self.page,
-              };
-            }
-            break;
+      }, 300);
+    },
+    listenerKey: function (event) {
+      let keyCode = event.keyCode;
+      let count = this.showList.length;
+      let cur = this.curSelect;
+      let start = event.target.selectionStart;
+      let colCount = this.recipeType == 1 ? 3 : 1;
+      switch (keyCode) {
+        case 13:
+          this.selectItem(this.showList[cur])
+          break;
+        case 37:
+          // left
+          if (cur !== -1) {
+            this.curSelect--;
+            setTimeout(() => {
+              event.target.selectionStart = event.target.selectionEnd = start;
+            })
           }
-          case 2: {
-            if (self.isCloud == 1) {
-              params = {
-                query: self.searchName,
-                status: 1,
-                page: self.page,
-              };
-            } else {
-              params = {
-                medicine_name: self.searchName,
-                status: 1,
-                page: self.page,
-              };
-            }
-
-            break;
+          break;
+        case 38:
+          // up
+          if (cur > colCount - 1) {
+            this.curSelect -= colCount;
+          } else {
+            this.curSelect = -1;
+            setTimeout(() => {
+              event.target.selectionStart = event.target.selectionEnd = start;
+            })
           }
-          case 3:
-            if (self.isCloud == 1) {
-              params = {
-                query: self.searchName,
-                status: 1,
-                page: self.page,
-              }
-            } else {
-              params = {
-                medicine_name: self.searchName,
-                status: 1,
-                page: self.page,
-              }
-            }
-
-            break;
-          case 4: {
-            params = {
-              name: self.searchName,
-              page: self.page,
-              status: 1
-            };
-            break;
+          break;
+        case 39:
+          // right
+          if (cur !== -1 && cur < count - 1) {
+            this.curSelect++;
+            setTimeout(() => {
+              event.target.selectionStart = event.target.selectionEnd = start;
+            })
           }
-          case 5: {
-            params = {
-              page: self.page,
-              query: self.searchName,
-              status: 1
-            };
-            break;
+          break;
+        case 40:
+          // down
+          if (cur === -1 && count > 0) {
+            this.curSelect = 0;
+            setTimeout(() => {
+              event.target.selectionStart = event.target.selectionEnd = start;
+            })
+          } else if (cur < count - colCount) {
+            this.curSelect += colCount;
           }
-          case 6: {
-            params = {
-              name: self.searchName,
-              page: self.page,
-              status: 1
-            };
-            break;
-          }
-        }
-        clearTimeout(this.timer);
-        this.timer = setTimeout(() => {
-          searchMed(params, this.recipeType, self.isCloud).then(
-            function (res) {
-              if (res.code == 1000) {
-                self.isFirst = false
-                self.searchList = res.data;
-              }
-            },
-            function (error) {
-              console.log(error);
-            }
-          );
-        }, 300);
-      },
-      listenerKey: function (event) {
-        let keyCode = event.keyCode;
-        let count = this.showList.length;
-        let cur = this.curSelect;
-        let start = event.target.selectionStart;
-        let colCount = this.recipeType == 1 ? 3 : 1;
-        switch (keyCode) {
-          case 13:
-            this.selectItem(this.showList[cur])
-            break;
-          case 37:
-            // left
-            if (cur !== -1) {
-              this.curSelect--;
-              setTimeout(() => {
-                event.target.selectionStart = event.target.selectionEnd = start;
-              })
-            }
-            break;
-          case 38:
-            // up
-            if (cur > colCount - 1) {
-              this.curSelect -= colCount;
-            } else {
-              this.curSelect = -1;
-              setTimeout(() => {
-                event.target.selectionStart = event.target.selectionEnd = start;
-              })
-            }
-            break;
-          case 39:
-            // right
-            if (cur !== -1 && cur < count - 1) {
-              this.curSelect++;
-              setTimeout(() => {
-                event.target.selectionStart = event.target.selectionEnd = start;
-              })
-            }
-            break;
-          case 40:
-            // down
-            if (cur === -1 && count > 0) {
-              this.curSelect = 0;
-              setTimeout(() => {
-                event.target.selectionStart = event.target.selectionEnd = start;
-              })
-            } else if (cur < count - colCount) {
-              this.curSelect += colCount;
-            }
-            break;
-          default:
-            return;
-        }
+          break;
+        default:
+          return;
       }
     }
-  };
+  }
+};
 </script>
 <style scoped>
+  .search-block {
+    position: relative;
+    height: 100%
+  }
+
   .search-result .herbal-result-li {
     width: 31.5%;
     height: 3.75rem;
@@ -436,6 +482,14 @@
   .select-box {
     background: #5096e0 !important;
     color: #fff !important;
+  }
+
+  .search-box {
+    padding-right: 3%;
+    width: 100%;
+    display: flex;
+    height: 2rem;
+    font-size: 1rem;
   }
 
   .pageBtn {

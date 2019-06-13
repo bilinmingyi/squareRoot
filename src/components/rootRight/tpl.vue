@@ -1,585 +1,584 @@
 <template>
-  <div>
-    <div class="mt5 ml6 mr6 mb5">
-      <div v-if="!showTpl">
-        <div class="mb6" style="width:100%;display:flex;height:2rem;">
-          <div class="col70 mr10">
-            <Input placeholder="请输入模板名称" @input="tplSearch()" v-model="searchTplName"/>
-          </div>
-          <div class="col30">
-            <Button long @click="tplSearch()">搜索</Button>
-          </div>
+  <div class="mt5 ml6 mr6 mb5 search-block">
+    <f-loader v-if="showLoading" :fixed="false"></f-loader>
+    <div v-if="!showTpl">
+      <div class="mb6" style="width:100%;display:flex;height:2rem;">
+        <div class="col70 mr10">
+          <Input placeholder="请输入模板名称" @input="tplSearch()" v-model="searchTplName"/>
         </div>
-        <span class="add_prescription_btn" v-show="recipeType!==0" @click="addTpl()">添加模板</span>
-        <div v-show="showResult" style="min-height:20rem;max-height:45rem;overflow:auto;">
-          <div
-            class="prescript-list"
-            v-for="(item,index) in showList"
-            :key="index"
-            @click.stop="tplShow(item)"
-          >
-            {{item.name}}
-            <span v-show="item.scope===1">（个人模板）</span>
-            <span v-show="item.scope===0">（共享模板）</span>
-          </div>
-          <div
-            class="mt10"
-            style="text-align:center;font-size:1rem;"
-            v-show="showList.length<1"
-          >暂无模板
-          </div>
-          <div class="pt15 pageBtn">
-            <Button
-              v-show="currPage!==1"
-              shape="circle"
-              type="primary"
-              ghost
-              @click.stop="changePage(0)"
-            >上一页
-            </Button>
-            <Button v-show="currPage===1" disabled shape="circle">上一页</Button>
-            <div class="ml10"></div>
-            <Button
-              v-show="currPage!==page_num"
-              shape="circle"
-              type="primary"
-              ghost
-              @click.stop="changePage(1)"
-            >下一页
-            </Button>
-            <Button v-show="currPage===page_num" disabled shape="circle">下一页</Button>
-          </div>
+        <div class="col30">
+          <Button long @click="tplSearch()">搜索</Button>
         </div>
       </div>
-      <div class="tpl-show mt5" style="font-size:0.875rem;" v-show="showTpl">
-        <div class="prescription_detail_btn" @click="tplHide()">返回</div>
-        <div class="ml6 mr16 mt16" style="font-size:0.875rem;border-bottom: 1px solid #4c89db;">
-          <span style="font-weight:900;">{{recipeType == 0 ? (clinicType == 6 ? '档案' : '病历') :'处方'}}模板：</span>
-          <span>{{tplData.tplName}}</span>
-          <span v-show="tplData.scope==0" style="float:right;">共享模板</span>
-          <span v-show="tplData.scope==1" style="float:right;">个人模板</span>
+      <span class="add_prescription_btn" v-show="recipeType!==0" @click="addTpl()">添加模板</span>
+      <div v-show="showResult" style="min-height:20rem;max-height:45rem;overflow:auto;">
+        <div
+          class="prescript-list"
+          v-for="(item,index) in showList"
+          :key="index"
+          @click.stop="tplShow(item)"
+        >
+          {{item.name}}
+          <span v-show="item.scope===1">（个人模板）</span>
+          <span v-show="item.scope===0">（共享模板）</span>
         </div>
-        <div class="search-result mt16 ml5 mr5" v-show="recipeType!=0">
-          <div
-            :class="[{'herbal-result-li':recipeType===1},{'search-result-li':recipeType!=1}]"
-            v-for="(item,index) in tplData.items"
-            :key="index"
-          >
+        <div
+          class="mt10"
+          style="text-align:center;font-size:1rem;"
+          v-show="showList.length<1"
+        >暂无模板
+        </div>
+        <div class="pt15 pageBtn">
+          <Button
+            v-show="currPage!==1"
+            shape="circle"
+            type="primary"
+            ghost
+            @click.stop="changePage(0)"
+          >上一页
+          </Button>
+          <Button v-show="currPage===1" disabled shape="circle">上一页</Button>
+          <div class="ml10"></div>
+          <Button
+            v-show="currPage!==page_num"
+            shape="circle"
+            type="primary"
+            ghost
+            @click.stop="changePage(1)"
+          >下一页
+          </Button>
+          <Button v-show="currPage===page_num" disabled shape="circle">下一页</Button>
+        </div>
+      </div>
+    </div>
+    <div class="tpl-show mt5" style="font-size:0.875rem;" v-show="showTpl">
+      <div class="prescription_detail_btn" @click="tplHide()">返回</div>
+      <div class="ml6 mr16 mt16" style="font-size:0.875rem;border-bottom: 1px solid #4c89db;">
+        <span style="font-weight:900;">{{recipeType == 0 ? (clinicType == 6 ? '档案' : '病历') :'处方'}}模板：</span>
+        <span>{{tplData.tplName}}</span>
+        <span v-show="tplData.scope==0" style="float:right;">共享模板</span>
+        <span v-show="tplData.scope==1" style="float:right;">个人模板</span>
+      </div>
+      <div class="search-result mt16 ml5 mr5" v-show="recipeType!=0">
+        <div
+          :class="[{'herbal-result-li':recipeType===1},{'search-result-li':recipeType!=1}]"
+          v-for="(item,index) in tplData.items"
+          :key="index"
+        >
             <span v-show="recipeType===1">
               {{item.alias_name||item.clinic_alias_name||item.name}}
               <br>
               （{{item.num}}{{item.unit}}）
             </span>
-            <span v-show="recipeType===2">
+          <span v-show="recipeType===2">
               {{item.alias_name||item.clinic_alias_name||item.name}}
               {{item.spec}}
             </span>
-            <span v-show="recipeType===4">
+          <span v-show="recipeType===4">
               {{item.alias_name||item.clinic_alias_name||item.name}}
               （{{item.num}}次）
             </span>
+        </div>
+      </div>
+      <div class="clear"></div>
+      <div class="mt10 ml6 mr6" v-show="recipeType==1">
+        <span>剂数：</span>
+        <span>{{tplData.dosage}}剂</span>
+      </div>
+      <div class="mt10 mb10 ml6 mr6" v-show="recipeType!=0">
+        <span>医嘱：</span>
+        <span>{{tplData.doctor_remark}}</span>
+      </div>
+      <div class="mt10 ml10 mb20 tpl-case tpl-content" v-show="recipeType==0">
+        <div>
+          <span class="case-label">主述&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <span>{{tplData.chief_complaint}}</span>
+        </div>
+        <div>
+          <span class="case-label">病史&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <span>{{tplData.present_illness}}</span>
+        </div>
+        <div>
+          <span class="case-label">既往史&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <span>{{tplData.past_history}}</span>
+        </div>
+        <div>
+          <span class="case-label">过敏史&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <span>{{tplData.allergic_history}}</span>
+        </div>
+        <div style="display:flex;">
+          <span class="case-label" style="width: 3.75rem">检查</span>
+          <div
+            style="white-space:pre-wrap; flex:1;margin:0;font-family:'microsoft yahei';border:0!important;"
+          >{{tplExamination}}
           </div>
         </div>
+        <div>
+          <span class="case-label">{{clinicType == 6 ? '诊断结果' : '西医诊断'}}&nbsp;</span>
+          <span>{{tplData.diagnosis_xy}}</span>
+        </div>
+        <div v-if="clinicType!=6">
+          <span class="case-label">中医诊断&nbsp;</span>
+          <span>{{tplData.diagnosis}}</span>
+        </div>
+      </div>
+      <div class="pb10">
+        <button class="prescription_detail_save mr2" @click.stop="useTplShow()">使用模板</button>
+        <button
+          class="prescription_detail_save"
+          v-show="recipeType!==0"
+          @click.stop="editTplShow()"
+        >编辑模板
+        </button>
+        <button class="prescription_detail_del" @click.stop="delTplShow()">删除模板</button>
         <div class="clear"></div>
-        <div class="mt10 ml6 mr6" v-show="recipeType==1">
-          <span>剂数：</span>
-          <span>{{tplData.dosage}}剂</span>
-        </div>
-        <div class="mt10 mb10 ml6 mr6" v-show="recipeType!=0">
-          <span>医嘱：</span>
-          <span>{{tplData.doctor_remark}}</span>
-        </div>
-        <div class="mt10 ml10 mb20 tpl-case tpl-content" v-show="recipeType==0">
-          <div>
-            <span class="case-label">主述&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span>{{tplData.chief_complaint}}</span>
-          </div>
-          <div>
-            <span class="case-label">病史&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span>{{tplData.present_illness}}</span>
-          </div>
-          <div>
-            <span class="case-label">既往史&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span>{{tplData.past_history}}</span>
-          </div>
-          <div>
-            <span class="case-label">过敏史&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span>{{tplData.allergic_history}}</span>
-          </div>
-          <div style="display:flex;">
-            <span class="case-label" style="width: 3.75rem">检查</span>
-            <div
-              style="white-space:pre-wrap; flex:1;margin:0;font-family:'microsoft yahei';border:0!important;"
-            >{{tplExamination}}
-            </div>
-          </div>
-          <div>
-            <span class="case-label">{{clinicType == 6 ? '诊断结果' : '西医诊断'}}&nbsp;</span>
-            <span>{{tplData.diagnosis_xy}}</span>
-          </div>
-          <div v-if="clinicType!=6">
-            <span class="case-label">中医诊断&nbsp;</span>
-            <span>{{tplData.diagnosis}}</span>
-          </div>
-        </div>
-        <div class="pb10">
-          <button class="prescription_detail_save mr2" @click.stop="useTplShow()">使用模板</button>
-          <button
-            class="prescription_detail_save"
-            v-show="recipeType!==0"
-            @click.stop="editTplShow()"
-          >编辑模板
-          </button>
-          <button class="prescription_detail_del" @click.stop="delTplShow()">删除模板</button>
-          <div class="clear"></div>
-        </div>
-        <div v-if="showUseTpl" class="alert-back">
-          <div class="use-tpl">
-            <div class="alert-title">确定使用[{{tplData.tplName}}]模板？</div>
-            <div class="mt20 mb10">
-              使用模板将覆盖已编辑之信息
-              <span v-if="recipeType!=0">
+      </div>
+      <div v-if="showUseTpl" class="alert-back">
+        <div class="use-tpl">
+          <div class="alert-title">确定使用[{{tplData.tplName}}]模板？</div>
+          <div class="mt20 mb10">
+            使用模板将覆盖已编辑之信息
+            <span v-if="recipeType!=0">
                 <strong style="color:red;">，暂无药品</strong>需要自行更改。
               </span>
+          </div>
+          <div class="use-list mt10">
+            <div
+              v-if="recipeType!=0"
+              class="use-list-li"
+              v-for="(item,index) in tplData.items"
+              :key="index"
+            >
+              {{item.alias_name||item.clinic_alias_name||item.name}} ({{item.num}}{{item.unit}}/{{item.usage}})
+              <span
+                v-show="recipeType==4"
+              >{{item.price}}/次</span>
+              <span v-show="item.is_match!=1" style="color:red;font-weight:bold;">暂无此药</span>
             </div>
-            <div class="use-list mt10">
-              <div
-                v-if="recipeType!=0"
-                class="use-list-li"
-                v-for="(item,index) in tplData.items"
-                :key="index"
-              >
-                {{item.alias_name||item.clinic_alias_name||item.name}} ({{item.num}}{{item.unit}}/{{item.usage}})
-                <span
-                  v-show="recipeType==4"
-                >{{item.price}}/次</span>
-                <span v-show="item.is_match!=1" style="color:red;font-weight:bold;">暂无此药</span>
+            <div v-if="recipeType==0" class="record-content">
+              <div>
+                <span class="case-label">主述&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span>{{tplData.chief_complaint}}</span>
               </div>
-              <div v-if="recipeType==0" class="record-content">
-                <div>
-                  <span class="case-label">主述&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                  <span>{{tplData.chief_complaint}}</span>
-                </div>
-                <div>
-                  <span class="case-label">病史&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                  <span>{{tplData.present_illness}}</span>
-                </div>
-                <div>
-                  <span class="case-label">既往史&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                  <span>{{tplData.past_history}}</span>
-                </div>
-                <div>
-                  <span class="case-label">过敏史&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                  <span>{{tplData.allergic_history}}</span>
-                </div>
-                <div style="display:flex;">
-                  <span class="case-label" style="width: 4.5rem">检查</span>
-                  <div
-                    style="white-space:pre-wrap; flex:1;margin:0;font-family:'microsoft yahei';"
-                  >{{tplExamination}}
-                  </div>
-                </div>
-                <div>
-                  <span class="case-label">{{clinicType == 6 ? '诊断结果' : '西医诊断'}}&nbsp;</span>
-                  <span>{{tplData.diagnosis_xy}}</span>
-                </div>
-                <div v-if="clinicType != 6">
-                  <span class="case-label">中医诊断&nbsp;</span>
-                  <span>{{tplData.diagnosis}}</span>
+              <div>
+                <span class="case-label">病史&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span>{{tplData.present_illness}}</span>
+              </div>
+              <div>
+                <span class="case-label">既往史&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span>{{tplData.past_history}}</span>
+              </div>
+              <div>
+                <span class="case-label">过敏史&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span>{{tplData.allergic_history}}</span>
+              </div>
+              <div style="display:flex;">
+                <span class="case-label" style="width: 4.5rem">检查</span>
+                <div
+                  style="white-space:pre-wrap; flex:1;margin:0;font-family:'microsoft yahei';"
+                >{{tplExamination}}
                 </div>
               </div>
-            </div>
-            <div class="pb10 tc mt20">
-              <button class="saveBtn mr20" @click.stop="useTpl()">确认</button>
-              <button class="saveBtn cancelBtn" @click.stop="useTplHide()">取消</button>
+              <div>
+                <span class="case-label">{{clinicType == 6 ? '诊断结果' : '西医诊断'}}&nbsp;</span>
+                <span>{{tplData.diagnosis_xy}}</span>
+              </div>
+              <div v-if="clinicType != 6">
+                <span class="case-label">中医诊断&nbsp;</span>
+                <span>{{tplData.diagnosis}}</span>
+              </div>
             </div>
           </div>
-        </div>
-        <div v-if="showDelTpl" class="alert-back" style="font-size:1rem;">
-          <div class="del-tpl">
-            <div class="ml20 pt20">删除模板</div>
-            <div class="ml20 pt10">
-              <Icon type="md-help-circle" size="40" color="#3182FB"/>
-              <span class="ml10">确定要删除[{{tplData.tplName}}]模板?</span>
-            </div>
-            <div style="position:absolute;right:5rem;bottom:2rem;">
-              <span @click="delTplHide()">取消</span>
-              <Button class="ml20 tpl-btn" shape="circle" type="primary" @click="delTpl()">确定</Button>
-            </div>
+          <div class="pb10 tc mt20">
+            <button class="saveBtn mr20" @click.stop="useTpl()">确认</button>
+            <button class="saveBtn cancelBtn" @click.stop="useTplHide()">取消</button>
           </div>
         </div>
       </div>
-      <div v-if="showEditTpl||showAddTpl" class="alert-back">
-        <div class="edit-tpl">
-          <div
-            class="pb12 pt12 font-bold tc font-18"
-            style="font-size:1.125rem;border-bottom:1px solid #cccccc;"
-          >
-            <span v-show="showEditTpl">编辑模板</span>
-            <span v-show="showAddTpl">添加模板</span>
+      <div v-if="showDelTpl" class="alert-back" style="font-size:1rem;">
+        <div class="del-tpl">
+          <div class="ml20 pt20">删除模板</div>
+          <div class="ml20 pt10">
+            <Icon type="md-help-circle" size="40" color="#3182FB"/>
+            <span class="ml10">确定要删除[{{tplData.tplName}}]模板?</span>
           </div>
-          <div style="position:relative;font-size: 0.875rem">
-            <div class="mt10 ml20">
-              <label class="ml20" for="edit-tpl-name">模板名称：</label>
-              <Input
-                name="tpl-name"
-                id="edit-tpl-name"
-                v-model="tplEditData.tplName"
-                placeholder="必填"
-                style="width: 9.375rem;"
-              />
-              <label class="ml20" for="edit-tpl-scope">模板类别：</label>
-              <Select name="edit-tpl-scope" style="width:7.5rem;" v-model="tplEditData.scope" id="edit-tpl-scope">
-                <Option
-                  v-for="(item,index) in tplType"
-                  :key="index"
-                  :value="item.scope"
-                >{{item.name}}
-                </Option>
-              </Select>
-              <label class="ml20" for="edit-tpl-source">药品来源：</label>
-              <Select name="edit-tpl-scope" style="width:7.5rem;" id="edit-tpl-source" disabled
-                      v-model="tplEditData.isCloud">
-                <Option :value="0">诊所药房</Option>
-                <Option :value="1">云药房</Option>
-              </Select>
-              <div class="mt10 inline-block" v-show="recipeType===1">
-                <span class="ml20">药品类型：</span>
-                <span v-show="category==1">饮片</span>
-                <span v-show="category==2">颗粒</span>
+          <div style="position:absolute;right:5rem;bottom:2rem;">
+            <span @click="delTplHide()">取消</span>
+            <Button class="ml20 tpl-btn" shape="circle" type="primary" @click="delTpl()">确定</Button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="showEditTpl||showAddTpl" class="alert-back">
+      <div class="edit-tpl">
+        <div
+          class="pb12 pt12 font-bold tc font-18"
+          style="font-size:1.125rem;border-bottom:1px solid #cccccc;"
+        >
+          <span v-show="showEditTpl">编辑模板</span>
+          <span v-show="showAddTpl">添加模板</span>
+        </div>
+        <div style="position:relative;font-size: 0.875rem">
+          <div class="mt10 ml20">
+            <label class="ml20" for="edit-tpl-name">模板名称：</label>
+            <Input
+              name="tpl-name"
+              id="edit-tpl-name"
+              v-model="tplEditData.tplName"
+              placeholder="必填"
+              style="width: 9.375rem;"
+            />
+            <label class="ml20" for="edit-tpl-scope">模板类别：</label>
+            <Select name="edit-tpl-scope" style="width:7.5rem;" v-model="tplEditData.scope" id="edit-tpl-scope">
+              <Option
+                v-for="(item,index) in tplType"
+                :key="index"
+                :value="item.scope"
+              >{{item.name}}
+              </Option>
+            </Select>
+            <label class="ml20" for="edit-tpl-source">药品来源：</label>
+            <Select name="edit-tpl-scope" style="width:7.5rem;" id="edit-tpl-source" disabled
+                    v-model="tplEditData.isCloud">
+              <Option :value="0">诊所药房</Option>
+              <Option :value="1">云药房</Option>
+            </Select>
+            <div class="mt10 inline-block" v-show="recipeType===1">
+              <span class="ml20">药品类型：</span>
+              <span v-show="category==1">饮片</span>
+              <span v-show="category==2">颗粒</span>
+            </div>
+          </div>
+
+          <div class="mt10 ml20 mr20">
+            <!--中药列表-->
+            <div v-show="recipeType===1">
+              <table class="col100">
+                <thead>
+                <tr>
+                  <th class="col10">序号</th>
+                  <th class="col30">药名</th>
+                  <th class="col10">药量</th>
+                  <th class="col15">单位</th>
+                  <th class="col10">规格</th>
+                  <th class="col10">用法</th>
+                  <th class="col15">操作</th>
+                </tr>
+                </thead>
+              </table>
+              <div style="max-height:8.5rem;overflow:auto;">
+                <table class="col100 font-14">
+                  <tbody>
+                  <tr v-for="(item,index) in tplEditData.items" :key="index">
+                    <td class="col10">{{index+1}}</td>
+                    <td class="col30">{{item.name}}</td>
+                    <td class="col10">
+                      <InputNumber
+                        :value="Number(item.num)"
+                        @input="item.num=$event"
+                      />
+                    </td>
+                    <td class="col15">{{item.unit_stock}}</td>
+                    <td class="col10">{{item.spec}}</td>
+                    <td class="col10">
+                      <Select v-model="item.usage">
+                        <Option
+                          v-for="(item1,index) in herbalMedUsages"
+                          :value="item1.name"
+                          :key="index"
+                        >{{item1.name}}
+                        </Option>
+                      </Select>
+                    </td>
+                    <td class="col15">
+                      <div style="color:#4181D8" @click.stop="delEditTplLists(index)">删除</div>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col100 mt10 pb10" style="border-bottom:#B4B4B4 solid 1px;">
+                <div class="mt10 ml20">
+                  <Input
+                    class="col30"
+                    placeholder="输入药品名称/编码/拼音码"
+                    v-model="tplEditData.searchName"
+                    @input="tplMedSearch()"
+                    clearable
+                  />
+                </div>
               </div>
             </div>
-
-            <div class="mt10 ml20 mr20">
-              <!--中药列表-->
-              <div v-show="recipeType===1">
+            <!--成药列表-->
+            <div v-show="recipeType==2">
+              <table class="col100">
+                <thead>
+                <tr>
+                  <th class="col5">序号</th>
+                  <th class="col25">药名</th>
+                  <th class="col10">规格</th>
+                  <th class="col10">总量</th>
+                  <th class="col5">单位</th>
+                  <th class="col10">用法</th>
+                  <th class="col10">每次用量</th>
+                  <th class="col10">频次</th>
+                  <th class="col10">天数</th>
+                  <th class="col10">操作</th>
+                </tr>
+                </thead>
+              </table>
+              <div style="max-height:8.5rem;overflow:auto;font-size:0.875rem !important;">
                 <table class="col100">
-                  <thead>
-                  <tr>
-                    <th class="col10">序号</th>
-                    <th class="col30">药名</th>
-                    <th class="col10">药量</th>
-                    <th class="col15">单位</th>
-                    <th class="col10">规格</th>
-                    <th class="col10">用法</th>
-                    <th class="col15">操作</th>
+                  <tbody>
+                  <tr v-for="(item,index) in tplEditData.items" :key="index">
+                    <td class="col5">{{index+1}}</td>
+                    <td class="col25">{{item.name}}</td>
+                    <td class="col10">{{item.spec}}</td>
+                    <td class="col10">
+                      <InputNumber
+                        class="col50"
+                        :value="Number(item.num)"
+                        @input="item.num=$event"
+                      />
+                    </td>
+                    <td class="col5">{{item.unit}}</td>
+                    <td class="col10">
+                      <Select class="col80" v-model="item.usage">
+                        <Option
+                          v-for="(item1,index) in westernMedUsages"
+                          :value="item1.name"
+                          :key="index"
+                        >{{item1.name}}
+                        </Option>
+                      </Select>
+                    </td>
+                    <td class="col10">
+                      <InputNumber
+                        class="col50"
+                        :value="Number(item.dose_once)"
+                        @input="item.dose_once=$event"
+                      />
+                    </td>
+                    <td class="col10">
+                      <Select v-model="item.frequency">
+                        <Option
+                          v-for="(item1,index) in medFrequency"
+                          :value="item1.name"
+                          :key="index"
+                        >{{item1.name}}
+                        </Option>
+                      </Select>
+                    </td>
+                    <td class="col10">
+                      <InputNumber
+                        class="col50"
+                        :value="Number(item.days)"
+                        @input="item.days=$event"
+                      />
+                    </td>
+                    <td class="col10">
+                      <div style="color:#4181D8" @click.stop="delEditTplLists(index)">删除</div>
+                    </td>
                   </tr>
-                  </thead>
+                  </tbody>
                 </table>
-                <div style="max-height:8.5rem;overflow:auto;">
-                  <table class="col100 font-14">
-                    <tbody>
-                    <tr v-for="(item,index) in tplEditData.items" :key="index">
-                      <td class="col10">{{index+1}}</td>
-                      <td class="col30">{{item.name}}</td>
-                      <td class="col10">
-                        <InputNumber
-                          :value="Number(item.num)"
-                          @input="item.num=$event"
-                        />
-                      </td>
-                      <td class="col15">{{item.unit_stock}}</td>
-                      <td class="col10">{{item.spec}}</td>
-                      <td class="col10">
-                        <Select v-model="item.usage">
-                          <Option
-                            v-for="(item1,index) in herbalMedUsages"
-                            :value="item1.name"
-                            :key="index"
-                          >{{item1.name}}
-                          </Option>
-                        </Select>
-                      </td>
-                      <td class="col15">
-                        <div style="color:#4181D8" @click.stop="delEditTplLists(index)">删除</div>
-                      </td>
-                    </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <div class="col100 mt10 pb10" style="border-bottom:#B4B4B4 solid 1px;">
-                  <div class="mt10 ml20">
-                    <Input
-                      class="col30"
-                      placeholder="输入药品名称/编码/拼音码"
-                      v-model="tplEditData.searchName"
-                      @input="tplMedSearch()"
-                      clearable
-                    />
-                  </div>
+              </div>
+              <div class="col100 mt10 pb10" style="border-bottom:#B4B4B4 solid 1px;">
+                <div class="mt10 ml20">
+                  <Input
+                    class="col30"
+                    placeholder="输入药品名称/编码/拼音码"
+                    v-model="tplEditData.searchName"
+                    @input="tplMedSearch()"
+                    clearable
+                  />
                 </div>
               </div>
-              <!--成药列表-->
-              <div v-show="recipeType==2">
+            </div>
+            <!--项目列表-->
+            <div v-show="recipeType==4">
+              <table class="col100">
+                <thead>
+                <tr>
+                  <th class="col10">序号</th>
+                  <th class="col50">项目名称</th>
+                  <th class="col20">数量</th>
+                  <th class="col20">操作</th>
+                </tr>
+                </thead>
+              </table>
+              <div style="max-height:8.5rem;overflow:auto;font-size:0.875rem !important;">
                 <table class="col100">
-                  <thead>
-                  <tr>
-                    <th class="col5">序号</th>
-                    <th class="col25">药名</th>
-                    <th class="col10">规格</th>
-                    <th class="col10">总量</th>
-                    <th class="col5">单位</th>
-                    <th class="col10">用法</th>
-                    <th class="col10">每次用量</th>
-                    <th class="col10">频次</th>
-                    <th class="col10">天数</th>
-                    <th class="col10">操作</th>
+                  <tbody>
+                  <tr v-for="(item,index) in tplEditData.items" :key="index">
+                    <td class="col10">{{index+1}}</td>
+                    <td class="col50">{{item.alias_name||item.clinic_alias_name||item.name}}</td>
+                    <td class="col20">
+                      <InputNumber
+                        class="col60"
+                        :value="Number(item.num)"
+                        @input="item.num=$event"
+                      />
+                    </td>
+                    <td class="col20">
+                      <div style="color:#4181D8" @click.stop="delEditTplLists(index)">删除</div>
+                    </td>
                   </tr>
-                  </thead>
+                  </tbody>
                 </table>
-                <div style="max-height:8.5rem;overflow:auto;font-size:0.875rem !important;">
-                  <table class="col100">
-                    <tbody>
-                    <tr v-for="(item,index) in tplEditData.items" :key="index">
-                      <td class="col5">{{index+1}}</td>
-                      <td class="col25">{{item.name}}</td>
-                      <td class="col10">{{item.spec}}</td>
-                      <td class="col10">
-                        <InputNumber
-                          class="col50"
-                          :value="Number(item.num)"
-                          @input="item.num=$event"
-                        />
-                      </td>
-                      <td class="col5">{{item.unit}}</td>
-                      <td class="col10">
-                        <Select class="col80" v-model="item.usage">
-                          <Option
-                            v-for="(item1,index) in westernMedUsages"
-                            :value="item1.name"
-                            :key="index"
-                          >{{item1.name}}
-                          </Option>
-                        </Select>
-                      </td>
-                      <td class="col10">
-                        <InputNumber
-                          class="col50"
-                          :value="Number(item.dose_once)"
-                          @input="item.dose_once=$event"
-                        />
-                      </td>
-                      <td class="col10">
-                        <Select v-model="item.frequency">
-                          <Option
-                            v-for="(item1,index) in medFrequency"
-                            :value="item1.name"
-                            :key="index"
-                          >{{item1.name}}
-                          </Option>
-                        </Select>
-                      </td>
-                      <td class="col10">
-                        <InputNumber
-                          class="col50"
-                          :value="Number(item.days)"
-                          @input="item.days=$event"
-                        />
-                      </td>
-                      <td class="col10">
-                        <div style="color:#4181D8" @click.stop="delEditTplLists(index)">删除</div>
-                      </td>
-                    </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <div class="col100 mt10 pb10" style="border-bottom:#B4B4B4 solid 1px;">
-                  <div class="mt10 ml20">
-                    <Input
-                      class="col30"
-                      placeholder="输入药品名称/编码/拼音码"
-                      v-model="tplEditData.searchName"
-                      @input="tplMedSearch()"
-                      clearable
-                    />
-                  </div>
-                </div>
               </div>
-              <!--项目列表-->
-              <div v-show="recipeType==4">
-                <table class="col100">
-                  <thead>
-                  <tr>
-                    <th class="col10">序号</th>
-                    <th class="col50">项目名称</th>
-                    <th class="col20">数量</th>
-                    <th class="col20">操作</th>
-                  </tr>
-                  </thead>
-                </table>
-                <div style="max-height:8.5rem;overflow:auto;font-size:0.875rem !important;">
-                  <table class="col100">
-                    <tbody>
-                    <tr v-for="(item,index) in tplEditData.items" :key="index">
-                      <td class="col10">{{index+1}}</td>
-                      <td class="col50">{{item.alias_name||item.clinic_alias_name||item.name}}</td>
-                      <td class="col20">
-                        <InputNumber
-                          class="col60"
-                          :value="Number(item.num)"
-                          @input="item.num=$event"
-                        />
-                      </td>
-                      <td class="col20">
-                        <div style="color:#4181D8" @click.stop="delEditTplLists(index)">删除</div>
-                      </td>
-                    </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <div class="col100 mt10 pb10" style="border-bottom:#B4B4B4 solid 1px;">
-                  <div class="mt10 ml20">
-                    <Input
-                      class="col30"
-                      placeholder="输入药品名称/编码/拼音码"
-                      v-model="tplEditData.searchName"
-                      @input="tplMedSearch()"
-                      clearable
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div
-                class="tpl-search-result"
-                v-if="tplEditData.searchListShow&&recipeType==1"
-              >
-                <table class="col100">
-                  <thead>
-                  <tr>
-                    <th class="col20">药品名称</th>
-                    <th class="col20">药品类别</th>
-                    <th class="col20">单位</th>
-                    <th class="col20">规格</th>
-                    <th class="col20">零售价</th>
-                  </tr>
-                  </thead>
-                </table>
-                <!--ref="herbal_scroll"-->
-                <div class="tpl-search-list">
-                  <table class="col100">
-                    <tbody>
-                    <tr
-                      v-for="(item,index) in tplEditData.searchLists"
-                      :key="index"
-                      @click="editTplAddList(item)"
-                    >
-                      <td class="col20">{{item.name}}</td>
-                      <td class="col20" v-if="item.category==1">饮片</td>
-                      <td class="col20" v-if="item.category==2">颗粒</td>
-                      <td class="col20">{{item.unit_stock}}</td>
-                      <td class="col20">{{item.spec}}</td>
-                      <td class="col20">{{item.sale_price}}</td>
-                    </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div
-                class="tpl-search-result"
-                v-show="tplEditData.searchListShow&&recipeType==2"
-              >
-                <table class="col100">
-                  <thead>
-                  <tr>
-                    <th class="col20">药品名称</th>
-                    <th class="col20">类别</th>
-                    <th class="col20">厂商</th>
-                    <th class="col20">规格</th>
-                    <th class="col20">零售价</th>
-                  </tr>
-                  </thead>
-                </table>
-                <!--ref="western_scroll"-->
-                <div class="tpl-search-list">
-                  <table class="col100">
-                    <tbody>
-                    <tr
-                      v-for="(item,index) in tplEditData.searchLists"
-                      :key="index"
-                      @click="editTplAddList(item)"
-                    >
-                      <td class="col20">{{item.name}}</td>
-                      <td class="col20">{{item.form}}</td>
-                      <td class="col20">{{item.vender}}</td>
-                      <td class="col20">{{item.spec}}</td>
-                      <td class="col20">{{item.sale_price}}</td>
-                    </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div
-                class="tpl-search-result"
-                v-show="tplEditData.searchListShow&&recipeType==4"
-              >
-                <table class="col100">
-                  <thead>
-                  <tr>
-                    <th class="col50">项目名称</th>
-                    <th class="col50">零售价</th>
-                  </tr>
-                  </thead>
-                </table>
-                <!--ref="therapy_scroll"-->
-                <div class="tpl-search-list">
-                  <table class="col100">
-                    <tbody>
-                    <tr
-                      v-for="(item,index) in tplEditData.searchLists"
-                      :key="index"
-                      @click="editTplAddList(item)"
-                    >
-                      <td class="col50">{{item.alias_name||item.clinic_alias_name||item.name}}</td>
-                      <td class="col50">{{item.price}}元</td>
-                    </tr>
-                    </tbody>
-                  </table>
+              <div class="col100 mt10 pb10" style="border-bottom:#B4B4B4 solid 1px;">
+                <div class="mt10 ml20">
+                  <Input
+                    class="col30"
+                    placeholder="输入药品名称/编码/拼音码"
+                    v-model="tplEditData.searchName"
+                    @input="tplMedSearch()"
+                    clearable
+                  />
                 </div>
               </div>
             </div>
 
-            <div class="mt10 ml40 mb10 col40" v-show="recipeType==1">饮片剂数：
-              <InputNumber
-                style="width:4rem"
-                name="dosage"
-                :value="Number(tplEditData.dosage)"
-                @input="tplEditData.dosage=$event"
-              />&nbsp;&nbsp;&nbsp;剂
+            <div
+              class="tpl-search-result"
+              v-if="tplEditData.searchListShow&&recipeType==1"
+            >
+              <table class="col100">
+                <thead>
+                <tr>
+                  <th class="col20">药品名称</th>
+                  <th class="col20">药品类别</th>
+                  <th class="col20">单位</th>
+                  <th class="col20">规格</th>
+                  <th class="col20">零售价</th>
+                </tr>
+                </thead>
+              </table>
+              <!--ref="herbal_scroll"-->
+              <div class="tpl-search-list">
+                <table class="col100">
+                  <tbody>
+                  <tr
+                    v-for="(item,index) in tplEditData.searchLists"
+                    :key="index"
+                    @click="editTplAddList(item)"
+                  >
+                    <td class="col20">{{item.name}}</td>
+                    <td class="col20" v-if="item.category==1">饮片</td>
+                    <td class="col20" v-if="item.category==2">颗粒</td>
+                    <td class="col20">{{item.unit_stock}}</td>
+                    <td class="col20">{{item.spec}}</td>
+                    <td class="col20">{{item.sale_price}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <div class="mt10 ml40 ">
-              <label class="ml20">&nbsp;&nbsp;&nbsp;医嘱：</label>
-              <Input
-                v-model="tplEditData.doctor_remark"
-                class="col70 mb10"
-                type="textarea"
-                placeholder="请输入文字"
-                :rows="2"
-                :autosize="{minRows:2,maxRows:4}"
-              />
+            <div
+              class="tpl-search-result"
+              v-show="tplEditData.searchListShow&&recipeType==2"
+            >
+              <table class="col100">
+                <thead>
+                <tr>
+                  <th class="col20">药品名称</th>
+                  <th class="col20">类别</th>
+                  <th class="col20">厂商</th>
+                  <th class="col20">规格</th>
+                  <th class="col20">零售价</th>
+                </tr>
+                </thead>
+              </table>
+              <!--ref="western_scroll"-->
+              <div class="tpl-search-list">
+                <table class="col100">
+                  <tbody>
+                  <tr
+                    v-for="(item,index) in tplEditData.searchLists"
+                    :key="index"
+                    @click="editTplAddList(item)"
+                  >
+                    <td class="col20">{{item.name}}</td>
+                    <td class="col20">{{item.form}}</td>
+                    <td class="col20">{{item.vender}}</td>
+                    <td class="col20">{{item.spec}}</td>
+                    <td class="col20">{{item.sale_price}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <div v-if="showEditTpl" class="edit-tpl-foot">
-              <Button
-                class="mr20 tpl-btn"
-                type="primary"
-                shape="circle"
-                size="large"
-                @click.stop="saveTplEdit()"
-              >保存
-              </Button>
-              <Button class="tpl-btn" shape="circle" size="large" @click.stop="cancelTplEdit()">取消</Button>
+            <div
+              class="tpl-search-result"
+              v-show="tplEditData.searchListShow&&recipeType==4"
+            >
+              <table class="col100">
+                <thead>
+                <tr>
+                  <th class="col50">项目名称</th>
+                  <th class="col50">零售价</th>
+                </tr>
+                </thead>
+              </table>
+              <!--ref="therapy_scroll"-->
+              <div class="tpl-search-list">
+                <table class="col100">
+                  <tbody>
+                  <tr
+                    v-for="(item,index) in tplEditData.searchLists"
+                    :key="index"
+                    @click="editTplAddList(item)"
+                  >
+                    <td class="col50">{{item.alias_name||item.clinic_alias_name||item.name}}</td>
+                    <td class="col50">{{item.price}}元</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <div v-if="showAddTpl" class="edit-tpl-foot">
-              <Button
-                class="mr20 tpl-btn"
-                type="primary"
-                shape="circle"
-                size="large"
-                @click.stop="saveTplAdd()"
-              >保存
-              </Button>
-              <Button class="tpl-btn" shape="circle" size="large" @click.stop="cancelTplAdd()">取消</Button>
-            </div>
+          </div>
+
+          <div class="mt10 ml40 mb10 col40" v-show="recipeType==1">饮片剂数：
+            <InputNumber
+              style="width:4rem"
+              name="dosage"
+              :value="Number(tplEditData.dosage)"
+              @input="tplEditData.dosage=$event"
+            />&nbsp;&nbsp;&nbsp;剂
+          </div>
+          <div class="mt10 ml40 ">
+            <label class="ml20">&nbsp;&nbsp;&nbsp;医嘱：</label>
+            <Input
+              v-model="tplEditData.doctor_remark"
+              class="col70 mb10"
+              type="textarea"
+              placeholder="请输入文字"
+              :rows="2"
+              :autosize="{minRows:2,maxRows:4}"
+            />
+          </div>
+          <div v-if="showEditTpl" class="edit-tpl-foot">
+            <Button
+              class="mr20 tpl-btn"
+              type="primary"
+              shape="circle"
+              size="large"
+              @click.stop="saveTplEdit()"
+            >保存
+            </Button>
+            <Button class="tpl-btn" shape="circle" size="large" @click.stop="cancelTplEdit()">取消</Button>
+          </div>
+          <div v-if="showAddTpl" class="edit-tpl-foot">
+            <Button
+              class="mr20 tpl-btn"
+              type="primary"
+              shape="circle"
+              size="large"
+              @click.stop="saveTplAdd()"
+            >保存
+            </Button>
+            <Button class="tpl-btn" shape="circle" size="large" @click.stop="cancelTplAdd()">取消</Button>
           </div>
         </div>
       </div>
@@ -603,6 +602,7 @@ import {
   saveMedTpl,
   searchMed
 } from "@/fetch/api.js";
+import fLoader from "@/components/fLoader";
 
 export default {
   name: "tpl",
@@ -612,7 +612,8 @@ export default {
     Select,
     Option,
     Icon,
-    InputNumber
+    InputNumber,
+    fLoader
   },
   data() {
     return {
@@ -667,7 +668,8 @@ export default {
         currIndex: -1
       },
       tplType: [{name: "个人", scope: 1}, {name: "共享", scope: 0}],
-      currShowTpl: {}
+      currShowTpl: {},
+      showLoading: false
     };
   },
   computed: {
@@ -797,6 +799,7 @@ export default {
   methods: {
     ...mapActions(["add_new_medicine", "clean_recipe", "set_record_prop"]),
     firstSearch: function () {
+      this.showLoading = true
       this.tplSearch();
     },
     changePage: function (flag) {
@@ -862,10 +865,16 @@ export default {
         if (this.recipeType != 6 && this.recipeType != 3) {
           searchTpl(params, self.recipeType).then(function (res) {
             if (res.code == 1000) {
+              self.showLoading = false
               self.tplSearchList = res.data;
               self.showResult = true;
+            } else {
+              this.$Message.info(res.msg)
             }
-          });
+          }).catch(error => {
+            self.showLoading = false
+            console.log(error)
+          })
         }
       }, 300);
     },
@@ -1675,5 +1684,10 @@ export default {
     font-weight: normal;
     max-height: 50vh;
     overflow-y: scroll;
+  }
+
+  .search-block {
+    position: relative;
+    height: 100%
   }
 </style>

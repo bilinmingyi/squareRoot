@@ -14,7 +14,7 @@ export default {
   },
   data () {
     return {
-    } ; 
+    } ;
   },
 }
 </script>
@@ -52,7 +52,8 @@ export default {
 }
 
 .top-2 {
-  top: 20%;
+  top: 30%;
+  /*transform: translateY(-50%);*/
 }
 
 @keyframes loading-spinning-bubbles {

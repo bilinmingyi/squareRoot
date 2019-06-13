@@ -33,68 +33,67 @@
       </div>
     </div>
     <div class="right-content">
-      <keep-alive>
-        <component :is="componentLists[(Number(tabType)-1)]"></component>
-      </keep-alive>
+      <component :is="componentLists[(Number(tabType)-1)]"></component>
     </div>
   </div>
 </template>
 
 <script>
-  import {mapGetters, mapState} from "vuex";
-  import medSearch from "@/components/rootRight/medSearch.vue";
-  import tpl from "@/components/rootRight/tpl.vue";
-  import classic from "@/components/rootRight/classic.vue"
+import {mapGetters, mapState} from "vuex";
+import medSearch from "@/components/rootRight/medSearch.vue";
+import tpl from "@/components/rootRight/tpl.vue";
+import classic from "@/components/rootRight/classic.vue"
 
-  export default {
-    name: "rootRight",
-    components: {
-      medSearch,
-      tpl,
-      classic
-    },
-    data() {
-      return {
-        tabType: 1,
-        componentLists: ['medSearch', 'tpl', 'classic']
-      };
-    },
-    created() {
+export default {
+  name: "rootRight",
+  components: {
+    medSearch,
+    tpl,
+    classic
+  },
+  data() {
+    return {
+      tabType: 1,
+      componentLists: ['medSearch', 'tpl', 'classic']
+    };
+  },
+  created() {
+    if (this.recipeType == 0) {
+      this.tabType = 2;
+    } else {
+      this.tabType = 1;
+    }
+  },
+  computed: {
+    ...mapState({
+      clinicType: state => state.clinicType
+    }),
+    ...mapGetters(["currRecipeData"]),
+    recipeType: function () {
+      return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
+    }
+  },
+  watch: {
+    recipeType: function () {
       if (this.recipeType == 0) {
-        this.tabType = 2;
+        this.changeTab(2);
       } else {
-        this.tabType = 1;
-      }
-    },
-    computed: {
-      ...mapState({
-        clinicType: state => state.clinicType
-      }),
-      ...mapGetters(["currRecipeData"]),
-      recipeType: function () {
-        return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
-      }
-    },
-    watch: {
-      recipeType: function () {
-        if (this.recipeType == 0) {
-          this.changeTab(2);
-        } else {
-          this.changeTab(1);
-        }
-      }
-    },
-    methods: {
-      changeTab(type) {
-        this.tabType = type;
+        this.changeTab(1);
       }
     }
-  };
+  },
+  methods: {
+    changeTab(type) {
+      this.tabType = type;
+    }
+  }
+};
 </script>
 
 <style scoped>
   .right-content {
     background: white;
+    height: calc(100% - 32px);
   }
 
   .right-block {
