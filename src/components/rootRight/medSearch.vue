@@ -445,7 +445,7 @@ export default {
 
   .search-result .herbal-result-li {
     width: 31.5%;
-    height: 3.75rem;
+    height: 3.125rem;
     border: #5096e0 solid 1px;
     border-radius: 0.25rem;
     float: left;

@@ -21,23 +21,22 @@
     <section>
       <table class="recipe_table">
         <thead>
-        <tr>
-          <th>序号</th>
-          <th>药名</th>
-          <th>规格</th>
-          <th>药量</th>
-          <!--<th>常用量</th>-->
-          <th>用法</th>
-          <th>操作</th>
+        <tr class="displayBlock" style="overflow-y: scroll">
+          <th style="width: 10%;display: inline-block;">序号</th>
+          <th style="width: 30%;display: inline-block;">药名</th>
+          <th style="width: 10%;display: inline-block;">规格</th>
+          <th style="width: 17%;display: inline-block;">药量</th>
+          <th style="width: 20%;display: inline-block;">用法</th>
+          <th style="width: 10%;display: inline-block;">操作</th>
         </tr>
         </thead>
-        <tbody>
-        <tr v-for="(item,index) in currentData.data.items">
-          <td>{{index+1}}</td>
-          <td>{{item.name}}</td>
+        <tbody class="herbal_table_body">
+        <tr v-for="(item,index) in currentData.data.items" class="displayBlock">
+          <td style="width: 10%;display: inline-block;">{{index+1}}</td>
+          <td style="width: 30%;display: inline-block;">{{item.name}}</td>
           <template v-if="item.is_match===1">
-            <td>{{item.spec==='1克/克'?'1克':item.spec}}</td>
-            <td>
+            <td style="width: 10%;display: inline-block;">{{item.spec==='1克/克'?'1克':item.spec}}</td>
+            <td style="width: 17%;display: inline-block;">
               <InputNumber style="width:3.2rem" :value="item.num"
                            @on-change="modify_medicine({key:'num',val:$event,index:index})"/>
               <span class="unitText">{{item.unit}}</span>
@@ -45,18 +44,17 @@
             </td>
           </template>
           <template v-else>
-            <td style="color: red;" colspan="2">
+            <td style="color: red;width: 30%;display: inline-block;" colspan="2">
               系统内搜索不到该药品
             </td>
           </template>
-          <!--<td>{{item.remark}}</td>-->
-          <td>
+          <td style="width: 20%;display: inline-block;">
             <Select style="width:4.25rem" :value="item.usage"
                     @on-change="modify_medicine({key:'usage',val:$event,index:index})">
               <Option v-for="item in herbalMedUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
             </Select>
           </td>
-          <td>
+          <td style="width: 10%;display: inline-block;">
             <a @click.stop="cancel_medicine(index)">删除</a>
           </td>
         </tr>
@@ -124,318 +122,318 @@
 </template>
 
 <script>
-  import {RadioGroup, Radio, Select, Option, Input, InputNumber} from 'iview'
-  import fRadio from '@/components/fRadio.vue'
-  import {mapActions, mapState} from 'vuex'
-  import saveTpl from '@/components/rootMiddle/saveRecipeTpl'
-  import wisdomYb from '@/components/wisdomyb.vue'
-  import {herbalMedUsages, herbalRpUsages, extraFeeTypes, medFrequency, userName, userId} from '@/assets/js/mapType'
-  import {saveDraft, wisdomyb} from '@/fetch/api.js'
-  import Link from "iview/src/mixins/link";
+import {RadioGroup, Radio, Select, Option, Input, InputNumber} from 'iview'
+import fRadio from '@/components/fRadio.vue'
+import {mapActions, mapState} from 'vuex'
+import saveTpl from '@/components/rootMiddle/saveRecipeTpl'
+import wisdomYb from '@/components/wisdomyb.vue'
+import {herbalMedUsages, herbalRpUsages, extraFeeTypes, medFrequency, userName, userId} from '@/assets/js/mapType'
+import {saveDraft, wisdomyb} from '@/fetch/api.js'
+import Link from "iview/src/mixins/link";
 
-  export default {
-    name: "herbalRecipe",
-    data() {
-      return {
-        medFrequency: medFrequency,
-        showAddTpl: false,
-        windowUrl: '',
-        wisdomShow: false
-      };
+export default {
+  name: "herbalRecipe",
+  data() {
+    return {
+      medFrequency: medFrequency,
+      showAddTpl: false,
+      windowUrl: '',
+      wisdomShow: false
+    };
+  },
+  components: {
+    Link,
+    RadioGroup,
+    Radio,
+    Select,
+    Option,
+    Input,
+    InputNumber,
+    saveTpl,
+    fRadio,
+    wisdomYb
+  },
+  computed: {
+    ...mapState({
+      'isYB': state => state.isYB,
+      'canGetRecipeHelp': state => state.canGetRecipeHelp,
+      'recordData': state => state.recordData,
+      'recipeList': state => state.recipeList,
+      'patientData': state => state.patientData,
+      'orderSeqno': state => state.orderSeqno,
+      'currRecipe': state => state.currRecipe,
+      'clinicId': state => state.clinicId,
+      'doctorId': state => state.doctorId,
+      'appointOrderSeqno': state => state.appointOrderSeqno,
+      'ybCardNo': state => state.ybCardNo,
+      'cloudShopList': state => state.cloudShopList
+    }),
+    currentData: function () {
+      return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
     },
-    components: {
-      Link,
-      RadioGroup,
-      Radio,
-      Select,
-      Option,
-      Input,
-      InputNumber,
-      saveTpl,
-      fRadio,
-      wisdomYb
-    },
-    computed: {
-      ...mapState({
-        'isYB': state => state.isYB,
-        'canGetRecipeHelp': state => state.canGetRecipeHelp,
-        'recordData': state => state.recordData,
-        'recipeList': state => state.recipeList,
-        'patientData': state => state.patientData,
-        'orderSeqno': state => state.orderSeqno,
-        'currRecipe': state => state.currRecipe,
-        'clinicId': state => state.clinicId,
-        'doctorId': state => state.doctorId,
-        'appointOrderSeqno': state => state.appointOrderSeqno,
-        'ybCardNo': state => state.ybCardNo,
-        'cloudShopList': state => state.cloudShopList
-      }),
-      currentData: function () {
-        return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
-      },
 
-      currentCloud: function () {
-        let list = this.cloudShopList
-        let type = this.currentData.type
-        let category
-        if (type == 1) {
-          category = this.currentData.data.category
-        }
-        let result = list.filter(item => {
-          return item.type == type
-        }).filter(item => {
-          if (item.type == 1) {
-            return item.category == category
-          } else {
-            return item
-          }
-        })
-        return result[0]
-      },
-
-      herbalMedUsages: function () {
-        return herbalMedUsages.filter(item => {
-          return item.status === 1
-        })
-      },
-      herbalRpUsages: function () {
-        return herbalRpUsages.filter(item => {
-          return item.status === 1
-        })
-      },
-      extraFeeTypes: function () {
-        return extraFeeTypes.filter(item => {
-          return item.status === 1
-        })
+    currentCloud: function () {
+      let list = this.cloudShopList
+      let type = this.currentData.type
+      let category
+      if (type == 1) {
+        category = this.currentData.data.category
       }
-    },
-    watch: {
-      'currentData.data': {
-        deep: true,
-        immediate: true,
-        handler: function (newVal, oldVal) {
-          var recipePrice = 0, allPrice = 0;
-          newVal.items.map((item) => {
-            if (item.is_match === 1) {
-              recipePrice += Number(item.num) * Number(item.price)
-            }
-
-          });
-          if (newVal.extra_feetype !== '' && newVal.extra_feetype !== undefined && newVal.extra_feetype != null) {
-            let extraItem = this.extraFeeTypes.filter((typeOne) => {
-              return typeOne.name === newVal.extra_feetype;
-            })
-            allPrice = recipePrice * Number(newVal.dosage) + extraItem[0].price * newVal.extra_num;
-          } else {
-            allPrice = recipePrice * Number(newVal.dosage)
-          }
-          this.modify_recipe({key: 'money', val: Number(allPrice).toFixed(2)})
+      let result = list.filter(item => {
+        return item.type == type
+      }).filter(item => {
+        if (item.type == 1) {
+          return item.category == category
+        } else {
+          return item
         }
-      }
+      })
+      return result[0]
     },
-    methods: {
-      ...mapActions([
-        'change_curr_tab',
-        'cancel_recipe',
-        'modify_medicine',
-        'modify_recipe',
-        'cancel_medicine',
-        'modify_recipe_detail',
-        'clean_recipe',
-        'change_print_pre',
-        'save_draft_data'
-      ]),
-      print_pre: function () {
-        this.change_print_pre();
-      },
-      cancelRecipe() {
+
+    herbalMedUsages: function () {
+      return herbalMedUsages.filter(item => {
+        return item.status === 1
+      })
+    },
+    herbalRpUsages: function () {
+      return herbalRpUsages.filter(item => {
+        return item.status === 1
+      })
+    },
+    extraFeeTypes: function () {
+      return extraFeeTypes.filter(item => {
+        return item.status === 1
+      })
+    }
+  },
+  watch: {
+    'currentData.data': {
+      deep: true,
+      immediate: true,
+      handler: function (newVal, oldVal) {
+        var recipePrice = 0, allPrice = 0;
+        newVal.items.map((item) => {
+          if (item.is_match === 1) {
+            recipePrice += Number(item.num) * Number(item.price)
+          }
+
+        });
+        if (newVal.extra_feetype !== '' && newVal.extra_feetype !== undefined && newVal.extra_feetype != null) {
+          let extraItem = this.extraFeeTypes.filter((typeOne) => {
+            return typeOne.name === newVal.extra_feetype;
+          })
+          allPrice = recipePrice * Number(newVal.dosage) + extraItem[0].price * newVal.extra_num;
+        } else {
+          allPrice = recipePrice * Number(newVal.dosage)
+        }
+        this.modify_recipe({key: 'money', val: Number(allPrice).toFixed(2)})
+      }
+    }
+  },
+  methods: {
+    ...mapActions([
+      'change_curr_tab',
+      'cancel_recipe',
+      'modify_medicine',
+      'modify_recipe',
+      'cancel_medicine',
+      'modify_recipe_detail',
+      'clean_recipe',
+      'change_print_pre',
+      'save_draft_data'
+    ]),
+    print_pre: function () {
+      this.change_print_pre();
+    },
+    cancelRecipe() {
+      this.$Modal.confirm({
+        title: '提示',
+        content: '<p>确定删除该处方？</p>',
+        onOk: () => {
+          this.cancel_recipe();
+        },
+        onCancel: () => {
+
+        }
+      });
+    },
+    changeCategory(event) {
+      if (this.currentData.data.items.length === 0) {
+        this.modify_recipe_detail({key: 'is_cloud', val: Number(event.target.value)})
+      } else {
         this.$Modal.confirm({
           title: '提示',
-          content: '<p>确定删除该处方？</p>',
+          content: '<p>切换药品来源将清空已选的药，确认要切换?</p>',
           onOk: () => {
-            this.cancel_recipe();
+            this.modify_recipe_detail({key: 'is_cloud', val: Number(event.target.value)})
+            this.clean_recipe();
           },
           onCancel: () => {
-
-          }
-        });
-      },
-      changeCategory(event) {
-        if (this.currentData.data.items.length === 0) {
-          this.modify_recipe_detail({key: 'is_cloud', val: Number(event.target.value)})
-        } else {
-          this.$Modal.confirm({
-            title: '提示',
-            content: '<p>切换药品来源将清空已选的药，确认要切换?</p>',
-            onOk: () => {
-              this.modify_recipe_detail({key: 'is_cloud', val: Number(event.target.value)})
-              this.clean_recipe();
-            },
-            onCancel: () => {
-              this.$forceUpdate()
-            }
-          })
-        }
-      },
-      saveTplData() {
-        if (this.currentData.data.items.length === 0) {
-          this.$Message.info("请先至少添加一个药品！");
-          return
-        }
-        let itemList = this.currentData.data.items;
-        for (var i = 0; i < itemList.length; i++) {
-          if (itemList[i].num === '' || itemList[i].num === 0) {
-            this.$Message.info("药品【" + itemList[i].name + "】的药量为空！")
-            return
-          }
-        }
-        if (this.currentData.data.dosage === '' || this.currentData.data.dosage === 0) {
-          this.$Message.info("请先填写处方的剂数！")
-          return
-        }
-        this.showAddTpl = true;
-      },
-      hideTplShow() {
-        this.showAddTpl = false;
-      },
-      change_extra(val) {
-        this.modify_recipe_detail({key: 'extra_feetype', val: val});
-        let extraItem = this.extraFeeTypes.filter((typeOne) => {
-          return typeOne.name === val;
-        })
-        if (extraItem[0]) {
-          this.modify_recipe_detail({key: 'extra_price', val: extraItem[0].price})
-        }
-
-      },
-      toAssist() {
-        this.saveDraftData();
-        this.$router.push({path: 'assist'});
-      },
-      saveDraftData() {
-        let draftData = {
-          recipeList: this.recipeList,
-          recordData: this.recordData,
-          currRecipe: this.currRecipe
-        }
-        this.save_draft_data(JSON.stringify(draftData));
-        saveDraft({
-          "patient_name": this.patientData.name,
-          "patient_mobile": this.patientData.mobile,
-          "patient_sex": this.patientData.sex,
-          "patient_marital_status": this.patientData.marital_status,
-          "patient_birthday": this.patientData.birthday,
-          "order_seqno": this.orderSeqno,
-          "draft": JSON.stringify(draftData),
-        }).then(data => {
-          if (data.code === 1000) {
-
-          } else {
-            this.$Message.info("保存失败");
+            this.$forceUpdate()
           }
         })
-      },
-      examineYB() {
-        if (this.recordData.diagnosis_xy === '') {
-          this.change_curr_tab(-1)
-          this.$Message.info("请先选择西医诊断!");
-          return
-        }
-        let diagnoses = this.recordData.diagnosis_xy_labels.map((item) => {
-          return {
-            "diagnose_code": item.code,
-            "diagnose_desc": item.name
-          }
-        })
-        let itemList = this.currentData.data.items
-        for (let i = 0, len = itemList.length; i < len; i++) {
-          if (itemList[i].yb_code === '') {
-            this.$Message.info("药品" + itemList[i].name + "不属于医保范畴!")
-            return;
-          }
-        }
-
-        let medList = itemList.map(med => {
-          let fre = {}
-          if (this.currentData.data.frequency) {
-            fre = this.findInFre(this.currentData.data.frequency)
-          } else {
-            fre = {code: 'qd', name: '每天一次', ratio: 1}
-          }
-          return {
-            "yb_code": med.yb_code,
-            "medicine_id": med.item_id,
-            "name": med.name,
-            "price": med.price * currRecipe.dosage,
-            "num": med.num * currRecipe.dosage,
-            "dose_unit": med.unit,
-            "amount": Number(med.price) * Number(med.num) * Number(currRecipe.dosage),
-            "use_day": Math.ceil(Number(currRecipe.dosage) / fre.ratio),
-            "single_dose_number": med.num,
-            "single_dose_unit": med.unit,
-            "single_take_number": med.num,
-            "single_take_unit": med.unit,
-            "take_medical_number": med.num * currRecipe.dosage,
-            "take_medical_unit": med.unit,
-            "frequence": fre.code
-          }
-        })
-
-        let params = {
-          "clinic_id": this.clinicId,
-          "doctor_id": this.doctorId,
-          "user_id": userId,
-          "user_name": userName,
-          "appoint_order_seqno": this.appointOrderSeqno,
-          "card_no": this.ybCardNo,
-          "recipe_id": new Date().getTime().toString() + Math.ceil(Math.random() * 1000).toString(),
-          "diagnoses": diagnoses,
-          "medicines": medList
-        }
-        wisdomyb(params).then(res => {
-          if (res.code === 1000) {
-            if (res.data.success == 'F') {
-              this.$Message.info(res.data.error_msg)
-            } else if (res.data.success == 'T' && res.data.result.length == 0) {
-              this.$Message.info("审核通过！")
-            } else if (res.data.success == 'T' && res.data.result.length != 0) {
-              this.wisdomShow = true
-              this.windowUrl = res.data.window_url
-            }
-          } else {
-            this.$Message.info(res.msg)
-          }
-        }).catch(error => {
-          console.log(error)
-          this.$Message.info('网络出错！')
-        })
-      },
-      findInFre(val) {
-        let list = [
-          {code: 'qd', name: '每天一次', ratio: 1},
-          {code: 'bid', name: '每天两次', ratio: 2},
-          {code: 'tid', name: '每天三次', ratio: 3},
-          {code: 'qid', name: '每天四次', ratio: 4},
-          {code: 'qod', name: '两天一次', ratio: 0.5},
-          {code: 'qw', name: '每周一次', ratio: 1 / 7},
-          {code: '', name: '饭前', ratio: 3},
-          {code: '', name: '饭后', ratio: 3},
-          {code: 'hs', name: '睡前', ratio: 1},
-          {code: 'OTH', name: '医嘱', ratio: 1}
-        ]
-        for (let i = 0, len = list.length; i < len; i++) {
-          if (list[i].name == val) {
-            return list[i]
-          }
-        }
-        return {}
-      },
-      hideWis() {
-        this.wisdomShow = false
       }
     },
+    saveTplData() {
+      if (this.currentData.data.items.length === 0) {
+        this.$Message.info("请先至少添加一个药品！");
+        return
+      }
+      let itemList = this.currentData.data.items;
+      for (var i = 0; i < itemList.length; i++) {
+        if (itemList[i].num === '' || itemList[i].num === 0) {
+          this.$Message.info("药品【" + itemList[i].name + "】的药量为空！")
+          return
+        }
+      }
+      if (this.currentData.data.dosage === '' || this.currentData.data.dosage === 0) {
+        this.$Message.info("请先填写处方的剂数！")
+        return
+      }
+      this.showAddTpl = true;
+    },
+    hideTplShow() {
+      this.showAddTpl = false;
+    },
+    change_extra(val) {
+      this.modify_recipe_detail({key: 'extra_feetype', val: val});
+      let extraItem = this.extraFeeTypes.filter((typeOne) => {
+        return typeOne.name === val;
+      })
+      if (extraItem[0]) {
+        this.modify_recipe_detail({key: 'extra_price', val: extraItem[0].price})
+      }
 
-  }
+    },
+    toAssist() {
+      this.saveDraftData();
+      this.$router.push({path: 'assist'});
+    },
+    saveDraftData() {
+      let draftData = {
+        recipeList: this.recipeList,
+        recordData: this.recordData,
+        currRecipe: this.currRecipe
+      }
+      this.save_draft_data(JSON.stringify(draftData));
+      saveDraft({
+        "patient_name": this.patientData.name,
+        "patient_mobile": this.patientData.mobile,
+        "patient_sex": this.patientData.sex,
+        "patient_marital_status": this.patientData.marital_status,
+        "patient_birthday": this.patientData.birthday,
+        "order_seqno": this.orderSeqno,
+        "draft": JSON.stringify(draftData),
+      }).then(data => {
+        if (data.code === 1000) {
+
+        } else {
+          this.$Message.info("保存失败");
+        }
+      })
+    },
+    examineYB() {
+      if (this.recordData.diagnosis_xy === '') {
+        this.change_curr_tab(-1)
+        this.$Message.info("请先选择西医诊断!");
+        return
+      }
+      let diagnoses = this.recordData.diagnosis_xy_labels.map((item) => {
+        return {
+          "diagnose_code": item.code,
+          "diagnose_desc": item.name
+        }
+      })
+      let itemList = this.currentData.data.items
+      for (let i = 0, len = itemList.length; i < len; i++) {
+        if (itemList[i].yb_code === '') {
+          this.$Message.info("药品" + itemList[i].name + "不属于医保范畴!")
+          return;
+        }
+      }
+
+      let medList = itemList.map(med => {
+        let fre = {}
+        if (this.currentData.data.frequency) {
+          fre = this.findInFre(this.currentData.data.frequency)
+        } else {
+          fre = {code: 'qd', name: '每天一次', ratio: 1}
+        }
+        return {
+          "yb_code": med.yb_code,
+          "medicine_id": med.item_id,
+          "name": med.name,
+          "price": med.price * currRecipe.dosage,
+          "num": med.num * currRecipe.dosage,
+          "dose_unit": med.unit,
+          "amount": Number(med.price) * Number(med.num) * Number(currRecipe.dosage),
+          "use_day": Math.ceil(Number(currRecipe.dosage) / fre.ratio),
+          "single_dose_number": med.num,
+          "single_dose_unit": med.unit,
+          "single_take_number": med.num,
+          "single_take_unit": med.unit,
+          "take_medical_number": med.num * currRecipe.dosage,
+          "take_medical_unit": med.unit,
+          "frequence": fre.code
+        }
+      })
+
+      let params = {
+        "clinic_id": this.clinicId,
+        "doctor_id": this.doctorId,
+        "user_id": userId,
+        "user_name": userName,
+        "appoint_order_seqno": this.appointOrderSeqno,
+        "card_no": this.ybCardNo,
+        "recipe_id": new Date().getTime().toString() + Math.ceil(Math.random() * 1000).toString(),
+        "diagnoses": diagnoses,
+        "medicines": medList
+      }
+      wisdomyb(params).then(res => {
+        if (res.code === 1000) {
+          if (res.data.success == 'F') {
+            this.$Message.info(res.data.error_msg)
+          } else if (res.data.success == 'T' && res.data.result.length == 0) {
+            this.$Message.info("审核通过！")
+          } else if (res.data.success == 'T' && res.data.result.length != 0) {
+            this.wisdomShow = true
+            this.windowUrl = res.data.window_url
+          }
+        } else {
+          this.$Message.info(res.msg)
+        }
+      }).catch(error => {
+        console.log(error)
+        this.$Message.info('网络出错！')
+      })
+    },
+    findInFre(val) {
+      let list = [
+        {code: 'qd', name: '每天一次', ratio: 1},
+        {code: 'bid', name: '每天两次', ratio: 2},
+        {code: 'tid', name: '每天三次', ratio: 3},
+        {code: 'qid', name: '每天四次', ratio: 4},
+        {code: 'qod', name: '两天一次', ratio: 0.5},
+        {code: 'qw', name: '每周一次', ratio: 1 / 7},
+        {code: '', name: '饭前', ratio: 3},
+        {code: '', name: '饭后', ratio: 3},
+        {code: 'hs', name: '睡前', ratio: 1},
+        {code: 'OTH', name: '医嘱', ratio: 1}
+      ]
+      for (let i = 0, len = list.length; i < len; i++) {
+        if (list[i].name == val) {
+          return list[i]
+        }
+      }
+      return {}
+    },
+    hideWis() {
+      this.wisdomShow = false
+    }
+  },
+
+}
 </script>
 
 <style scoped>
@@ -484,5 +482,14 @@
     min-width: 2rem;
     display: inline-block;
     text-align: left;
+  }
+  .herbal_table_body {
+    display: block;
+    overflow-y: scroll;
+    max-height: calc(100vh - 485px);
+  }
+  .displayBlock {
+    display: block;
+    width: 100%;
   }
 </style>
