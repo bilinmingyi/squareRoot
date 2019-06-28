@@ -41,7 +41,7 @@ export default {
         importIdx: -999, // 导入索引, -1: 就诊病历, 0: 第一个处方, 1: 第二个处方,...
         totalPageNum: 0,
         page: 1,
-        pageSize: 4,
+        pageSize: window.screen.height > 960 || window.screen.width >= 1600 ? 4 : (window.screen.height >= 900 ? 3 : 2),
         reciptType: "",
         completeFirst: false,
         treatOrderList: [] // 就诊历史列表
@@ -62,6 +62,7 @@ export default {
   created() {
     this.getData("patientInfo");
     this.getData("historyRecipes");
+    console.log(window.screen.height)
   },
   methods: {
     ...mapActions(["set_state_prop", 'set_record_prop']),
