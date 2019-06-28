@@ -97,13 +97,16 @@
             <Button size="large" @click="returnToModify">返回修改</Button>
           </div>
         </div>
-        <div class="content_right_second" v-if="resultList.length!==0">
-          <p>处方审核信息</p>
-          <div class="trial_block">
-           <div v-for="(item, index) in resultList">
-             <div class="font-bold">{{index+1}}、{{item.name}}</div>
-             <div>{{item.result.auditResult}}</div>
-           </div>
+        <div class="content_right_second">
+          <f-loader v-if="auditLoading" :fixed="false"></f-loader>
+          <div v-if="resultList.length!==0">
+            <p>处方审核信息</p>
+            <div class="trial_block">
+              <div v-for="(item, index) in resultList">
+                <div class="font-bold">{{index+1}}、{{item.name}}</div>
+                <div>{{item.result.auditResult}}</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -124,6 +127,7 @@
       return {
         allPrice: 0,
         showLoading: false,
+        auditLoading: false,
         resultList: []
       }
     },
@@ -163,6 +167,7 @@
     },
     created() {
       let promiseList = []
+      this.auditLoading = true
       this.recipeList.forEach(item => {
         if (item.type == 2) {
           let presNo = new Date().getTime() + '' + Math.ceil(Math.random() * 1000)
@@ -197,6 +202,7 @@
         }
       })
       Promise.all(promiseList).then(res => {
+        this.auditLoading = false
         let numList = ['一', '二', '三', '四', '五']
         res.forEach((re, index) => {
           if (re.code == 1000) {
@@ -393,6 +399,8 @@
 
   .content_right_second {
     padding: 2rem 1rem;
+    position: relative;
+    min-height: 300px;
   }
 
   .content_right_second p {
