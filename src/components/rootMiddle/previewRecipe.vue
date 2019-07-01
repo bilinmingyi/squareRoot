@@ -173,27 +173,27 @@
           let presNo = new Date().getTime() + '' + Math.ceil(Math.random() * 1000)
           let list = item.data.items.map(med => {
             return {
-              'presNo': presNo,
-              'deptCode': this.departmentCode,
-              'deptName': this.department,
-              'doctorName': this.doctorName,
+              'pres_no': presNo,
+              'dept_code': this.departmentCode,
+              'dept_name': this.department,
+              'doctor_name': this.doctorName,
               'diagnosis': this.recordData.diagnosis_xy,
-              'patientCode': this.patientData.id,
-              'patientName': this.patientData.name,
-              'patientSex': this.patientData.sex == 1 ? '男' : '女',
-              'patientAge': this.patientData.age,
-              'drugCode': med.code,
-              'drugName': med.name,
-              'drugSpecs': med.spec,
-              'drugDosage': med.sale_dose_ratio,
-              'drugDosageUnitName': med.unit_dose,
-              'drugQty': med.num,
-              'drugUnit': med.unit,
-              'drugUsageName': med.usage,
-              'drugPerDos': med.dose_once,
-              'dosageUnit': med.unit_dose,
-              'frequencyCode': med.frequency ? this.findInFre(med.frequency) : 'qd',
-              'presActDays': med.days
+              'patient_code': this.patientData.id,
+              'patient_name': this.patientData.name,
+              'patient_sex': this.patientData.sex == 1 ? '男' : '女',
+              'patient_age': this.patientData.age,
+              'drug_code': med.code,
+              'drug_name': med.name,
+              'drug_specs': med.spec,
+              'drug_dosage': med.sale_dose_ratio,
+              'drug_dosage_unit_name': med.unit_dose,
+              'drug_qty': med.num,
+              'drug_unit': med.unit,
+              'drug_usage_name': med.usage,
+              'drug_per_dos': med.dose_once,
+              'dosage_unit': med.unit_dose,
+              'frequency_code': med.frequency ? this.findInFre(med.frequency) : 'qd',
+              'pres_act_days': med.days
             }
           })
           promiseList.push(auditrecipe({
