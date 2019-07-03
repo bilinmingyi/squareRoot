@@ -1177,11 +1177,11 @@ export default {
       var self = this;
       if (this.recipeType === 0) {
         self.showUseTpl = true;
-        // this.useTpl();
         return
       }
       var ids = [], names = [], params = {};
       var items = self.currShowTpl.items;
+      console.log(items)
       this.currShowTpl.items.forEach(function (item) {
         ids.push(Number(item.item_id));
         names.push(item.name)
@@ -1208,6 +1208,7 @@ export default {
               for (var i = 0, len = res.data.length; i < len; i++) {
                 if (item.name == res.data[i].name || item.name == res.data[i].alias_name) {
                   item.is_match = 1
+                  item.default_sale_price = res.data[i].default_sale_price
                   break;
                 }
               }
