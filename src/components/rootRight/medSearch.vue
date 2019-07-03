@@ -455,7 +455,7 @@ export default {
     text-align: center;
     justify-content: center;
     align-items: center;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
   }
 
   .search-result .search-result-li {

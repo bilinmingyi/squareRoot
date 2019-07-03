@@ -16,7 +16,6 @@ const actions = {
   //middle
   add_new_recipt: ({commit, state}, {type, category}) => {
     let item = {};
-    console.log(state.orderSeqno)
     switch (type) {
       case 1://重要处方
         item = {

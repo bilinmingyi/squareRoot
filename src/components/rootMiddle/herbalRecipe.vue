@@ -30,7 +30,11 @@
           <th style="width: 10%;display: inline-block;">操作</th>
         </tr>
         </thead>
-        <tbody class="herbal_table_body">
+      </table>
+    </section>
+    <section class="herbal_table_body" ref="herbal_table_body">
+      <table class="recipe_table">
+        <tbody>
         <tr v-for="(item,index) in currentData.data.items" class="displayBlock">
           <td style="width: 10%;display: inline-block;">{{index+1}}</td>
           <td style="width: 30%;display: inline-block;">{{item.name}}</td>
@@ -42,18 +46,18 @@
               <span class="unitText">{{item.unit}}</span>
               <span class="num_text" v-if="currentData.data.category==2">({{item.num*item.stock_sale_ratio}}{{item.unit_sale}})</span>
             </td>
+            <td style="width: 20%;display: inline-block;">
+              <Select style="width:4.25rem" :value="item.usage"
+                      @on-change="modify_medicine({key:'usage',val:$event,index:index})">
+                <Option v-for="item in herbalMedUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
+              </Select>
+            </td>
           </template>
           <template v-else>
-            <td style="color: red;width: 30%;display: inline-block;" colspan="2">
+            <td style="color: red;width: 48%;display: inline-block;line-height: 32px" colspan="2">
               系统内搜索不到该药品
             </td>
           </template>
-          <td style="width: 20%;display: inline-block;">
-            <Select style="width:4.25rem" :value="item.usage"
-                    @on-change="modify_medicine({key:'usage',val:$event,index:index})">
-              <Option v-for="item in herbalMedUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
-            </Select>
-          </td>
           <td style="width: 10%;display: inline-block;">
             <a @click.stop="cancel_medicine(index)">删除</a>
           </td>
@@ -63,59 +67,60 @@
         </tr>
         </tbody>
       </table>
+      <section class="mb50">
+        <div class="pl10 pt20">
+          <span class="input_label"> 处方金额：{{currentData.money | priceFormat}}元</span>
+        </div>
+        <div class="displayFlex pl10 pr10 pt10">
+          <div class="width-240">
+            <span class="input_label"> 剂数：</span>
+            <InputNumber class="input_120" :value="currentData.data.dosage"
+                         @on-change="modify_recipe_detail({key:'dosage',val:$event})"/>
+            <span class="input_label">剂</span>
+          </div>
+          <div class="width-240">
+            <span class="input_label">频次：</span>
+            <Select class="input_120" :value="currentData.data.frequency"
+                    @on-change="modify_recipe_detail({key:'frequency',val:$event})">
+              <Option v-for="item in medFrequency" :value="item.name" :key="item.name">{{ item.name }}</Option>
+            </Select>
+          </div>
+          <div class="width-240">
+            <span class="input_label"> 用法：</span>
+            <Select class="input_120" :value="currentData.data.usage"
+                    @on-change="modify_recipe_detail({key:'usage',val:$event})">
+              <Option v-for="item in herbalRpUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
+            </Select>
+          </div>
+        </div>
+        <div class="displayFlex p10">
+          <div class="width-240">
+            <span class="input_label"> 附加：</span>
+            <Select class="input_120" :value="currentData.data.extra_feetype" @on-change="change_extra($event)">
+              <Option v-for="item in extraFeeTypes" :value="item.name" :key="item.id">{{ item.name }}</Option>
+            </Select>
+          </div>
+          <div class="width-240">
+            <span class="input_label">数量：</span>
+            <InputNumber class="input_120" :value="currentData.data.extra_num"
+                         @on-change="modify_recipe_detail({key:'extra_num',val:$event})"/>
+          </div>
+          <div class="width-240">
+            <span class="input_label"> 用量：</span>
+            <InputNumber class="input_120" :value="currentData.data.eachDose"
+                         @on-change="modify_recipe_detail({key:'eachDose',val:$event})"/>
+            <span class="input_label">ml</span>
+          </div>
+        </div>
+        <div class="displayFlex pl10 pt10 width-620">
+          <span class="input_label pr4">医嘱：</span>
+          <Input class="flexOne" type="textarea" :autosize="{minRows: 3,maxRows: 3}" placeholder="医嘱提示"
+                 :value="currentData.data.doctor_remark"
+                 @on-change="modify_recipe_detail({key:'doctor_remark',val:$event.target.value})"/>
+        </div>
+      </section>
     </section>
-    <section class="mb50">
-      <div class="pl10 pt20">
-        <span class="input_label"> 处方金额：{{currentData.money | priceFormat}}元</span>
-      </div>
-      <div class="displayFlex pl10 pr10 pt10">
-        <div class="width-240">
-          <span class="input_label"> 剂数：</span>
-          <InputNumber class="input_120" :value="currentData.data.dosage"
-                       @on-change="modify_recipe_detail({key:'dosage',val:$event})"/>
-          <span class="input_label">剂</span>
-        </div>
-        <div class="width-240">
-          <span class="input_label">频次：</span>
-          <Select class="input_120" :value="currentData.data.frequency"
-                  @on-change="modify_recipe_detail({key:'frequency',val:$event})">
-            <Option v-for="item in medFrequency" :value="item.name" :key="item.name">{{ item.name }}</Option>
-          </Select>
-        </div>
-        <div class="width-240">
-          <span class="input_label"> 用法：</span>
-          <Select class="input_120" :value="currentData.data.usage"
-                  @on-change="modify_recipe_detail({key:'usage',val:$event})">
-            <Option v-for="item in herbalRpUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
-          </Select>
-        </div>
-      </div>
-      <div class="displayFlex p10">
-        <div class="width-240">
-          <span class="input_label"> 附加：</span>
-          <Select class="input_120" :value="currentData.data.extra_feetype" @on-change="change_extra($event)">
-            <Option v-for="item in extraFeeTypes" :value="item.name" :key="item.id">{{ item.name }}</Option>
-          </Select>
-        </div>
-        <div class="width-240">
-          <span class="input_label">数量：</span>
-          <InputNumber class="input_120" :value="currentData.data.extra_num"
-                       @on-change="modify_recipe_detail({key:'extra_num',val:$event})"/>
-        </div>
-        <div class="width-240">
-          <span class="input_label"> 用量：</span>
-          <InputNumber class="input_120" :value="currentData.data.eachDose"
-                       @on-change="modify_recipe_detail({key:'eachDose',val:$event})"/>
-          <span class="input_label">ml</span>
-        </div>
-      </div>
-      <div class="displayFlex pl10 pt10 width-620">
-        <span class="input_label pr4">医嘱：</span>
-        <Input class="flexOne" type="textarea" :autosize="{minRows: 3,maxRows: 3}" placeholder="医嘱提示"
-               :value="currentData.data.doctor_remark"
-               @on-change="modify_recipe_detail({key:'doctor_remark',val:$event.target.value})"/>
-      </div>
-    </section>
+
     <save-tpl v-if="showAddTpl" @hideTpl="hideTplShow"></save-tpl>
     <wisdomYb :url="windowUrl" @close="hideWis" v-if="wisdomShow"></wisdomYb>
   </div>
@@ -212,7 +217,12 @@ export default {
       deep: true,
       immediate: true,
       handler: function (newVal, oldVal) {
-        var recipePrice = 0, allPrice = 0;
+        var self = this, recipePrice = 0, allPrice = 0;
+        self.$nextTick(function () {
+          if (self.$refs.herbal_table_body) {
+            self.$refs.herbal_table_body.scrollTo(0, self.$refs.herbal_table_body.scrollHeight)
+          }
+        })
         newVal.items.map((item) => {
           if (item.is_match === 1) {
             recipePrice += Number(item.num) * Number(item.price)
@@ -483,11 +493,13 @@ export default {
     display: inline-block;
     text-align: left;
   }
+
   .herbal_table_body {
     display: block;
     overflow-y: scroll;
-    max-height: calc(100vh - 485px);
+    max-height: calc(100vh - 220px);
   }
+
   .displayBlock {
     display: block;
     width: 100%;
