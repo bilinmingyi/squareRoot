@@ -195,8 +195,9 @@
           "names": names,
           "status": 1
         }
+        let isCloud = this.recipeList[this.currRecipe].data.is_cloud
         this.showLoader = true;
-        let res = await getHerbalList(params, this.recipeList[this.currRecipe].data.is_cloud);
+        let res = await getHerbalList(params, isCloud);
         if (res.code === 1000) {
           this.classicDetail.component.forEach(item => {
             var existence = {};
@@ -234,8 +235,8 @@
                 "name": existence.name,
                 "num": existence.unit_stock == "g" || existence.unit_stock == "克" ? item.dosage : 0,
                 "unit": existence.unit_stock,
-                "default_sale_price": existence.sale_price,
-                "sale_price": existence.sale_price,
+                "default_sale_price": isCloud == 1 ? existence.trade_price:  existence.sale_price,
+                "sale_price": isCloud == 1 ? existence.trade_price:  existence.sale_price,
                 "spec": existence.spec,
                 "unit_stock": existence.unit_stock,
                 "unit_sale": existence.unit_sale,
