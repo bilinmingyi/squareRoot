@@ -16,9 +16,11 @@ const actions = {
   //middle
   add_new_recipt: ({commit, state}, {type, category}) => {
     let item = {};
+    console.log(state.orderSeqno)
     switch (type) {
       case 1://重要处方
         item = {
+          pres_no: state.orderSeqno + '-' + Math.ceil(Math.random() * 1000),
           type: 1,
           money: 0,
           data: {
@@ -38,6 +40,7 @@ const actions = {
         break;
       case 2://中成药处方
         item = {
+          pres_no: state.orderSeqno + '-' + Math.ceil(Math.random() * 1000),
           type: 2,
           money: 0,
           data: {
@@ -49,6 +52,7 @@ const actions = {
         break;
       case 3://产品处方
         item = {
+          pres_no: state.orderSeqno + '-' + Math.ceil(Math.random() * 1000),
           type: 3,
           money: 0,
           data: {
@@ -60,6 +64,7 @@ const actions = {
         break;
       case 4://项目处方
         item = {
+          pres_no: state.orderSeqno + '-' + Math.ceil(Math.random() * 1000),
           type: 4,
           money: 0,
           data: {
@@ -70,6 +75,7 @@ const actions = {
         break;
       case 5://附加服务
         item = {
+          pres_no: state.orderSeqno + '-' + Math.ceil(Math.random() * 1000),
           type: 5,
           money: 0,
           data: {
@@ -127,6 +133,8 @@ const actions = {
       case 2:
         result = {
           "yb_code": item.yb_cata_code ? item.yb_cata_code : '',
+          "yb_standard_code": item.yb_standard_code ? item.yb_standard_code : '',
+          "national_num": item.national_num ? item.national_num : '',
           "code": item.code ? item.code : '',
           "item_id": item.id,
           "name": Number(state.recipeList[state.currRecipe].data.is_cloud) === 1 ? (item.alias_name ? item.alias_name : item.name) : (item.clinic_alias_name ? item.clinic_alias_name : item.name),

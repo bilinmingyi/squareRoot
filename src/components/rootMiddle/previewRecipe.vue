@@ -170,10 +170,9 @@
       this.auditLoading = true
       this.recipeList.forEach(item => {
         if (item.type == 2) {
-          let presNo = new Date().getTime() + '' + Math.ceil(Math.random() * 1000)
           let list = item.data.items.map(med => {
             return {
-              'pres_no': presNo,
+              'pres_no': item.pres_no,
               'dept_code': this.departmentCode,
               'dept_name': this.department,
               'doctor_name': this.doctorName,
@@ -182,7 +181,7 @@
               'patient_name': this.patientData.name,
               'patient_sex': this.patientData.sex == 1 ? '男' : '女',
               'patient_age': this.patientData.age,
-              'drug_code': med.code,
+              'drug_code': med.yb_standard_code || med.national_num || med.code,
               'drug_name': med.name,
               'drug_specs': med.spec,
               'drug_dosage': med.sale_dose_ratio,

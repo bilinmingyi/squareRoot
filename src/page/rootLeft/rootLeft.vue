@@ -62,7 +62,6 @@ export default {
   created() {
     this.getData("patientInfo");
     this.getData("historyRecipes");
-    console.log(window.screen.height)
   },
   methods: {
     ...mapActions(["set_state_prop", 'set_record_prop']),
