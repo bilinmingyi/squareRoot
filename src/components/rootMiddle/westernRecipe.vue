@@ -20,10 +20,11 @@
         <thead>
         <tr>
           <th>序号</th>
-          <th>药名</th>
+          <th style="width: 15%">药名</th>
           <th>规格</th>
           <th>总量</th>
           <th>单位</th>
+          <th>单价</th>
           <th>用法</th>
           <th>每次用量</th>
           <th>频次</th>
@@ -34,7 +35,7 @@
         <tbody>
         <tr v-for="(item,index) in currentData.data.items">
           <td>{{index+1}}</td>
-          <td>{{item.name}}</td>
+          <td style="width: 15%">{{item.name}}</td>
 
           <template v-if="item.is_match===1">
             <td>{{item.spec}}</td>
@@ -50,24 +51,27 @@
               </Select>
             </td>
             <td>
-              <Select style="width:4.5rem" :value="item.usage"
+              {{item.sale_price|priceFormat}}
+            </td>
+            <td>
+              <Select style="max-width:4.5rem" :value="item.usage"
                       @on-change="modify_medicine({key:'usage',val:$event,index:index})">
                 <Option v-for="item in westernMedUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
               </Select>
             </td>
             <td>
-              <InputNumber style="width:3.2rem" :value="Number(item.dose_once)"
+              <InputNumber style="max-width:3.2rem" :value="Number(item.dose_once)"
                            @on-change="modify_medicine({key:'dose_once',val:$event,index:index})"/>
               <span class="unitText">{{item.unit_dose}}</span>
             </td>
             <td>
-              <Select style="width:5.5rem" :value="item.frequency"
+              <Select style="max-width:5.5rem" :value="item.frequency"
                       @on-change="modify_medicine({key:'frequency',val:$event,index:index})">
                 <Option v-for="item in medFrequency" :value="item.name" :key="item.name">{{ item.name }}</Option>
               </Select>
             </td>
             <td>
-              <InputNumber style="width:3.2rem" :value="item.days"
+              <InputNumber style="max-width:3.2rem" :value="item.days"
                            @on-change="modify_medicine({key:'days',val:$event,index:index})"/>
             </td>
           </template>
