@@ -28,8 +28,9 @@
             <td>
               <InputNumber style="width:3.2rem" :value="item.num"
                      @on-change="modify_medicine({key:'num',val:$event,index:index})"/>
+              <span class="unit_text">{{item.unit}}</span>
             </td>
-            <td>{{item.price}}元/次</td>
+            <td>{{item.price|priceFormat}}</td>
             <td>
               <Input type="text" :value="item.remark"
                      @on-change="modify_medicine({key:'remark',val:$event.target.value,index:index})"/>
@@ -180,6 +181,11 @@
   .herbal_head_left {
     flex: 1;
     align-self: center;
+  }
+  .unit_text {
+    display: inline-block;
+    min-width: 2rem;
+    text-align: left;
   }
 
 </style>

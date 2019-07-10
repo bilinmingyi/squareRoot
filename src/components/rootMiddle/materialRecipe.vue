@@ -14,7 +14,7 @@
           <th>序号</th>
           <th>材料名称</th>
           <th>数量</th>
-          <th>单位</th>
+          <th>单价</th>
           <th>备注</th>
           <th>操作</th>
         </tr>
@@ -27,8 +27,9 @@
             <td>
               <InputNumber style="width:3.2rem" :value="item.num"
                      @on-change="modify_medicine({key:'num',val:$event,index:index})"/>
+              <span class="unit_text">{{item.unit}}</span>
             </td>
-            <td>{{item.unit}}</td>
+            <td>{{item.price|priceFormat}}</td>
             <td>
               <Input type="text" :value="item.remark"
                      @on-change="modify_medicine({key:'remark',val:$event.target.value,index:index})"/>
@@ -156,5 +157,10 @@
   .herbal_head_left {
     flex: 1;
     align-self: center;
+  }
+  .unit_text {
+    display: inline-block;
+    min-width: 2rem;
+    text-align: left;
   }
 </style>

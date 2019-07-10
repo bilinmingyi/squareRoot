@@ -162,6 +162,10 @@ const actions = {
           "name": Number(state.recipeList[state.currRecipe].data.is_cloud) === 1 ? (item.alias_name ? item.alias_name : item.name) : (item.clinic_alias_name ? item.clinic_alias_name : item.name),
           "num": !item.num ? 0 : item.num,
           "unit": item.unit === item.unit_stock ? item.unit_stock : (item.unit === item.unit_sale ? item.unit_sale : item.unit_stock),
+          "price":
+            Number(state.recipeList[state.currRecipe].data.is_cloud) === 1
+              ? (item.unit === item.unit_stock ? item.default_sale_price : (item.unit === item.unit_sale ? (item.default_sale_price/ item.stock_sale_ratio) : item.default_sale_price))
+              : (item.unit === item.unit_stock ? item.sale_price : (item.unit === item.unit_sale ? (item.sale_price/ item.stock_sale_ratio) : item.sale_price)),
           "sale_price": Number(state.recipeList[state.currRecipe].data.is_cloud) === 1 ? item.default_sale_price : item.sale_price,
           "spec": item.spec,
           "category": item.category,

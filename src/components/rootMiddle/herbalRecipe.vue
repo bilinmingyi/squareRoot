@@ -23,10 +23,11 @@
         <thead>
         <tr class="displayBlock" style="overflow-y: scroll">
           <th style="width: 10%;display: inline-block;">序号</th>
-          <th style="width: 30%;display: inline-block;">药名</th>
+          <th style="width: 25%;display: inline-block;">药名</th>
           <th style="width: 10%;display: inline-block;">规格</th>
-          <th style="width: 17%;display: inline-block;">药量</th>
-          <th style="width: 20%;display: inline-block;">用法</th>
+          <th style="width: 15%;display: inline-block;">药量</th>
+          <th style="width: 12%;display: inline-block">单价</th>
+          <th style="width: 15%;display: inline-block;">用法</th>
           <th style="width: 10%;display: inline-block;">操作</th>
         </tr>
         </thead>
@@ -37,16 +38,19 @@
         <tbody>
         <tr v-for="(item,index) in currentData.data.items" class="displayBlock">
           <td style="width: 10%;display: inline-block;">{{index+1}}</td>
-          <td style="width: 30%;display: inline-block;">{{item.name}}</td>
+          <td style="width: 25%;display: inline-block;">{{item.name}}</td>
           <template v-if="item.is_match===1">
             <td style="width: 10%;display: inline-block;">{{item.spec==='1克/克'?'1克':item.spec}}</td>
-            <td style="width: 17%;display: inline-block;">
+            <td style="width: 15%;display: inline-block;">
               <InputNumber style="width:3.2rem" :value="item.num"
                            @on-change="modify_medicine({key:'num',val:$event,index:index})"/>
-              <span class="unitText">{{item.unit}}</span>
-              <span class="num_text" v-if="currentData.data.category==2">({{item.num*item.stock_sale_ratio}}{{item.unit_sale}})</span>
+              <div class="keli_unit">
+                <span class="unitText">{{item.unit}}</span>
+                <span class="num_text" v-if="currentData.data.category==2">({{item.num*item.stock_sale_ratio}}{{item.unit_sale}})</span>
+              </div>
             </td>
-            <td style="width: 20%;display: inline-block;">
+            <td style="width: 12%;display: inline-block">{{item.price|priceFormat}}</td>
+            <td style="width: 15%;display: inline-block;">
               <Select style="width:4.25rem" :value="item.usage"
                       @on-change="modify_medicine({key:'usage',val:$event,index:index})">
                 <Option v-for="item in herbalMedUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
@@ -54,7 +58,7 @@
             </td>
           </template>
           <template v-else>
-            <td style="color: red;width: 48%;display: inline-block;line-height: 32px" colspan="2">
+            <td style="color: red;width: 52%;display: inline-block;line-height: 32px" colspan="2">
               系统内搜索不到该药品
             </td>
           </template>
@@ -479,7 +483,6 @@ export default {
 
   .num_text {
     display: inline-block;
-    width: 3rem;
     color: #4DBC89;
   }
 
@@ -489,7 +492,6 @@ export default {
   }
 
   .unitText {
-    min-width: 2rem;
     display: inline-block;
     text-align: left;
   }
@@ -503,5 +505,10 @@ export default {
   .displayBlock {
     display: block;
     width: 100%;
+  }
+  .keli_unit {
+    display: inline-block;
+    min-width: 4rem;
+    text-align: left
   }
 </style>

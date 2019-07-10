@@ -24,6 +24,7 @@
           <th>规格</th>
           <th>总量</th>
           <th>单位</th>
+          <th>单价</th>
           <th>说明</th>
           <th>操作</th>
         </tr>
@@ -47,6 +48,7 @@
                 <Option :value="item.unit_sale" key="item.unit_sale">{{item.unit_sale}}</Option>
               </Select>
             </td>
+            <td>{{item.price|priceFormat}}</td>
             <td>
               <Input type="text" :value="item.remark"
                      @on-change="modify_medicine({key:'remark',val:$event.target.value,index:index})"/>
@@ -84,147 +86,161 @@
 </template>
 
 <script>
-  import fRadio from '@/components/fRadio.vue'
-  import {mapActions, mapState} from 'vuex'
-  import {Select, Option, Input, InputNumber} from 'iview'
+import fRadio from '@/components/fRadio.vue'
+import {mapActions, mapState} from 'vuex'
+import {Select, Option, Input, InputNumber} from 'iview'
 
-  export default {
-    name: "productRecipe",
-    data() {
-      return {
-        showAddTpl: false
+export default {
+  name: "productRecipe",
+  data() {
+    return {
+      showAddTpl: false
+    }
+  },
+  components: {
+    Select,
+    Option,
+    Input,
+    // saveTpl,
+    InputNumber,
+    fRadio
+  },
+  computed: {
+    ...mapState({
+      'cloudShopList': state => state.cloudShopList
+    }),
+    currentData: function () {
+      return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
+    },
+    currentCloud: function () {
+      let list = this.cloudShopList
+      let type = this.currentData.type
+      let category
+      if (type == 1) {
+        category = this.currentData.data.category
       }
-    },
-    components: {
-      Select,
-      Option,
-      Input,
-      // saveTpl,
-      InputNumber,
-      fRadio
-    },
-    computed: {
-      ...mapState({
-        'cloudShopList': state => state.cloudShopList
-      }),
-      currentData: function () {
-        return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
-      },
-      currentCloud: function () {
-        let list = this.cloudShopList
-        let type = this.currentData.type
-        let category
-        if (type == 1) {
-          category = this.currentData.data.category
+      let result = list.filter(item => {
+        return item.type == type
+      }).filter(item => {
+        if (item.type == 1) {
+          return item.category == category
+        } else {
+          return item
         }
-        let result = list.filter(item => {
-          return item.type == type
-        }).filter(item => {
-          if (item.type == 1) {
-            return item.category == category
+      })
+      return result[0]
+    }
+  },
+  watch: {
+    'currentData.data.items': {
+      deep: true,
+      handler: function (newVal, oldVal) {
+        let allPrice = 0;
+        newVal.map((item, index) => {
+          if (item.unit === item.unit_stock) {
+            allPrice += Number(item.sale_price) * Number(item.num);
+          } else if (item.unit === item.unit_sale) {
+            allPrice += Number(item.sale_price * 1.0 / item.stock_sale_ratio) * Number(item.num);
           } else {
-            return item
+            allPrice += Number(item.sale_price) * Number(item.num);
           }
         })
-        return result[0]
+        setTimeout(() => {
+          this.modify_recipe({key: 'money', val: Number(allPrice).toFixed(2)})
+        })
       }
     },
-    watch: {
-      'currentData.data.items': {
-        deep: true,
-        handler: function (newVal, oldVal) {
-          let allPrice = 0;
-          newVal.map((item, index) => {
-            if (item.unit === item.unit_stock) {
-              allPrice += Number(item.sale_price) * Number(item.num);
-            } else if (item.unit === item.unit_sale) {
-              allPrice += Number(item.sale_price * 1.0 / item.stock_sale_ratio) * Number(item.num);
-            } else {
-              allPrice += Number(item.sale_price) * Number(item.num);
-            }
+  },
+  methods: {
+    ...mapActions([
+      'cancel_recipe',
+      'modify_medicine',
+      'cancel_medicine',
+      'modify_recipe_detail',
+      'modify_recipe',
+      'clean_recipe',
+      'change_print_pre',
+    ]),
+    print_pre: function () {
+      this.change_print_pre();
+    },
+    cancelRecipe() {
+      this.$Modal.confirm({
+        title: '提示',
+        content: '<p>确定删除该处方？</p>',
+        onOk: () => {
+          this.cancel_recipe();
+        },
+        onCancel: () => {
+          console.log("88")
+        }
+      });
+    },
+    change_unit(event, index) {
+      let currItems = this.currentData.data.items[index];
+      this.modify_medicine({key: 'unit', val: event, index: index})
+      if (currItems.num !== '' && currItems.num !== 0) {
+        if (event === currItems.unit_stock) {
+          this.modify_medicine({
+            key: 'num',
+            val: Math.ceil(currItems.num * 1.0 / currItems.stock_sale_ratio),
+            index: index
           })
-          setTimeout(() => {
-            this.modify_recipe({key: 'money', val: Number(allPrice).toFixed(2)})
+          this.modify_medicine({
+            key: 'price',
+            val: Number(currItems.sale_price),
+            index: index
+          })
+        } else if (event === currItems.unit_sale) {
+          this.modify_medicine({
+            key: 'num',
+            val: Math.ceil(currItems.num * currItems.stock_sale_ratio),
+            index: index
+          })
+          this.modify_medicine({
+            key: 'price',
+            val: Number(currItems.sale_price * 1.0 / currItems.stock_sale_ratio),
+            index: index
           })
         }
-      },
+      }
     },
-    methods: {
-      ...mapActions([
-        'cancel_recipe',
-        'modify_medicine',
-        'cancel_medicine',
-        'modify_recipe_detail',
-        'modify_recipe',
-        'clean_recipe',
-        'change_print_pre',
-      ]),
-      print_pre: function () {
-        this.change_print_pre();
-      },
-      cancelRecipe() {
+    changeCategory(event) {
+      if (this.currentData.data.items.length === 0) {
+        this.modify_recipe_detail({key: 'is_cloud', val: Number(event.target.value)})
+      } else {
         this.$Modal.confirm({
           title: '提示',
-          content: '<p>确定删除该处方？</p>',
+          content: '<p>切换药品来源将清空已选的药，确认要切换?</p>',
           onOk: () => {
-            this.cancel_recipe();
+            this.modify_recipe_detail({key: 'is_cloud', val: Number(event.target.value)})
+            this.clean_recipe();
           },
           onCancel: () => {
-            console.log("88")
+            this.$forceUpdate()
           }
-        });
-      },
-      change_unit(event, index) {
-        let currItems = this.currentData.data.items[index];
-        this.modify_medicine({key: 'unit', val: event, index: index})
-        if (currItems.num !== '' && currItems.num !== 0) {
-          if (event === currItems.unit_stock) {
-            this.modify_medicine({
-              key: 'num',
-              val: Math.ceil(currItems.num * 1.0 / currItems.stock_sale_ratio),
-              index: index
-            })
-          } else if (event === currItems.unit_sale) {
-            this.modify_medicine({key: 'num', val: Math.ceil(currItems.num * currItems.stock_sale_ratio), index: index})
-          }
-        }
-      },
-      changeCategory(event) {
-        if (this.currentData.data.items.length === 0) {
-          this.modify_recipe_detail({key: 'is_cloud', val: Number(event.target.value)})
-        } else {
-          this.$Modal.confirm({
-            title: '提示',
-            content: '<p>切换药品来源将清空已选的药，确认要切换?</p>',
-            onOk: () => {
-              this.modify_recipe_detail({key: 'is_cloud', val: Number(event.target.value)})
-              this.clean_recipe();
-            },
-            onCancel: () => {
-              this.$forceUpdate()
-            }
-          })
-        }
+        })
       }
-      // saveTplData() {
-      //   if (this.currentData.data.items.length === 0) {
-      //     this.$Message.info("请先至少添加一个药品！");
-      //     return
-      //   }
-      //   let itemList = this.currentData.data.items;
-      //   for (var i = 0; i < itemList.length; i++) {
-      //     if (itemList[i].num === '' || itemList[i].num === 0) {
-      //       this.$Message.info("药品【" + itemList[i].name + "】的药量为空！")
-      //       return
-      //     }
-      //   }
-      //   this.showAddTpl = true;
-      // },
-      // hideTplShow() {
-      //   this.showAddTpl = false;
-      // }
     }
+    // saveTplData() {
+    //   if (this.currentData.data.items.length === 0) {
+    //     this.$Message.info("请先至少添加一个药品！");
+    //     return
+    //   }
+    //   let itemList = this.currentData.data.items;
+    //   for (var i = 0; i < itemList.length; i++) {
+    //     if (itemList[i].num === '' || itemList[i].num === 0) {
+    //       this.$Message.info("药品【" + itemList[i].name + "】的药量为空！")
+    //       return
+    //     }
+    //   }
+    //   this.showAddTpl = true;
+    // },
+    // hideTplShow() {
+    //   this.showAddTpl = false;
+    // }
   }
+}
 </script>
 
 <style scoped>
