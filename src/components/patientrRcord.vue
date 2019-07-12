@@ -58,11 +58,16 @@
       <div class="text-justify mid-record-item-key">
         <span>检&nbsp;&nbsp;&nbsp;查：</span>
       </div>
-      <div class="mid-record-item-val">
-        <assistTextarea rows="2" readOnly placeholder="点此输入" :value="examination"
-                        @input="function(val) {examination = val}"
-                        @assist="clinicRecord(3)">
-        </assistTextarea>
+      <div class="mid-record-item-val" @click.stop="clinicRecord(3)">
+        <Input
+          class="patient-record-input"
+          type="textarea"
+          :autosize="{minRows: 1,maxRows: 5}"
+          placeholder="点此输入"
+          :rows="1"
+          v-model="examination"
+          readonly
+        ></Input>
       </div>
     </div>
     <div class="mt10 mid-record-item" @click.stop="$refs.diagnosis_xy_input.focus()">
