@@ -2,7 +2,7 @@
   <!-- 患者病历 -->
   <div class="mid-box-content">
     <div class="mid-title-btn-box mb10 pr10">
-      <button class="prescriptionBtn mr5" @click.stop="printPrescription('printCase')">打印{{clinicType == 6 ? '档案' : '病历'}}</button>
+      <button class="prescriptionBtn mr10" @click.stop="printPrescription('printCase')">打印{{clinicType == 6 ? '档案' : '病历'}}</button>
       <button class="prescriptionBtn" @click.stop="showSaveTemplate()">存为模板</button>
     </div>
     <hr class="mid-hr">
@@ -576,7 +576,7 @@ export default {
 .prescriptionBtn {
   border: 1px solid #5096e0;
   border-radius: 1.875rem;
-  font-size: 1rem;
+  font-size: 0.875rem;
   color: #5096e0;
   background: none;
   padding: 0 0.5rem;

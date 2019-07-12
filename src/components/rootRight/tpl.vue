@@ -189,7 +189,7 @@
               </div>
             </div>
           </div>
-          <div class="pb10 tc mt20">
+          <div class=" tc mt30">
             <button class="saveBtn mr20" @click.stop="useTpl()">确认</button>
             <button class="saveBtn cancelBtn" @click.stop="useTplHide()">取消</button>
           </div>
@@ -1566,12 +1566,12 @@ export default {
   }
 
   .saveBtn {
-    font-size: 1rem;
+    font-size: 0.875rem;
     color: #ffffff;
     font-weight: bold;
     width: 8.75rem;
     text-align: center;
-    padding: 0.5625rem 0;
+    padding: 0.375rem 0;
     background: #5096e0;
     border-radius: 6.25rem;
     border: none;
@@ -1645,7 +1645,7 @@ export default {
   }
 
   .tpl-btn {
-    font-size: 1rem;
+    font-size: 0.875rem;
     width: 6rem;
   }
 

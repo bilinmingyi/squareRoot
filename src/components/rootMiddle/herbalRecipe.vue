@@ -454,7 +454,7 @@ export default {
   .btn {
     border: 0.0625rem solid #5096E0;
     border-radius: 1.875rem;
-    font-size: 1rem;
+    font-size: 0.875rem;
     color: #5096E0;
     background: none;
     line-height: 1.875rem;
