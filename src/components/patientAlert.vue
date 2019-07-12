@@ -11,7 +11,7 @@
         <div class="mb10">
           <Input
             type="textarea"
-            :rows="4"
+            :rows="3"
             placeholder="请输入文字"
             v-model="DiagnosisItem.contentText"
             @click.stop="clickword(item)"
@@ -738,7 +738,7 @@ export default {
 }
 .prescription_tab_head_close {
   color: #5096e0;
-  font-size: 1rem;
+  font-size: 0.875rem;
   text-decoration: underline;
   cursor: pointer;
 }
@@ -801,7 +801,7 @@ export default {
 }
 
 .prescription_tab_save {
-  width: 11rem;
+  width: 8rem;
   height: 2.5rem;
   line-height: 2.5rem;
   border-radius: 1.875rem;
@@ -811,7 +811,7 @@ export default {
   font-size: 0.9375rem;
 }
 .prescription_tab_cancel {
-  width: 11rem;
+  width: 8rem;
   height: 2.5rem;
   line-height: 2.5rem;
   border-radius: 1.875rem;
@@ -829,7 +829,7 @@ export default {
   background: #fff;
   border-radius: 0.25rem;
   padding: 0.3125rem 0.625rem;
-  font-size: 1rem;
+  font-size: 0.875rem;
 }
 
 .prescription-blue-title {
@@ -840,7 +840,7 @@ export default {
 }
 
 .check_name {
-  width: 50px;
+  width: 2.5rem;
   line-height: 30px;
   display: inline-block;
 }

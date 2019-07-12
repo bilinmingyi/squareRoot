@@ -14,80 +14,55 @@
       <div class="text-justify mid-record-item-key">
         <span>主&nbsp;&nbsp;&nbsp;述：</span>
       </div>
-      <div class="mid-record-item-val" @click.stop="clinicRecord(2)">
-        <Input
-          class="patient-record-input"
-          type="textarea"
-          :autosize="{minRows: 2,maxRows: 5}"
-          placeholder="点此输入"
-          :rows="2"
-          v-model="recordData.chief_complaint"
-          readonly
-        ></Input>
+      <div class="mid-record-item-val">
+        <assistTextarea rows="2" placeholder="点此输入" :value="recordData.chief_complaint"
+                        @input="function(val) {recordData.chief_complaint = val}"
+                        @assist="clinicRecord(2)">
+        </assistTextarea>
       </div>
     </div>
     <div class="mt10 mid-record-item">
       <div class="text-justify mid-record-item-key">
         <span>病&nbsp;&nbsp;&nbsp;史：</span>
       </div>
-      <div class="mid-record-item-val" @click.stop="clinicRecord(4)">
-        <Input
-          class="patient-record-input"
-          type="textarea"
-          :autosize="{minRows: 2,maxRows: 5}"
-          placeholder="点此输入"
-          :rows="2"
-          v-model="recordData.present_illness"
-          readonly
-        ></Input>
+      <div class="mid-record-item-val">
+        <assistTextarea rows="2" placeholder="点此输入" :value="recordData.present_illness"
+                        @input="function(val) {recordData.present_illness = val}"
+                        @assist="clinicRecord(4)">
+        </assistTextarea>
       </div>
     </div>
     <div class="mt10 mid-record-item">
       <div class="text-justify mid-record-item-key">
         <span>过敏史：</span>
       </div>
-      <div class="mid-record-item-val" @click.stop="clinicRecord(1)">
-        <Input
-          class="patient-record-input"
-          type="textarea"
-          :autosize="{minRows: 1,maxRows: 5}"
-          placeholder="点此输入"
-          :rows="1"
-          v-model="recordData.allergic_history"
-          readonly
-        ></Input>
+      <div class="mid-record-item-val">
+        <assistTextarea rows="2" placeholder="点此输入" :value="recordData.allergic_history"
+                        @input="function(val) {recordData.allergic_history = val}"
+                        @assist="clinicRecord(1)">
+        </assistTextarea>
       </div>
     </div>
     <div class="mt10 mid-record-item">
       <div class="text-justify mid-record-item-key">
         <span>既往史：</span>
       </div>
-      <div class="mid-record-item-val" @click.stop="clinicRecord(0)">
-        <Input
-          class="patient-record-input"
-          type="textarea"
-          :autosize="{minRows: 1,maxRows: 5}"
-          placeholder="点此输入"
-          :rows="1"
-          v-model="recordData.personal_history"
-          readonly
-        ></Input>
+      <div class="mid-record-item-val">
+        <assistTextarea rows="2" placeholder="点此输入" :value="recordData.personal_history"
+                        @input="function(val) {recordData.personal_history = val}"
+                        @assist="clinicRecord(0)">
+        </assistTextarea>
       </div>
     </div>
     <div class="mt10 mid-record-item">
       <div class="text-justify mid-record-item-key">
         <span>检&nbsp;&nbsp;&nbsp;查：</span>
       </div>
-      <div class="mid-record-item-val" @click.stop="clinicRecord(3)">
-        <Input
-          class="patient-record-input"
-          type="textarea"
-          :autosize="{minRows: 1,maxRows: 5}"
-          placeholder="点此输入"
-          :rows="1"
-          v-model="examination"
-          readonly
-        ></Input>
+      <div class="mid-record-item-val">
+        <assistTextarea rows="2" readOnly placeholder="点此输入" :value="examination"
+                        @input="function(val) {examination = val}"
+                        @assist="clinicRecord(3)">
+        </assistTextarea>
       </div>
     </div>
     <div class="mt10 mid-record-item" @click.stop="$refs.diagnosis_xy_input.focus()">
@@ -107,6 +82,7 @@
           </div>
           <input
             class="diagnosis-input"
+            placeholder="点此输入"
             type="text"
             v-model="recordData.diagnosis_xy_input"
             @blur="handleComma('diagnosis_xy')"
@@ -151,6 +127,7 @@
           <input
             class="diagnosis-input"
             type="text"
+            placeholder="点此输入"
             v-model="recordData.diagnosis_input"
             @blur="handleComma('diagnosis')"
             @input="searchDiagnosis('diagnosis')"
@@ -185,6 +162,7 @@
           :autosize="{minRows: 2,maxRows: 5}"
           :rows="2"
           :value="recordData.treat_advice"
+          placeholder="点此输入"
           @on-change="set_record_prop({key: 'treat_advice', val: $event.target.value})"
         ></Input>
       </div>
@@ -217,6 +195,7 @@ import patientAlert from "./patientAlert";
 import {getCaseHistory, getDiseaseList} from "@/fetch/api.js";
 import saveRecordTpl from '@/components/saveRecordTpl';
 import printRecord from '@/components/printRecord';
+import assistTextarea from '@/components/assistTextarea'
 
 export default {
   name: "patientrRcord",
@@ -225,7 +204,8 @@ export default {
     Tag,
     patientAlert,
     saveRecordTpl,
-    printRecord
+    printRecord,
+    assistTextarea
   },
   data() {
     return {
@@ -315,6 +295,7 @@ export default {
   },
   methods: {
     ...mapActions(["set_record_prop"]),
+
     changeBox(type) {
       switch (type) {
         case 'diagnosis':
@@ -648,10 +629,6 @@ export default {
 
   .diagnosis-input:focus {
     outline-color: transparent;
-  }
-
-  .diagnosis-input:focus .diagnosis-input-box {
-
   }
 
   .mid-record-item-drop-down-box {

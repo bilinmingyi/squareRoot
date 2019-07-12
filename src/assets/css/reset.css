@@ -752,3 +752,6 @@ input {
 .clear{
   clear: both;
 }
+textarea.ivu-input {
+  resize: none;
+}
