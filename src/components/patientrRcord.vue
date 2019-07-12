@@ -2,6 +2,8 @@
   <!-- 患者病历 -->
   <div class="mid-box-content">
     <div class="mid-title-btn-box mb10 pr10">
+      <button class="prescriptionBtn mr10">病历项目设置</button>
+      <button class="prescriptionBtn mr10">添加报告</button>
       <button class="prescriptionBtn mr10" @click.stop="printPrescription('printCase')">打印{{clinicType == 6 ? '档案' : '病历'}}</button>
       <button class="prescriptionBtn" @click.stop="showSaveTemplate()">存为模板</button>
     </div>
