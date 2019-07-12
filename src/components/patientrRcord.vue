@@ -4,7 +4,9 @@
     <div class="mid-title-btn-box mb10 pr10">
       <button class="prescriptionBtn mr10">病历项目设置</button>
       <button class="prescriptionBtn mr10">添加报告</button>
-      <button class="prescriptionBtn mr10" @click.stop="printPrescription('printCase')">打印{{clinicType == 6 ? '档案' : '病历'}}</button>
+      <button class="prescriptionBtn mr10" @click.stop="printPrescription('printCase')">打印{{clinicType == 6 ? '档案' :
+        '病历'}}
+      </button>
       <button class="prescriptionBtn" @click.stop="showSaveTemplate()">存为模板</button>
     </div>
     <hr class="mid-hr">
@@ -88,19 +90,20 @@
         ></Input>
       </div>
     </div>
-    <div class="mt10 mid-record-item">
+    <div class="mt10 mid-record-item" @click.stop="$refs.diagnosis_xy_input.focus()">
       <div class="text-justify mid-record-item-key">
         <span>{{clinicType == 6 ? '诊断结果' : '西医诊断'}}：</span>
       </div>
       <div class="mid-record-item-val">
-        <div class="diagnosis-input-box" @click.stop="$refs.diagnosis_xy_input.focus()">
+        <div class="diagnosis-input-box" ref="diagnosis_xy">
           <div class="label-box" v-show="recordData.diagnosis_xy_labels.length > 0">
             <Tag
               closable
               v-for="(tag, index) in recordData.diagnosis_xy_labels"
               @on-close="deleteDiagnosisLabel('diagnosis_xy', index)"
               :key="tag.code"
-            >{{tag.name}}</Tag>
+            >{{tag.name}}
+            </Tag>
           </div>
           <input
             class="diagnosis-input"
@@ -108,6 +111,7 @@
             v-model="recordData.diagnosis_xy_input"
             @blur="handleComma('diagnosis_xy')"
             @input="searchDiagnosis('diagnosis_xy')"
+            @focus="changeBox('diagnosis_xy')"
             ref="diagnosis_xy_input"
             @keydown="listenerKey($event, 'diagnosis_xy')"
           >
@@ -123,7 +127,8 @@
               @click="chooseDiagnosisLabel('diagnosis_xy', index)"
               :class="{cur: diagnosisDataIndex == (index + 1)}"
               :id="'diagnosis_xy_drop_down_li_' + (index + 1)"
-            >{{item.name}}</li>
+            >{{item.name}}
+            </li>
           </ul>
         </div>
       </div>
@@ -133,14 +138,15 @@
         <span>中医诊断：</span>
       </div>
       <div class="mid-record-item-val">
-        <div class="diagnosis-input-box">
+        <div class="diagnosis-input-box" ref="diagnosis">
           <div class="label-box" v-show="recordData.diagnosis_labels.length > 0">
             <Tag
               closable
               v-for="(tag, index) in recordData.diagnosis_labels"
               @on-close="deleteDiagnosisLabel('diagnosis', index)"
               :key="tag.code"
-            >{{tag.name}}</Tag>
+            >{{tag.name}}
+            </Tag>
           </div>
           <input
             class="diagnosis-input"
@@ -148,6 +154,7 @@
             v-model="recordData.diagnosis_input"
             @blur="handleComma('diagnosis')"
             @input="searchDiagnosis('diagnosis')"
+            @focus="changeBox('diagnosis')"
             ref="diagnosis_input"
             @keydown="listenerKey($event, 'diagnosis')"
           >
@@ -162,7 +169,8 @@
               v-for="(item, index) in recordData.diagnosis_search_data"
               @click="chooseDiagnosisLabel('diagnosis', index)"
               :class="{cur: diagnosisDataIndex == (index + 1)}"
-            >{{item.name}}</li>
+            >{{item.name}}
+            </li>
           </ul>
         </div>
       </div>
@@ -203,12 +211,13 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
-import { Input, Tag } from "iview";
+import {mapState, mapActions} from "vuex";
+import {Input, Tag} from "iview";
 import patientAlert from "./patientAlert";
-import { getCaseHistory, getDiseaseList } from "@/fetch/api.js";
+import {getCaseHistory, getDiseaseList} from "@/fetch/api.js";
 import saveRecordTpl from '@/components/saveRecordTpl';
 import printRecord from '@/components/printRecord';
+
 export default {
   name: "patientrRcord",
   components: {
@@ -242,38 +251,38 @@ export default {
       var examination = this.recordData.examination;
       var ret = "";
       (examination.bloodpressure_num1 || examination.bloodpressure_num2) &&
-        (ret +=
-          "血压" +
-          examination.bloodpressure_num1 +
-          "/" +
-          examination.bloodpressure_num2 +
-          "mmHg，");
+      (ret +=
+        "血压" +
+        examination.bloodpressure_num1 +
+        "/" +
+        examination.bloodpressure_num2 +
+        "mmHg，");
       examination.bloodglucose &&
-        (ret += "血糖" + examination.bloodglucose + "mg/ml，");
+      (ret += "血糖" + examination.bloodglucose + "mg/ml，");
       examination.trioxypurine &&
-        (ret += "尿酸" + examination.trioxypurine + "umol/L，");
+      (ret += "尿酸" + examination.trioxypurine + "umol/L，");
       examination.heartrate &&
-        (ret += "心率" + examination.heartrate + "次/分，");
+      (ret += "心率" + examination.heartrate + "次/分，");
       examination.breathe && (ret += "呼吸" + examination.breathe + "次/分，");
       examination.animalheat &&
-        (ret += "体温" + examination.animalheat + "℃，");
+      (ret += "体温" + examination.animalheat + "℃，");
       examination.weight && (ret += "体重" + examination.weight + "kg，");
       examination.info && (ret += (ret ? '\n' : '') + examination.info);
       return ret;
     },
 
     // 诊断查询字符串
-    recordQueryDiagnosis: function() {
+    recordQueryDiagnosis: function () {
       var str = this.recordData.diagnosis_input;
       return this.handleQueryDiagnosisStr(str);
     },
-    recordQueryDiagnosisXy: function() {
+    recordQueryDiagnosisXy: function () {
       var str = this.recordData.diagnosis_xy_input;
       return this.handleQueryDiagnosisStr(str);
     }
   },
   watch: {
-    "recordData.diagnosis_input": function(curVal, oldVal) {
+    "recordData.diagnosis_input": function (curVal, oldVal) {
       this.set_record_prop({
         key: "diagnosis_input",
         val: curVal.replace(/([；])/g, ";")
@@ -283,7 +292,7 @@ export default {
         val: this.joinDiagnosis("diagnosis")
       });
     },
-    "recordData.diagnosis_xy_input": function(curVal, oldVal) {
+    "recordData.diagnosis_xy_input": function (curVal, oldVal) {
       this.set_record_prop({
         key: "diagnosis_xy_input",
         val: curVal.replace(/([；])/g, ";")
@@ -306,6 +315,16 @@ export default {
   },
   methods: {
     ...mapActions(["set_record_prop"]),
+    changeBox(type) {
+      switch (type) {
+        case 'diagnosis':
+          this.$refs.diagnosis.style.borderColor = '#57a3f3'
+          break
+        case 'diagnosis_xy':
+          this.$refs.diagnosis_xy.style.borderColor = '#57a3f3'
+          break
+      }
+    },
     clinicRecord(type) {
       this.diagnosisType = type;
       this.showPatientAlert = true;
@@ -328,33 +347,35 @@ export default {
 
     /* 中西医诊断 */
     // 处理字符串中的逗号
-    handleCommaCore: function(str) {
+    handleCommaCore: function (str) {
       str = str.replace(/([；])/g, ";");
       var arr = str
         .split(";")
-        .map(function(item) {
+        .map(function (item) {
           return item.trim();
         })
-        .filter(function(item) {
+        .filter(function (item) {
           return item != "";
         });
       str = arr.join(";");
       return str ? str + ";" : "";
     },
-    handleComma: function(type) {
+    handleComma: function (type) {
       if (type !== "diagnosis" && type !== "diagnosis_xy") return;
+      this.$refs.diagnosis.style.borderColor = null
+      this.$refs.diagnosis_xy.style.borderColor = null
       this.set_record_prop({
         key: type + "_input",
         val: this.handleCommaCore(this.recordData[type + "_input"])
       });
       setTimeout(() => {
-        this.set_record_prop({ key: type + "_search_data", val: [] });
+        this.set_record_prop({key: type + "_search_data", val: []});
         this.diagnosisDataIndex = 0;
       }, 200);
     },
 
     // 从诊断字符串中获取查询参数
-    handleQueryDiagnosisStr: function(str) {
+    handleQueryDiagnosisStr: function (str) {
       var arr = str.split(";");
       var lastStr = "";
       while (arr.length && lastStr == "") {
@@ -364,7 +385,7 @@ export default {
     },
 
     // 诊断查询
-    searchDiagnosis: function(type) {
+    searchDiagnosis: function (type) {
       var url = "";
       var params = {
         page: 1,
@@ -374,6 +395,7 @@ export default {
       switch (type) {
         case "diagnosis":
           // url = this.appRoot + "/doctreat/treatorder/zyDisease/list";
+
           params.query = this.recordQueryDiagnosis;
           if (params.query == "") {
             this.clearDiagnosisSearchData("diagnosis");
@@ -424,19 +446,19 @@ export default {
     },
 
     // 清空查询的诊断结果,并重新聚焦回输入框
-    clearDiagnosisSearchData: function(type) {
+    clearDiagnosisSearchData: function (type) {
       if (type === "diagnosis") {
-        this.set_record_prop({ key: "diagnosis_search_data", val: [] });
+        this.set_record_prop({key: "diagnosis_search_data", val: []});
         this.$refs.diagnosis_input.focus();
       } else if (type === "diagnosis_xy") {
-        this.set_record_prop({ key: "diagnosis_xy_search_data", val: [] });
+        this.set_record_prop({key: "diagnosis_xy_search_data", val: []});
         this.$refs.diagnosis_xy_input.focus();
       }
       this.diagnosisDataIndex = 0;
     },
 
     // 组合诊断结果
-    joinDiagnosis: function(type) {
+    joinDiagnosis: function (type) {
       var inputStr = "";
       var labelStr = "";
       var arr = [];
@@ -449,7 +471,7 @@ export default {
         arr = this.recordData.diagnosis_xy_labels;
       }
 
-      arr.forEach(function(item) {
+      arr.forEach(function (item) {
         labelStr += item.name + ";";
       });
       inputStr =
@@ -462,7 +484,7 @@ export default {
     },
 
     // 删除诊断标签
-    deleteDiagnosisLabel: function(type, index) {
+    deleteDiagnosisLabel: function (type, index) {
       let labels = this.recordData[type + "_labels"];
       labels.splice(index, 1);
       this.set_record_prop({
@@ -473,26 +495,26 @@ export default {
     },
 
     // 选中诊断标签
-    chooseDiagnosisLabel: function(type, index) {
+    chooseDiagnosisLabel: function (type, index) {
       let labels = this.recordData[type + "_labels"];
       labels.push(this.recordData[type + "_search_data"][index]);
-      this.set_record_prop({ key: type + "_labels", val: labels });
+      this.set_record_prop({key: type + "_labels", val: labels});
       this.deleteQueryDiagnosisStr(type);
       this.handleComma(type);
       this.clearDiagnosisSearchData(type);
     },
 
     // 删除诊断字符串中查询后选择的字符串
-    deleteQueryDiagnosisStr: function(type) {
+    deleteQueryDiagnosisStr: function (type) {
       if (type !== "diagnosis" && type !== "diagnosis_xy") return;
       var str = this.recordData[type + "_input"];
       str = str.replace(/([；])/g, ";");
       var arr = str
         .split(";")
-        .map(function(item) {
+        .map(function (item) {
           return item.trim();
         })
-        .filter(function(item) {
+        .filter(function (item) {
           return item != "";
         });
       var lastStr = arr[arr.length - 1];
@@ -501,11 +523,11 @@ export default {
       }
       arr.pop();
       str = arr.join(";");
-      this.set_record_prop({ key: type + "_input", val: str });
+      this.set_record_prop({key: type + "_input", val: str});
     },
 
     // 诊断监听按钮
-    listenerKey: function(event, type) {
+    listenerKey: function (event, type) {
       var keyCode = event.keyCode;
       var index = this.diagnosisDataIndex;
       var data = this.recordData[type + "_search_data"];
@@ -515,6 +537,7 @@ export default {
       switch (keyCode) {
         case 13:
           index !== 0 && this.chooseDiagnosisLabel(type, index - 1);
+          this.changeBox(type)
           break;
         case 38:
           if (--index < 0) {
@@ -545,146 +568,169 @@ export default {
 </script>
 
 <style scoped>
-.mid-box-content {
-  background: #fff;
-  padding-bottom: 60px;
-}
-.mid-title-btn-box {
-  display: flex;
-  justify-content: flex-end;
-}
-.mid-hr {
-  border: none;
-  height: 1px;
-  background-color: #ccc;
-}
-.mid-record-item {
-  display: flex;
-}
-.mid-record-item-key {
-  padding-left: 1.5rem;
-  min-width: 6.1875rem;
-  height: 2.25rem;
-  font-size: 0.9375rem;
-  font-family: PingFangSC-Semibold;
-  font-weight: 600;
-  color: rgba(76, 76, 76, 1);
-}
-.mid-record-item-val {
-  flex: 1;
-  padding: 0 1.5rem 0 0.3125rem;
-  position: relative;
-}
-.prescriptionBtn {
-  border: 1px solid #5096e0;
-  border-radius: 1.875rem;
-  font-size: 0.875rem;
-  color: #5096e0;
-  background: none;
-  padding: 0 0.5rem;
-  line-height: 1.875rem;
-}
-.diagnosis-input-box {
-  margin-bottom: 0.3125rem;
-  width: 100%;
-  min-height: 2.375rem;
-  line-height: 1.5rem;
-  padding: 0.25rem 0.5rem;
-  font-size: 1rem;
-  border: 1px solid #5096e0;
-  border-radius: 0.25rem;
-  color: #515a6e;
-  background-color: #f6fbfe;
-  background-image: none;
-  position: relative;
-  cursor: text;
-  transition: border 0.2s ease-in-out, background 0.2s ease-in-out,
+  .mid-box-content {
+    background: #fff;
+    padding-bottom: 60px;
+  }
+
+  .mid-title-btn-box {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .mid-hr {
+    border: none;
+    height: 1px;
+    background-color: #ccc;
+  }
+
+  .mid-record-item {
+    display: flex;
+  }
+
+  .mid-record-item-key {
+    padding-left: 1.5rem;
+    min-width: 6.1875rem;
+    height: 2.25rem;
+    font-size: 0.9375rem;
+    font-family: PingFangSC-Semibold;
+    font-weight: 600;
+    color: rgba(76, 76, 76, 1);
+  }
+
+  .mid-record-item-val {
+    flex: 1;
+    padding: 0 1.5rem 0 0.3125rem;
+    position: relative;
+  }
+
+  .prescriptionBtn {
+    border: 1px solid #5096e0;
+    border-radius: 1.875rem;
+    font-size: 0.875rem;
+    color: #5096e0;
+    background: none;
+    padding: 0 0.5rem;
+    line-height: 1.875rem;
+  }
+
+  .diagnosis-input-box {
+    margin-bottom: 0.3125rem;
+    width: 100%;
+    min-height: 2.375rem;
+    line-height: 1.5rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #dcdee2;
+    border-radius: 0.25rem;
+    color: #515a6e;
+    background-image: none;
+    position: relative;
+    cursor: text;
+    transition: border 0.2s ease-in-out, background 0.2s ease-in-out,
     box-shadow 0.2s ease-in-out;
-}
-.diagnosis-input {
-  flex: 1;
-  border: none;
-  width: 100%;
-  min-width: 10.9375rem;
-  height: 1.75rem;
-  color: #515a6e;
-  background: #f6fbfe;
-  font-size: 0.9375rem;
-  outline: none;
-}
-.diagnosis-input:focus {
-  outline-color: transparent;
-}
+  }
 
-.mid-record-item-drop-down-box {
-  position: relative;
-  width: 100%;
-  height: 0;
-  padding: 0 10px;
-}
+  .diagnosis-input-box:hover {
+    border-color: #57a3f3;
+  }
 
-.drop-down-mask {
-  position: fixed;
-  z-index: 9;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
+  .diagnosis-input {
+    flex: 1;
+    border: none;
+    width: 100%;
+    min-width: 10.9375rem;
+    height: 1.75rem;
+    color: #515a6e;
+    font-size: 0.9375rem;
+    outline: none;
+  }
 
-.mid-record-item-drop-down-box .drop-down {
-  position: absolute;
-  top: -6px;
-  left: 10px;
-  width: 95%;
-  height: 180px;
-  border: 1px solid #ccc;
-  border-top: none;
-  background: #fff;
-  z-index: 10;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
-  overflow: auto;
-}
-.drop-down li {
-  height: 30px;
-  line-height: 30px;
-  padding: 0 18px;
-  font-size: 14px;
-  vertical-align: middle;
-  opacity: 1;
-  overflow: hidden;
-  cursor: pointer;
-  border-bottom: 1px solid #ccc;
-}
-.drop-down li:nth-last-child(1) {
-  border-bottom: none;
-}
-.drop-down li:hover {
-  opacity: 0.8;
-}
-.drop-down li:active {
-  opacity: 0.5;
-}
-.drop-down .cur {
-  background: #5096e0;
-  color: #fff;
-}
+  .diagnosis-input:focus {
+    outline-color: transparent;
+  }
 
-.pointer {
-  cursor: pointer;
-}
-.display-flex {
-  display: flex;
-}
-.text-justify {
-  text-align: justify;
-}
-.text-justify::after {
-  content: "";
-  overflow: hidden;
-  width: 100%;
-  height: 0;
-  display: inline-block;
-}
+  .diagnosis-input:focus .diagnosis-input-box {
+
+  }
+
+  .mid-record-item-drop-down-box {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding: 0 10px;
+  }
+
+  .drop-down-mask {
+    position: fixed;
+    z-index: 9;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  .mid-record-item-drop-down-box .drop-down {
+    position: absolute;
+    top: -6px;
+    left: 10px;
+    width: 95%;
+    height: 180px;
+    border: 1px solid #ccc;
+    border-top: none;
+    background: #fff;
+    z-index: 10;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    overflow: auto;
+  }
+
+  .drop-down li {
+    height: 30px;
+    line-height: 30px;
+    padding: 0 18px;
+    font-size: 14px;
+    vertical-align: middle;
+    opacity: 1;
+    overflow: hidden;
+    cursor: pointer;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .drop-down li:nth-last-child(1) {
+    border-bottom: none;
+  }
+
+  .drop-down li:hover {
+    opacity: 0.8;
+  }
+
+  .drop-down li:active {
+    opacity: 0.5;
+  }
+
+  .drop-down .cur {
+    background: #5096e0;
+    color: #fff;
+  }
+
+  .pointer {
+    cursor: pointer;
+  }
+
+  .display-flex {
+    display: flex;
+  }
+
+  .text-justify {
+    text-align: justify;
+  }
+
+  .text-justify::after {
+    content: "";
+    overflow: hidden;
+    width: 100%;
+    height: 0;
+    display: inline-block;
+  }
 </style>

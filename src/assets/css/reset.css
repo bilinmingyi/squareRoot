@@ -641,11 +641,6 @@ input {
   font-size: 1rem;
 }
 
-.mid-record-item .ivu-input {
-  border: 1px solid #5096e0;
-  background: #f8fdff;
-}
-
 .e-p-i-content-item .ivu-select-selection .ivu-select-selected-value {
   height: 2.5rem;
   line-height: 2.5rem;
