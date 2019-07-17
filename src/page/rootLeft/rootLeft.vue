@@ -79,11 +79,9 @@ export default {
               !this.recordData.past_history && this.set_record_prop({ key: 'past_history', val: res.data.past_history});
               !this.recordData.family_history && this.set_record_prop({ key: 'family_history', val: res.data.family_history});
               !this.recordData.prophylactic_history && this.set_record_prop({ key: 'prophylactic_history', val: res.data.prophylactic_history});
-
             }
           });
           break;
-
         case "historyRecipes":
           this.historyFinish = false;
           getHistoryRecipes({

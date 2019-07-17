@@ -2,7 +2,7 @@
   <!-- 患者病历 -->
   <div class="mid-box-content">
     <div class="mid-title-btn-box mb10 pr10">
-      <button class="prescriptionBtn mr10">病历项目设置</button>
+      <button class="prescriptionBtn mr10" @click.stop="showRecordSetAlert">病历项目设置</button>
       <button class="prescriptionBtn mr10">添加报告</button>
       <button class="prescriptionBtn mr10" @click.stop="printPrescription('printCase')">打印{{clinicType == 6 ? '档案' :
         '病历'}}
@@ -32,7 +32,7 @@
         </assistTextarea>
       </div>
     </div>
-    <div class="mt10 mid-record-item">
+    <div class="mt10 mid-record-item" v-if="checkRecord('allergic_history')">
       <div class="text-justify mid-record-item-key">
         <span>过敏史：</span>
       </div>
@@ -43,7 +43,7 @@
         </assistTextarea>
       </div>
     </div>
-    <div class="mt10 mid-record-item">
+    <div class="mt10 mid-record-item" v-if="checkRecord('personal_history')">
       <div class="text-justify mid-record-item-key">
         <span>个人史：</span>
       </div>
@@ -55,7 +55,7 @@
       </div>
     </div>
 
-    <div class="mt10 mid-record-item">
+    <div class="mt10 mid-record-item" v-if="checkRecord('past_history')">
       <div class="text-justify mid-record-item-key">
         <span>既往史：</span>
       </div>
@@ -70,7 +70,7 @@
         ></Input>
       </div>
     </div>
-    <div class="mt10 mid-record-item">
+    <div class="mt10 mid-record-item" v-if="checkRecord('family_history')">
       <div class="text-justify mid-record-item-key">
         <span>家族史：</span>
       </div>
@@ -85,7 +85,7 @@
         ></Input>
       </div>
     </div>
-    <div class="mt10 mid-record-item">
+    <div class="mt10 mid-record-item" v-if="checkRecord('prophylactic_history')">
       <div class="text-justify mid-record-item-key">
         <span>预防接种史：</span>
       </div>
@@ -151,7 +151,7 @@
         </div>
       </div>
     </div>
-    <div class="mt10 mid-record-item">
+    <div class="mt10 mid-record-item" v-if="checkRecord('examination')">
       <div class="text-justify mid-record-item-key">
         <span>基础检查：</span>
       </div>
@@ -168,7 +168,7 @@
     </div>
 
 
-    <div class="mt10 mid-record-item" @click.stop="$refs.diagnosis_input.focus()" v-if="clinicType != 6">
+    <div class="mt10 mid-record-item" @click.stop="$refs.diagnosis_input.focus()" v-if="checkRecord('diagnosis')">
       <div class="text-justify mid-record-item-key">
         <span>中医诊断：</span>
       </div>
@@ -271,7 +271,7 @@
         ></Input>
       </div>
     </div>
-    <div class="mt10 mid-record-item">
+    <div class="mt10 mid-record-item" v-if="checkRecord('sport_advice')">
       <div class="text-justify mid-record-item-key">
         <span>运动建议：</span>
       </div>
@@ -286,7 +286,7 @@
         ></Input>
       </div>
     </div>
-    <div class="mt10 mid-record-item">
+    <div class="mt10 mid-record-item" v-if="checkRecord('dietary_advice')">
       <div class="text-justify mid-record-item-key">
         <span>膳食建议：</span>
       </div>
@@ -318,6 +318,7 @@
       :printFlag="printFlag"
       @reset="printFlag = false"
     ></print-record>
+    <record-set v-if="recordSetAlert" @close="recordSetAlert = false"></record-set>
   </div>
   <!-- 患者病历 -->
 </template>
@@ -330,6 +331,7 @@ import {getCaseHistory, getDiseaseList} from "@/fetch/api.js";
 import saveRecordTpl from '@/components/saveRecordTpl';
 import printRecord from '@/components/printRecord';
 import assistTextarea from '@/components/assistTextarea'
+import recordSet from  '@/components/recordSet'
 
 export default {
   name: "patientrRcord",
@@ -339,6 +341,7 @@ export default {
     patientAlert,
     saveRecordTpl,
     printRecord,
+    recordSet,
     assistTextarea
   },
   data() {
@@ -353,6 +356,7 @@ export default {
       diagnosisTimer: null,
       diagnosisDataIndex: 0,  // 诊断下拉数组当前选中索引
       printFlag: false, // 打印病历
+      recordSetAlert: false
     };
   },
   computed: {
@@ -430,6 +434,13 @@ export default {
   methods: {
     ...mapActions(["set_record_prop"]),
 
+    checkRecord (type) {
+      var self = this
+      return self.recordData.recordList.indexOf(type) >= 0
+    },
+    showRecordSetAlert () {
+      this.recordSetAlert = true
+    },
     changeBox(type) {
       switch (type) {
         case 'diagnosis':
@@ -444,22 +455,18 @@ export default {
       this.diagnosisType = type;
       this.showPatientAlert = true;
     },
-
     closePatientAlert() {
       this.showPatientAlert = false;
     },
-
     printPrescription() {
       // 打印病历
       // this.showPrintRecord = true;
       this.printFlag = true;
     },
-
     showSaveTemplate() {
       // 存为模板
       this.showSaveRecordTpl = true;
     },
-
     /* 中西医诊断 */
     // 处理字符串中的逗号
     handleCommaCore: function (str) {
@@ -488,7 +495,6 @@ export default {
         this.diagnosisDataIndex = 0;
       }, 200);
     },
-
     // 从诊断字符串中获取查询参数
     handleQueryDiagnosisStr: function (str) {
       var arr = str.split(";");
@@ -498,7 +504,6 @@ export default {
       }
       return lastStr;
     },
-
     // 诊断查询
     searchDiagnosis: function (type) {
       var url = "";
@@ -559,7 +564,6 @@ export default {
         });
       }, 300);
     },
-
     // 清空查询的诊断结果,并重新聚焦回输入框
     clearDiagnosisSearchData: function (type) {
       if (type === "diagnosis") {
@@ -571,7 +575,6 @@ export default {
       }
       this.diagnosisDataIndex = 0;
     },
-
     // 组合诊断结果
     joinDiagnosis: function (type) {
       var inputStr = "";
@@ -597,7 +600,6 @@ export default {
 
       return ret;
     },
-
     // 删除诊断标签
     deleteDiagnosisLabel: function (type, index) {
       let labels = this.recordData[type + "_labels"];
@@ -608,7 +610,6 @@ export default {
       });
       this.joinDiagnosis(type);
     },
-
     // 选中诊断标签
     chooseDiagnosisLabel: function (type, index) {
       let labels = this.recordData[type + "_labels"];
@@ -618,7 +619,6 @@ export default {
       this.handleComma(type);
       this.clearDiagnosisSearchData(type);
     },
-
     // 删除诊断字符串中查询后选择的字符串
     deleteQueryDiagnosisStr: function (type) {
       if (type !== "diagnosis" && type !== "diagnosis_xy") return;
@@ -640,7 +640,6 @@ export default {
       str = arr.join(";");
       this.set_record_prop({key: type + "_input", val: str});
     },
-
     // 诊断监听按钮
     listenerKey: function (event, type) {
       var keyCode = event.keyCode;

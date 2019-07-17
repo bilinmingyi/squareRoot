@@ -40,6 +40,7 @@ const state = {
 
   recordData: {
     // 患者病历
+    recordList: [],
     chief_complaint: '',    // 主述
     present_illness: '',    // 现病史
     allergic_history: '',   // 过敏史
