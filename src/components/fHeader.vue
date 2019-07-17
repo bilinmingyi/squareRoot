@@ -96,11 +96,11 @@
           id: this.patientData.id,
           name: this.patientData.name,
           mobile: this.patientData.mobile,
-          personal_history: this.recordData.personal_history, // 个人史
-          allergic_history: this.recordData.allergic_history, // 过敏史
-          past_history: this.recordData.past_history, // 既往史
-          family_history: this.recordData.family_history, // 家族史
-          prophylactic_history: this.recordData.prophylactic_history, // 预防接种史
+          personal_history: this.recordData.recordList.indexOf('personal_history') >= 0 ? this.recordData.personal_history : null, // 个人史
+          allergic_history: this.recordData.recordList.indexOf('allergic_history') >= 0 ? this.recordData.allergic_history : null, // 过敏史
+          past_history: this.recordData.recordList.indexOf('past_history') >= 0 ? this.recordData.past_history : null, // 既往史
+          family_history: this.recordData.recordList.indexOf('family_history') >= 0 ? this.recordData.family_history : null, // 家族史
+          prophylactic_history: this.recordData.recordList.indexOf('prophylactic_history') >= 0 ? this.recordData.prophylactic_history : null, // 预防接种史
         }).then(function (res) {
           if (res.code === 1000) {
           } else {

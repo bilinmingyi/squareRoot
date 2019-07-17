@@ -317,8 +317,10 @@
         submitOrder({
           "order_seqno": this.orderSeqno,
           "chief_complaint": this.recordData.chief_complaint,
-          "examination": JSON.stringify(this.recordData.examination),
-          "diagnosis": this.recordData.diagnosis,
+          "examination": this.recordData.recordList.indexOf('examination') >= 0 ? JSON.stringify(this.recordData.examination) : null,
+          "diagnosis": this.recordData.recordList.indexOf('diagnosis') >= 0 ? this.recordData.diagnosis : null,
+          "sport_advice": this.recordData.recordList.indexOf('sport_advice') >= 0 ? this.recordData.sport_advice : null,
+          "dietary_advice": this.recordData.recordList.indexOf('dietary_advice') >= 0 ? this.recordData.dietary_advice : null,
           "diagnosis_xy": this.recordData.diagnosis_xy,
           "present_illness": this.recordData.present_illness,
           "recipe_list": resultList,
