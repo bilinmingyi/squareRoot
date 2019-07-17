@@ -23,21 +23,24 @@
               class="prescription_tab_content_item cursor_pointer"
               v-for="item in DiagnosisItem.currList"
               @click.stop="clickword(item)"
-            >{{item}}</div>
+            >{{item}}
+            </div>
           </div>
           <div class="display-flex">
             <div
               class="prescription_tab_num"
               v-for="item in numList"
               @click.stop="clickword(item)"
-            >{{item}}</div>
+            >{{item}}
+            </div>
           </div>
           <div class="display-flex mt10">
             <div
               class="prescription_tab_num"
               v-for="item in timeList"
               @click.stop="clickword(item)"
-            >{{item}}</div>
+            >{{item}}
+            </div>
           </div>
         </div>
         <div class="display-flex">
@@ -86,7 +89,8 @@
             class="prescription_tab_content_item cursor_pointer"
             v-for="item in DiagnosisItem.currList"
             @click.stop="clickword(item)"
-          >{{item}}</div>
+          >{{item}}
+          </div>
         </div>
         <div class="display-flex">
           <div class="display-flex flex-1">
@@ -112,7 +116,8 @@
       </div>
       <div
         v-show="DiagnosisItem.CommonEdit"
-      >#{include file="common/treatCommon/setCommonWord.html"/}</div>
+      >#{include file="common/treatCommon/setCommonWord.html"/}
+      </div>
     </div>
     <!--病史-->
     <!--过敏史-->
@@ -131,7 +136,8 @@
             class="prescription_tab_content_item cursor_pointer"
             v-for="item in DiagnosisItem.currList"
             @click.stop="clickword(item)"
-          >{{item}}</div>
+          >{{item}}
+          </div>
         </div>
         <div class="display-flex">
           <div class="display-flex flex-1">
@@ -157,7 +163,8 @@
       </div>
       <div
         v-show="DiagnosisItem.CommonEdit"
-      >#{include file="common/treatCommon/setCommonWord.html"/}</div>
+      >#{include file="common/treatCommon/setCommonWord.html"/}
+      </div>
     </div>
     <!--过敏史-->
     <!--既往史-->
@@ -176,7 +183,8 @@
             class="prescription_tab_content_item cursor_pointer"
             v-for="item in DiagnosisItem.currList"
             @click.stop="clickword(item)"
-          >{{item}}</div>
+          >{{item}}
+          </div>
         </div>
         <div class="display-flex">
           <div class="display-flex flex-1">
@@ -304,14 +312,13 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
-import { Input } from "iview";
+import {mapState, mapActions} from "vuex";
+import {Input} from "iview";
 import {
-  getCaseHistory,
-  updatePatientInfo,
   setCaseHistory
 } from "@/fetch/api.js";
 import setCommonWord from "./setCommonWord";
+
 export default {
   props: {
     diagnosisTypeProp: {
@@ -338,7 +345,7 @@ export default {
         {
           type: 0,
           typeCode: "personal_history",
-          typeName: "既往史",
+          typeName: "个人史",
           dataList: [],
           currList: [],
           totalNum: 0,
@@ -415,8 +422,7 @@ export default {
   computed: {
     ...mapState({
       DiagnosisCurrIndex: state => state.currRecipe,
-      recordData: state => state.recordData,
-      parientData: state => state.patientData
+      recordData: state => state.recordData
     }),
     diagnosisType() {
       return this.diagnosisTypeProp;
@@ -452,117 +458,117 @@ export default {
     getCaseHistoryFn() {
       // getCaseHistory().then(res => {
       //   if (res.code == 1000) {
-          let res = {};
-          res.data = this.caseHistory;
-          if (
-            res.data.past_history != undefined &&
-            res.data.past_history != null &&
-            JSON.parse(res.data.past_history).length != 0
-          ) {
-            this.DiagnosisTypeList[0].dataList = JSON.parse(
-              res.data.past_history
-            );
-          } else {
-            this.DiagnosisTypeList[0].dataList = [
-              "否认",
-              "高血压",
-              "糖尿病",
-              "心血管病",
-              "慢性肺炎",
-              "恶性肿瘤",
-              "结核病"
-            ];
-          }
-          this.DiagnosisTypeList[0].totalNum = Math.ceil(
-            this.DiagnosisTypeList[0].dataList.length /
-              this.DiagnosisTypeList[0].pageSize
-          );
+      let res = {};
+      res.data = this.caseHistory;
+      if (
+        res.data.past_history != undefined &&
+        res.data.past_history != null &&
+        JSON.parse(res.data.past_history).length != 0
+      ) {
+        this.DiagnosisTypeList[0].dataList = JSON.parse(
+          res.data.past_history
+        );
+      } else {
+        this.DiagnosisTypeList[0].dataList = [
+          "否认",
+          "高血压",
+          "糖尿病",
+          "心血管病",
+          "慢性肺炎",
+          "恶性肿瘤",
+          "结核病"
+        ];
+      }
+      this.DiagnosisTypeList[0].totalNum = Math.ceil(
+        this.DiagnosisTypeList[0].dataList.length /
+        this.DiagnosisTypeList[0].pageSize
+      );
 
-          if (
-            res.data.allergic_history != undefined &&
-            res.data.allergic_history != null &&
-            JSON.parse(res.data.allergic_history).length != 0
-          ) {
-            this.DiagnosisTypeList[1].dataList = JSON.parse(
-              res.data.allergic_history
-            );
-          } else {
-            this.DiagnosisTypeList[1].dataList = [
-              "否认",
-              "青霉素",
-              "阿奇霉素",
-              "链霉素",
-              "头孢类",
-              "磺胺类",
-              "解热镇痛类"
-            ];
-          }
-          this.DiagnosisTypeList[1].totalNum = Math.ceil(
-            this.DiagnosisTypeList[1].dataList.length /
-              this.DiagnosisTypeList[1].pageSize
-          );
+      if (
+        res.data.allergic_history != undefined &&
+        res.data.allergic_history != null &&
+        JSON.parse(res.data.allergic_history).length != 0
+      ) {
+        this.DiagnosisTypeList[1].dataList = JSON.parse(
+          res.data.allergic_history
+        );
+      } else {
+        this.DiagnosisTypeList[1].dataList = [
+          "否认",
+          "青霉素",
+          "阿奇霉素",
+          "链霉素",
+          "头孢类",
+          "磺胺类",
+          "解热镇痛类"
+        ];
+      }
+      this.DiagnosisTypeList[1].totalNum = Math.ceil(
+        this.DiagnosisTypeList[1].dataList.length /
+        this.DiagnosisTypeList[1].pageSize
+      );
 
-          if (
-            res.data.chief_complaint != undefined &&
-            res.data.chief_complaint != null &&
-            JSON.parse(res.data.chief_complaint).length != 0
-          ) {
-            this.DiagnosisTypeList[2].dataList = JSON.parse(
-              res.data.chief_complaint
-            );
-          } else {
-            this.DiagnosisTypeList[2].dataList = [
-              "发热",
-              "头痛",
-              "头晕",
-              "鼻塞",
-              "流涕",
-              "声嘶",
-              "咽痛",
-              "咽轻红",
-              "咽充血",
-              "咳嗽",
-              "咳喘",
-              "咳痰",
-              "呼吸困难",
-              "腹痛",
-              "腹泻",
-              "腹胀",
-              "恶心",
-              "乏力",
-              "呕吐",
-              "反酸",
-              "便秘",
-              "胸闷",
-              "胸痛",
-              "心悸",
-              "腰痛",
-              "腰背痛",
-              "关节痛",
-              "尿频",
-              "尿急",
-              "尿痛"
-            ];
-          }
-          this.DiagnosisTypeList[2].totalNum = Math.ceil(
-            this.DiagnosisTypeList[2].dataList.length /
-              this.DiagnosisTypeList[2].pageSize
-          );
+      if (
+        res.data.chief_complaint != undefined &&
+        res.data.chief_complaint != null &&
+        JSON.parse(res.data.chief_complaint).length != 0
+      ) {
+        this.DiagnosisTypeList[2].dataList = JSON.parse(
+          res.data.chief_complaint
+        );
+      } else {
+        this.DiagnosisTypeList[2].dataList = [
+          "发热",
+          "头痛",
+          "头晕",
+          "鼻塞",
+          "流涕",
+          "声嘶",
+          "咽痛",
+          "咽轻红",
+          "咽充血",
+          "咳嗽",
+          "咳喘",
+          "咳痰",
+          "呼吸困难",
+          "腹痛",
+          "腹泻",
+          "腹胀",
+          "恶心",
+          "乏力",
+          "呕吐",
+          "反酸",
+          "便秘",
+          "胸闷",
+          "胸痛",
+          "心悸",
+          "腰痛",
+          "腰背痛",
+          "关节痛",
+          "尿频",
+          "尿急",
+          "尿痛"
+        ];
+      }
+      this.DiagnosisTypeList[2].totalNum = Math.ceil(
+        this.DiagnosisTypeList[2].dataList.length /
+        this.DiagnosisTypeList[2].pageSize
+      );
 
-          if (
-            res.data.present_illness != undefined &&
-            res.data.present_illness != null
-          ) {
-            this.DiagnosisTypeList[4].dataList = JSON.parse(
-              res.data.present_illness
-            );
-            this.DiagnosisTypeList[4].totalNum = Math.ceil(
-              this.DiagnosisTypeList[4].dataList.length /
-                this.DiagnosisTypeList[4].pageSize
-            );
-          }
+      if (
+        res.data.present_illness != undefined &&
+        res.data.present_illness != null
+      ) {
+        this.DiagnosisTypeList[4].dataList = JSON.parse(
+          res.data.present_illness
+        );
+        this.DiagnosisTypeList[4].totalNum = Math.ceil(
+          this.DiagnosisTypeList[4].dataList.length /
+          this.DiagnosisTypeList[4].pageSize
+        );
+      }
 
-          this.changePage(1);
+      this.changePage(1);
       //   } else {
       //     console.log(res.msg);
       //   }
@@ -601,23 +607,7 @@ export default {
           val: this.DiagnosisItem.contentText
         });
       }
-      if (this.DiagnosisItem.type == 0 || this.DiagnosisItem.type == 1) {
-        updatePatientInfo({
-          id: this.parientData.id,
-          name: this.parientData.name,
-          mobile: this.parientData.mobile,
-          personal_history: this.recordData.personal_history,
-          allergic_history: this.recordData.allergic_history
-        }).then(res => {
-          if (res.code == 1000) {
-            this.clinicClose();
-          } else {
-            console.log(res.msg);
-          }
-        });
-      } else {
-        this.clinicClose();
-      }
+      this.clinicClose();
     },
 
     changeCurrPage(type) {
@@ -687,7 +677,7 @@ export default {
       this.setCaseHistoryFn();
     },
 
-    dragEnd({ firstId = -1, lastId = -1 }) {
+    dragEnd({firstId = -1, lastId = -1}) {
       let temp = "";
       temp = this.DiagnosisItem.dataList[firstId].toString();
       if (firstId < lastId) {
@@ -705,167 +695,178 @@ export default {
 </script>
 
 <style scoped>
-.prescription_tab_bg {
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.5);
-  z-index: 500;
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-.prescription_tab {
-  z-index: 998;
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  left: 50%;
-  width: 760px;
-  height: auto;
-  background: #f6fbfe;
-  padding: 15px;
-  box-shadow: 0 4px 16px 4px rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-}
-.prescription_tab_head {
-  display: flex;
-}
-.prescription_tab_head_title {
-  color: #4c4c4c;
-  font-size: 1rem;
-  flex: 1;
-  font-weight: bold;
-}
-.prescription_tab_head_close {
-  color: #5096e0;
-  font-size: 0.875rem;
-  text-decoration: underline;
-  cursor: pointer;
-}
-.prescription_tab_content_item {
-  width: 24.3%;
-  border: #5096e0 solid 1px;
-  border-radius: 0.25rem;
-  background: #fff;
-  color: #4c4c4c;
-  height: 2.5rem;
-  line-height: 2.5rem;
-  text-align: center;
-  margin-right: 0.3125rem;
-  margin-bottom: 0.625rem;
-  font-size: 0.9375rem;
-}
-.prescription_tab_num {
-  width: 6.5%;
-  height: 2.5rem;
-  line-height: 2.5rem;
-  border: #5096e0 solid 1px;
-  color: #4c4c4c;
-  float: left;
-  border-radius: 0.25rem;
-  background: #fff;
-  text-align: center;
-  margin-right: 0.75rem;
-}
+  .prescription_tab_bg {
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.5);
+    z-index: 500;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
 
-.prescription_change_page_btn {
-  font-size: 1rem;
-  height: 2.5rem;
-  line-height: 2.5rem;
-}
+  .prescription_tab {
+    z-index: 998;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    width: 760px;
+    height: auto;
+    background: #f6fbfe;
+    padding: 15px;
+    box-shadow: 0 4px 16px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
 
-.prescription_tab_page .active {
-  font-size: 1rem;
-  color: #5096e0;
-  text-decoration: underline;
-  cursor: pointer;
-  height: 2.5rem;
-  line-height: 2.5rem;
-}
-.prescription_tab_page .disable {
-  font-size: 1rem;
-  color: #cccccc;
-  text-decoration: none;
-  cursor: no-drop;
-  height: 2.5rem;
-  line-height: 2.5rem;
-}
+  .prescription_tab_head {
+    display: flex;
+  }
 
-.prescription_set_common_world_btn {
-  color: #5096e0;
-  font-size: 1rem;
-  height: 2.5rem;
-  line-height: 2.5rem;
-  text-decoration: underline;
-  cursor: pointer;
-}
+  .prescription_tab_head_title {
+    color: #4c4c4c;
+    font-size: 1rem;
+    flex: 1;
+    font-weight: bold;
+  }
 
-.prescription_tab_save {
-  width: 8rem;
-  height: 2.5rem;
-  line-height: 2.5rem;
-  border-radius: 1.875rem;
-  background: #5096e0;
-  color: #fff;
-  text-align: center;
-  font-size: 0.9375rem;
-}
-.prescription_tab_cancel {
-  width: 8rem;
-  height: 2.5rem;
-  line-height: 2.5rem;
-  border-radius: 1.875rem;
-  background: #fff;
-  color: #5096e0;
-  border: #5096e0 solid 1px;
-  text-align: center;
-  font-size: 0.9375rem;
-}
+  .prescription_tab_head_close {
+    color: #5096e0;
+    font-size: 0.875rem;
+    text-decoration: underline;
+    cursor: pointer;
+  }
 
-.prescription_tab_check {
-  width: 100%;
-  border: #5096e0 solid 1px;
-  height: auto;
-  background: #fff;
-  border-radius: 0.25rem;
-  padding: 0.3125rem 0.625rem;
-  font-size: 0.875rem;
-}
+  .prescription_tab_content_item {
+    width: 24.3%;
+    border: #5096e0 solid 1px;
+    border-radius: 0.25rem;
+    background: #fff;
+    color: #4c4c4c;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    text-align: center;
+    margin-right: 0.3125rem;
+    margin-bottom: 0.625rem;
+    font-size: 0.9375rem;
+  }
 
-.prescription-blue-title {
-  color: #5096e0;
-  font-weight: bold;
-  font-size: 1rem;
-  margin-bottom: 10px;
-}
+  .prescription_tab_num {
+    width: 6.5%;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    border: #5096e0 solid 1px;
+    color: #4c4c4c;
+    float: left;
+    border-radius: 0.25rem;
+    background: #fff;
+    text-align: center;
+    margin-right: 0.75rem;
+  }
 
-.check_name {
-  width: 2.5rem;
-  line-height: 30px;
-  display: inline-block;
-}
+  .prescription_change_page_btn {
+    font-size: 1rem;
+    height: 2.5rem;
+    line-height: 2.5rem;
+  }
 
-.check_num {
-  width: 3.125rem;
-  line-height: 1.875rem;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: #4c4c4c solid 1px;
-  outline: none;
-}
+  .prescription_tab_page .active {
+    font-size: 1rem;
+    color: #5096e0;
+    text-decoration: underline;
+    cursor: pointer;
+    height: 2.5rem;
+    line-height: 2.5rem;
+  }
 
-.display-flex {
-  display: flex;
-}
-.flex-wrap {
-  display: flex;
-  flex-wrap: wrap;
-}
-.flex-1 {
-  flex: 1;
-}
-.cursor_pointer {
-  cursor: pointer;
-}
+  .prescription_tab_page .disable {
+    font-size: 1rem;
+    color: #cccccc;
+    text-decoration: none;
+    cursor: no-drop;
+    height: 2.5rem;
+    line-height: 2.5rem;
+  }
+
+  .prescription_set_common_world_btn {
+    color: #5096e0;
+    font-size: 1rem;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .prescription_tab_save {
+    width: 8rem;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    border-radius: 1.875rem;
+    background: #5096e0;
+    color: #fff;
+    text-align: center;
+    font-size: 0.9375rem;
+  }
+
+  .prescription_tab_cancel {
+    width: 8rem;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    border-radius: 1.875rem;
+    background: #fff;
+    color: #5096e0;
+    border: #5096e0 solid 1px;
+    text-align: center;
+    font-size: 0.9375rem;
+  }
+
+  .prescription_tab_check {
+    width: 100%;
+    border: #5096e0 solid 1px;
+    height: auto;
+    background: #fff;
+    border-radius: 0.25rem;
+    padding: 0.3125rem 0.625rem;
+    font-size: 0.875rem;
+  }
+
+  .prescription-blue-title {
+    color: #5096e0;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+
+  .check_name {
+    width: 2.5rem;
+    line-height: 30px;
+    display: inline-block;
+  }
+
+  .check_num {
+    width: 3.125rem;
+    line-height: 1.875rem;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: #4c4c4c solid 1px;
+    outline: none;
+  }
+
+  .display-flex {
+    display: flex;
+  }
+
+  .flex-wrap {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .flex-1 {
+    flex: 1;
+  }
+
+  .cursor_pointer {
+    cursor: pointer;
+  }
 </style>

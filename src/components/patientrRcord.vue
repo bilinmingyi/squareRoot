@@ -23,7 +23,7 @@
     </div>
     <div class="mt10 mid-record-item">
       <div class="text-justify mid-record-item-key">
-        <span>病&nbsp;&nbsp;&nbsp;史：</span>
+        <span>现病史：</span>
       </div>
       <div class="mid-record-item-val">
         <assistTextarea rows="2" placeholder="点此输入" :value="recordData.present_illness"
@@ -45,7 +45,7 @@
     </div>
     <div class="mt10 mid-record-item">
       <div class="text-justify mid-record-item-key">
-        <span>既往史：</span>
+        <span>个人史：</span>
       </div>
       <div class="mid-record-item-val">
         <assistTextarea rows="2" placeholder="点此输入" :value="recordData.personal_history"
@@ -54,66 +54,120 @@
         </assistTextarea>
       </div>
     </div>
+
     <div class="mt10 mid-record-item">
       <div class="text-justify mid-record-item-key">
-        <span>检&nbsp;&nbsp;&nbsp;查：</span>
+        <span>既往史：</span>
+      </div>
+      <div class="mid-record-item-val">
+        <Input
+          type="textarea"
+          :autosize="{minRows: 2,maxRows: 5}"
+          :rows="2"
+          placeholder="点此输入"
+          @on-change="set_record_prop({key: 'past_history', val: $event.target.value})"
+          :value="recordData.past_history"
+        ></Input>
+      </div>
+    </div>
+    <div class="mt10 mid-record-item">
+      <div class="text-justify mid-record-item-key">
+        <span>家族史：</span>
+      </div>
+      <div class="mid-record-item-val">
+        <Input
+          type="textarea"
+          :autosize="{minRows: 2,maxRows: 5}"
+          :rows="2"
+          placeholder="点此输入"
+          @on-change="set_record_prop({key: 'family_history', val: $event.target.value})"
+          :value="recordData.family_history"
+        ></Input>
+      </div>
+    </div>
+    <div class="mt10 mid-record-item">
+      <div class="text-justify mid-record-item-key">
+        <span>预防接种史：</span>
+      </div>
+      <div class="mid-record-item-val">
+        <Input
+          type="textarea"
+          :autosize="{minRows: 2,maxRows: 5}"
+          :rows="2"
+          placeholder="点此输入"
+          @on-change="set_record_prop({key: 'prophylactic_history', val: $event.target.value})"
+          :value="recordData.prophylactic_history"
+        ></Input>
+      </div>
+    </div>
+
+    <div class="mt10 mid-record-item">
+      <div class="text-justify mid-record-item-key">
+        <span>检查报告：</span>
+      </div>
+      <div class="mid-record-item-val display-flex">
+        <div class="examine-report">
+          <img src="../assets/img/jc@2x.png">
+          <div class="examine-infor">
+            <div>
+              王小明
+            </div>
+            <button>删除</button>
+          </div>
+        </div>
+        <div class="examine-report">
+          <img src="../assets/img/jc@2x.png">
+          <div class="examine-infor">
+            <div>
+              王小明
+            </div>
+            <button>删除</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt10 mid-record-item">
+      <div class="text-justify mid-record-item-key" style="flex-wrap: wrap">
+        <span>问诊表：</span>
+      </div>
+      <div class="mid-record-item-val display-flex" style="flex-wrap: wrap">
+        <div class="examine-report">
+          <img src="../assets/img/dcb@2x.png">
+          <div class="examine-infor">
+            <div>
+              健康生活调查表
+            </div>
+            <button>删除</button>
+          </div>
+        </div>
+        <div class="examine-report">
+          <img src="../assets/img/dcb@2x.png">
+          <div class="examine-infor">
+            <div>
+              基础检查表
+            </div>
+            <button>删除</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt10 mid-record-item">
+      <div class="text-justify mid-record-item-key">
+        <span>基础检查：</span>
       </div>
       <div class="mid-record-item-val" @click.stop="clinicRecord(3)">
         <Input
-          class="patient-record-input"
           type="textarea"
-          :autosize="{minRows: 1,maxRows: 5}"
+          :autosize="{minRows: 2,maxRows: 5}"
+          :rows="2"
           placeholder="点此输入"
-          :rows="1"
           v-model="examination"
           readonly
         ></Input>
       </div>
     </div>
-    <div class="mt10 mid-record-item" @click.stop="$refs.diagnosis_xy_input.focus()">
-      <div class="text-justify mid-record-item-key">
-        <span>{{clinicType == 6 ? '诊断结果' : '西医诊断'}}：</span>
-      </div>
-      <div class="mid-record-item-val">
-        <div class="diagnosis-input-box" ref="diagnosis_xy">
-          <div class="label-box" v-show="recordData.diagnosis_xy_labels.length > 0">
-            <Tag
-              closable
-              v-for="(tag, index) in recordData.diagnosis_xy_labels"
-              @on-close="deleteDiagnosisLabel('diagnosis_xy', index)"
-              :key="tag.code"
-            >{{tag.name}}
-            </Tag>
-          </div>
-          <input
-            class="diagnosis-input"
-            placeholder="点此输入"
-            type="text"
-            v-model="recordData.diagnosis_xy_input"
-            @blur="handleComma('diagnosis_xy')"
-            @input="searchDiagnosis('diagnosis_xy')"
-            @focus="changeBox('diagnosis_xy')"
-            ref="diagnosis_xy_input"
-            @keydown="listenerKey($event, 'diagnosis_xy')"
-          >
-        </div>
-        <div
-          class="mid-record-item-drop-down-box"
-          v-show="recordData.diagnosis_xy_search_data.length > 0"
-        >
-          <div class="drop-down-mask" @click="clearDiagnosisSearchData('diagnosis_xy')"></div>
-          <ul class="drop-down" ref="diagnosis_xy_drop_down">
-            <li
-              v-for="(item, index) in recordData.diagnosis_xy_search_data"
-              @click="chooseDiagnosisLabel('diagnosis_xy', index)"
-              :class="{cur: diagnosisDataIndex == (index + 1)}"
-              :id="'diagnosis_xy_drop_down_li_' + (index + 1)"
-            >{{item.name}}
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
+
+
     <div class="mt10 mid-record-item" @click.stop="$refs.diagnosis_input.focus()" v-if="clinicType != 6">
       <div class="text-justify mid-record-item-key">
         <span>中医诊断：</span>
@@ -157,6 +211,51 @@
         </div>
       </div>
     </div>
+    <div class="mt10 mid-record-item" @click.stop="$refs.diagnosis_xy_input.focus()">
+      <div class="text-justify mid-record-item-key">
+        <span>诊断结果：</span>
+      </div>
+      <div class="mid-record-item-val">
+        <div class="diagnosis-input-box" ref="diagnosis_xy">
+          <div class="label-box" v-show="recordData.diagnosis_xy_labels.length > 0">
+            <Tag
+              closable
+              v-for="(tag, index) in recordData.diagnosis_xy_labels"
+              @on-close="deleteDiagnosisLabel('diagnosis_xy', index)"
+              :key="tag.code"
+            >{{tag.name}}
+            </Tag>
+          </div>
+          <input
+            class="diagnosis-input"
+            placeholder="点此输入"
+            type="text"
+            v-model="recordData.diagnosis_xy_input"
+            @blur="handleComma('diagnosis_xy')"
+            @input="searchDiagnosis('diagnosis_xy')"
+            @focus="changeBox('diagnosis_xy')"
+            ref="diagnosis_xy_input"
+            @keydown="listenerKey($event, 'diagnosis_xy')"
+          >
+        </div>
+        <div
+          class="mid-record-item-drop-down-box"
+          v-show="recordData.diagnosis_xy_search_data.length > 0"
+        >
+          <div class="drop-down-mask" @click="clearDiagnosisSearchData('diagnosis_xy')"></div>
+          <ul class="drop-down" ref="diagnosis_xy_drop_down">
+            <li
+              v-for="(item, index) in recordData.diagnosis_xy_search_data"
+              @click="chooseDiagnosisLabel('diagnosis_xy', index)"
+              :class="{cur: diagnosisDataIndex == (index + 1)}"
+              :id="'diagnosis_xy_drop_down_li_' + (index + 1)"
+            >{{item.name}}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
     <div class="mt10 mid-record-item">
       <div class="text-justify mid-record-item-key">
         <span>处理意见：</span>
@@ -169,6 +268,36 @@
           :value="recordData.treat_advice"
           placeholder="点此输入"
           @on-change="set_record_prop({key: 'treat_advice', val: $event.target.value})"
+        ></Input>
+      </div>
+    </div>
+    <div class="mt10 mid-record-item">
+      <div class="text-justify mid-record-item-key">
+        <span>运动建议：</span>
+      </div>
+      <div class="mid-record-item-val">
+        <Input
+          type="textarea"
+          :autosize="{minRows: 2,maxRows: 5}"
+          :rows="2"
+          placeholder="点此输入"
+          @on-change="set_record_prop({key: 'sport_advice', val: $event.target.value})"
+          :value="recordData.sport_advice"
+        ></Input>
+      </div>
+    </div>
+    <div class="mt10 mid-record-item">
+      <div class="text-justify mid-record-item-key">
+        <span>膳食建议：</span>
+      </div>
+      <div class="mid-record-item-val">
+        <Input
+          type="textarea"
+          :autosize="{minRows: 2,maxRows: 5}"
+          :rows="2"
+          placeholder="点此输入"
+          @on-change="set_record_prop({key: 'dietary_advice', val: $event.target.value})"
+          :value="recordData.dietary_advice"
         ></Input>
       </div>
     </div>
@@ -577,7 +706,8 @@ export default {
   .mid-record-item-key {
     padding-left: 1.5rem;
     min-width: 6.1875rem;
-    height: 2.25rem;
+    height: 2rem;
+    line-height: 2rem;
     font-size: 0.9375rem;
     font-family: PingFangSC-Semibold;
     font-weight: 600;
@@ -715,4 +845,37 @@ export default {
     height: 0;
     display: inline-block;
   }
+
+  .examine-report {
+    display: flex;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 16px;
+    margin-right: 16px;
+    margin-bottom: 4px;
+  }
+
+  .examine-report img {
+    width: 44px;
+    height: 44px;
+    margin-right: 12px;
+  }
+
+  .examine-infor {
+    text-align: center;
+  }
+
+  .examine-infor button {
+    width: 48px;
+    line-height: 20px;
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    border: 1px solid rgba(204, 204, 204, 1);
+    font-size: 11px;
+    color: #8C8C8C;
+    background: transparent;
+    margin-top: 6px;
+  }
+
 </style>

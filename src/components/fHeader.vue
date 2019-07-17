@@ -47,7 +47,7 @@
   import {Button, Dropdown, DropdownMenu, DropdownItem} from 'iview'
   import {mapState, mapActions} from 'vuex'
   import previewRecipe from '@/components/rootMiddle/previewRecipe.vue'
-  import {saveDraft, cancelOrder, waitingPage} from '@/fetch/api.js'
+  import {saveDraft, cancelOrder, waitingPage, updatePatientInfo} from '@/fetch/api.js'
   import fLoader from '@/components/fLoader.vue'
 
   export default {
@@ -92,6 +92,24 @@
           recordData: this.recordData,
           currRecipe: this.currRecipe
         }
+        updatePatientInfo({
+          id: this.patientData.id,
+          name: this.patientData.name,
+          mobile: this.patientData.mobile,
+          personal_history: this.recordData.personal_history, // 个人史
+          allergic_history: this.recordData.allergic_history, // 过敏史
+          past_history: this.recordData.past_history, // 既往史
+          family_history: this.recordData.family_history, // 家族史
+          prophylactic_history: this.recordData.prophylactic_history, // 预防接种史
+        }).then(function (res) {
+          if (res.code === 1000) {
+          } else {
+            this.$Message.info(res.msg);
+          }
+        }).catch(function (error) {
+          console.log(error)
+          this.$Message.info("网络出错！");
+        })
         this.save_draft_data(JSON.stringify(draftData));
         saveDraft({
           "patient_name": this.patientData.name,
@@ -115,6 +133,9 @@
             this.showLoading = false;
             this.$Message.info("保存失败");
           }
+        }).catch(function (error) {
+          console.log(error)
+          this.$Message.info("网络出错！");
         })
       },
       confirmCancel() {

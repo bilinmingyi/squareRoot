@@ -41,9 +41,14 @@ const state = {
   recordData: {
     // 患者病历
     chief_complaint: '',    // 主述
-    present_illness: '',    // 病史
+    present_illness: '',    // 现病史
     allergic_history: '',   // 过敏史
-    personal_history: '',   // 既往史
+    personal_history: '',   // 个人史
+    past_history: '', // 既往史
+    family_history: '', // 家族史
+    prophylactic_history: '', // 预防接种史
+
+
     examination: {},    // 检查
     diagnosis_xy: '',   // 西医诊断
     diagnosis: '',    // 中医诊断
@@ -54,6 +59,8 @@ const state = {
     diagnosis_labels: [],  // 中医诊断标签
     diagnosis_search_data: [],  // 中医诊断搜索结果
     treat_advice: '',   // 处理意见
+    sport_advice: '', // 运动建议
+    dietary_advice: '' // 饮食建议
   },
 
   //middle
