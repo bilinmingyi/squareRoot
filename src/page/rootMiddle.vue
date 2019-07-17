@@ -38,21 +38,6 @@
         clinicType: state => state.clinicType
       })
     },
-    mounted() {
-      // let temCurrRecipe = this.currRecipe;
-      // if (this.recipeList.length === 0) {
-      //   if (this.clinicType === 6) {
-      //     this.addNewRecipt(3);
-      //     this.addNewRecipt(4);
-      //   } else {
-      //     this.addNewRecipt(1, 1);
-      //     this.addNewRecipt(1, 2);
-      //     this.addNewRecipt(2);
-      //     this.addNewRecipt(4);
-      //   }
-      //   this.change_curr_tab(temCurrRecipe);
-      // }
-    },
     methods: {
       ...mapActions([
         'add_new_recipt',

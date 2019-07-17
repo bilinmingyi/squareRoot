@@ -76,6 +76,10 @@ export default {
               !this.recordData.personal_history && this.set_record_prop({ key: 'personal_history', val: res.data.personal_history});
               !this.recordData.present_illness && this.set_record_prop({ key: 'present_illness', val: res.data.present_illness});
               !this.recordData.allergic_history && this.set_record_prop({ key: 'allergic_history', val: res.data.allergic_history});
+              !this.recordData.past_history && this.set_record_prop({ key: 'past_history', val: res.data.past_history});
+              !this.recordData.family_history && this.set_record_prop({ key: 'family_history', val: res.data.family_history});
+              !this.recordData.prophylactic_history && this.set_record_prop({ key: 'prophylactic_history', val: res.data.prophylactic_history});
+
             }
           });
           break;
