@@ -152,6 +152,12 @@ const pointCount = (params) => fetch('/doctreat/treat/help', params)
 
 const waitingPage = '/yzshis/doctreat/waiting/listPage';
 
+const addReportImg = (params) => fetch('/doctreat/report/imgUpload', params)
+
+const addReport = (params) => fetch('/doctreat/report/add', params)
+
+const updataReport = (params) => fetch('/doctreat/report/update', params)
+
 //right
 const searchRecentMed = (params, type, isCloud) => {
   if (type === 1) {
@@ -266,6 +272,9 @@ export {
   fetchMedshopList,
   auditrecipe,
   fetchClinic,
+  addReportImg,
+  addReport,
+  updataReport,
 
   //right
   searchRecentMed,

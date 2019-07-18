@@ -84,7 +84,7 @@
           </td>
         </tr>
         <tr v-if="currentData.data.items.length==0">
-          <td colspan="10">
+          <td colspan="11">
             右侧选择添加药品
           </td>
         </tr>

@@ -49,6 +49,8 @@ const state = {
     family_history: '', // 家族史
     prophylactic_history: '', // 预防接种史
 
+    inspection_report: [], // 检查报告
+    outpatient_table: [], // w问诊表
 
     examination: {},    // 检查
     diagnosis_xy: '',   // 西医诊断

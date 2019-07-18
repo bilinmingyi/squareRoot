@@ -3,7 +3,7 @@
   <div class="mid-box-content">
     <div class="mid-title-btn-box mb10 pr10">
       <button class="prescriptionBtn mr10" @click.stop="showRecordSetAlert">病历项目设置</button>
-      <button class="prescriptionBtn mr10">添加报告</button>
+      <button class="prescriptionBtn mr10" @click.stop="showAddRecordAlert(-1)">添加报告</button>
       <button class="prescriptionBtn mr10" @click.stop="printPrescription('printCase')">打印{{clinicType == 6 ? '档案' :
         '病历'}}
       </button>
@@ -101,50 +101,32 @@
       </div>
     </div>
 
-    <div class="mt10 mid-record-item">
+    <div class="mt10 mid-record-item" v-if="recordData.inspection_report.length > 0">
       <div class="text-justify mid-record-item-key">
         <span>检查报告：</span>
       </div>
       <div class="mid-record-item-val display-flex">
-        <div class="examine-report">
+        <div class="examine-report" v-for="(item, index) in recordData.inspection_report" @click.stop="showAddRecordAlert(index)">
           <img src="../assets/img/jc@2x.png">
           <div class="examine-infor">
             <div>
-              王小明
-            </div>
-            <button>删除</button>
-          </div>
-        </div>
-        <div class="examine-report">
-          <img src="../assets/img/jc@2x.png">
-          <div class="examine-infor">
-            <div>
-              王小明
+              {{item.name}}
             </div>
             <button>删除</button>
           </div>
         </div>
       </div>
     </div>
-    <div class="mt10 mid-record-item">
+    <div class="mt10 mid-record-item" v-if="recordData.outpatient_table.length > 0">
       <div class="text-justify mid-record-item-key" style="flex-wrap: wrap">
         <span>问诊表：</span>
       </div>
       <div class="mid-record-item-val display-flex" style="flex-wrap: wrap">
-        <div class="examine-report">
+        <div class="examine-report" v-for="(item, index) in recordData.outpatient_table">
           <img src="../assets/img/dcb@2x.png">
           <div class="examine-infor">
             <div>
-              健康生活调查表
-            </div>
-            <button>删除</button>
-          </div>
-        </div>
-        <div class="examine-report">
-          <img src="../assets/img/dcb@2x.png">
-          <div class="examine-infor">
-            <div>
-              基础检查表
+              {{item.name}}
             </div>
             <button>删除</button>
           </div>
@@ -319,6 +301,7 @@
       @reset="printFlag = false"
     ></print-record>
     <record-set v-if="recordSetAlert" @close="recordSetAlert = false"></record-set>
+    <add-record v-if="addRecordAlert" :currIndex="currRecordIndex" @close="addRecordAlert = false"></add-record>
   </div>
   <!-- 患者病历 -->
 </template>
@@ -332,6 +315,7 @@ import saveRecordTpl from '@/components/saveRecordTpl';
 import printRecord from '@/components/printRecord';
 import assistTextarea from '@/components/assistTextarea'
 import recordSet from  '@/components/recordSet'
+import addRecord from '@/components/addRecord'
 
 export default {
   name: "patientrRcord",
@@ -342,6 +326,7 @@ export default {
     saveRecordTpl,
     printRecord,
     recordSet,
+    addRecord,
     assistTextarea
   },
   data() {
@@ -356,7 +341,10 @@ export default {
       diagnosisTimer: null,
       diagnosisDataIndex: 0,  // 诊断下拉数组当前选中索引
       printFlag: false, // 打印病历
-      recordSetAlert: false
+      recordSetAlert: false,
+      addRecordAlert: false,
+      currRecordIndex: -1
+
     };
   },
   computed: {
@@ -440,6 +428,10 @@ export default {
     },
     showRecordSetAlert () {
       this.recordSetAlert = true
+    },
+    showAddRecordAlert (index) {
+      this.currRecordIndex = Number(index)
+      this.addRecordAlert = true
     },
     changeBox(type) {
       switch (type) {
@@ -862,7 +854,7 @@ export default {
   }
 
   .examine-infor {
-    text-align: center;
+
   }
 
   .examine-infor button {
