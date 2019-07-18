@@ -28,7 +28,7 @@
       </section>
       <div class="tc mt30">
         <button class="saveBtn mr20" @click.stop="sureData">确定</button>
-        <button class="saveBtn cancelBtn" @click.stop="cancel">取消</button>
+        <button class="saveBtn cancelBtn" @click.stop="cancel(0)">取消</button>
       </div>
     </div>
     <f-loader v-if="showLoading"></f-loader>
@@ -37,7 +37,7 @@
 
 <script>
 import {Input} from 'iview'
-import {addReportImg, addReport, updataReport, saveDraft} from "@/fetch/api.js";
+import {addReportImg, addReport, updataReport} from "@/fetch/api.js";
 import fLoader from '@/components/fLoader.vue'
 import {mapState, mapActions} from "vuex";
 
@@ -67,10 +67,6 @@ export default {
   computed: {
     ...mapState({
       'patientData': state => state.patientData,
-      'recordData': state => state.recordData,
-      'recipeList': state => state.recipeList,
-      'orderSeqno': state => state.orderSeqno,
-      'currRecipe': state => state.currRecipe,
     })
   },
   created() {
@@ -85,7 +81,6 @@ export default {
   methods: {
     ...mapActions([
       'set_record_prop',
-      'save_draft_data'
     ]),
     imgSelect(event) {
       let self = this;
@@ -137,8 +132,7 @@ export default {
               "name": this.project
             })
             this.set_record_prop({key: 'inspection_report', val: this.inspectionList});
-            this.cancel()
-            this.saveDraftData()
+            this.cancel(1)
           } else {
             this.showLoading = false
             this.$Message.info(res.msg)
@@ -170,8 +164,7 @@ export default {
               "name": self.project
             }
             this.set_record_prop({key: 'inspection_report', val: self.inspectionList});
-            this.cancel()
-            this.saveDraftData()
+            this.cancel(1)
           } else {
             self.showLoading = false
             self.$Message.info(res.msg)
@@ -195,8 +188,7 @@ export default {
                 "name": self.project
               }
               this.set_record_prop({key: 'inspection_report', val: self.inspectionList});
-              this.cancel()
-              this.saveDraftData()
+              this.cancel(1)
             } else {
               this.showLoading = false
               this.$Message.info(res.msg)
@@ -211,34 +203,8 @@ export default {
         console.log(e)
       }
     },
-    cancel() {
-      this.$emit('close')
-    },
-    saveDraftData() {
-      let draftData = {
-        recipeList: this.recipeList,
-        recordData: this.recordData,
-        currRecipe: this.currRecipe
-      }
-      this.save_draft_data(JSON.stringify(draftData));
-      saveDraft({
-        "patient_name": this.patientData.name,
-        "patient_mobile": this.patientData.mobile,
-        "patient_sex": this.patientData.sex,
-        "patient_marital_status": this.patientData.marital_status,
-        "patient_birthday": this.patientData.birthday,
-        "order_seqno": this.orderSeqno,
-        "draft": JSON.stringify(draftData),
-      }).then(data => {
-        if (data.code === 1000) {
-
-        } else {
-          this.$Message.info("保存失败");
-        }
-      }).catch(function (error) {
-        console.log(error)
-        this.$Message.info("网络出错！");
-      })
+    cancel(canSave) {
+      this.$emit('close', canSave)
     }
   }
 }

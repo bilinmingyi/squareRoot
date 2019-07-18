@@ -158,6 +158,8 @@ const addReport = (params) => fetch('/doctreat/report/add', params)
 
 const updataReport = (params) => fetch('/doctreat/report/update', params)
 
+const deleteReport = (params) => fetch('/doctreat/report/delete', params)
+
 //right
 const searchRecentMed = (params, type, isCloud) => {
   if (type === 1) {
@@ -275,6 +277,7 @@ export {
   addReportImg,
   addReport,
   updataReport,
+  deleteReport,
 
   //right
   searchRecentMed,

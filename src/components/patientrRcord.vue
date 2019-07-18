@@ -106,13 +106,14 @@
         <span>检查报告：</span>
       </div>
       <div class="mid-record-item-val display-flex">
-        <div class="examine-report" v-for="(item, index) in recordData.inspection_report" @click.stop="showAddRecordAlert(index)">
+        <div class="examine-report" v-for="(item, index) in recordData.inspection_report"
+             @click.stop="showAddRecordAlert(index)">
           <img src="../assets/img/jc@2x.png">
           <div class="examine-infor">
             <div>
               {{item.name}}
             </div>
-            <button @click.stop="deleteReport(index)">删除</button>
+            <button @click.stop="delReport(item, index)">删除</button>
           </div>
         </div>
       </div>
@@ -301,7 +302,7 @@
       @reset="printFlag = false"
     ></print-record>
     <record-set v-if="recordSetAlert" @close="recordSetAlert = false"></record-set>
-    <add-record v-if="addRecordAlert" :currIndex="currRecordIndex" @close="addRecordAlert = false"></add-record>
+    <add-record v-if="addRecordAlert" :currIndex="currRecordIndex" @close="hideAddRecordAlert"></add-record>
   </div>
   <!-- 患者病历 -->
 </template>
@@ -310,11 +311,11 @@
 import {mapState, mapActions} from "vuex";
 import {Input, Tag} from "iview";
 import patientAlert from "./patientAlert";
-import {getCaseHistory, getDiseaseList} from "@/fetch/api.js";
+import {getCaseHistory, getDiseaseList, deleteReport, saveDraft} from "@/fetch/api.js";
 import saveRecordTpl from '@/components/saveRecordTpl';
 import printRecord from '@/components/printRecord';
 import assistTextarea from '@/components/assistTextarea'
-import recordSet from  '@/components/recordSet'
+import recordSet from '@/components/recordSet'
 import addRecord from '@/components/addRecord'
 
 export default {
@@ -349,8 +350,12 @@ export default {
   },
   computed: {
     ...mapState({
-      recordData: state => state.recordData,
-      clinicType: state => state.clinicType
+      'recordData': state => state.recordData,
+      'patientData': state => state.patientData,
+      'recipeList': state => state.recipeList,
+      'orderSeqno': state => state.orderSeqno,
+      'currRecipe': state => state.currRecipe,
+      'clinicType': state => state.clinicType
     }),
     examination() {
       // 计算检查结果
@@ -420,30 +425,79 @@ export default {
     });
   },
   methods: {
-    ...mapActions(["set_record_prop"]),
-
-    checkRecord (type) {
+    ...mapActions([
+      "set_record_prop",
+      'save_draft_data'
+    ]),
+    checkRecord(type) {
       var self = this
       return self.recordData.recordList.indexOf(type) >= 0
     },
-    showRecordSetAlert () {
+    showRecordSetAlert() {
       this.recordSetAlert = true
     },
-    showAddRecordAlert (index) {
+    showAddRecordAlert(index) {
       this.currRecordIndex = Number(index)
       this.addRecordAlert = true
     },
-    deleteReport (index) {
+    hideAddRecordAlert(canSave){
+      this.addRecordAlert = false
+      if(canSave === 1) {
+        this.saveDraftData()
+      }
+    },
+    delReport(item, index) {
+      let self = this
+      let inspectionList = JSON.parse(JSON.stringify(self.recordData.inspection_report))
       this.$Modal.confirm({
         title: '提示',
         content: '<p>确定删除该检查报告？</p>',
         onOk: () => {
-          console.log(index)
+          deleteReport({
+            "id": item.check_report_id
+          }).then(res => {
+            if (res.code === 1000){
+              inspectionList.splice(index, 1)
+              self.set_record_prop({key: 'inspection_report', val: inspectionList});
+              self.saveDraftData()
+            } else {
+              self.$Message.info(res.msg)
+            }
+          }).catch(e => {
+            self.$Message.info("网络出错！")
+            console.log(e)
+          })
         },
         onCancel: () => {
 
         }
       });
+    },
+    saveDraftData() {
+      let draftData = {
+        recipeList: this.recipeList,
+        recordData: this.recordData,
+        currRecipe: this.currRecipe
+      }
+      this.save_draft_data(JSON.stringify(draftData));
+      saveDraft({
+        "patient_name": this.patientData.name,
+        "patient_mobile": this.patientData.mobile,
+        "patient_sex": this.patientData.sex,
+        "patient_marital_status": this.patientData.marital_status,
+        "patient_birthday": this.patientData.birthday,
+        "order_seqno": this.orderSeqno,
+        "draft": JSON.stringify(draftData),
+      }).then(data => {
+        if (data.code === 1000) {
+
+        } else {
+          this.$Message.info("保存失败");
+        }
+      }).catch(function (error) {
+        console.log(error)
+        this.$Message.info("网络出错！");
+      })
     },
     changeBox(type) {
       switch (type) {
