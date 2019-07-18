@@ -21,9 +21,14 @@
               <button class="upload-btn mb20">上传照片
                 <input type="file" class="file-input" @change="imgSelect"/>
               </button>
-              <button class="upload-btn print-btn">打印</button>
+              <button class="upload-btn print-btn" @click="print">打印</button>
             </div>
           </div>
+        </div>
+      </section>
+      <section id="print" style="display: none">
+        <div style="width: 100%;height: 100%">
+          <img :src="img_url" style="width: 100%">
         </div>
       </section>
       <div class="tc mt30">
@@ -85,6 +90,7 @@ export default {
     imgSelect(event) {
       let self = this;
       let file = event.target.files[0];
+
       self.file = file
       let reader = new FileReader();
       reader.onload = function (e) {
@@ -115,6 +121,7 @@ export default {
     async addData() {
       let formData = new FormData()
       formData.append('file', this.file)
+
       try {
         let res = await addReportImg(formData)
         if (res.code === 1000) {
@@ -149,7 +156,7 @@ export default {
     async updata() {
       let self = this
       try {
-        if (JSON.stringify(self.file) === '{}') {
+        if (!self.file.name) {
           let res = await updataReport({
             "id": self.report_id,
             "organ_name": self.organization,
@@ -205,6 +212,28 @@ export default {
     },
     cancel(canSave) {
       this.$emit('close', canSave)
+    },
+    print() {
+      var el = document.getElementById('print');
+      var iframe = document.createElement("IFRAME");
+      var doc = null;
+      iframe.setAttribute(
+        "style",
+        "position:absolute;width:0px;height:0px;left:-500px;top:-500px;"
+      );
+      document.body.appendChild(iframe);
+      doc = iframe.contentWindow.document;
+      doc.write("<LINK rel='stylesheet' type='text/css'>");
+      doc.write("<div>" + el.innerHTML + "</div>");
+      doc.close();
+      setTimeout(() => {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+        if (navigator.userAgent.indexOf("MSIE") > 0) {
+          document.body.removeChild(iframe);
+        }
+      }, 500)
+
     }
   }
 }
