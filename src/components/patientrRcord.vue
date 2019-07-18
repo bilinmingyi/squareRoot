@@ -112,7 +112,7 @@
             <div>
               {{item.name}}
             </div>
-            <button>删除</button>
+            <button @click.stop="deleteReport(index)">删除</button>
           </div>
         </div>
       </div>
@@ -432,6 +432,18 @@ export default {
     showAddRecordAlert (index) {
       this.currRecordIndex = Number(index)
       this.addRecordAlert = true
+    },
+    deleteReport (index) {
+      this.$Modal.confirm({
+        title: '提示',
+        content: '<p>确定删除该检查报告？</p>',
+        onOk: () => {
+          console.log(index)
+        },
+        onCancel: () => {
+
+        }
+      });
     },
     changeBox(type) {
       switch (type) {
