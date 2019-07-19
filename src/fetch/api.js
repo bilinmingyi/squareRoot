@@ -241,6 +241,12 @@ const fetchOptionConfig = params => fetch('/clinic/optionConfig', params);
 
 const fetchMedshopList = params => fetch('/clinicmng/medshopList', params)
 
+const fetchQuestionList = params =>fetch('clinicmng/question/list', params)
+
+const fetchQuestion = params => fetch('/clinicmng/question/content?questionId=' + params)
+
+const addTreatAnswer = params => fetch('/doctreat/treatAnswer/add', params)
+
 export {
   fetch,
   cancelOrder,
@@ -286,5 +292,8 @@ export {
   updateTpl,
   delTpl,
   searchFJB,
+  fetchQuestionList,
+  fetchQuestion,
+  addTreatAnswer,
   queryClassic
 }

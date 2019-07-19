@@ -3,6 +3,14 @@
     <div>
       <div style="display: flex;">
         <div
+          v-show="recipeType==0"
+          style="flex: 1;"
+          :class="['prescript-title',{'current-tab':tabType == 4}]"
+          @click.stop="changeTab(4)"
+        >
+          <span>问诊表</span>
+        </div>
+        <div
           v-show="recipeType==1||recipeType==2||recipeType==3||recipeType==4||recipeType==6"
           style="flex: 1;"
           :class="['prescript-title',{'current-tab':tabType == 1}]"
@@ -20,7 +28,7 @@
           @click.stop="changeTab(2)"
         >
           <span v-show="recipeType!=0">处方模板</span>
-          <span v-show="recipeType==0">{{clinicType == 6 ? '病历' : '档案'}}模板</span>
+          <span v-show="recipeType==0">{{clinicType == 6 ? '档案' : '病历'}}模板</span>
         </div>
         <div
           style="flex: 1;"
@@ -43,23 +51,25 @@ import {mapGetters, mapState} from "vuex";
 import medSearch from "@/components/rootRight/medSearch.vue";
 import tpl from "@/components/rootRight/tpl.vue";
 import classic from "@/components/rootRight/classic.vue"
+import outpatientTable from "@/components/rootRight/outpatientTable.vue"
 
 export default {
   name: "rootRight",
   components: {
     medSearch,
     tpl,
-    classic
+    classic,
+    outpatientTable
   },
   data() {
     return {
       tabType: 1,
-      componentLists: ['medSearch', 'tpl', 'classic']
+      componentLists: ['medSearch', 'tpl', 'classic', 'outpatientTable']
     };
   },
   created() {
     if (this.recipeType == 0) {
-      this.tabType = 2;
+      this.tabType = 4;
     } else {
       this.tabType = 1;
     }
@@ -76,7 +86,7 @@ export default {
   watch: {
     recipeType: function () {
       if (this.recipeType == 0) {
-        this.changeTab(2);
+        this.changeTab(4);
       } else {
         this.changeTab(1);
       }
@@ -99,6 +109,7 @@ export default {
   .right-block {
     margin-bottom: 1.25rem;
     box-shadow: 0px 2px 4px 0px rgba(80, 150, 224, 0.32);
+    border-radius: 0.5rem 0.5rem 0rem 0rem;
   }
 
   .prescript-title {
