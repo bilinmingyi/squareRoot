@@ -1231,6 +1231,14 @@ export default {
           sport_advice: self.tplData.sport_advice,
           dietary_advice: self.tplData.dietary_advice
         };
+        let list = ['allergic_history', 'family_history', 'diagnosis', 'personal_history', 'prophylactic_history', 'sport_advice', 'past_history', 'examination', 'dietary_advice']
+        let record_list = []
+        list.forEach(item => {
+          if(data[item] != ''){
+            record_list.push(item)
+          }
+        })
+        self.set_record_prop({key: 'recordList', val: record_list})
         Object.keys(data).forEach(function (k) {
           self.set_record_prop({
             key: k,
