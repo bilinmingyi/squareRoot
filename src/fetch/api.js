@@ -249,6 +249,8 @@ const addTreatAnswer = params => fetch('/doctreat/treatAnswer/add', params)
 
 const updateTreatAnswer = params => fetch('/doctreat/treatAnswer/update', params)
 
+const deleteTreatAnswer = params => fetch('/doctreat/treatAnswer/delete', params)
+
 export {
   fetch,
   cancelOrder,
@@ -298,5 +300,6 @@ export {
   fetchQuestion,
   addTreatAnswer,
   updateTreatAnswer,
+  deleteTreatAnswer,
   queryClassic
 }

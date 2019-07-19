@@ -130,7 +130,7 @@
             <div>
               {{item.name}}
             </div>
-            <button>删除</button>
+            <button @click.stop="delQuestions(item, index)">删除</button>
           </div>
         </div>
       </div>
@@ -304,7 +304,8 @@
     ></print-record>
     <record-set v-if="recordSetAlert" @close="recordSetAlert = false"></record-set>
     <add-record v-if="addRecordAlert" :currIndex="currRecordIndex" @close="hideAddRecordAlert"></add-record>
-    <write-questions v-if="writeQuestionsAlert" :currIndex="currQuestionIndex" @close="hideWriteQuestionsAlert"></write-questions>
+    <write-questions v-if="writeQuestionsAlert" :currIndex="currQuestionIndex"
+                     @close="hideWriteQuestionsAlert"></write-questions>
   </div>
   <!-- 患者病历 -->
 </template>
@@ -313,7 +314,7 @@
 import {mapState, mapActions} from "vuex";
 import {Input, Tag} from "iview";
 import patientAlert from "./patientAlert";
-import {getCaseHistory, getDiseaseList, deleteReport, saveDraft} from "@/fetch/api.js";
+import {getCaseHistory, getDiseaseList, deleteReport, saveDraft, deleteTreatAnswer} from "@/fetch/api.js";
 import saveRecordTpl from '@/components/saveRecordTpl';
 import printRecord from '@/components/printRecord';
 import assistTextarea from '@/components/assistTextarea'
@@ -472,9 +473,6 @@ export default {
             self.$Message.info("网络出错！")
             console.log(e)
           })
-        },
-        onCancel: () => {
-
         }
       });
     },
@@ -488,6 +486,32 @@ export default {
         this.saveDraftData()
       }
     },
+    delQuestions(item, index) {
+      let self = this
+      let outpatientList = JSON.parse(JSON.stringify(self.recordData.outpatient_table))
+      this.$Modal.confirm({
+        title: '提示',
+        content: '<p>确定删除该问诊表？</p>',
+        onOk: () => {
+          deleteTreatAnswer({
+            "id": item.patient_answer_id
+          })
+            .then(function (res) {
+              if (res.code === 1000) {
+                outpatientList.splice(index, 1)
+                self.set_record_prop({key: 'outpatient_table', val: outpatientList});
+                self.saveDraftData()
+              } else {
+                this.$Message.info(res.msg)
+              }
+            })
+            .catch(e => {
+              console.log(e)
+            })
+        }
+      });
+    },
+
     saveDraftData() {
       let draftData = {
         recipeList: this.recipeList,
