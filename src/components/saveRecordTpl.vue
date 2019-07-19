@@ -65,13 +65,19 @@ export default {
       };
       let recordData = this.recordData;
       Object.assign(params, {
-        past_history: recordData.personal_history,
-        allergic_history: recordData.allergic_history,
         chief_complaint: recordData.chief_complaint,
         present_illness: recordData.present_illness,
+        allergic_history: recordData.allergic_history,
+        personal_history: recordData.personal_history,
+        past_history: recordData.past_history,
+        family_history: recordData.family_history,
+        prophylactic_history: recordData.prophylactic_history,
+        examination: JSON.stringify(recordData.examination),
         diagnosis: recordData.diagnosis,
         diagnosis_xy: recordData.diagnosis_xy,
-        examination: JSON.stringify(recordData.examination)
+        treat_advice: recordData.treat_advice,
+        sport_advice: recordData.sport_advice,
+        dietary_advice: recordData.dietary_advice
       });
       addRecordTpl(params).then(res => {
         if (res.code == 1000) {
@@ -137,6 +143,7 @@ export default {
   color: #fff;
   text-align: center;
   font-size: 0.9375rem;
+  cursor: pointer;
 }
 .prescription_tab_cancel {
   width: 10rem;

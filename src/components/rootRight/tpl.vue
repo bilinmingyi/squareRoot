@@ -90,37 +90,63 @@
         <span>{{tplData.doctor_remark}}</span>
       </div>
       <div class="mt10 ml10 mb20 tpl-case tpl-content" v-show="recipeType==0">
-        <div>
-          <span class="case-label">主述&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <div v-if="tplData.chief_complaint">
+          <span class="case-label">主述</span>
           <span>{{tplData.chief_complaint}}</span>
         </div>
-        <div>
-          <span class="case-label">病史&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <div v-if="tplData.present_illness">
+          <span class="case-label">现病史</span>
           <span>{{tplData.present_illness}}</span>
         </div>
-        <div>
-          <span class="case-label">既往史&nbsp;&nbsp;&nbsp;&nbsp;</span>
-          <span>{{tplData.past_history}}</span>
-        </div>
-        <div>
-          <span class="case-label">过敏史&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <div v-if="tplData.allergic_history">
+          <span class="case-label">过敏史</span>
           <span>{{tplData.allergic_history}}</span>
         </div>
+        <div v-if="tplData.personal_history">
+          <span class="case-label">个人史</span>
+          <span>{{tplData.personal_history}}</span>
+        </div>
+        <div v-if="tplData.past_history">
+          <span class="case-label">既往史</span>
+          <span>{{tplData.past_history}}</span>
+        </div>
+        <div v-if="tplData.family_history">
+          <span class="case-label">家族史</span>
+          <span>{{tplData.family_history}}</span>
+        </div>
+        <div v-if="tplData.prophylactic_history">
+          <span class="case-label">预防接种史</span>
+          <span>{{tplData.prophylactic_history}}</span>
+        </div>
         <div style="display:flex;">
-          <span class="case-label" style="width: 3.75rem">检查</span>
+          <span class="case-label" style="width: 4.25rem;">基础检查</span>
           <div
             style="white-space:pre-wrap; flex:1;margin:0;font-family:'microsoft yahei';border:0!important;"
           >{{tplExamination}}
           </div>
         </div>
-        <div>
-          <span class="case-label">{{clinicType == 6 ? '诊断结果' : '西医诊断'}}&nbsp;</span>
-          <span>{{tplData.diagnosis_xy}}</span>
-        </div>
-        <div v-if="clinicType!=6">
-          <span class="case-label">中医诊断&nbsp;</span>
+
+        <div v-if="tplData.diagnosis">
+          <span class="case-label">中医诊断</span>
           <span>{{tplData.diagnosis}}</span>
         </div>
+        <div v-if="tplData.diagnosis_xy">
+          <span class="case-label">诊断结果</span>
+          <span>{{tplData.diagnosis_xy}}</span>
+        </div>
+        <div v-if="tplData.treat_advice">
+          <span class="case-label">处理意见</span>
+          <span>{{tplData.treat_advice}}</span>
+        </div>
+        <div v-if="tplData.sport_advice">
+          <span class="case-label">运动建议</span>
+          <span>{{tplData.sport_advice}}</span>
+        </div>
+        <div v-if="tplData.dietary_advice">
+          <span class="case-label">膳食建议</span>
+          <span>{{tplData.dietary_advice}}</span>
+        </div>
+
       </div>
       <div class="pb10">
         <button class="prescription_detail_save mr2" @click.stop="useTplShow()">使用模板</button>
@@ -648,11 +674,16 @@ export default {
         chief_complaint: "", //主诉
         present_illness: "", //病史
         allergic_history: "", //过敏史
+        personal_history: "", // 个人史
         past_history: "", //既往史
+        family_history: "", // 家族史
+        prophylactic_history: "", // 预防接种史
         examination: "", //检查
         diagnosis: "", //中医诊断
         diagnosis_xy: "", //西医诊断
-        treat_advice: "" //处理意见
+        treat_advice: "", //处理意见
+        sport_advice: "", // 运动建议
+        dietary_advice: "" // 膳食建议
       },
       tplEditData: {
         category: 1,
@@ -1095,10 +1126,17 @@ export default {
         chief_complaint: item.chief_complaint, //主诉
         present_illness: item.present_illness, //病史
         allergic_history: item.allergic_history, //过敏史
+        personal_history: item.personal_history, // 个人史
         past_history: item.past_history, //既往史
+        family_history: item.family_history, // 家族史
+        prophylactic_history: item.prophylactic_history, // 预防接种史
+
         examination: item.examination, //检查
         diagnosis: item.diagnosis, //中医诊断
-        diagnosis_xy: item.diagnosis_xy //西医诊断
+        diagnosis_xy: item.diagnosis_xy, //西医诊断
+        treat_advice: item.treat_advice, //处理意见
+        sport_advice: item.sport_advice, // 运动建议
+        dietary_advice: item.dietary_advice // 膳食建议
       };
       self.showTpl = true;
 
@@ -1377,6 +1415,7 @@ export default {
 </script>
 
 <style scoped>
+
   .prescript-list {
     margin: 0.3125rem 0;
     text-align: center;
@@ -1659,6 +1698,8 @@ export default {
 
   .case-label {
     font-weight: bold;
+    width: 4rem;
+    display: inline-block;
   }
 
   .pageBtn {
