@@ -182,36 +182,60 @@
               <span v-show="item.is_match!=1" style="color:red;font-weight:bold;">暂无此药</span>
             </div>
             <div v-if="recipeType==0" class="record-content">
-              <div>
-                <span class="case-label">主述&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+              <div v-if="tplData.chief_complaint">
+                <span class="case-label">主述</span>
                 <span>{{tplData.chief_complaint}}</span>
               </div>
-              <div>
-                <span class="case-label">病史&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+              <div v-if="tplData.present_illness">
+                <span class="case-label">现病史</span>
                 <span>{{tplData.present_illness}}</span>
               </div>
-              <div>
-                <span class="case-label">既往史&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                <span>{{tplData.past_history}}</span>
-              </div>
-              <div>
-                <span class="case-label">过敏史&nbsp;&nbsp;&nbsp;&nbsp;</span>
+              <div v-if="tplData.allergic_history">
+                <span class="case-label">过敏史</span>
                 <span>{{tplData.allergic_history}}</span>
               </div>
+              <div v-if="tplData.personal_history">
+                <span class="case-label">个人史</span>
+                <span>{{tplData.personal_history}}</span>
+              </div>
+              <div v-if="tplData.past_history">
+                <span class="case-label">既往史</span>
+                <span>{{tplData.past_history}}</span>
+              </div>
+              <div v-if="tplData.family_history">
+                <span class="case-label">家族史</span>
+                <span>{{tplData.family_history}}</span>
+              </div>
+              <div v-if="tplData.prophylactic_history">
+                <span class="case-label">预防接种史</span>
+                <span>{{tplData.prophylactic_history}}</span>
+              </div>
               <div style="display:flex;">
-                <span class="case-label" style="width: 4.5rem">检查</span>
+                <span class="case-label" style="width: 4.25rem;">基础检查</span>
                 <div
-                  style="white-space:pre-wrap; flex:1;margin:0;font-family:'microsoft yahei';"
+                  style="white-space:pre-wrap; flex:1;margin:0;font-family:'microsoft yahei';border:0!important;"
                 >{{tplExamination}}
                 </div>
               </div>
-              <div>
-                <span class="case-label">{{clinicType == 6 ? '诊断结果' : '西医诊断'}}&nbsp;</span>
+              <div v-if="tplData.diagnosis">
+                <span class="case-label">中医诊断</span>
+                <span>{{tplData.diagnosis}}</span>
+              </div>
+              <div v-if="tplData.diagnosis_xy">
+                <span class="case-label">诊断结果</span>
                 <span>{{tplData.diagnosis_xy}}</span>
               </div>
-              <div v-if="clinicType != 6">
-                <span class="case-label">中医诊断&nbsp;</span>
-                <span>{{tplData.diagnosis}}</span>
+              <div v-if="tplData.treat_advice">
+                <span class="case-label">处理意见</span>
+                <span>{{tplData.treat_advice}}</span>
+              </div>
+              <div v-if="tplData.sport_advice">
+                <span class="case-label">运动建议</span>
+                <span>{{tplData.sport_advice}}</span>
+              </div>
+              <div v-if="tplData.dietary_advice">
+                <span class="case-label">膳食建议</span>
+                <span>{{tplData.dietary_advice}}</span>
               </div>
             </div>
           </div>
@@ -1186,6 +1210,9 @@ export default {
           present_illness: self.tplData.present_illness || "",
           allergic_history: self.tplData.allergic_history || "",
           personal_history: self.tplData.past_history || "",
+          past_history: self.tplData.past_history || "",
+          family_history: self.tplData.family_history || "",
+          prophylactic_history: self.tplData.prophylactic_history || "",
           examinationInfo: self.tplData.examination
             ? JSON.parse(self.tplData.examination)
             : {},
@@ -1200,7 +1227,9 @@ export default {
               : "",
           treat_advice: self.tplData.treat_advice || "",
           diagnosis_xy_labels: [],
-          diagnosis_labels: []
+          diagnosis_labels: [],
+          sport_advice: self.tplData.sport_advice,
+          dietary_advice: self.tplData.dietary_advice
         };
         Object.keys(data).forEach(function (k) {
           self.set_record_prop({
