@@ -61,9 +61,12 @@ export default {
     }
   },
   created() {
-    this.patientId = this.$store.state.patientData.id
-    this.outpatientList = this.$store.state.recordData.outpatient_table
     this.getData()
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.patientId = this.$store.state.patientData.id
+    })
   },
   methods: {
     ...mapActions([
@@ -118,6 +121,8 @@ export default {
       }, 300)
     },
     async getQuestion(item) {
+      let self = this
+      self.outpatientList = JSON.parse(JSON.stringify(self.$store.state.recordData.outpatient_table))
       this.showLoading = true
       let res = await fetchQuestion(item.id)
       try {
@@ -144,12 +149,14 @@ export default {
           })
           this.showLoading = false
           if (resp.code === 1000) {
-            this.outpatientList.push({
+            console.log(self.outpatientList)
+            self.outpatientList.push({
               "patient_answer_id": resp.data,
               "name": item.name,
               "content": JSON.stringify(content)
             })
-            this.set_record_prop({key: 'outpatient_table', val: this.outpatientList})
+            console.log(self.outpatientList)
+            self.set_record_prop({key: 'outpatient_table', val: self.outpatientList})
           } else {
             this.$Message.info(resp.msg)
           }
