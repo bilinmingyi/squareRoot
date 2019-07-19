@@ -126,13 +126,13 @@ export default {
           res.data.forEach(subject => {
             switch (subject.type) {
               case 'input':
-                content.push(Object.assign(subject, {answer: ''}))
+                content.push(Object.assign(subject, {answer: '', comment: ''}))
                 break
               case 'radio':
-                content.push(Object.assign(subject, {answer: ''}))
+                content.push(Object.assign(subject, {answer: '', comment: ''}))
                 break
               case 'checkbox':
-                content.push(Object.assign(subject, {answer: []}))
+                content.push(Object.assign(subject, {answer: [], comment: ''}))
                 break
             }
           })

@@ -247,6 +247,8 @@ const fetchQuestion = params => fetch('/clinicmng/question/content?questionId=' 
 
 const addTreatAnswer = params => fetch('/doctreat/treatAnswer/add', params)
 
+const updateTreatAnswer = params => fetch('/doctreat/treatAnswer/update', params)
+
 export {
   fetch,
   cancelOrder,
@@ -295,5 +297,6 @@ export {
   fetchQuestionList,
   fetchQuestion,
   addTreatAnswer,
+  updateTreatAnswer,
   queryClassic
 }

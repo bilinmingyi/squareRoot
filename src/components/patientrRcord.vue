@@ -123,7 +123,8 @@
         <span>问诊表：</span>
       </div>
       <div class="mid-record-item-val display-flex" style="flex-wrap: wrap">
-        <div class="examine-report" v-for="(item, index) in recordData.outpatient_table">
+        <div class="examine-report" v-for="(item, index) in recordData.outpatient_table"
+             @click.stop="showWriteQuestionsAlert(index)">
           <img src="../assets/img/dcb@2x.png">
           <div class="examine-infor">
             <div>
@@ -303,6 +304,7 @@
     ></print-record>
     <record-set v-if="recordSetAlert" @close="recordSetAlert = false"></record-set>
     <add-record v-if="addRecordAlert" :currIndex="currRecordIndex" @close="hideAddRecordAlert"></add-record>
+    <write-questions v-if="writeQuestionsAlert" :currIndex="currQuestionIndex" @close="hideWriteQuestionsAlert"></write-questions>
   </div>
   <!-- 患者病历 -->
 </template>
@@ -317,6 +319,7 @@ import printRecord from '@/components/printRecord';
 import assistTextarea from '@/components/assistTextarea'
 import recordSet from '@/components/recordSet'
 import addRecord from '@/components/addRecord'
+import writeQuestions from "@/components/writeQuestions";
 
 export default {
   name: "patientrRcord",
@@ -328,7 +331,8 @@ export default {
     printRecord,
     recordSet,
     addRecord,
-    assistTextarea
+    assistTextarea,
+    writeQuestions
   },
   data() {
     return {
@@ -344,8 +348,9 @@ export default {
       printFlag: false, // 打印病历
       recordSetAlert: false,
       addRecordAlert: false,
-      currRecordIndex: -1
-
+      writeQuestionsAlert: false,
+      currRecordIndex: -1,
+      currQuestionIndex: -1
     };
   },
   computed: {
@@ -440,9 +445,9 @@ export default {
       this.currRecordIndex = Number(index)
       this.addRecordAlert = true
     },
-    hideAddRecordAlert(canSave){
+    hideAddRecordAlert(canSave) {
       this.addRecordAlert = false
-      if(canSave === 1) {
+      if (canSave == 1) {
         this.saveDraftData()
       }
     },
@@ -456,7 +461,7 @@ export default {
           deleteReport({
             "id": item.check_report_id
           }).then(res => {
-            if (res.code === 1000){
+            if (res.code === 1000) {
               inspectionList.splice(index, 1)
               self.set_record_prop({key: 'inspection_report', val: inspectionList});
               self.saveDraftData()
@@ -472,6 +477,16 @@ export default {
 
         }
       });
+    },
+    showWriteQuestionsAlert(index) {
+      this.currQuestionIndex = Number(index)
+      this.writeQuestionsAlert = true
+    },
+    hideWriteQuestionsAlert(canSave) {
+      this.writeQuestionsAlert = false
+      if (canSave == 1) {
+        this.saveDraftData()
+      }
     },
     saveDraftData() {
       let draftData = {

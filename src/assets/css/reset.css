@@ -755,3 +755,6 @@ input {
 textarea.ivu-input {
   resize: none;
 }
+.ivu-input::-webkit-input-placeholder {
+  font-size: 0.875rem !important;
+}
