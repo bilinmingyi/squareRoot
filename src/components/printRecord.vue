@@ -56,16 +56,28 @@
           <div style="width: 80px;text-align: right;padding-right: 6px">现病史：</div>
           <div style="flex: 1">{{recordData.present_illness}}</div>
         </div>
-        <div style="margin-bottom: 10px;margin-top: 10px;display: flex">
-          <div style="width: 80px;text-align: right;padding-right: 6px">既往史：</div>
-          <div style="flex: 1">{{recordData.personal_history}}</div>
-        </div>
-        <div style="margin-bottom: 10px;margin-top: 10px;display: flex">
+        <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('allergic_history')">
           <div style="width: 80px;text-align: right;padding-right: 6px">过敏史：</div>
           <div style="flex: 1">{{recordData.allergic_history}}</div>
         </div>
+        <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('personal_history')">
+          <div style="width: 80px;text-align: right;padding-right: 6px">个人史：</div>
+          <div style="flex: 1">{{recordData.personal_history}}</div>
+        </div>
+        <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('past_history')">
+          <div style="width: 80px;text-align: right;padding-right: 6px">既往史：</div>
+          <div style="flex: 1">{{recordData.past_history}}</div>
+        </div>
+        <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('family_history')">
+          <div style="width: 80px;text-align: right;padding-right: 6px">家族史：</div>
+          <div style="flex: 1">{{recordData.family_history}}</div>
+        </div>
+        <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('prophylactic_history')">
+          <div style="width: 80px;text-align: right;padding-right: 6px">预防接种史：</div>
+          <div style="flex: 1">{{recordData.prophylactic_history}}</div>
+        </div>
         <div style="margin-bottom: 10px;margin-top: 10px;display: flex">
-          <div style="width: 80px;text-align: right;padding-right: 6px">检查：</div>
+          <div style="width: 80px;text-align: right;padding-right: 6px">基础检查：</div>
           <div style="flex: 1;">
             <div class="menu_big_input" @click="clinicRecord(3)">
               <div class="menu_big_input1" style="width: auto">
@@ -74,13 +86,26 @@
             </div>
           </div>
         </div>
-        <div style="margin-bottom: 10px;margin-top: 10px;display: flex">
-          <div style="width: 80px;text-align: right;padding-right: 6px">{{clinicType == 6 ? '诊断结果' : '西医诊断'}}：</div>
-          <div style="flex: 1">{{recordData.diagnosis_xy}}</div>
-        </div>
-        <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="clinicType != 6">
+        <div style="margin-bottom: 10px;margin-top: 10px;display: flex"v-if="checkRecord('diagnosis')">
           <div style="width: 80px;text-align: right;padding-right: 6px">中医诊断：</div>
           <div style="flex: 1">{{recordData.diagnosis}}</div>
+        </div>
+
+        <div style="margin-bottom: 10px;margin-top: 10px;display: flex">
+          <div style="width: 80px;text-align: right;padding-right: 6px">诊断结果</div>
+          <div style="flex: 1">{{recordData.diagnosis_xy}}</div>
+        </div>
+        <div style="margin-bottom: 10px;margin-top: 10px;display: flex">
+          <div style="width: 80px;text-align: right;padding-right: 6px">处理意见：</div>
+          <div style="flex: 1">{{recordData.treat_advice}}</div>
+        </div>
+        <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('sport_advice')">
+          <div style="width: 80px;text-align: right;padding-right: 6px">运动建议：</div>
+          <div style="flex: 1">{{recordData.sport_advice}}</div>
+        </div>
+        <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('dietary_advice')">
+          <div style="width: 80px;text-align: right;padding-right: 6px">饮食建议：</div>
+          <div style="flex: 1">{{recordData.dietary_advice}}</div>
         </div>
       </section>
       <section style="font-size: 12px;display: flex;margin-top: 20px">
@@ -147,6 +172,10 @@ export default {
     }
   },
   methods: {
+    checkRecord(type) {
+      var self = this
+      return self.recordData.recordList.indexOf(type) >= 0
+    },
     printPrescription: function(id_str) {
       setTimeout(() => {
         var el = document.getElementById(id_str);
