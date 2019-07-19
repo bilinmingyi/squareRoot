@@ -30,6 +30,9 @@
               <CheckboxGroup v-model="item.answer">
                 <Checkbox v-for="opt in item.options" :label="opt" class="mr30" :key="opt"></Checkbox>
                 <Radio v-if="item.has_comment == 1" label="其他"></Radio>
+                <div v-if="item.has_comment == 1" style="display: inline-block">
+                  (<input class="other-input" v-model="item.comment"/>)
+                </div>
               </CheckboxGroup>
             </div>
           </section>

@@ -313,6 +313,18 @@
           'doctor_remark': '',
           "extra_list": []
         })
+        let check_report_data = this.recordData.inspection_report.map(item => {
+          return {
+            "check_report_id": item.check_report_id,
+            "name": item.name
+          }
+        })
+        let answer_data = this.recordData.outpatient_table.map(item => {
+          return {
+            "patient_answer_id": item.patient_answer_id,
+            "name": item.name
+          }
+        })
 
         submitOrder({
           "order_seqno": this.orderSeqno,
@@ -325,6 +337,8 @@
           "present_illness": this.recordData.present_illness,
           "recipe_list": resultList,
           "draft": this.draftData,
+          "check_report_data": check_report_data,
+          "answer_data": answer_data,
           "treat_price": this.treatPrice
         }).then(data => {
           if (data.code === 1000) {
