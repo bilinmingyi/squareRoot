@@ -333,6 +333,7 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
+    height: 2.5rem;
     opacity: 0;
   }
 

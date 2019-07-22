@@ -76,7 +76,7 @@
           <div style="width: 80px;text-align: right;padding-right: 6px">预防接种史：</div>
           <div style="flex: 1">{{recordData.prophylactic_history}}</div>
         </div>
-        <div style="margin-bottom: 10px;margin-top: 10px;display: flex">
+        <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('examination')">
           <div style="width: 80px;text-align: right;padding-right: 6px">基础检查：</div>
           <div style="flex: 1;">
             <div class="menu_big_input" @click="clinicRecord(3)">

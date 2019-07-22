@@ -6,7 +6,7 @@
         <div class="outpatient-patient">{{patientData.name}}/{{patientData.sex|parseSex}}/{{patientData.age}}岁</div>
         <div>
           <button class="save-btn mr10" @click.stop="saveData()">保存</button>
-          <button class="save-btn mr10 print-btn">打印</button>
+          <button class="save-btn mr10 print-btn" @click.stop="printPrescription()">打印</button>
           <button class="save-btn delete-btn" @click.stop="cancel(0)">返回</button>
         </div>
       </div>
@@ -47,6 +47,89 @@
       </div>
     </div>
     <f-loader v-if="showLoading"></f-loader>
+    <div id="printQuestion" style="display: none">
+      <section style="color: #000000;">
+        <div
+          style="width: 100%;height: 35px;text-align: center;line-height: 35px;font-weight: bold;font-size: 32px;margin-bottom: 10px"
+        >{{clinicName}}</div>
+        <div style="width: 100%;height: 35px;text-align: center;line-height: 35px;font-size: 20px;font-weight: bold;margin-bottom: 24px;letter-spacing: 5px;">
+          问诊表
+        </div>
+<!--        <div style=";line-height: 32px;font-weight: bold;font-size: 16px;text-align: center;display: flex;padding: 0 30px">-->
+<!--          <div>填写需知：</div>-->
+<!--          <div style="flex: 1;text-align: left">-->
+<!--            请根据自己的实际情况和真实感受填写，专家将根据此表结合你的健康检测为您提供指导方案。-->
+<!--          </div>-->
+<!--        </div>-->
+        <div>
+<!--          <div style="font-size: 20px;font-weight: bold;text-align: center;margin-bottom: 20px">基本信息</div>-->
+          <div style="border: 5px double #000;font-size: 16px;padding: 10px;margin-bottom: 20px">
+            <div style="display: flex;margin-bottom: 10px">
+              <div style="flex: 1;display: flex;">
+                <div style="width: 70px;text-align: justify;text-align-last:justify;margin-right: 16px;">姓名</div>
+                <div>{{patientData.name}}</div>
+              </div>
+              <div style="flex: 1;display: flex;">
+                <div style="width: 70px;text-align: justify;text-align-last:justify;margin-right: 16px;">性别</div>
+                <div>{{patientData.sex|parseSex}}</div>
+              </div>
+              <div style="flex: 1;display: flex;">
+                <div style="width: 70px;text-align: justify;text-align-last:justify;margin-right: 16px;">出生日期</div>
+                <div>{{patientData.birthday|dateFormat('yyyy-MM-dd')}}</div>
+              </div>
+            </div>
+            <div style="display: flex">
+              <div style="flex: 1;display: flex;">
+                <div style="width: 70px;text-align: justify;text-align-last:justify;margin-right: 16px;">婚姻</div>
+                <div>{{patientData.marital_status}}</div>
+              </div>
+              <div style="flex: 1;display: flex;">
+                <div style="width: 70px;text-align: justify;text-align-last:justify;margin-right: 16px;">体重</div>
+                <div>{{patientData.weight}}KG</div>
+              </div>
+              <div style="flex: 1;display: flex;">
+                <div style="width: 70px;text-align: justify;text-align-last:justify;margin-right: 16px;">联系电话</div>
+                <div>{{patientData.mobile}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="font-size: 14px;column-count: 2;column-rule: 1px solid #CCCCCC">
+          <div v-for="(item, index) in contentList" :key="item.id">
+            <section v-if="item.type === 'radio'" style="margin-bottom: 10px">
+              <div style="font-weight: bold">{{index+1}}、{{item.question}}(单选题)</div>
+              <div style="margin-top: 10px">
+                <RadioGroup v-model="item.answer">
+                  <Radio v-for="opt in item.options" :label="opt" class="mr30" :key="opt"></Radio>
+                  <Radio v-if="item.has_comment == 1" label="其他"></Radio>
+                  <div v-if="item.has_comment == 1" style="display: inline-block">
+                    (<input style="border: none;outline: none;border-bottom:1px solid #000000;width: 100px;" v-model="item.comment"/>)
+                  </div>
+                </RadioGroup>
+              </div>
+            </section>
+            <section v-if="item.type === 'checkbox'" style="margin-bottom: 10px">
+              <div style="font-weight: bold">{{index+1}}、{{item.question}}(多选题)</div>
+              <div style="margin-top: 10px">
+                <CheckboxGroup v-model="item.answer">
+                  <Checkbox v-for="opt in item.options" :label="opt" class="mr30" :key="opt"></Checkbox>
+                  <Radio v-if="item.has_comment == 1" label="其他"></Radio>
+                  <div v-if="item.has_comment == 1" style="display: inline-block">
+                    (<input style="border: none;outline: none;border-bottom:1px solid #000000;width: 100px;" v-model="item.comment"/>)
+                  </div>
+                </CheckboxGroup>
+              </div>
+            </section>
+            <section v-if="item.type === 'input'" style="margin-bottom: 10px">
+              <div>{{index+1}}、{{item.question}}</div>
+              <div style="margin-top: 10px;margin-bottom: 10px">
+               <textarea style="width: 300px;padding: 10px;resize: none;border-radius: 4px" rows="2" v-model="item.answer"></textarea>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -55,6 +138,7 @@ import {mapState, mapActions} from "vuex";
 import {Input, Radio, RadioGroup, CheckboxGroup, Checkbox} from 'iview'
 import {updateTreatAnswer} from "@/fetch/api.js";
 import fLoader from '@/components/fLoader.vue'
+import {clinicName} from '@/assets/js/mapType.js'
 
 export default {
   name: "writeQuestions",
@@ -77,12 +161,13 @@ export default {
       outpatientList: [],
       currQuestions: {},
       contentList: [],
-      showLoading: false
+      showLoading: false,
+      clinicName: clinicName
     }
   },
   computed: {
     ...mapState({
-      'patientData': state => state.patientData,
+      'patientData': state => state.patientData
     })
   },
   created() {
@@ -113,6 +198,28 @@ export default {
         this.showLoading = false
         console.log(e)
       })
+    },
+    printPrescription: function() {
+      setTimeout(() => {
+        var el = document.getElementById('printQuestion');
+        var iframe = document.createElement("IFRAME");
+        var doc = null;
+        iframe.setAttribute(
+          "style",
+          "position:absolute;width:0px;height:0px;left:-500px;top:-500px;"
+        );
+        document.body.appendChild(iframe);
+        doc = iframe.contentWindow.document;
+        doc.write("<LINK rel='stylesheet' type='text/css'>");
+        doc.write("<div>" + el.innerHTML + "</div>");
+        doc.close();
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+        if (navigator.userAgent.indexOf("MSIE") > 0) {
+          document.body.removeChild(iframe);
+        }
+        this.$emit('reset')
+      }, 30);
     },
     cancel(canSave) {
       this.$emit('close', canSave)
