@@ -23,9 +23,9 @@
         <thead>
         <tr class="displayBlock" style="overflow-y: scroll">
           <th style="width: 10%;display: inline-block;">序号</th>
-          <th style="width: 25%;display: inline-block;">药名</th>
+          <th style="width: 20%;display: inline-block;">药名</th>
           <th style="width: 10%;display: inline-block;">规格</th>
-          <th style="width: 15%;display: inline-block;">药量</th>
+          <th style="width: 18%;display: inline-block;">药量</th>
           <th style="width: 12%;display: inline-block">单价</th>
           <th style="width: 15%;display: inline-block;">用法</th>
           <th style="width: 10%;display: inline-block;">操作</th>
@@ -38,13 +38,13 @@
         <tbody>
         <tr v-for="(item,index) in currentData.data.items" class="displayBlock">
           <td style="width: 10%;display: inline-block;">{{index+1}}</td>
-          <td style="width: 25%;display: inline-block;">{{item.name}}</td>
+          <td style="width: 20%;display: inline-block;">{{item.name}}</td>
           <template v-if="item.is_match===1">
             <td style="width: 10%;display: inline-block;">{{item.spec==='1克/克'?'1克':item.spec}}</td>
-            <td style="width: 15%;display: inline-block;">
+            <td style="width: 18%;display: inline-block;">
               <InputNumber style="width:3.2rem" :value="item.num"
                            @on-change="modify_medicine({key:'num',val:$event,index:index})"/>
-              <div class="keli_unit">
+              <div :class="currentData.data.category== 2 ? 'keli_unit' : 'yinpian_unit'">
                 <span class="unitText">{{item.unit}}</span>
                 <span class="num_text" v-if="currentData.data.category==2">({{item.num*item.stock_sale_ratio}}{{item.unit_sale}})</span>
               </div>
@@ -505,6 +505,11 @@ export default {
   .displayBlock {
     display: block;
     width: 100%;
+  }
+  .yinpian_unit {
+    display: inline-block;
+    min-width: 2rem;
+    text-align: left
   }
   .keli_unit {
     display: inline-block;

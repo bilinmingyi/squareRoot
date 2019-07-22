@@ -1234,7 +1234,7 @@ export default {
         let list = ['allergic_history', 'family_history', 'diagnosis', 'personal_history', 'prophylactic_history', 'sport_advice', 'past_history', 'examination', 'dietary_advice']
         let record_list = []
         list.forEach(item => {
-          if(data[item] != ''){
+          if(data[item]){
             record_list.push(item)
           }
         })

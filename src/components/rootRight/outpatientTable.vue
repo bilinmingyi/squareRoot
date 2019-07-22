@@ -149,7 +149,6 @@ export default {
           })
           this.showLoading = false
           if (resp.code === 1000) {
-            console.log(self.outpatientList)
             self.outpatientList.push({
               "patient_answer_id": resp.data,
               "name": item.name,

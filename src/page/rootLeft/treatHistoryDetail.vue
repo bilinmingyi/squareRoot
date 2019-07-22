@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="pb10 pl15 pr15 font-15">
-        <div class="history-line-s" v-for="item in recordData">
+        <div class="history-line-s" v-for="item in recordData" :key="item.code" v-if="item.val">
           <div class="display-flex">
             <div class="history-line-key">{{item.code}}</div>
             <pre class="flex-1 multiline-text-box">{{item.val}}</pre>
@@ -151,10 +151,13 @@ export default {
     return {
       recordTemplate: [
         {code: "主述", key: "chief_complaint"},
-        {code: "病史", key: "present_illness"},
+        {code: "现病史", key: "present_illness"},
         {code: "检查", key: "examination"},
-        {code: "西医诊断", key: "diagnosis_xy"},
-        {code: "中医诊断", key: "diagnosis"}
+        {code: "诊断结果", key: "diagnosis_xy"},
+        {code: "中医诊断", key: "diagnosis"},
+        {code: "处理意见", key: "treat_advice"},
+        {code: "运动建议", key: "sport_advice"},
+        {code: "膳食建议", key: "dietary_advice"}
       ],
       historyResultShow: false,
       listMap: [
@@ -213,12 +216,6 @@ export default {
       let [selectedOrder, examination] = [this.selectedOrder, this.examination];
       let data = this.recordTemplate;
       return data.filter(item => {
-        if (this.clinicType == 6 && item.code == '中医诊断') {
-          return
-        }
-        if (this.clinicType == 6 && item.code == '西医诊断') {
-          item.code = '诊断结果'
-        }
         item.val =
           item.code !== "检查"
             ? selectedOrder[item.key]
@@ -274,6 +271,19 @@ export default {
             break;
         }
       });
+      let list = ['allergic_history', 'family_history', 'diagnosis', 'personal_history', 'prophylactic_history', 'sport_advice', 'past_history', 'examination', 'dietary_advice']
+      let record_list = []
+
+      list.forEach(item => {
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].key == item && data[i].val && JSON.stringify(data[i].val) != '{}'){
+            record_list.push(item)
+            break
+          }
+        }
+      })
+      this.set_record_prop({key: 'recordList', val: record_list})
+
 
       data.forEach(item => {
         this.set_record_prop({

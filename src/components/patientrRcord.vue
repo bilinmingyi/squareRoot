@@ -581,7 +581,7 @@ export default {
     },
     handleComma: function (type) {
       if (type !== "diagnosis" && type !== "diagnosis_xy") return;
-      this.$refs.diagnosis.style.borderColor = null
+      this.$refs.diagnosis ? this.$refs.diagnosis.style.borderColor = null : null
       this.$refs.diagnosis_xy.style.borderColor = null
       this.set_record_prop({
         key: type + "_input",
