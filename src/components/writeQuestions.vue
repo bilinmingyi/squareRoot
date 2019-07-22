@@ -76,7 +76,11 @@
             <div style="display: flex">
               <div style="flex: 1;display: flex;">
                 <div style="width: 70px;text-align: justify;text-align-last:justify;margin-right: 16px;">婚姻</div>
-                <div>{{patientData.marital_status}}</div>
+                <div>
+                  <span v-if="patientData.marital_status == 0">保密</span>
+                  <span v-if="patientData.marital_status == 1">已婚</span>
+                  <span v-if="patientData.marital_status == 2">未婚</span>
+                </div>
               </div>
               <div style="flex: 1;display: flex;">
                 <div style="width: 70px;text-align: justify;text-align-last:justify;margin-right: 16px;">体重</div>

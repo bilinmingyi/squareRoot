@@ -17,10 +17,10 @@
           <span class="t-h-d-disable-import" v-else>导入</span>
         </div>
       </div>
-      <div class="pb10 pl15 pr15 font-15">
+      <div class="pb10 pl15 pr15 font-14">
         <div class="history-line-s" v-for="item in recordData" :key="item.code" v-if="item.val">
           <div class="display-flex">
-            <div class="history-line-key">{{item.code}}</div>
+            <div class="history-line-key">{{item.code}}：</div>
             <pre class="flex-1 multiline-text-box">{{item.val}}</pre>
           </div>
         </div>
@@ -440,7 +440,7 @@ export default {
     line-height: 1.875rem;
     padding: 0 0.9375rem;
     margin: 0.3125rem 0;
-    font-size: 1rem;
+    font-size: 0.9375rem;
     display: flex;
   }
 
@@ -479,7 +479,9 @@ export default {
   }
 
   .history-line-key {
-    width: 2.75rem;
+    width: 5rem;
+    text-align: justify;
+    text-align-last: justify;
   }
 
   .multiline-text-box {
