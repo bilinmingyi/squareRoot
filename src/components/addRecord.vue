@@ -18,9 +18,9 @@
               <img :src="img_url">
             </div>
             <div class="btn-block">
-              <button class="upload-btn mb20">上传照片
+              <div class="upload-btn mb20">上传照片
                 <input type="file" class="file-input" @change="imgSelect"/>
-              </button>
+              </div>
               <button class="upload-btn print-btn" @click="print">打印</button>
             </div>
           </div>
@@ -332,7 +332,7 @@ export default {
   .file-input {
     position: absolute;
     top: 0;
-    left: 0;
+    left: -0.25rem;
     height: 2.5rem;
     opacity: 0;
   }

@@ -84,7 +84,7 @@
             @click.stop="clickword(item)"
           ></Input>
         </div>
-        <div class="display-flex mb10">
+        <div class="display-flex flex-wrap mb10">
           <div
             class="prescription_tab_content_item cursor_pointer"
             v-for="item in DiagnosisItem.currList"

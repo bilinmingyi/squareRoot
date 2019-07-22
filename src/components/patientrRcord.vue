@@ -2,10 +2,12 @@
   <!-- 患者病历 -->
   <div class="mid-box-content">
     <div class="mid-title-btn-box mb10 pr10">
-      <button class="prescriptionBtn mr10" @click.stop="showRecordSetAlert">病历项目设置</button>
+      <button class="prescriptionBtn mr10" @click.stop="showRecordSetAlert">
+        {{clinicType == 6 ? '档案' : '病历'}}项目设置
+      </button>
       <button class="prescriptionBtn mr10" @click.stop="showAddRecordAlert(-1)">添加报告</button>
-      <button class="prescriptionBtn mr10" @click.stop="printPrescription()">打印{{clinicType == 6 ? '档案' :
-        '病历'}}
+      <button class="prescriptionBtn mr10" @click.stop="printPrescription()">
+        打印{{clinicType == 6 ? '档案' : '病历'}}
       </button>
       <button class="prescriptionBtn" @click.stop="showSaveTemplate()">存为模板</button>
     </div>
@@ -113,7 +115,10 @@
             <div>
               {{item.name}}
             </div>
-            <button @click.stop="delReport(item, index)">删除</button>
+<!--            <button @click.stop="delReport(item, index)">删除</button>-->
+          </div>
+          <div class="delete-icon" @click.stop="delReport(item, index)">
+            <Icon type="md-close" size="16"/>
           </div>
         </div>
       </div>
@@ -130,7 +135,9 @@
             <div>
               {{item.name}}
             </div>
-            <button @click.stop="delQuestions(item, index)">删除</button>
+          </div>
+          <div class="delete-icon" @click.stop="delQuestions(item, index)">
+            <Icon type="md-close" size="16"/>
           </div>
         </div>
       </div>
@@ -312,7 +319,7 @@
 
 <script>
 import {mapState, mapActions} from "vuex";
-import {Input, Tag} from "iview";
+import {Input, Tag, Icon} from "iview";
 import patientAlert from "./patientAlert";
 import {getCaseHistory, getDiseaseList, deleteReport, saveDraft, deleteTreatAnswer} from "@/fetch/api.js";
 import saveRecordTpl from '@/components/saveRecordTpl';
@@ -327,6 +334,7 @@ export default {
   components: {
     Input,
     Tag,
+    Icon,
     patientAlert,
     saveRecordTpl,
     printRecord,
@@ -944,6 +952,7 @@ export default {
 
   .examine-report {
     display: flex;
+    position: relative;
     background: rgba(255, 255, 255, 1);
     box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
@@ -959,7 +968,8 @@ export default {
   }
 
   .examine-infor {
-
+    display: flex;
+    align-items: center;
   }
 
   .examine-infor button {
@@ -974,4 +984,9 @@ export default {
     margin-top: 6px;
   }
 
+  .delete-icon{
+    position: absolute;
+    right: 0.5rem;
+    top: 0.5rem;
+  }
 </style>

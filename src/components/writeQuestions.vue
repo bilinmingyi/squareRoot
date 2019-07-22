@@ -16,7 +16,7 @@
             <div class="question-item-text">{{index+1}}、{{item.question}}(单选题)</div>
             <div class="mt16 mb16 align-item">
               <RadioGroup v-model="item.answer">
-                <Radio v-for="opt in item.options" :label="opt" class="mr30" :key="opt"></Radio>
+                <Radio v-for="opt in item.options" :label="opt" class="mr30" :key="item.id + opt"></Radio>
                 <Radio v-if="item.has_comment == 1" label="其他"></Radio>
                 <div v-if="item.has_comment == 1" style="display: inline-block">
                   (<input class="other-input" v-model="item.comment"/>)
@@ -28,7 +28,7 @@
             <div class="question-item-text">{{index+1}}、{{item.question}}(多选题)</div>
             <div class="mt16 mb16 align-item">
               <CheckboxGroup v-model="item.answer">
-                <Checkbox v-for="opt in item.options" :label="opt" class="mr30" :key="opt"></Checkbox>
+                <Checkbox v-for="opt in item.options" :label="opt" class="mr30" :key="item.id + opt"></Checkbox>
                 <Radio v-if="item.has_comment == 1" label="其他"></Radio>
                 <div v-if="item.has_comment == 1" style="display: inline-block">
                   (<input class="other-input" v-model="item.comment"/>)
@@ -55,14 +55,7 @@
         <div style="width: 100%;height: 35px;text-align: center;line-height: 35px;font-size: 20px;font-weight: bold;margin-bottom: 24px;letter-spacing: 5px;">
           问诊表
         </div>
-<!--        <div style=";line-height: 32px;font-weight: bold;font-size: 16px;text-align: center;display: flex;padding: 0 30px">-->
-<!--          <div>填写需知：</div>-->
-<!--          <div style="flex: 1;text-align: left">-->
-<!--            请根据自己的实际情况和真实感受填写，专家将根据此表结合你的健康检测为您提供指导方案。-->
-<!--          </div>-->
-<!--        </div>-->
         <div>
-<!--          <div style="font-size: 20px;font-weight: bold;text-align: center;margin-bottom: 20px">基本信息</div>-->
           <div style="border: 5px double #000;font-size: 16px;padding: 10px;margin-bottom: 20px">
             <div style="display: flex;margin-bottom: 10px">
               <div style="flex: 1;display: flex;">
@@ -99,25 +92,31 @@
             <section v-if="item.type === 'radio'" style="margin-bottom: 10px">
               <div style="font-weight: bold">{{index+1}}、{{item.question}}(单选题)</div>
               <div style="margin-top: 10px">
-                <RadioGroup v-model="item.answer">
-                  <Radio v-for="opt in item.options" :label="opt" class="mr30" :key="opt"></Radio>
-                  <Radio v-if="item.has_comment == 1" label="其他"></Radio>
-                  <div v-if="item.has_comment == 1" style="display: inline-block">
-                    (<input style="border: none;outline: none;border-bottom:1px solid #000000;width: 100px;" v-model="item.comment"/>)
+                <span v-for="opt in item.options">
+                   <input v-model="item.answer" type="radio" :value="opt" :key="item.id + opt">{{opt}}
+                </span>
+                <span v-if="item.has_comment == 1">
+                   <input v-model="item.answer" type="radio" value="其他">其他
+                  <div style="display: inline-block">
+                    (<input
+                    style="border: none;outline: none;border-bottom:1px solid #000000;width: 100px;"
+                    v-model="item.comment"/>)
                   </div>
-                </RadioGroup>
+                </span>
               </div>
             </section>
             <section v-if="item.type === 'checkbox'" style="margin-bottom: 10px">
               <div style="font-weight: bold">{{index+1}}、{{item.question}}(多选题)</div>
               <div style="margin-top: 10px">
-                <CheckboxGroup v-model="item.answer">
-                  <Checkbox v-for="opt in item.options" :label="opt" class="mr30" :key="opt"></Checkbox>
-                  <Radio v-if="item.has_comment == 1" label="其他"></Radio>
-                  <div v-if="item.has_comment == 1" style="display: inline-block">
+                <span v-for="opt in item.options">
+                  <input v-model="item.answer" type="checkbox" :value="opt" :key="item.id + opt" />{{opt}}
+                </span>
+                <span v-if="item.has_comment == 1">
+                  <input v-model="item.answer" type="checkbox" value="其他" />其他
+                  <div style="display: inline-block">
                     (<input style="border: none;outline: none;border-bottom:1px solid #000000;width: 100px;" v-model="item.comment"/>)
                   </div>
-                </CheckboxGroup>
+                </span>
               </div>
             </section>
             <section v-if="item.type === 'input'" style="margin-bottom: 10px">
