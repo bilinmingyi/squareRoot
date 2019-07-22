@@ -460,7 +460,6 @@ export default {
       //   if (res.code == 1000) {
       let res = {};
       res.data = this.caseHistory;
-      console.log(res)
       if (
         res.data.past_history != undefined &&
         res.data.past_history != null &&

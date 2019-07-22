@@ -29,7 +29,7 @@
             <div class="mt16 mb16 align-item">
               <CheckboxGroup v-model="item.answer">
                 <Checkbox v-for="opt in item.options" :label="opt" class="mr30" :key="item.id + opt"></Checkbox>
-                <Radio v-if="item.has_comment == 1" label="其他"></Radio>
+                <Checkbox v-if="item.has_comment == 1" label="其他"></Checkbox>
                 <div v-if="item.has_comment == 1" style="display: inline-block">
                   (<input class="other-input" v-model="item.comment"/>)
                 </div>
@@ -51,8 +51,10 @@
       <section style="color: #000000;">
         <div
           style="width: 100%;height: 35px;text-align: center;line-height: 35px;font-weight: bold;font-size: 32px;margin-bottom: 10px"
-        >{{clinicName}}</div>
-        <div style="width: 100%;height: 35px;text-align: center;line-height: 35px;font-size: 20px;font-weight: bold;margin-bottom: 24px;letter-spacing: 5px;">
+        >{{clinicName}}
+        </div>
+        <div
+          style="width: 100%;height: 35px;text-align: center;line-height: 35px;font-size: 20px;font-weight: bold;margin-bottom: 24px;letter-spacing: 5px;">
           问诊表
         </div>
         <div>
@@ -93,15 +95,28 @@
               <div style="font-weight: bold">{{index+1}}、{{item.question}}(单选题)</div>
               <div style="margin-top: 10px">
                 <span v-for="opt in item.options">
-                   <input v-model="item.answer" type="radio" :value="opt" :key="item.id + opt">{{opt}}
+                  <span v-if="item.answer == opt">
+                    <input checked type="radio" :name="item.id" :key="item.id + opt" :value="opt">
+
+                    {{opt}}
+                  </span>
+                  <span v-else>
+                    <input type="radio" :name="item.id" :key="item.id + opt" :value="opt">
+                    {{opt}}
+                  </span>
+
                 </span>
                 <span v-if="item.has_comment == 1">
-                   <input v-model="item.answer" type="radio" value="其他">其他
-                  <div style="display: inline-block">
-                    (<input
-                    style="border: none;outline: none;border-bottom:1px solid #000000;width: 100px;"
-                    v-model="item.comment"/>)
-                  </div>
+                  <span v-if="item.answer == '其他'">
+                    <input type="radio" :name="item.id" value="其他" checked>其他
+                  </span>
+                   <span v-else>
+                    <input type="radio" :name="item.id" value="其他">其他
+                  </span>
+                   (<div style="display: inline-block;">
+                     <div
+                       style="display: flex;align-items: center;justify-content: center;border-bottom: 1px solid #000000;min-width: 120px;text-align: center;height: 22px">{{item.comment}}</div>
+                   </div>)
                 </span>
               </div>
             </section>
@@ -109,20 +124,35 @@
               <div style="font-weight: bold">{{index+1}}、{{item.question}}(多选题)</div>
               <div style="margin-top: 10px">
                 <span v-for="opt in item.options">
-                  <input v-model="item.answer" type="checkbox" :value="opt" :key="item.id + opt" />{{opt}}
+                  <span v-if="item.answer.indexOf(opt)>=0">
+                    <input checked type="checkbox" :name="item.id" :value="opt"
+                           :key="item.id + opt"/>{{opt}}
+                  </span>
+                  <span v-else>
+                    <input type="checkbox" :name="item.id" :value="opt"
+                           :key="item.id + opt"/>{{opt}}
+                  </span>
+
                 </span>
                 <span v-if="item.has_comment == 1">
-                  <input v-model="item.answer" type="checkbox" value="其他" />其他
-                  <div style="display: inline-block">
-                    (<input style="border: none;outline: none;border-bottom:1px solid #000000;width: 100px;" v-model="item.comment"/>)
-                  </div>
+                  <span v-if="item.answer.indexOf('其他')>=0">
+                    <input type="checkbox" checked :name="item.id" value="其他"/>其他
+                  </span>
+                  <span v-else>
+                    <input type="checkbox" :name="item.id" value="其他"/>其他
+                  </span>
+                  (<div style="display: inline-block;">
+                     <div
+                       style="display: flex;align-items: center;justify-content: center;border-bottom: 1px solid #000000;min-width: 120px;text-align: center;height: 22px">{{item.comment}}</div>
+                   </div>)
                 </span>
               </div>
             </section>
             <section v-if="item.type === 'input'" style="margin-bottom: 10px">
               <div>{{index+1}}、{{item.question}}</div>
               <div style="margin-top: 10px;margin-bottom: 10px">
-               <textarea style="width: 300px;padding: 10px;resize: none;border-radius: 4px" rows="2" v-model="item.answer"></textarea>
+                <textarea style="width: 300px;padding: 10px;resize: none;border-radius: 4px"
+                          rows="2">{{item.answer}}</textarea>
               </div>
             </section>
           </div>
@@ -198,27 +228,27 @@ export default {
         console.log(e)
       })
     },
-    printPrescription: function() {
+    printPrescription: function () {
+      var el = document.getElementById('printQuestion');
+      var iframe = document.createElement("IFRAME");
+      var doc = null;
+      iframe.setAttribute(
+        "style",
+        "position:absolute;width:0px;height:0px;left:-500px;top:-500px;"
+      );
+      document.body.appendChild(iframe);
+      doc = iframe.contentWindow.document;
+      doc.write("<LINK rel='stylesheet' type='text/css'>");
+      doc.write("<div>" + el.innerHTML + "</div>");
+      doc.close();
       setTimeout(() => {
-        var el = document.getElementById('printQuestion');
-        var iframe = document.createElement("IFRAME");
-        var doc = null;
-        iframe.setAttribute(
-          "style",
-          "position:absolute;width:0px;height:0px;left:-500px;top:-500px;"
-        );
-        document.body.appendChild(iframe);
-        doc = iframe.contentWindow.document;
-        doc.write("<LINK rel='stylesheet' type='text/css'>");
-        doc.write("<div>" + el.innerHTML + "</div>");
-        doc.close();
         iframe.contentWindow.focus();
         iframe.contentWindow.print();
-        if (navigator.userAgent.indexOf("MSIE") > 0) {
-          document.body.removeChild(iframe);
-        }
-        this.$emit('reset')
-      }, 30);
+      }, 300)
+      if (navigator.userAgent.indexOf("MSIE") > 0) {
+        document.body.removeChild(iframe);
+      }
+      this.$emit('reset')
     },
     cancel(canSave) {
       this.$emit('close', canSave)
