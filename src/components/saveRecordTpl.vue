@@ -50,6 +50,10 @@ export default {
   },
   methods: {
     ...mapActions(['set_state_prop']),
+    checkRecord(type) {
+      var self = this
+      return self.recordData.recordList.indexOf(type) >= 0
+    },
     saveAsTemplate() {
       if (this.recordTemplateName == "") {
         this.$Message.warning("请先填写模板名称");
@@ -64,21 +68,30 @@ export default {
         scope: 1
       };
       let recordData = this.recordData;
+      recordData.recordList.forEach(key => {
+        if (key === 'examination') {
+          params[key] = JSON.stringify(recordData[key])
+        } else {
+          params[key] = recordData[key]
+        }
+      })
+
       Object.assign(params, {
         chief_complaint: recordData.chief_complaint,
         present_illness: recordData.present_illness,
-        allergic_history: recordData.allergic_history,
-        personal_history: recordData.personal_history,
-        past_history: recordData.past_history,
-        family_history: recordData.family_history,
-        prophylactic_history: recordData.prophylactic_history,
-        examination: JSON.stringify(recordData.examination),
-        diagnosis: recordData.diagnosis,
+        // allergic_history: recordData.allergic_history,
+        // personal_history: recordData.personal_history,
+        // past_history: recordData.past_history,
+        // family_history: recordData.family_history,
+        // prophylactic_history: recordData.prophylactic_history,
+        // examination: JSON.stringify(recordData.examination),
+        // diagnosis: recordData.diagnosis,
         diagnosis_xy: recordData.diagnosis_xy,
         treat_advice: recordData.treat_advice,
-        sport_advice: recordData.sport_advice,
-        dietary_advice: recordData.dietary_advice
+        // sport_advice: recordData.sport_advice,
+        // dietary_advice: recordData.dietary_advice
       });
+      console.log(params)
       addRecordTpl(params).then(res => {
         if (res.code == 1000) {
           this.$Message.success("存为模板成功");

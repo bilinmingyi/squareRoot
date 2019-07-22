@@ -118,7 +118,7 @@
           <span class="case-label">预防接种史</span>
           <span>{{tplData.prophylactic_history}}</span>
         </div>
-        <div style="display:flex;">
+        <div style="display:flex;" v-if="tplData.examination">
           <span class="case-label" style="width: 4.25rem;">基础检查</span>
           <div
             style="white-space:pre-wrap; flex:1;margin:0;font-family:'microsoft yahei';border:0!important;"
@@ -1234,7 +1234,7 @@ export default {
         let list = ['allergic_history', 'family_history', 'diagnosis', 'personal_history', 'prophylactic_history', 'sport_advice', 'past_history', 'examination', 'dietary_advice']
         let record_list = []
         list.forEach(item => {
-          if(data[item]){
+          if(data[item] && JSON.stringify(data[item]) != '{}'){
             record_list.push(item)
           }
         })
