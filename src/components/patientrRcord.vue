@@ -293,7 +293,7 @@
       </div>
     </div>
     <patient-alert
-      v-show="recordCaseHistoryFinish && showPatientAlert"
+      v-show="showPatientAlert"
       :caseHistoryProp="recordCaseHistory"
       :diagnosisTypeProp="diagnosisType"
       @close="closePatientAlert"
@@ -349,7 +349,6 @@ export default {
       showSaveRecordTpl: false,
       showPrintRecord: false,
       diagnosisType: 0,
-      recordCaseHistoryFinish: false,
       recordCaseHistory: {},
 
       diagnosisTimer: null,
@@ -429,14 +428,7 @@ export default {
     }
   },
   created() {
-    getCaseHistory().then(res => {
-      if (res.code == 1000) {
-        this.recordCaseHistory = res.data;
-        this.recordCaseHistoryFinish = true;
-      } else {
-        console.log(res.msg);
-      }
-    });
+
   },
   methods: {
     ...mapActions([
@@ -557,8 +549,16 @@ export default {
       }
     },
     clinicRecord(type) {
-      this.diagnosisType = type;
-      this.showPatientAlert = true;
+      getCaseHistory().then(res => {
+        if (res.code == 1000) {
+          this.recordCaseHistory = res.data;
+          this.diagnosisType = type;
+          this.showPatientAlert = true;
+        } else {
+          console.log(res.msg);
+        }
+      });
+
     },
     closePatientAlert() {
       this.showPatientAlert = false;

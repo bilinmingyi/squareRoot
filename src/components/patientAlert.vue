@@ -460,6 +460,7 @@ export default {
       //   if (res.code == 1000) {
       let res = {};
       res.data = this.caseHistory;
+      console.log(res)
       if (
         res.data.past_history != undefined &&
         res.data.past_history != null &&
@@ -661,7 +662,9 @@ export default {
         present_illness: JSON.stringify(this.DiagnosisTypeList[4].dataList),
         diagnosis: JSON.stringify([])
       }).then(res => {
-        if (res.code != 1000) {
+        if (res.code == 1000) {
+
+        } else {
           console.log(res.msg);
         }
       });
