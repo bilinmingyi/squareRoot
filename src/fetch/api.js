@@ -251,6 +251,10 @@ const updateTreatAnswer = params => fetch('/doctreat/treatAnswer/update', params
 
 const deleteTreatAnswer = params => fetch('/doctreat/treatAnswer/delete', params)
 
+const readQuestions = params => fetch('/doctreat/treatAnswer/detail', params)
+
+const readReposts = params => fetch('/doctreat/report/detail', params)
+
 export {
   fetch,
   cancelOrder,
@@ -288,6 +292,8 @@ export {
   addReport,
   updataReport,
   deleteReport,
+  readQuestions,
+  readReposts,
 
   //right
   searchRecentMed,

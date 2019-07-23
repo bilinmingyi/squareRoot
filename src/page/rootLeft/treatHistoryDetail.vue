@@ -25,18 +25,48 @@
           </div>
         </div>
       </div>
+      <div v-if="treatReportList.length > 0">
+        <div class="history-title">
+          <div class="flex-1">
+            <span class="font-bold">检查报告</span>
+          </div>
+        </div>
+        <div class="t-h-d-drug-row">
+          <div
+            class="t-h-d-drug-item a_blue_text"
+            v-for="report in treatReportList"
+            @click.stop="showReadReportAlert(report)"
+          >{{report.name}}
+          </div>
+        </div>
+      </div>
+      <div v-if="treatAnswerList.length > 0">
+        <div class="history-title">
+          <div class="flex-1">
+            <span class="font-bold">问诊表</span>
+          </div>
+        </div>
+        <div class="t-h-d-drug-row">
+          <div
+            class="t-h-d-drug-item a_blue_text"
+            v-for="answer in treatAnswerList"
+            @click.stop="showReadQuestionAlert(answer)"
+          >{{answer.name}}
+          </div>
+        </div>
+      </div>
+
       <div v-for="(recipe, index) in selectedOrder.recipe_list">
         <section v-if="recipe.recipe_type==1">
           <div class="history-title">
-            <span class="font-bold flex-1">
+            <span class="font-bold font-14 flex-1">
               中药处方
-              <span class="font-13">
-                （
+
+                (
                 <span v-if="recipe.category==1">饮片</span>
                 <span v-if="recipe.category==2">颗粒</span>
-                ）
+                )
                 ：总共{{recipe.dosage}}剂 {{recipe.usage}}
-              </span>
             </span>
             <span
               v-if="currRecipe != -1 && reciptType == 1 && recipe.category == recipeList[currRecipe].data.category"
@@ -132,6 +162,8 @@
       :map="listMap"
       @close="historyResultShow = false"
     ></history-result>
+    <read-questions v-if="showReadQuestion" @close="showReadQuestion = false" :answer="currAnswer"></read-questions>
+    <read-reports v-if="showReadReport" @close="showReadReport = false" :report="currReport"></read-reports>
   </div>
 </template>
 
@@ -139,12 +171,16 @@
 import {mapState, mapActions} from "vuex";
 import historyResult from "@/page/rootLeft/historyResult";
 import {checkIsMatch} from "@/fetch/api.js";
+import readQuestions from "@/components/readQuestions";
+import readReports from "@/components/readReports";
 import fLoader from "@/components/fLoader";
 
 export default {
   components: {
     historyResult,
-    fLoader
+    fLoader,
+    readQuestions,
+    readReports
   },
   props: ["selectedOrderProp", "reciptTypeProp", "examinationInfoProp", "recipeClinicId"],
   data() {
@@ -169,7 +205,11 @@ export default {
         "extra_list"
       ],
       formatedRecipe: {},
-      showLoader: false
+      showLoader: false,
+      showReadQuestion: false,
+      showReadReport: false,
+      currAnswer: {},
+      currReport: {}
     };
   },
   computed: {
@@ -181,6 +221,12 @@ export default {
     }),
     selectedOrder() {
       return this.selectedOrderProp;
+    },
+    treatAnswerList() {
+      return this.selectedOrder.treat_answer_data ? JSON.parse(this.selectedOrder.treat_answer_data) : []
+    },
+    treatReportList() {
+      return this.selectedOrder.treat_report_data ? JSON.parse(this.selectedOrder.treat_report_data) : []
     },
     reciptType() {
       return this.reciptTypeProp;
@@ -238,6 +284,16 @@ export default {
   },
   methods: {
     ...mapActions(["set_state_prop", "set_record_prop"]),
+    showReadQuestionAlert(item) {
+      this.showReadQuestion = true
+      this.currAnswer = item
+    },
+
+    showReadReportAlert(item) {
+      this.showReadReport = true
+      this.currReport = item
+    },
+
     historyDetailsBack() {
       this.set_state_prop({key: "showHistoryDetail", val: false});
     },
@@ -276,7 +332,7 @@ export default {
 
       list.forEach(item => {
         for (let i = 0; i < data.length; i++) {
-          if (data[i].key == item && data[i].val && JSON.stringify(data[i].val) != '{}'){
+          if (data[i].key == item && data[i].val && JSON.stringify(data[i].val) != '{}') {
             record_list.push(item)
             break
           }
@@ -324,7 +380,7 @@ export default {
         if (this.recipeClinicId == this.clinicId) {
           params = {status: 1, ids}
         } else {
-          params = {status: 1,names}
+          params = {status: 1, names}
         }
 
       }
@@ -348,7 +404,7 @@ export default {
             }
           }
         } else {
-          if(this.recipeClinicId == this.clinicId){
+          if (this.recipeClinicId == this.clinicId) {
             for (let i = 0, len = arr.length; i < len; i++) {
               let findData = data.find(dataItem => dataItem.id == arr[i].item_id);
               if (findData) {
@@ -375,6 +431,13 @@ export default {
 </script>
 
 <style scoped>
+  .a_blue_text {
+    color: #5096e0;
+    text-decoration: underline;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
   .treat-history-detail {
     background: #fff;
     flex: 1;
