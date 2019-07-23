@@ -68,9 +68,11 @@ export default {
   },
   methods: {
     getData() {
+      this.showLoading = true
       readReposts({
         'id': this.report.check_report_id
       }).then(res => {
+        this.showLoading = false
         if (res.code === 1000) {
           this.img_url = res.data.report_url
           this.organization = res.data.organ_name
@@ -79,6 +81,7 @@ export default {
           this.$Message.info(res.msg)
         }
       }).catch(error => {
+        this.showLoading = false
         console.log(error)
       })
     },
