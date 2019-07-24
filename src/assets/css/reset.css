@@ -758,3 +758,6 @@ textarea.ivu-input {
 .ivu-input::-webkit-input-placeholder {
   font-size: 0.875rem !important;
 }
+.ivu-radio-wrapper {
+  font-size: 14px;
+}

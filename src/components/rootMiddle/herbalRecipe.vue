@@ -10,10 +10,8 @@
       </div>
       <div>
         <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
-        <!--        <button class="btn" v-if="currentData.data.category==2 && canGetRecipeHelp==1" @click.stop="toAssist">-->
-        <!--          辅助开方-->
-        <!--        </button>-->
         <button class="btn btn_yb_check" @click.stop="examineYB" v-if="isYB">医保处方审核</button>
+        <button class="btn" @click.stop="showImportRecipe">导入处方</button>
         <button class="btn" @click="print_pre()">打印处方</button>
         <button class="btn btn_print" @click.stop="saveTplData">存为模板</button>
       </div>
@@ -127,6 +125,7 @@
 
     <save-tpl v-if="showAddTpl" @hideTpl="hideTplShow"></save-tpl>
     <wisdomYb :url="windowUrl" @close="hideWis" v-if="wisdomShow"></wisdomYb>
+    <import-recipe v-if="importRecipeShow" @close="importRecipeShow = false"></import-recipe>
   </div>
 </template>
 
@@ -136,6 +135,7 @@ import fRadio from '@/components/fRadio.vue'
 import {mapActions, mapState} from 'vuex'
 import saveTpl from '@/components/rootMiddle/saveRecipeTpl'
 import wisdomYb from '@/components/wisdomyb.vue'
+import importRecipe from '@/components/importRecipe.vue'
 import {herbalMedUsages, herbalRpUsages, extraFeeTypes, medFrequency, userName, userId} from '@/assets/js/mapType'
 import {saveDraft, wisdomyb} from '@/fetch/api.js'
 import Link from "iview/src/mixins/link";
@@ -147,7 +147,8 @@ export default {
       medFrequency: medFrequency,
       showAddTpl: false,
       windowUrl: '',
-      wisdomShow: false
+      wisdomShow: false,
+      importRecipeShow: false
     };
   },
   components: {
@@ -160,7 +161,8 @@ export default {
     InputNumber,
     saveTpl,
     fRadio,
-    wisdomYb
+    wisdomYb,
+    importRecipe
   },
   computed: {
     ...mapState({
@@ -257,6 +259,9 @@ export default {
       'change_print_pre',
       'save_draft_data'
     ]),
+    showImportRecipe () {
+      this.importRecipeShow = true
+    },
     print_pre: function () {
       this.change_print_pre();
     },
