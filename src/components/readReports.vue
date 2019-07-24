@@ -1,7 +1,7 @@
 <template>
   <div class="prescription_tab_bg">
     <div class="prescription_tab">
-      <div class="alert-title mb20">添加检查报告</div>
+      <div class="alert-title mb20">检查报告</div>
       <section>
         <div class="displayFlex align-item mb20">
           <span class="input_label pr16">机构名称</span>
@@ -12,7 +12,7 @@
           <Input class="flexOne" disabled v-model="project"/>
         </div>
         <div class="displayFlex">
-          <span class="input_label pr16">上传图片</span>
+          <span class="input_label pr16">报告图片</span>
           <div class="displayFlex flexOne">
             <div class="img-block">
               <img :src="img_url">
