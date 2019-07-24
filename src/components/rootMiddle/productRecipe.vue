@@ -55,7 +55,7 @@
             </td>
           </template>
           <template v-else>
-            <td colspan="4" style="color: red;">系统内搜索不到该药品</td>
+            <td colspan="4" style="color: red;">系统内没有匹配到该药名</td>
           </template>
 
           <td>

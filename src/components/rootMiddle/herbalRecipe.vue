@@ -58,8 +58,8 @@
             </td>
           </template>
           <template v-else>
-            <td style="color: red;width: 52%;display: inline-block;line-height: 32px" colspan="2">
-              系统内搜索不到该药品
+            <td style="color: red;width: 56%;display: inline-block;line-height: 32px" colspan="2">
+              系统内没有匹配到该药名
             </td>
           </template>
           <td style="width: 10%;display: inline-block;">
