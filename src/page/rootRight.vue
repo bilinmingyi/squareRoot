@@ -8,7 +8,7 @@
           :class="['prescript-title',{'current-tab':tabType == 4}]"
           @click.stop="changeTab(4)"
         >
-          <span>问诊表</span>
+          <span>{{clinicType == 6 ? '调查表' : '问诊表'}}</span>
         </div>
         <div
           v-show="recipeType==1||recipeType==2||recipeType==3||recipeType==4||recipeType==6"
