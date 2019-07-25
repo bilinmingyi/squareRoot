@@ -28,26 +28,19 @@
           v-show="showList.length<1"
         >暂无模板
         </div>
-        <div class="pt15 pageBtn">
-          <Button
-            v-show="currPage!==1"
-            shape="circle"
-            type="primary"
-            ghost
+        <div class="t-h-btn-group pt15">
+          <button
+            :class="['t-h-btn', 't-h-btn-active', {'t-h-btn-disable':currPage <= 1}]"
+            :disabled="currPage <= 1"
             @click.stop="changePage(0)"
           >上一页
-          </Button>
-          <Button v-show="currPage===1" disabled shape="circle">上一页</Button>
-          <div class="ml10"></div>
-          <Button
-            v-show="currPage!==page_num"
-            shape="circle"
-            type="primary"
-            ghost
+          </button>
+          <button
+            :class="['t-h-btn', 't-h-btn-active', {'t-h-btn-disable':currPage >= page_num}]"
+            :disabled="currPage >= page_num"
             @click.stop="changePage(1)"
           >下一页
-          </Button>
-          <Button v-show="currPage===page_num" disabled shape="circle">下一页</Button>
+          </button>
         </div>
       </div>
     </div>
@@ -859,14 +852,13 @@ export default {
     },
     changePage: function (flag) {
       if (flag == 0) {
-        if (this.currPage == 1) {
+        if (this.currPage <= 1) {
           this.currPage = 1;
         } else {
           this.currPage--;
         }
-      }
-      if (flag == 1) {
-        if (this.currPage == this.page_num) {
+      } else if (flag == 1) {
+        if (this.currPage >= this.page_num) {
           this.currPage = this.page_num;
         } else {
           this.currPage++;
@@ -1234,7 +1226,7 @@ export default {
         let list = ['allergic_history', 'family_history', 'diagnosis', 'personal_history', 'prophylactic_history', 'sport_advice', 'past_history', 'examination', 'dietary_advice']
         let record_list = []
         list.forEach(item => {
-          if(data[item] && JSON.stringify(data[item]) != '{}'){
+          if (data[item] && JSON.stringify(data[item]) != '{}') {
             record_list.push(item)
           }
         })

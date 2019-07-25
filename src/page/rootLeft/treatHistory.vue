@@ -134,30 +134,7 @@ export default {
   line-height: 1.5rem;
   height: 1.5rem;
 }
-.t-h-btn-group {
-  display: flex;
-  justify-content: space-around;
-}
-.t-h-btn {
-  width: 6.25rem;
-  height: 1.875rem;
-  line-height: 1.875rem;
-  font-size: 0.875rem;
-  text-align: center;
-  border-radius: 1.875rem;
-}
-.t-h-btn-disable {
-  color: #6c6c6c;
-  background: #f2f2f2;
-  border: none;
-  cursor: no-drop;
-}
-.t-h-btn-active {
-  border: #5096e0 solid 1px;
-  color: #5096e0;
-  background: #ffffff;
-  cursor: pointer;
-}
+
 .display-flex {
   display: flex;
 }

@@ -475,7 +475,7 @@ export default {
 
   .search-result .no-stock {
     border: 0;
-    background-color: #dadada;
+    background-color: #e1e1e1;
     color: #5e5e5e;
   }
 

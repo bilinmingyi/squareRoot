@@ -633,6 +633,32 @@ input {
   font-weight: bold;
 }
 
+.t-h-btn-group {
+  display: flex;
+  justify-content: space-around;
+}
+.t-h-btn {
+  width: 6.25rem;
+  height: 1.875rem;
+  line-height: 1.875rem;
+  font-size: 0.875rem;
+  text-align: center;
+  border-radius: 1.875rem;
+}
+
+.t-h-btn-active {
+  border: #5096e0 solid 1px;
+  color: #5096e0;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.t-h-btn-disable {
+  color: #8C8C8C;
+  background: transparent;
+  border: 0.0625rem solid #8C8C8C;
+  cursor: no-drop;
+}
 
 .e-p-i-content-item .ivu-input,
 .e-p-i-content-item .ivu-select-selection {

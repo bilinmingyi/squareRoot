@@ -4,7 +4,6 @@
       <div style="display: flex;">
         <div
           v-show="recipeType==0"
-          style="flex: 1;"
           :class="['prescript-title',{'current-tab':tabType == 4}]"
           @click.stop="changeTab(4)"
         >
@@ -12,7 +11,6 @@
         </div>
         <div
           v-show="recipeType==1||recipeType==2||recipeType==3||recipeType==4||recipeType==6"
-          style="flex: 1;"
           :class="['prescript-title',{'current-tab':tabType == 1}]"
           @click.stop="changeTab(1)"
         >
@@ -23,8 +21,7 @@
         </div>
         <div
           v-show="recipeType==1||recipeType==2||recipeType==4||recipeType==0"
-          style="flex: 1;"
-          :class="['prescript-title',{'current-tab':tabType == 2}]"
+          :class="['prescript-title', 'margin-lr', {'current-tab':tabType == 2}]"
           @click.stop="changeTab(2)"
         >
           <span v-show="recipeType!=0">处方模板</span>
@@ -32,11 +29,10 @@
         </div>
         <div
           style="flex: 1;"
-          v-show="recipeType == 1"
           :class="['prescript-title',{'current-tab':tabType == 3}]"
           @click.stop="changeTab(3)"
         >
-          <span>经典方剂</span>
+          <span>{{recipeType == 0 ? '常用模板' : '常用处方'}}</span>
         </div>
       </div>
     </div>
@@ -50,7 +46,7 @@
 import {mapGetters, mapState} from "vuex";
 import medSearch from "@/components/rootRight/medSearch.vue";
 import tpl from "@/components/rootRight/tpl.vue";
-import classic from "@/components/rootRight/classic.vue"
+import commonTemplate from "@/components/rootRight/commonTemplate.vue"
 import outpatientTable from "@/components/rootRight/outpatientTable.vue"
 
 export default {
@@ -58,13 +54,13 @@ export default {
   components: {
     medSearch,
     tpl,
-    classic,
-    outpatientTable
+    outpatientTable,
+    commonTemplate
   },
   data() {
     return {
       tabType: 1,
-      componentLists: ['medSearch', 'tpl', 'classic', 'outpatientTable']
+      componentLists: ['medSearch', 'tpl', 'commonTemplate', 'outpatientTable']
     };
   },
   created() {
@@ -114,13 +110,19 @@ export default {
 
   .prescript-title {
     height: 2rem;
-    background: rgba(225, 225, 225, 1);
+    background: #e1e1e1;
     color: rgba(140, 140, 140, 1);
     font-weight: bold;
     font-size: 1rem;
-    border-radius: 0.5rem 0.5rem 0rem 0rem;
+    border-radius: 0.25rem 0.25rem 0rem 0rem;
     text-align: center;
     line-height: 2rem;
+    cursor: pointer;
+    flex: 1;
+  }
+
+  .margin-lr {
+    margin: 0 0.0625rem;
   }
 
   .current-tab {

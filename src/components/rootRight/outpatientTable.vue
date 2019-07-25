@@ -12,24 +12,19 @@
     <section>
       <div class="prescript-list" v-for="item in dataList" @click.stop="getQuestion(item)">{{item.name}}</div>
     </section>
-    <div class="btn-block">
-      <Button
-        shape="circle"
-        type="primary"
-        ghost
-        class="mr10"
+    <div class="t-h-btn-group pt15">
+      <button
+        :class="['t-h-btn', 't-h-btn-active', {'t-h-btn-disable':page <= 1}]"
         :disabled="page <= 1"
         @click.stop="changeType(1)"
       >上一页
-      </Button>
-      <Button
-        shape="circle"
-        type="primary"
-        ghost
+      </button>
+      <button
+        :class="['t-h-btn', 't-h-btn-active', {'t-h-btn-disable':page >= Math.ceil(totalNum/pageSize)}]"
         :disabled="page >= Math.ceil(totalNum/pageSize)"
         @click.stop="changeType(2)"
       >下一页
-      </Button>
+      </button>
     </div>
   </div>
 </template>
@@ -177,11 +172,6 @@ export default {
     margin: 0.3125rem 0.375rem;
     position: relative;
     height: 100%
-  }
-
-  .btn-block {
-    text-align: center;
-    padding-top: 15px;
   }
 
   .prescript-list {
