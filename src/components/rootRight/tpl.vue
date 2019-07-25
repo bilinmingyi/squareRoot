@@ -4,17 +4,17 @@
     <div v-if="!showTpl">
       <div class="mb6" style="width:100%;display:flex;height:2rem;">
         <div class="col70 mr10">
-          <Input placeholder="请输入模板名称" @input="tplSearch()" v-model="searchTplName"/>
+          <Input placeholder="请输入模板名称" @input="tplSearch(1)" v-model="searchTplName"/>
         </div>
         <div class="col30">
-          <Button long @click="tplSearch()">搜索</Button>
+          <Button long @click="tplSearch(1)">搜索</Button>
         </div>
       </div>
       <span class="add_prescription_btn" v-show="recipeType!==0" @click="addTpl()">添加模板</span>
-      <div v-show="showResult" style="min-height:20rem;max-height:45rem;overflow:auto;">
+      <div v-show="showResult" style="min-height:20rem">
         <div
           class="prescript-list"
-          v-for="(item,index) in showList"
+          v-for="(item,index) in tplSearchList"
           :key="index"
           @click.stop="tplShow(item)"
         >
@@ -25,7 +25,7 @@
         <div
           class="mt10"
           style="text-align:center;font-size:1rem;"
-          v-show="showList.length<1"
+          v-show="tplSearchList.length<1"
         >暂无模板
         </div>
         <div class="t-h-btn-group pt15">
@@ -664,8 +664,7 @@ export default {
       timer: null,
       currPage: 1,
       page_num: 1,
-      showList: [],
-      page_size: 0,
+      page_size: 10,
       westernMedUsages: westernMedUsages,
       medFrequency: medFrequency,
       showAddTpl: false,
@@ -717,7 +716,8 @@ export default {
       },
       tplType: [{name: "个人", scope: 1}, {name: "共享", scope: 0}],
       currShowTpl: {},
-      showLoading: false
+      showLoading: false,
+      firstTimer: null
     };
   },
   computed: {
@@ -770,70 +770,22 @@ export default {
   watch: {
     isCloud: function () {
       this.showTpl = false;
-      this.searchTplName = "";
       this.showResult = false;
       this.firstSearch();
     },
     recipeType: function () {
       this.showTpl = false;
-      this.searchTplName = "";
       this.showResult = false;
       this.firstSearch();
     },
     category: function () {
       this.showTpl = false;
-      this.searchTplName = "";
       this.showResult = false;
       this.firstSearch();
     },
     tplChange: function () {
       this.showResult = false;
       this.firstSearch();
-    },
-    tplSearchList: function () {
-      if (this.recipeType === 1) {
-        this.page_size = 10;
-      } else {
-        this.page_size = 10;
-      }
-      this.currPage = 1;
-      this.page_num = Number(
-        (this.tplSearchList.length / this.page_size).toFixed(0)
-      );
-      if (this.page_num * this.page_size < this.tplSearchList.length) {
-        this.page_num++;
-      }
-      if (this.page_num == 1) {
-        this.showList = this.tplSearchList.slice(0);
-      } else {
-        if (this.currPage == this.page_num) {
-          this.showList = this.tplSearchList.slice(
-            this.page_size * (this.currPage - 1)
-          );
-        } else {
-          this.showList = this.tplSearchList.slice(
-            this.page_size * (this.currPage - 1),
-            this.page_size * this.currPage
-          );
-        }
-      }
-      this.showResult = true;
-    },
-    currPage: function () {
-      if (this.page_num == 1) {
-        this.showList = this.tplSearchList.slice(0, -1);
-      } else {
-        if (this.currPage == this.page_num) {
-          this.showList = this.tplSearchList.slice(
-            this.page_size * (this.currPage - 1)
-          );
-        } else {
-          this.showList = this.tplSearchList.slice(
-            this.page_size * (this.currPage - 1),
-            this.page_size * this.currPage
-          );
-        }
-      }
     },
     "tplEditData.searchLists": {
       deep: true,
@@ -847,8 +799,11 @@ export default {
   methods: {
     ...mapActions(["add_new_medicine", "clean_recipe", "set_record_prop"]),
     firstSearch: function () {
-      this.showLoading = true
-      this.tplSearch();
+      clearTimeout(this.firstTimer)
+      this.firstTimer = setTimeout(() => {
+        this.searchTplName = ''
+        this.tplSearch(1);
+      }, 100)
     },
     changePage: function (flag) {
       if (flag == 0) {
@@ -856,29 +811,34 @@ export default {
           this.currPage = 1;
         } else {
           this.currPage--;
+          this.tplSearch(this.currPage)
         }
       } else if (flag == 1) {
         if (this.currPage >= this.page_num) {
           this.currPage = this.page_num;
         } else {
           this.currPage++;
+          this.tplSearch(this.currPage)
         }
       }
     },
-    tplSearch: function () {
+    tplSearch: function (page) {
       var self = this;
+      self.currPage = page
       var params = {};
       if (this.recipeType != 6 && this.recipeType != 3) {
         this.showResult = true;
       } else {
         return
       }
+      this.showLoading = true
       switch (self.recipeType) {
         case 0: {
           params = {
             name: self.searchTplName,
             scope: 1,
-            page: 1
+            page: self.currPage,
+            page_size: self.page_size
           };
           break;
         }
@@ -887,7 +847,8 @@ export default {
             category: self.category,
             is_cloud: self.isCloud,
             name: self.searchTplName,
-            page: 1
+            page: self.currPage,
+            page_size: self.page_size
           };
           break;
         }
@@ -895,14 +856,16 @@ export default {
           params = {
             name: self.searchTplName,
             is_cloud: self.isCloud,
-            page: 1
+            page: self.currPage,
+            page_size: self.page_size
           };
           break;
         }
         case 4: {
           params = {
             name: self.searchTplName,
-            page: 1
+            page: self.currPage,
+            page_size: self.page_size
           };
           break;
         }
@@ -914,6 +877,7 @@ export default {
             if (res.code == 1000) {
               self.showLoading = false
               self.tplSearchList = res.data;
+              self.page_num = Math.ceil(res.total_num/self.page_size)
               self.showResult = true;
             } else {
               this.$Message.info(res.msg)
@@ -1454,6 +1418,7 @@ export default {
     width: 100%;
     height: 2.5rem;
     font-size: 0.875rem;
+    cursor: pointer;
   }
 
   .add_prescription_btn {
@@ -1729,12 +1694,6 @@ export default {
     font-weight: bold;
     width: 4rem;
     display: inline-block;
-  }
-
-  .pageBtn {
-    clear: both;
-    display: flex;
-    justify-content: center;
   }
 
   .clear {

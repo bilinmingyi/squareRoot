@@ -12,10 +12,10 @@
 
     <f-loader v-if="showLoading" :fixed="false"></f-loader>
 
-    <div class="search-result" v-show="showResult">
+    <div class="search-result">
       <div
         :class="[{'no-stock':item.stock<1 && isCloud!=1},{'herbal-result-li':recipeType===1},{'search-result-li':recipeType!=1}, {'select-box': curSelect === index}]"
-        v-for="(item,index) in showList"
+        v-for="(item,index) in searchList"
         :key="index"
         @click.stop="selectItem(item)"
       >
@@ -54,27 +54,21 @@
         {{isFirst ? '请搜索药品' : '暂无药品'}}
       </div>
     </div>
-    <div class="pt15 pageBtn">
-      <Button
-        v-show="currPage!==1"
-        shape="circle"
-        type="primary"
-        ghost
-        @click.stop="changePage(0)"
-        class="mr20"
-      >上一页
-      </Button>
-      <Button v-show="currPage===1" class="mr20" disabled shape="circle">上一页</Button>
-      <div class="ml10"></div>
-      <Button
-        v-show="currPage<page_num"
-        shape="circle"
-        type="primary"
-        ghost
-        @click.stop="changePage(1)"
-      >下一页
-      </Button>
-      <Button v-show="currPage>=page_num" disabled shape="circle">下一页</Button>
+    <div class="clear" >
+      <div class="t-h-btn-group pt15" v-show="!isFirst">
+        <button
+          :class="['t-h-btn', 't-h-btn-active', {'t-h-btn-disable':currPage <= 1}]"
+          :disabled="currPage <= 1"
+          @click.stop="changePage(0)"
+        >上一页
+        </button>
+        <button
+          :class="['t-h-btn', 't-h-btn-active', {'t-h-btn-disable':currPage >= page_num}]"
+          :disabled="currPage >= page_num"
+          @click.stop="changePage(1)"
+        >下一页
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -94,19 +88,18 @@ export default {
   },
   data() {
     return {
-      showResult: false,
       timer: null,
       searchName: "",
       searchList: [],
+      recentList: [],
       currPage: 1,
       page_num: 0,
-      showList: [],
       page_size: 0,
       curSelect: -1,  // 当前选中的药品
-      page: 1,
       totalNum: 0,
       isFirst: true,
-      showLoading: false
+      showLoading: false,
+      firstTimer: null
     }
   },
   computed: {
@@ -124,64 +117,16 @@ export default {
   watch: {
     category: function () {
       this.searchName = "";
-      this.showResult = false;
       this.firstSearch();
     },
     recipeType: function () {
       this.searchName = "";
-      this.showResult = false;
       this.firstSearch();
     },
     isCloud: function () {
       this.searchName = "";
-      this.showResult = false;
       this.firstSearch();
     },
-    searchList: function () {
-      if (this.recipeType === 1) {
-        this.page_size = 18;
-      } else {
-        this.page_size = 10;
-      }
-      this.currPage = 1;
-      this.page_num = Number(
-        (this.searchList.length / this.page_size).toFixed(0)
-      );
-      if (this.page_num * this.page_size < this.searchList.length) {
-        this.page_num++;
-      }
-      if (this.page_num == 1) {
-        this.showList = this.searchList.slice(0);
-      } else {
-        if (this.currPage == this.page_num) {
-          this.showList = this.searchList.slice(
-            this.page_size * (this.currPage - 1)
-          );
-        } else {
-          this.showList = this.searchList.slice(
-            this.page_size * (this.currPage - 1),
-            this.page_size * this.currPage
-          );
-        }
-      }
-      this.showResult = true;
-    },
-    currPage: function () {
-      if (this.page_num == 1) {
-        this.showList = this.searchList.slice(0, -1);
-      } else {
-        if (this.currPage == this.page_num) {
-          this.showList = this.searchList.slice(
-            this.page_size * (this.currPage - 1)
-          );
-        } else {
-          this.showList = this.searchList.slice(
-            this.page_size * (this.currPage - 1),
-            this.page_size * this.currPage
-          );
-        }
-      }
-    }
   },
 
   created() {
@@ -195,6 +140,10 @@ export default {
       });
       if (filterList.length === 0) {
         this.add_new_medicine({item: item, type: this.currRecipeData.type});
+        this.searchList = this.recentList;
+        this.page_num = 1;
+        this.currPage = 1;
+        this.isFirst = true
         this.searchName = '';
         this.curSelect = -1;
 
@@ -204,17 +153,19 @@ export default {
     },
     changePage: function (flag) {
       if (flag == 0) {
-        if (this.currPage == 1) {
+        if (this.currPage <= 1) {
           this.currPage = 1;
         } else {
           this.currPage--;
+          this.searchMed()
         }
       }
       if (flag == 1) {
-        if (this.currPage == this.page_num) {
+        if (this.currPage >= this.page_num) {
           this.currPage = this.page_num;
         } else {
           this.currPage++;
+          this.searchMed()
         }
       }
     },
@@ -222,6 +173,22 @@ export default {
       if (this.recipeType === 0) {
         return;
       }
+      this.searchName = ""
+      this.searchList = []
+      this.recentList = []
+      this.currPage = 1
+      this.page_num = 0
+      this.page_size = 0
+      this.curSelect = -1
+      this.totalNum = 0
+      this.isFirst = true
+      this.showLoading = false
+      clearTimeout(this.firstTimer)
+      this.firstTimer = setTimeout(() => {
+        this.firstFetch()
+      }, 100)
+    },
+    firstFetch: function () {
       var self = this, params = {};
       self.showLoading = true
       if (self.recipeType === 1) {
@@ -245,43 +212,36 @@ export default {
         if (res[0].code === 1000 && res[1].code === 1000) {
           self.showLoading = false
           var resultList = JSON.parse(JSON.stringify(res[1].data))
-          for (let i = 0, len = res[0].data.length; i < len && resultList.length < params.page_size; i++) {
-            if (!res[1].data.some(med => med.id === res[0].data[i].id)) {
-              resultList.push(res[0].data[i])
+          if (resultList.length < params.page_size) {
+            for (let i = 0, len = res[0].data.length; i < len && resultList.length < params.page_size; i++) {
+              if (!res[1].data.some(med => med.id === res[0].data[i].id)) {
+                resultList.push(res[0].data[i])
+              }
             }
+            self.isFirst = true
+            self.recentList = resultList
+            self.searchList = resultList
+          } else {
+            self.isFirst = true
+            self.recentList = resultList.slice(0, Number(params.page_size))
+            self.searchList = resultList.slice(0, Number(params.page_size))
           }
-          self.isFirst = true
-          self.searchList = resultList
+
+
         }
       }).catch(error => {
         self.showLoading = false
         console.log(error)
       })
-
-      // searchRecentMed(
-      //   {
-      //     category: self.category
-      //   },
-      //   self.recipeType,
-      //   self.isCloud
-      // ).then(
-      //   function (res) {
-      //     if (res.code == 1000) {
-      //       self.isFirst = true
-      //       self.searchList = res.data;
-      //     }
-      //   },
-      //   function (error) {
-      //     console.log(error);
-      //   }
-      // )
     },
     searchMed: function () {
       this.curSelect = -1;
       var self = this;
       if (self.searchName == "") {
-        // self.searchList = [];
-        // self.firstSearch();
+        self.searchList = self.recentList;
+        self.page_num = 1;
+        self.currPage = 1;
+        self.isFirst = true
         return
       }
       if (self.searchName.replace(/\s/g, '') == '') {
@@ -290,91 +250,107 @@ export default {
       var params = {};
       switch (self.recipeType) {
         case 1: {
+          self.page_size = 18
           if (self.isCloud == 1) {
             params = {
               query: self.searchName,
               category: self.category,
               status: 1,
-              page: self.page,
+              page: self.currPage,
+              page_size: 18
             }
           } else {
             params = {
               medicine_name: self.searchName,
               category: self.category,
               status: 1,
-              page: self.page,
+              page: self.currPage,
+              page_size: 18
             };
           }
           break;
         }
         case 2: {
+          self.page_size = 10
           if (self.isCloud == 1) {
             params = {
               query: self.searchName,
               status: 1,
-              page: self.page,
+              page: self.currPage,
+              page_size: 10
             };
           } else {
             params = {
               medicine_name: self.searchName,
               status: 1,
-              page: self.page,
+              page: self.currPage,
+              page_size: 10
             };
           }
 
           break;
         }
         case 3:
+          self.page_size = 10
           if (self.isCloud == 1) {
             params = {
               query: self.searchName,
               status: 1,
-              page: self.page,
+              page: self.currPage,
+              page_size: 10
             }
           } else {
             params = {
               medicine_name: self.searchName,
               status: 1,
-              page: self.page,
+              page: self.currPage,
+              page_size: 10
             }
           }
+          break;
+        case 4:
+          self.page_size = 10
+          params = {
+            name: self.searchName,
+            page: self.currPage,
+            status: 1,
+            page_size: 10
+          };
+          break;
 
-          break;
-        case 4: {
+        case 5:
+          self.page_size = 10
           params = {
-            name: self.searchName,
-            page: self.page,
-            status: 1
-          };
-          break;
-        }
-        case 5: {
-          params = {
-            page: self.page,
+            page: self.currPage,
             query: self.searchName,
-            status: 1
+            status: 1,
+            page_size: 10
           };
           break;
-        }
-        case 6: {
+        case 6:
+          self.page_size = 10
           params = {
             name: self.searchName,
-            page: self.page,
-            status: 1
+            page: self.currPage,
+            status: 1,
+            page_size: 10
           };
           break;
-        }
       }
       clearTimeout(this.timer);
       this.timer = setTimeout(() => {
+        self.showLoading = true
         searchMed(params, self.recipeType, self.isCloud).then(
           function (res) {
+            self.showLoading = false
             if (res.code == 1000) {
               self.isFirst = false
+              self.page_num = Math.ceil(res.total_num / self.page_size)
               self.searchList = res.data;
             }
           },
           function (error) {
+            self.showLoading = false
             console.log(error);
           }
         );
@@ -382,13 +358,13 @@ export default {
     },
     listenerKey: function (event) {
       let keyCode = event.keyCode;
-      let count = this.showList.length;
+      let count = this.searchList.length;
       let cur = this.curSelect;
       let start = event.target.selectionStart;
       let colCount = this.recipeType == 1 ? 3 : 1;
       switch (keyCode) {
         case 13:
-          this.selectItem(this.showList[cur])
+          this.selectItem(this.searchList[cur])
           break;
         case 37:
           // left
@@ -455,6 +431,7 @@ export default {
     text-align: center;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
     font-size: 0.8125rem;
   }
 
@@ -471,6 +448,7 @@ export default {
     display: flex;
     align-items: center;
     font-size: 0.875rem;
+    cursor: pointer;
   }
 
   .search-result .no-stock {
@@ -492,9 +470,4 @@ export default {
     font-size: 1rem;
   }
 
-  .pageBtn {
-    clear: both;
-    display: flex;
-    justify-content: center;
-  }
 </style>

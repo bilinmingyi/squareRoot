@@ -183,5 +183,6 @@ export default {
     width: 100%;
     height: 2.5rem;
     font-size: 0.875rem;
+    cursor: pointer;
   }
 </style>
