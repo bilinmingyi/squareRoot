@@ -72,7 +72,7 @@ export default {
       fetchQuestionList({
         name: this.query,
         page: this.page,
-        page_szie: this.pageSize
+        page_size: this.pageSize
       }).then(res => {
         this.showLoading = false
         if (res.code === 1000) {
