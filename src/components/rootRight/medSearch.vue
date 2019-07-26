@@ -1,12 +1,12 @@
 <template>
   <div class="pt5 pl6 pr6 search-block">
     <div class="mb6 search-box">
-      <div class="col70 mr10">
+      <div class="flexOne mr10">
         <Input @on-keydown="listenerKey($event)" @on-blur="curSelect=-1" @input="searchMed()" placeholder="药品名称/拼音简码"
                v-model="searchName"/>
       </div>
-      <div class="col30">
-        <Button long type="primary" @click="searchMed()">搜索</Button>
+      <div>
+        <button @click="searchMed()" class="search-btn">搜索</button>
       </div>
     </div>
 

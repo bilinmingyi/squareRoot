@@ -3,11 +3,11 @@
     <f-loader v-if="showLoading" :fixed="false"></f-loader>
     <div v-if="!showTpl">
       <div class="mb6" style="width:100%;display:flex;height:2rem;">
-        <div class="col70 mr10">
+        <div class="flexOne mr10">
           <Input placeholder="请输入模板名称" @input="tplSearch(1)" v-model="searchTplName"/>
         </div>
-        <div class="col30">
-          <Button long type="primary" @click="tplSearch(1)">搜索</Button>
+        <div>
+          <button class="search-btn" @click="tplSearch(1)">搜索</button>
         </div>
       </div>
       <span class="add_prescription_btn" v-show="recipeType!==0" @click="addTpl()">添加模板</span>
@@ -1629,17 +1629,6 @@ export default {
     font-size: 0.875rem;
   }
 
-  .search-btn {
-    width: 20%;
-    height: 2rem;
-    background: #5096e0;
-    border-radius: 0.25rem;
-    color: #fff;
-    display: block;
-    text-align: center;
-    font-size: 1rem;
-    line-height: 2rem;
-  }
 
   .search-input {
     width: 75%;

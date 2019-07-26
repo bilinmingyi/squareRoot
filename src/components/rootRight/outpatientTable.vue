@@ -2,11 +2,11 @@
   <div class="search-block">
     <f-loader v-if="showLoading" :fixed="false"></f-loader>
     <div class="mb6 displayFlex">
-      <div class="col70 mr10">
+      <div class="flexOne mr10">
         <Input placeholder="请输入模板名称" v-model="query" @input="queryByInput()"/>
       </div>
-      <div class="col30">
-        <Button long @click.stop="queryByname">搜索</Button>
+      <div>
+        <button class="search-btn" @click.stop="queryByname">搜索</button>
       </div>
     </div>
     <section>
@@ -171,7 +171,7 @@ export default {
   .search-block {
     margin: 0.3125rem 0.375rem;
     position: relative;
-    height: 100%
+    height: 98%
   }
 
   .prescript-list {
