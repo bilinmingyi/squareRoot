@@ -47,7 +47,7 @@ export default {
       showLoading: false,
       query: '',
       page: 1,
-      pageSize: 10,
+      pageSize: window.screen.height > 960 || window.screen.width >= 1600 ? 10 : 8,
       totalNum: 0,
       dataList: [],
       timer: null,

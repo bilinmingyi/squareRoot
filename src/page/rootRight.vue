@@ -99,13 +99,14 @@ export default {
 <style scoped>
   .right-content {
     background: white;
-    height: calc(100% - 32px);
+    height: calc(100% - 38px);
+    box-shadow: 0px 2px 4px 0px rgba(80, 150, 224, 0.32);
   }
 
   .right-block {
-    margin-bottom: 1.25rem;
-    box-shadow: 0px 2px 4px 0px rgba(80, 150, 224, 0.32);
-    border-radius: 0.5rem 0.5rem 0rem 0rem;
+    /*margin-bottom: 1.25rem;*/
+    /*box-shadow: 0px 2px 4px 0px rgba(80, 150, 224, 0.32);*/
+    /*border-radius: 0.5rem 0.5rem 0rem 0rem;*/
   }
 
   .prescript-title {

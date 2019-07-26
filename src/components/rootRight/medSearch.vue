@@ -1,12 +1,12 @@
 <template>
-  <div class="mt5 ml6 mb5 search-block">
+  <div class="pt5 pl6 pr6 search-block">
     <div class="mb6 search-box">
       <div class="col70 mr10">
         <Input @on-keydown="listenerKey($event)" @on-blur="curSelect=-1" @input="searchMed()" placeholder="药品名称/拼音简码"
                v-model="searchName"/>
       </div>
       <div class="col30">
-        <Button long @click="searchMed()">搜索</Button>
+        <Button long type="primary" @click="searchMed()">搜索</Button>
       </div>
     </div>
 
@@ -257,7 +257,7 @@ export default {
               category: self.category,
               status: 1,
               page: self.currPage,
-              page_size: 18
+              page_size: self.page_size
             }
           } else {
             params = {
@@ -265,75 +265,75 @@ export default {
               category: self.category,
               status: 1,
               page: self.currPage,
-              page_size: 18
+              page_size: self.page_size
             };
           }
           break;
         }
         case 2: {
-          self.page_size = 10
+          self.page_size = window.screen.height > 960 || window.screen.width >= 1600 ? 10 : 8
           if (self.isCloud == 1) {
             params = {
               query: self.searchName,
               status: 1,
               page: self.currPage,
-              page_size: 10
+              page_size: self.page_size
             };
           } else {
             params = {
               medicine_name: self.searchName,
               status: 1,
               page: self.currPage,
-              page_size: 10
+              page_size: self.page_size
             };
           }
 
           break;
         }
         case 3:
-          self.page_size = 10
+          self.page_size = window.screen.height > 960 || window.screen.width >= 1600 ? 10 : 8
           if (self.isCloud == 1) {
             params = {
               query: self.searchName,
               status: 1,
               page: self.currPage,
-              page_size: 10
+              page_size: self.page_size
             }
           } else {
             params = {
               medicine_name: self.searchName,
               status: 1,
               page: self.currPage,
-              page_size: 10
+              page_size: self.page_size
             }
           }
           break;
         case 4:
-          self.page_size = 10
+          self.page_size = window.screen.height > 960 || window.screen.width >= 1600 ? 10 : 8
           params = {
             name: self.searchName,
             page: self.currPage,
             status: 1,
-            page_size: 10
+            page_size: self.page_size
           };
           break;
 
         case 5:
-          self.page_size = 10
+          self.page_size =( window.screen.height > 960 || window.screen.width >= 1600) ? 10 : 8
           params = {
             page: self.currPage,
             query: self.searchName,
             status: 1,
-            page_size: 10
+            page_size: self.page_size
           };
           break;
         case 6:
-          self.page_size = 10
+          self.page_size = window.screen.height > 960 || window.screen.width >= 1600 ? 10 : 8
           params = {
             name: self.searchName,
             page: self.currPage,
             status: 1,
-            page_size: 10
+            page_size: self.page_size
           };
           break;
       }
@@ -420,13 +420,13 @@ export default {
   }
 
   .search-result .herbal-result-li {
-    width: 31.5%;
+    width: calc((100% - 0.75rem) / 3);
     height: 3.125rem;
     border: #5096e0 solid 1px;
     border-radius: 0.25rem;
     float: left;
     display: flex;
-    margin-right: 1%;
+    margin-right: 0.25rem;
     margin-bottom: 0.25rem;
     text-align: center;
     justify-content: center;
@@ -436,7 +436,7 @@ export default {
   }
 
   .search-result .search-result-li {
-    width: 97%;
+    width: 100%;
     height: 2.5rem;
     border: #5096e0 solid 1px;
     border-radius: 0.25rem;
@@ -463,7 +463,6 @@ export default {
   }
 
   .search-box {
-    padding-right: 3%;
     width: 100%;
     display: flex;
     height: 2rem;
