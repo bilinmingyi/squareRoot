@@ -29,6 +29,7 @@
         </div>
         <div
           style="flex: 1;"
+          v-show="recipeType==1||recipeType==2||recipeType==0"
           :class="['prescript-title',{'current-tab':tabType == 3}]"
           @click.stop="changeTab(3)"
         >

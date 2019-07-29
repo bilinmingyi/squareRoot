@@ -97,7 +97,7 @@
         <span>医嘱：</span>
         <span>{{tplData.doctor_remark}}</span>
       </div>
-      <div class="ml10 mb20 tpl-case tpl-content" v-show="recipeType==0">
+      <div class="ml10 mb20 tpl-content" v-show="recipeType==0">
         <div v-if="tplData.chief_complaint" class="tpl-case-div">
           <span class="case-label">主述</span>
           <span>{{tplData.chief_complaint}}</span>
@@ -908,7 +908,7 @@ export default {
           searchTpl(params, self.recipeType).then(function (res) {
             if (res.code == 1000) {
               self.showLoading = false
-              self.temItemWidth = Number(window.getComputedStyle(document.getElementById('tplList'), null).width.replace(/px/g, ''))
+              self.temItemWidth = Number(self.getCurrentStyle(document.getElementById('tplList')).width.replace(/px/g, ''))
               self.tplSearchList = res.data;
               self.page_num = Math.ceil(res.total_num / self.page_size)
               self.showResult = true;
@@ -1303,6 +1303,15 @@ export default {
     delTplHide: function () {
       this.showDelTpl = false;
     },
+    getCurrentStyle: function (node) {
+      let style = null
+      if (window.getComputedStyle) {
+        style = window.getComputedStyle(node, null)
+      } else {
+        style = node.currentStyle
+      }
+      return style
+    },
     // editTplShow: function () {
     //   var self = this;
     //   self.tplEditData.searchName = "";
@@ -1513,9 +1522,9 @@ export default {
   }
 
   .search-result .search-result-li {
-    width: 95%;
+    width: 100%;
     height: 2.5rem;
-    border: #5096e0 solid 0.0625rem;
+    border: #CCCCCC solid 0.0625rem;
     border-radius: 0.25rem;
     float: left;
     margin-right: 1%;
@@ -1525,6 +1534,7 @@ export default {
     display: flex;
     align-items: center;
     font-size: 0.875rem;
+    cursor: pointer;
   }
 
   .prescription_detail_save {

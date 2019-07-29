@@ -2,11 +2,11 @@
   <div class="pt5 pl6 pr6 search-block">
     <div class="mb6 search-box">
       <div class="flexOne mr10">
-        <Input @on-keydown="listenerKey($event)" @on-blur="curSelect=-1" @input="searchMed()" placeholder="药品名称/拼音简码"
+        <Input @on-keydown="listenerKey($event)" @on-blur="curSelect=-1" @input="searchMedicine(1)" placeholder="药品名称/拼音简码"
                v-model="searchName"/>
       </div>
       <div>
-        <button @click="searchMed()" class="search-btn">搜索</button>
+        <button @click="searchMedicine(1)" class="search-btn">搜索</button>
       </div>
     </div>
 
@@ -157,7 +157,7 @@ export default {
           this.currPage = 1;
         } else {
           this.currPage--;
-          this.searchMed()
+          this.searchMedicine(this.currPage)
         }
       }
       if (flag == 1) {
@@ -165,7 +165,7 @@ export default {
           this.currPage = this.page_num;
         } else {
           this.currPage++;
-          this.searchMed()
+          this.searchMedicine(this.currPage)
         }
       }
     },
@@ -234,8 +234,9 @@ export default {
         console.log(error)
       })
     },
-    searchMed: function () {
+    searchMedicine: function (page) {
       this.curSelect = -1;
+      this.currPage = page
       var self = this;
       if (self.searchName == "") {
         self.searchList = self.recentList;
