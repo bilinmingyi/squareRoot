@@ -99,7 +99,6 @@ input {
 }
 
 
-
 .full-screen-hr {
   width: 100%;
   margin: 0;
@@ -112,45 +111,54 @@ input {
 .bg-ff {
   background: #FFFFFF;
 }
-.prescription_tab_bg{
+
+.prescription_tab_bg {
   width: 100%;
   height: 100%;
-  background: rgba(255,255,255,0.50);
+  background: rgba(255, 255, 255, 0.50);
   z-index: 1000;
   position: fixed;
   top: 0;
   left: 0;
 }
-.recipe_table{
+
+.recipe_table {
   width: 100%;
   font-size: 0.875rem;
   color: #4C4C4C;
   text-align: center;
 }
-.recipe_table thead{
+
+.recipe_table thead {
   background: #F6FBFE;
 }
-.recipe_table th{
-  font-weight:600;
+
+.recipe_table th {
+  font-weight: 600;
   padding: 0.625rem 0;
 }
-.recipe_table tbody tr{
+
+.recipe_table tbody tr {
   border-bottom: 0.0625px solid #cccccc;
 }
-.recipe_table tbody td{
+
+.recipe_table tbody td {
   padding: 0.3125rem 0;
 }
 
-.displayFlex{
+.displayFlex {
   display: flex;
 }
-.flexOne{
+
+.flexOne {
   flex: 1;
 }
-.input_120{
+
+.input_120 {
   width: 7.5rem !important;
 }
-.input_label{
+
+.input_label {
   font-size: 0.875rem;
   font-weight: 600;
   color: #4C4C4C;
@@ -160,10 +168,16 @@ input {
 .width-100 {
   width: 6.25rem;
 }
-.width-240{
+
+.width-200 {
+  width: 12.5rem;
+}
+
+.width-240 {
   width: 15rem;
 }
-.width-620{
+
+.width-620 {
   width: 41rem;
 }
 
@@ -244,9 +258,10 @@ input {
 }
 
 /* padding-right */
-.pr4{
+.pr4 {
   padding-right: 0.25rem;
 }
+
 .pr5 {
   padding-right: 0.3125rem;
 }
@@ -418,9 +433,11 @@ input {
 .ml20 {
   margin-left: 1.25rem;
 }
+
 .ml30 {
   margin-left: 1.875rem;
 }
+
 .ml40 {
   margin-left: 2.5rem;
 
@@ -466,6 +483,7 @@ input {
 .mr30 {
   margin-right: 1.875rem;
 }
+
 /* margin-top */
 .mt5 {
   margin-top: 0.3125rem;
@@ -496,8 +514,8 @@ input {
 }
 
 .mt20 {
-   margin-top: 1.25rem;
- }
+  margin-top: 1.25rem;
+}
 
 .mt30 {
   margin-top: 1.875rem;
@@ -553,55 +571,71 @@ input {
 }
 
 /*排版*/
-.col5{
+.col5 {
   width: 5% !important;
 }
-.col53{
+
+.col53 {
   width: 5.3%;
 }
-.col10{
+
+.col10 {
   width: 10% !important;
 }
-.col15{
+
+.col15 {
   width: 15% !important;
 }
-.col20{
+
+.col20 {
   width: 20% !important;
 }
-.col25{
+
+.col25 {
   width: 25% !important;
 }
-.col30{
+
+.col30 {
   width: 30% !important;
 }
-.col35{
+
+.col35 {
   width: 35% !important;
 }
-.col40{
+
+.col40 {
   width: 40% !important;
 }
-.col45{
+
+.col45 {
   width: 45% !important;
 }
-.col50{
+
+.col50 {
   width: 50% !important;
 }
-.col60{
+
+.col60 {
   width: 60% !important;
 }
-.col65{
+
+.col65 {
   width: 65% !important;
 }
-.col70{
+
+.col70 {
   width: 70% !important;
 }
-.col80{
+
+.col80 {
   width: 80% !important;
 }
-.col90{
+
+.col90 {
   width: 90% !important;
 }
-.col100{
+
+.col100 {
   width: 100% !important;
 }
 
@@ -625,9 +659,11 @@ input {
 .font-16 {
   font-size: 1rem;
 }
+
 .font-18 {
   font-size: 1.125rem;
 }
+
 /* font-weight */
 .font-bold {
   font-weight: bold;
@@ -637,6 +673,7 @@ input {
   display: flex;
   justify-content: space-around;
 }
+
 .t-h-btn {
   width: 6.25rem;
   height: 1.875rem;
@@ -661,7 +698,7 @@ input {
 }
 
 .search-btn {
-  background:rgba(80,150,224,1);
+  background: rgba(80, 150, 224, 1);
   border-radius: 0.25rem;
   font-size: 0.875rem;
   font-weight: bold;
@@ -733,44 +770,52 @@ input {
   color: #c5c8ce;
   line-height: 1.25rem;
 }
+
 .mid-record-item .ivu-tag {
   height: 1.375rem;
   line-height: 1.375rem;
 }
 
 ::-webkit-scrollbar-track {
-	border-radius: 0.625rem;
-	-webkit-box-shadow: inset 0 0 0.375rem rgba(0,0,0,0);
+  border-radius: 0.625rem;
+  -webkit-box-shadow: inset 0 0 0.375rem rgba(0, 0, 0, 0);
 }
+
 ::-webkit-scrollbar-thumb {
-	background-color: rgba(0,0,0,0.05);
-	border-radius: 0.625rem;
-	-webkit-box-shadow: inset 1px 1px 0 rgba(0,0,0,.1);
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 0.625rem;
+  -webkit-box-shadow: inset 1px 1px 0 rgba(0, 0, 0, .1);
 }
+
 ::-webkit-scrollbar-thumb {
-	background-color: rgba(0,0,0,0.2);
-	border-radius: 0.625rem;
-	-webkit-box-shadow: inset 1px 1px 0 rgba(0,0,0,.1);
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 0.625rem;
+  -webkit-box-shadow: inset 1px 1px 0 rgba(0, 0, 0, .1);
 }
+
 ::-webkit-scrollbar {
-	width: 1rem;
-	height: 1rem;
+  width: 1rem;
+  height: 1rem;
 }
+
 ::-webkit-scrollbar-track,
 ::-webkit-scrollbar-thumb {
-	border-radius: 62.4375rem;
-	border: 0.3125rem solid transparent;
+  border-radius: 62.4375rem;
+  border: 0.3125rem solid transparent;
 }
+
 ::-webkit-scrollbar-track {
-	box-shadow: 1px 1px 0.3125rem rgba(0,0,0,.2) inset;
+  box-shadow: 1px 1px 0.3125rem rgba(0, 0, 0, .2) inset;
 }
+
 ::-webkit-scrollbar-thumb {
-	min-height: 1.25rem;
-	background-clip: content-box;
-	box-shadow: 0 0 0 0.3125rem rgba(0,0,0,.2) inset;
+  min-height: 1.25rem;
+  background-clip: content-box;
+  box-shadow: 0 0 0 0.3125rem rgba(0, 0, 0, .2) inset;
 }
+
 ::-webkit-scrollbar-corner {
-	background: transparent;
+  background: transparent;
 }
 
 /* patient-record input */
@@ -778,24 +823,31 @@ input {
   min-height: 2.375rem !important;
   line-height: 1.875rem;
 }
-.tl{
+
+.tl {
   text-align: left;
 }
-.tc{
+
+.tc {
   text-align: center;
 }
-.tr{
+
+.tr {
   text-align: right;
 }
-.clear{
+
+.clear {
   clear: both;
 }
+
 textarea.ivu-input {
   resize: none;
 }
+
 .ivu-input::-webkit-input-placeholder {
   font-size: 0.875rem !important;
 }
+
 .ivu-radio-wrapper {
   font-size: 14px;
 }

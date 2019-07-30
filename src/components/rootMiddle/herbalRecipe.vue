@@ -9,17 +9,17 @@
         </f-radio>
       </div>
       <div>
-        <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
-        <button class="btn btn_yb_check" @click.stop="examineYB" v-if="isYB">医保处方审核</button>
-        <button class="btn" @click.stop="showImportRecipe">导入处方</button>
-        <button class="btn" @click="print_pre()">打印处方</button>
+        <button class="btn btn_cancel mr10" @click.stop="cancelRecipe">删除</button>
+        <button class="btn btn_yb_check mr10" @click.stop="examineYB" v-if="isYB">医保处方审核</button>
+        <button class="btn mr10" @click.stop="showImportRecipe">导入处方</button>
+        <button class="btn mr10" @click="print_pre()">打印处方</button>
         <button class="btn btn_print" @click.stop="saveTplData">存为模板</button>
       </div>
     </section>
     <section>
       <table class="recipe_table">
         <thead>
-        <tr class="displayBlock" style="overflow-y: scroll">
+        <tr class="displayBlock">
           <th style="width: 10%;display: inline-block;">序号</th>
           <th style="width: 20%;display: inline-block;">药名</th>
           <th style="width: 10%;display: inline-block;">规格</th>
@@ -503,7 +503,7 @@ export default {
 
   .herbal_table_body {
     display: block;
-    overflow-y: scroll;
+    overflow-y: auto;
     max-height: calc(100vh - 220px);
   }
 

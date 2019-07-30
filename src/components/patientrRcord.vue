@@ -832,6 +832,7 @@ export default {
     background: none;
     padding: 0 0.5rem;
     line-height: 1.875rem;
+    min-width: 5.125rem;
   }
 
   .diagnosis-input-box {

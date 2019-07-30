@@ -9,9 +9,9 @@
         </f-radio>
       </div>
       <div>
-        <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
-        <button class="btn btn_yb_check" @click.stop="examineYB" v-if="isYB">医保处方审核</button>
-        <button class="btn" @click="print_pre()">打印处方</button>
+        <button class="btn btn_cancel mr10" @click.stop="cancelRecipe">删除</button>
+        <button class="btn btn_yb_check mr10" @click.stop="examineYB" v-if="isYB">医保处方审核</button>
+        <button class="btn mr10" @click="print_pre()">打印处方</button>
         <button class="btn btn_print" @click.stop="saveTplData">存为模板</button>
       </div>
     </section>
