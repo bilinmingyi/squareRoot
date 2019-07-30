@@ -75,7 +75,7 @@
             <span v-show="recipeType===1">
               {{item.alias_name||item.clinic_alias_name||item.name}}
               <br>
-              （{{item.num}}{{item.unit}}）
+              （{{item.adult_num}}{{item.unit}}）
             </span>
           <span v-show="recipeType===2">
               {{item.alias_name||item.clinic_alias_name||item.name}}
