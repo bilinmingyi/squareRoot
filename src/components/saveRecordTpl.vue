@@ -2,44 +2,52 @@
   <section class="prescription_tab_bg">
     <div
       class="prescription_tab"
-      style="width: 20rem;padding: 1.25rem 1.875rem 1.875rem;top: 35%;left: 50%;"
     >
-      <div class="mb10">
-        <div class="prescription_tab_head_title">请输入模板名称</div>
+      <div class="mb20">
+        <div class="alert-title">添加病历模板</div>
       </div>
-      <div class="mb10">
-        <input
-          type="text"
-          class="CommonEdit_input"
-          style="width: 100%;"
-          placeholder="最多不超过10个字"
-          v-model="recordTemplateName"
-        >
-      </div>
-      <div class="display-flex">
-        <div
-          class="prescription_tab_save mr20"
-          style="width: 120px;"
-          @click.stop="saveAsTemplate()"
-        >确定</div>
-        <div
-          class="prescription_tab_cancel"
-          style="width: 120px;"
-          @click.stop="hideSaveTemplate()"
-        >取消</div>
+      <section>
+        <div class="displayFlex align-item mb15">
+          <span class="input_label pr16">模板范围</span>
+          <RadioGroup class="flexOne" v-model="recordTemplateScope">
+            <Radio label="1">个人</Radio>
+            <Radio class="ml30" label="0">本诊所</Radio>
+          </RadioGroup>
+        </div>
+        <div class="displayFlex align-item mb10">
+          <span class="input_label pr16">模板名称</span>
+          <Input class="flexOne" placeholder="请输入名称(必填)" v-model="recordTemplateName"/>
+        </div>
+        <div class="displayFlex align-item mb10">
+          <span class="input_label pr16">中医诊断</span>
+          <Input class="flexOne" placeholder="选填" v-model="diagnosis"/>
+        </div>
+        <div class="displayFlex align-item mb10">
+          <span class="input_label pr16">西医诊断</span>
+          <Input class="flexOne" placeholder="选填" v-model="diagnosis_xy"/>
+        </div>
+      </section>
+      <div class="tc mt30">
+        <button class="saveBtn mr20" @click.stop="saveAsTemplate">确定</button>
+        <button class="saveBtn cancelBtn" @click.stop="hideSaveTemplate()">取消</button>
       </div>
     </div>
   </section>
 </template>
 
 <script>
-import { addRecordTpl } from "@/fetch/api.js";
-import { mapState, mapActions } from "vuex";
+import {Input, RadioGroup, Radio} from 'iview'
+import {addRecordTpl} from "@/fetch/api.js";
+import {mapState, mapActions} from "vuex";
+
 export default {
   props: [],
   data() {
     return {
-      recordTemplateName: ""
+      recordTemplateName: "",
+      recordTemplateScope: "1",
+      diagnosis_xy: "",
+      diagnosis: ""
     };
   },
   computed: {
@@ -48,6 +56,15 @@ export default {
       tplChange: state => state.tplChange
     })
   },
+  components: {
+    Input,
+    RadioGroup,
+    Radio
+  },
+  mounted() {
+    this.diagnosis_xy = this.recordData.diagnosis_xy
+    this.diagnosis = this.recordData.diagnosis
+  },
   methods: {
     ...mapActions(['set_state_prop']),
     checkRecord(type) {
@@ -55,22 +72,25 @@ export default {
       return self.recordData.recordList.indexOf(type) >= 0
     },
     saveAsTemplate() {
-      if (this.recordTemplateName == "") {
-        this.$Message.warning("请先填写模板名称");
+      let self = this
+      if (self.recordTemplateName == "") {
+        self.$Message.warning("请先填写模板名称");
         return;
       }
-      if (this.recordTemplateName.length > 10) {
-        this.$Message.warning("模板名称不超过10个字");
+      if (self.recordTemplateName.length > 32) {
+        self.$Message.warning("模板名称过长，请修改");
         return;
       }
       let params = {
-        name: this.recordTemplateName,
-        scope: 1
+        name: self.recordTemplateName,
+        scope: Number(self.recordTemplateScope)
       };
       let recordData = this.recordData;
       recordData.recordList.forEach(key => {
         if (key === 'examination') {
           params[key] = JSON.stringify(recordData[key])
+        } else if (key === 'diagnosis') {
+          params[key] = self.diagnosis
         } else {
           params[key] = recordData[key]
         }
@@ -79,19 +99,9 @@ export default {
       Object.assign(params, {
         chief_complaint: recordData.chief_complaint,
         present_illness: recordData.present_illness,
-        // allergic_history: recordData.allergic_history,
-        // personal_history: recordData.personal_history,
-        // past_history: recordData.past_history,
-        // family_history: recordData.family_history,
-        // prophylactic_history: recordData.prophylactic_history,
-        // examination: JSON.stringify(recordData.examination),
-        // diagnosis: recordData.diagnosis,
-        diagnosis_xy: recordData.diagnosis_xy,
+        diagnosis_xy: self.diagnosis_xy,
         treat_advice: recordData.treat_advice,
-        // sport_advice: recordData.sport_advice,
-        // dietary_advice: recordData.dietary_advice
       });
-      console.log(params)
       addRecordTpl(params).then(res => {
         if (res.code == 1000) {
           this.$Message.success("存为模板成功");
@@ -111,65 +121,56 @@ export default {
 </script>
 
 <style scoped>
-.prescription_tab_bg {
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.5);
-  z-index: 500;
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-.prescription_tab {
-  z-index: 998;
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  left: 50%;
-  width: 47.5rem;
-  height: auto;
-  background: #f6fbfe;
-  padding: 0.9375rem;
-  box-shadow: 0 0.25rem 1rem 0.25rem rgba(0, 0, 0, 0.2);
-  border-radius: 0.25rem;
-}
-.prescription_tab_head_title {
-  color: #4c4c4c;
-  font-size: 1rem;
-  font-weight: bold;
-}
-.CommonEdit_input {
-  width: 10rem;
-  height: 2.5rem;
-  line-height: 2.5rem;
-  border: #5096e0 solid 1px;
-  background: #fff;
-  border-radius: 0.25rem;
-  text-indent: 0.3125rem;
-}
-.prescription_tab_save {
-  width: 10rem;
-  height: 2.5rem;
-  line-height: 2.5rem;
-  border-radius: 1.875rem;
-  background: #5096e0;
-  color: #fff;
-  text-align: center;
-  font-size: 0.9375rem;
-  cursor: pointer;
-}
-.prescription_tab_cancel {
-  width: 10rem;
-  height: 2.5rem;
-  line-height: 2.5rem;
-  border-radius: 1.875rem;
-  background: #fff;
-  color: #5096e0;
-  border: #5096e0 solid 1px;
-  text-align: center;
-  font-size: 0.9375rem;
-}
-.display-flex {
-  display: flex;
-}
+  .prescription_tab_bg {
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.5);
+    z-index: 500;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+
+  .prescription_tab {
+    z-index: 998;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    width: 34rem;
+    height: auto;
+    background: #fff;
+    padding: 1.5rem 6.25rem 2rem;
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
+
+  .alert-title {
+    text-align: center;
+    font-weight: 900;
+    font-size: 1rem;
+    color: #5f95da;
+  }
+
+  .saveBtn {
+    font-size: 0.875rem;
+    color: #ffffff;
+    font-weight: bold;
+    width: 7.5rem;
+    text-align: center;
+    padding: 0.375rem 0;
+    background: #5096e0;
+    border-radius: 6.25rem;
+    border: none;
+  }
+
+  .cancelBtn {
+    background: #ffffff;
+    border: 0.0625rem solid #5096e0;
+    color: #5096e0;
+  }
+
+  .align-item {
+    align-items: center;
+  }
 </style>

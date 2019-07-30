@@ -1208,12 +1208,12 @@ export default {
           examination: self.tplData.examination
             ? JSON.parse(self.tplData.examination)
             : {},
+          diagnosis: self.tplData.diagnosis != "" ? self.tplData.diagnosis + ";" : "",
+          diagnosis_xy:  self.tplData.diagnosis_xy != "" ? self.tplData.diagnosis_xy + ";" : "",
           diagnosis_input:
             self.tplData.diagnosis != "" ? self.tplData.diagnosis + ";" : "",
           diagnosis_xy_input:
-            self.tplData.diagnosis_xy != ""
-              ? self.tplData.diagnosis_xy + ";"
-              : "",
+            self.tplData.diagnosis_xy != "" ? self.tplData.diagnosis_xy + ";" : "",
           treat_advice: self.tplData.treat_advice || "",
           diagnosis_xy_labels: [],
           diagnosis_labels: [],
@@ -1245,7 +1245,6 @@ export default {
       }
       var ids = [], names = [], params = {};
       var items = self.currShowTpl.items;
-      console.log(items)
       this.currShowTpl.items.forEach(function (item) {
         ids.push(Number(item.item_id));
         names.push(item.name)

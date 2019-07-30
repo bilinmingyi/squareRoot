@@ -300,7 +300,7 @@
       :timeStamp="Date.now()"
     ></patient-alert>
     <save-record-tpl
-      v-show="showSaveRecordTpl"
+      v-if="showSaveRecordTpl"
       @close="showSaveRecordTpl = false"
     ></save-record-tpl>
     <print-record

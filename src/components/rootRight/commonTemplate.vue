@@ -74,6 +74,14 @@ export default {
     recipeType: function () {
       return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
     },
+    category: function () {
+      return this.currRecipeData === undefined ? 1 : (this.currRecipeData.data.category === undefined ? 1 : this.currRecipeData.data.category);
+    }
+  },
+  watch: {
+    recipeType: function () {
+
+    }
   },
   filters: {
     textEllipsis(val, width) {
