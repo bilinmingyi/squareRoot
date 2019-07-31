@@ -350,7 +350,6 @@ export default {
         currIndex: -1
       },
       tplType: [{name: "个人", scope: 1}, {name: "共享", scope: 0}],
-      currShowTpl: {},
       showLoading: false,
       firstTimer: null,
       temItemWidth: '',
@@ -447,7 +446,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["add_new_medicine", "clean_recipe", "set_record_prop"]),
+    ...mapActions(["add_new_medicine", "clean_recipe", "set_record_prop", "modify_recipe_detail"]),
     firstSearch: function () {
       clearTimeout(this.firstTimer)
       this.firstTimer = setTimeout(() => {
@@ -742,41 +741,12 @@ export default {
       this.showAddTpl = false;
     },
     tplShow: function (item) {
-      this.tplEditData.searchName = "";
-      this.currShowTpl = item;
-
-      var self = this;
-      self.tplData = {
-        tplName: item.name,
-        symptom: item.symptom,
-        scope: item.scope,
+      let self = this;
+      self.tplEditData.searchName = "";
+      self.tplData = Object.assign(item, {
         items: item.component ? JSON.parse(item.component) : [],
-        dosage: item.dosage,
-        doctor_remark: item.doctor_remark,
-        category: item.category,
-        clinic_id: item.clinic_id,
-        creator_name: item.creator_name,
-        creator_id: item.creator_id,
-        id: item.id,
-        is_cloud: item.is_cloud,
-
-        chief_complaint: item.chief_complaint, //主诉
-        present_illness: item.present_illness, //病史
-        allergic_history: item.allergic_history, //过敏史
-        personal_history: item.personal_history, // 个人史
-        past_history: item.past_history, //既往史
-        family_history: item.family_history, // 家族史
-        prophylactic_history: item.prophylactic_history, // 预防接种史
-
-        examination: item.examination, //检查
-        diagnosis: item.diagnosis, //中医诊断
-        diagnosis_xy: item.diagnosis_xy, //西医诊断
-        treat_advice: item.treat_advice, //处理意见
-        sport_advice: item.sport_advice, // 运动建议
-        dietary_advice: item.dietary_advice // 膳食建议
-      };
+      })
       self.showTpl = true;
-
     },
     tplHide: function () {
       this.showTpl = false;
@@ -786,36 +756,12 @@ export default {
       if (this.recipeType !== 0) {
         this.clean_recipe();
         self.tplData.items.forEach(function (item) {
-          var newItem = {
-            category: item.category,
-            id: item.item_id,
-            name: item.alias_name || item.clinic_alias_name || item.name,
-            alias_name: item.alias_name || item.name,
-            clinic_alias_name: item.clinic_alias_name || item.name,
-            num: item.num,
-            price: item.price,
-            sale_price: item.sale_price,
-            default_sale_price: item.default_sale_price || 0,
-            spec: item.spec,
-            stock: item.stock,
-            stock_sale_ratio: item.stock_sale_ratio,
-            unit: item.unit || "次",
-            unit_sale: item.unit_sale,
-            unit_stock: item.unit_stock,
-            usage: item.usage,
-            dose_once: item.dose_once,
-            frequency: item.frequency,
-            days: item.days,
-            status: item.status || 0,
-            is_match: item.is_match,
-            unit_dose: item.unit_dose || "克",
-            sale_dose_ratio: item.sale_dose_ratio || 0,
-            type: item.type || 1
-          };
-
-          self.add_new_medicine({item: newItem, type: self.recipeType});
-
+          self.add_new_medicine({item: item, type: self.recipeType});
         });
+        if (self.recipeType == 1) {
+          this.modify_recipe_detail({key: 'usage', val: self.tplData.treat_method})
+          this.modify_recipe_detail({key: 'dosage', val: self.tplData.dosage})
+        }
         this.showUseTpl = false;
       } else {
         var data = {
@@ -862,31 +808,23 @@ export default {
       }
     },
     useTplShow: function () {
-      var self = this;
+      let self = this;
       if (this.recipeType === 0) {
         self.showUseTpl = true;
         return
       }
-      var ids = [], names = [], params = {};
-      var items = self.currShowTpl.items;
-      this.currShowTpl.items.forEach(function (item) {
-        ids.push(Number(item.item_id));
+      let names = []
+      let params = {}
+      let items = JSON.parse(JSON.stringify(self.tplData.items));
+      items.forEach(function (item) {
         names.push(item.name)
       });
       if (this.recipeType == 1) {
-        if (self.isCloud == 1) {
           params = {names: names, status: 1, category: self.category}
-        } else {
-          params = {ids: ids, status: 1, category: self.category};
-        }
-
       } else {
-        if (self.isCloud == 1) {
           params = {names: names, status: 1}
-        } else {
-          params = {ids: ids, status: 1};
-        }
       }
+      let resultList = []
 
       searchMed(params, this.recipeType, self.isCloud).then(function (res) {
         if (res.code == 1000) {
@@ -895,22 +833,25 @@ export default {
               for (var i = 0, len = res.data.length; i < len; i++) {
                 if (item.name == res.data[i].name || item.name == res.data[i].alias_name) {
                   item.is_match = 1
-                  item.default_sale_price = res.data[i].default_sale_price
+                  resultList.push(Object.assign(res.data[i], item))
                   break;
                 }
               }
             } else {
               for (var i = 0, len = res.data.length; i < len; i++) {
-                if (item.item_id == res.data[i].id) {
+                if (item.name == res.data[i].name || item.name == res.data[i].clinic_alias_name) {
                   item.is_match = 1
+                  resultList.push(Object.assign(res.data[i], item))
                   break;
                 }
               }
             }
             if (i == len) {
               item.is_match = 0;
+              resultList.push(Object.assign({}, item))
             }
           });
+          self.tplData.items = resultList
           self.showUseTpl = true;
         } else {
           self.$Message.info(res.msg)
