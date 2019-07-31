@@ -86,6 +86,7 @@ export default {
     Input,
     fLoader
   },
+  props: ['tabType'],
   data() {
     return {
       timer: null,
@@ -127,6 +128,10 @@ export default {
       this.searchName = "";
       this.firstSearch();
     },
+    tabType: function () {
+      this.searchName = "";
+      this.firstSearch();
+    }
   },
 
   created() {
@@ -198,6 +203,13 @@ export default {
           status: 1,
           category: self.category
         }
+      } else if (self.recipeType === 4) {
+        params = {
+          page: 1,
+          page_size: 10,
+          status: 1,
+          is_combine: self.tabType == 5 ? 1 : 0
+        }
       } else {
         params = {
           page: 1,
@@ -211,7 +223,10 @@ export default {
       ]).then(res => {
         if (res[0].code === 1000 && res[1].code === 1000) {
           self.showLoading = false
-          var resultList = JSON.parse(JSON.stringify(res[1].data))
+          let isCombine = self.tabType == 5 ? 1: 0
+          var resultList = res[1].data.filter(item => {
+            return item.is_combine == isCombine
+          })
           if (resultList.length < params.page_size) {
             for (let i = 0, len = res[0].data.length; i < len && resultList.length < params.page_size; i++) {
               if (!res[1].data.some(med => med.id === res[0].data[i].id)) {
@@ -315,6 +330,7 @@ export default {
             name: self.searchName,
             page: self.currPage,
             status: 1,
+            is_combine: self.tabType == 5 ? 1 : 0,
             page_size: self.page_size
           };
           break;

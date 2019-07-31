@@ -20,6 +20,13 @@
           <span v-show="recipeType==6">材料搜索</span>
         </div>
         <div
+          v-show="recipeType==4"
+          :class="['prescript-title',{'current-tab':tabType == 5}]"
+          @click.stop="changeTab(5)"
+        >
+          <span>组合项目</span>
+        </div>
+        <div
           v-show="recipeType==1||recipeType==2||recipeType==4||recipeType==0"
           :class="['prescript-title', 'margin-lr', {'current-tab':tabType == 2}]"
           @click.stop="changeTab(2)"
@@ -38,7 +45,7 @@
       </div>
     </div>
     <div class="right-content">
-      <component :is="componentLists[(Number(tabType)-1)]"></component>
+      <component :is="componentLists[(Number(tabType)-1)]" :tabType="tabType"></component>
     </div>
   </div>
 </template>
@@ -61,7 +68,7 @@ export default {
   data() {
     return {
       tabType: 1,
-      componentLists: ['medSearch', 'tpl', 'commonTemplate', 'outpatientTable']
+      componentLists: ['medSearch', 'tpl', 'commonTemplate', 'outpatientTable', 'medSearch']
     };
   },
   created() {
