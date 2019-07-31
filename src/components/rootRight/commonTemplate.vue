@@ -1,10 +1,10 @@
 <template>
-  <div class="pr6 pl6 pt5">
-    <f-loader v-if="showLoading"></f-loader>
+  <div class="pr6 pl6 pt5 search-block">
+    <f-loader v-if="showLoading" :fixed="false"></f-loader>
     <div v-if="!showDetail">
       <div class="displayFlex">
         <div class="flexOne mr10">
-          <Input placeholder="请输入模板名称"/>
+          <Input placeholder="请输入模板名称" v-model="searchName"/>
         </div>
         <div>
           <button class="search-btn">搜索</button>
@@ -12,22 +12,22 @@
       </div>
       <section id="tplList">
         <div v-if="recipeType===0">
-          <div class="prescript-list" @click.stop="showTemplate">
-            111
+          <div class="prescript-list" v-for="item in tplList" @click.stop="showTemplate(item)">
+            {{item.name}}
           </div>
           <div class="prescript-list">
             111
           </div>
         </div>
         <div v-else>
-          <div class="med-template" @click.stop="showTemplate">
+          <div class="med-template" @click.stop="showTemplate(item)">
             <div class="med-template-title">测试1</div>
             <div class="med-template-content">
               {{test|textEllipsis(temItemWidth)}}
             </div>
           </div>
         </div>
-        <div class="mt10 tc">
+        <div class="mt10 tc" v-show="tplList.length <= 0">
           暂无模板
         </div>
       </section>
@@ -47,7 +47,7 @@
       </div>
     </div>
     <template v-if="showDetail">
-      <template-record v-if="recipeType===0" @close="showDetail=false"></template-record>
+      <template-record v-if="recipeType===0" @close="showDetail=false" :tpl="currTpl"></template-record>
       <template-recipe v-else @close="showDetail=false"></template-recipe>
     </template>
 
@@ -60,6 +60,7 @@ import {Input} from "iview";
 import templateRecipe from '@/components/rootRight/templateRecipe'
 import templateRecord from '@/components/rootRight/templateRecord'
 import fLoader from "@/components/fLoader";
+import {fetchCommonTemplate} from '@/fetch/api.js'
 
 export default {
   name: "commonTemplate",
@@ -102,11 +103,20 @@ export default {
       temItemWidth: '',
       test: '胁肋疼痛，胸闷善太息，情志抑郁，易怒，脘腹胀满，脉弦，肝气郁滞证。胁肋疼痛，胸闷善太息，情志抑郁，易怒，脘腹胀满，脉弦，肝气郁。胁肋疼痛，胸闷善太息，情志抑郁，易怒，脘腹胀满，脉弦，肝气郁',
       pageSize: 0,
-      showDetail: false
+      showDetail: false,
+      searchName: '',
+      tplList: [],
+      currTpl: {}
     }
   },
   mounted () {
     this.temItemWidth = Number(this.getCurrentStyle(document.getElementById('tplList')).width.replace(/px/g, ''))
+    if (this.recipeType == 0) {
+      this.pageSize = window.screen.height > 960 || window.screen.width >= 1600 ? 10 : 8
+    } else {
+      this.pageSize = window.screen.height > 960 || window.screen.width > 1600 ? 5 : (window.screen.height >= 900 ? 4 : 3)
+    }
+    this.getData(1)
   },
   methods: {
     getCurrentStyle: function (node) {
@@ -119,8 +129,29 @@ export default {
       return style
     },
     changePage (type) {},
-    showTemplate () {
+    showTemplate (item) {
       this.showDetail = true
+      this.currTpl = item
+    },
+    getData (page) {
+      this.currPage = page
+      this.showLoading = true
+      fetchCommonTemplate({
+        "name": this.searchName,
+        "page": this.currPage,
+        "page_size": this.pageSize
+      }, this.recipeType).then(res => {
+        this.showLoading = false
+        if (res.code === 1000) {
+          this.tplList = res.data
+          this.pageNum = Math.ceil(res.total_num / this.pageSize)
+        } else {
+          this.$Message.info(res.msg)
+        }
+      }).catch(error => {
+        this.showLoading = false
+        console.log(error)
+      })
     }
   }
 }
@@ -158,5 +189,10 @@ export default {
   .med-template-content {
     font-size: 0.875rem;
     line-height: 1.25rem;
+  }
+
+  .search-block {
+    position: relative;
+    height: 100%
   }
 </style>

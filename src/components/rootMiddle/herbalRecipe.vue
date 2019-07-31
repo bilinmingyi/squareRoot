@@ -232,13 +232,15 @@ export default {
       immediate: true,
       handler: function (newVal, oldVal) {
         var self = this, recipePrice = 0, allPrice = 0;
-        if (newVal.items.length > oldVal.items.length) {
-          self.$nextTick(function () {
+
+        self.$nextTick(function () {
+          if (newVal && oldVal && newVal.items.length > oldVal.items.length) {
             if (self.$refs.herbal_table_body) {
               self.$refs.herbal_table_body.scrollTop = self.$refs.herbal_table_body.scrollHeight - self.$refs.herbal_table_body.clientHeight
             }
-          })
-        }
+          }
+        })
+
         newVal.items.map((item) => {
           if (item.is_match === 1) {
             recipePrice += Number(item.num) * Number(item.price)
@@ -269,7 +271,7 @@ export default {
       'change_print_pre',
       'save_draft_data'
     ]),
-    showImportRecipe () {
+    showImportRecipe() {
       this.importRecipeShow = true
     },
     print_pre: function () {
@@ -521,11 +523,13 @@ export default {
     display: block;
     width: 100%;
   }
+
   .yinpian_unit {
     display: inline-block;
     min-width: 2rem;
     text-align: left
   }
+
   .keli_unit {
     display: inline-block;
     min-width: 4rem;

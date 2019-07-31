@@ -255,6 +255,16 @@ const readQuestions = params => fetch('/doctreat/treatAnswer/detail', params)
 
 const readReposts = params => fetch('/doctreat/report/detail', params)
 
+const fetchCommonTemplate = (params, type) => {
+  if (type === 0) {
+    return fetch('/doctreat/globalTpl/casehistory/list', params);
+  } else if(type === 1) {
+    return fetch('/doctreat/globalTpl/herbal/list', params);
+  } else if(type === 2) {
+    return fetch('/doctreat/globalTpl/western/list', params);
+  }
+}
+
 export {
   fetch,
   cancelOrder,
@@ -307,5 +317,6 @@ export {
   addTreatAnswer,
   updateTreatAnswer,
   deleteTreatAnswer,
-  queryClassic
+  queryClassic,
+  fetchCommonTemplate
 }

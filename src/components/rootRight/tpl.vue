@@ -1202,6 +1202,7 @@ export default {
   .tpl-content {
     max-height: calc(100vh - 21rem);
     overflow-y: scroll;
+    font-size: 0.875rem;
   }
 
   .record-content {
