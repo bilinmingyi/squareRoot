@@ -230,11 +230,11 @@ export default {
     'currentData.data': {
       deep: true,
       immediate: true,
-      handler: function (newVal, oldVal) {
+      handler: function (newVal) {
         var self = this, recipePrice = 0, allPrice = 0;
         self.$nextTick(function () {
           if (self.$refs.herbal_table_body) {
-            self.$refs.herbal_table_body.scrollTo(0, self.$refs.herbal_table_body.scrollHeight)
+            self.$refs.herbal_table_body.scrollTop = self.$refs.herbal_table_body.scrollHeight - self.$refs.herbal_table_body.clientHeight
           }
         })
         newVal.items.map((item) => {

@@ -437,7 +437,7 @@ export default {
   }
 
   .search-result .herbal-result-li {
-    width: calc((100% - 0.75rem) / 3);
+    width: calc((100% - 1.5rem) / 3);
     height: 3.125rem;
     border: #5096e0 solid 1px;
     border-radius: 0.25rem;
