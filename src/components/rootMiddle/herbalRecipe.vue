@@ -230,13 +230,15 @@ export default {
     'currentData.data': {
       deep: true,
       immediate: true,
-      handler: function (newVal) {
+      handler: function (newVal, oldVal) {
         var self = this, recipePrice = 0, allPrice = 0;
-        self.$nextTick(function () {
-          if (self.$refs.herbal_table_body) {
-            self.$refs.herbal_table_body.scrollTop = self.$refs.herbal_table_body.scrollHeight - self.$refs.herbal_table_body.clientHeight
-          }
-        })
+        if (newVal.items.length > oldVal.items.length) {
+          self.$nextTick(function () {
+            if (self.$refs.herbal_table_body) {
+              self.$refs.herbal_table_body.scrollTop = self.$refs.herbal_table_body.scrollHeight - self.$refs.herbal_table_body.clientHeight
+            }
+          })
+        }
         newVal.items.map((item) => {
           if (item.is_match === 1) {
             recipePrice += Number(item.num) * Number(item.price)
