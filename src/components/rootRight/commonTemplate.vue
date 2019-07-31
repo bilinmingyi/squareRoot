@@ -15,15 +15,12 @@
           <div class="prescript-list" v-for="item in tplList" @click.stop="showTemplate(item)">
             {{item.name}}
           </div>
-          <div class="prescript-list">
-            111
-          </div>
         </div>
         <div v-else>
-          <div class="med-template" @click.stop="showTemplate(item)">
-            <div class="med-template-title">测试1</div>
+          <div class="med-template" v-for="item in tplList" @click.stop="showTemplate(item)">
+            <div class="med-template-title"> {{item.name}}</div>
             <div class="med-template-content">
-              {{test|textEllipsis(temItemWidth)}}
+              {{item.symptom|textEllipsis(temItemWidth)}}
             </div>
           </div>
         </div>
