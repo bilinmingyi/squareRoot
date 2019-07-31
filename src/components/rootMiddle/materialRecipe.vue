@@ -4,7 +4,7 @@
       <div class="herbal_head_left"></div>
       <div>
         <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
-        <button class="btn"  @click="print_pre()">打印处方</button>
+        <button class="btn" @click="print_pre()">打印处方</button>
       </div>
     </section>
     <section>
@@ -25,8 +25,12 @@
           <td>{{item.name}}</td>
           <template v-if="item.is_match===1">
             <td>
-              <InputNumber style="width:3.2rem" :value="item.num"
-                     @on-change="modify_medicine({key:'num',val:$event,index:index})"/>
+              <InputNumber style="width:3.2rem"
+                           :value="item.num"
+                           @on-change="modify_medicine({key:'num',val:$event,index:index})"
+                           :formatter="value => `${Math.floor(value)}`"
+                           :parser="value => `${Math.floor(value)}`"
+              />
               <span class="unit_text">{{item.unit}}</span>
             </td>
             <td>{{item.price|priceFormat}}</td>
@@ -59,72 +63,73 @@
       <div class="displayFlex pl10 pt10 width-620">
         <span class="input_label pr4">医嘱：</span>
         <Input class="flexOne" type="textarea" :autosize="{minRows: 3,maxRows: 3}" placeholder="医嘱提示"
-               :value="currentData.data.doctor_remark" @on-change="modify_recipe_detail({key:'doctor_remark',val:$event.target.value})"/>
+               :value="currentData.data.doctor_remark"
+               @on-change="modify_recipe_detail({key:'doctor_remark',val:$event.target.value})"/>
       </div>
     </section>
   </div>
 </template>
 
 <script>
-  import {mapActions} from 'vuex'
-  import {Select, Option, Input, InputNumber} from 'iview'
+import {mapActions} from 'vuex'
+import {Select, Option, Input, InputNumber} from 'iview'
 
-  export default {
-    name: "materialRecipe",
-    data() {
-      return {}
+export default {
+  name: "materialRecipe",
+  data() {
+    return {}
+  },
+  computed: {
+    currentData: function () {
+      return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
     },
-    computed: {
-      currentData: function () {
-        return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
-      },
-    },
-    watch:{
-      'currentData.data.items':{
-        deep:true,
-        handler:function (newVal,oldVal) {
-          let allPrice=0;
-          newVal.map((item)=>{
-            allPrice+=Number(item.price)*Number(item.num);
-          })
-          setTimeout(()=>{
-            this.modify_recipe({key: 'money', val: Number(allPrice).toFixed(2)})
-          })
-        }
+  },
+  watch: {
+    'currentData.data.items': {
+      deep: true,
+      handler: function (newVal, oldVal) {
+        let allPrice = 0;
+        newVal.map((item) => {
+          allPrice += Number(item.price) * Number(item.num);
+        })
+        setTimeout(() => {
+          this.modify_recipe({key: 'money', val: Number(allPrice).toFixed(2)})
+        })
       }
-    },
-    components: {
-      Select,
-      Option,
-      InputNumber,
-      Input
-    },
-    methods: {
-      ...mapActions([
-        'cancel_recipe',
-        'cancel_medicine',
-        'modify_medicine',
-        'modify_recipe_detail',
-        'modify_recipe',
-        'change_print_pre',
-      ]),
-      print_pre: function(){
-        this.change_print_pre();
-      },
-      cancelRecipe() {
-        this.$Modal.confirm({
-          title: '提示',
-          content: '<p>确定删除该处方？</p>',
-          onOk: () => {
-            this.cancel_recipe();
-          },
-          onCancel: () => {
-            console.log("88")
-          }
-        });
-      },
     }
+  },
+  components: {
+    Select,
+    Option,
+    InputNumber,
+    Input
+  },
+  methods: {
+    ...mapActions([
+      'cancel_recipe',
+      'cancel_medicine',
+      'modify_medicine',
+      'modify_recipe_detail',
+      'modify_recipe',
+      'change_print_pre',
+    ]),
+    print_pre: function () {
+      this.change_print_pre();
+    },
+    cancelRecipe() {
+      this.$Modal.confirm({
+        title: '提示',
+        content: '<p>确定删除该处方？</p>',
+        onOk: () => {
+          this.cancel_recipe();
+        },
+        onCancel: () => {
+          console.log("88")
+        }
+      });
+    },
   }
+}
 </script>
 
 <style scoped>
@@ -158,6 +163,7 @@
     flex: 1;
     align-self: center;
   }
+
   .unit_text {
     display: inline-block;
     min-width: 2rem;

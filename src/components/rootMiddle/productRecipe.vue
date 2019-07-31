@@ -38,8 +38,12 @@
           <template v-if="item.is_match===1">
             <td>{{item.spec}}</td>
             <td>
-              <InputNumber style="width:3.2rem;" :value="item.num"
-                           @on-change="modify_medicine({key:'num',val:$event,index:index})"/>
+              <InputNumber style="width:3.2rem;"
+                           :value="item.num"
+                           @on-change="modify_medicine({key:'num',val:$event,index:index})"
+                           :formatter="value => `${Math.floor(value)}`"
+                           :parser="value => `${Math.floor(value)}`"
+              />
             </td>
             <td>
               <Select style="width:3.125rem" :value="item.unit"

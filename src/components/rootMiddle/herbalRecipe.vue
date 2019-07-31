@@ -40,8 +40,12 @@
           <template v-if="item.is_match===1">
             <td style="width: 10%;display: inline-block;">{{item.spec==='1克/克'?'1克':item.spec}}</td>
             <td style="width: 18%;display: inline-block;">
-              <InputNumber style="width:3.2rem" :value="item.num"
-                           @on-change="modify_medicine({key:'num',val:$event,index:index})"/>
+              <InputNumber style="width:3.2rem"
+                           :value="item.num"
+                           @on-change="modify_medicine({key:'num',val:$event,index:index})"
+                           :formatter="value => `${Math.floor(value)}`"
+                           :parser="value => `${Math.floor(value)}`"
+              />
               <div :class="currentData.data.category== 2 ? 'keli_unit' : 'yinpian_unit'">
                 <span class="unitText">{{item.unit}}</span>
                 <span class="num_text" v-if="currentData.data.category==2">({{item.num*item.stock_sale_ratio}}{{item.unit_sale}})</span>
@@ -76,8 +80,12 @@
         <div class="displayFlex pl10 pr10 pt10">
           <div class="width-240">
             <span class="input_label"> 剂数：</span>
-            <InputNumber class="input_120" :value="currentData.data.dosage"
-                         @on-change="modify_recipe_detail({key:'dosage',val:$event})"/>
+            <InputNumber class="input_120"
+                         :value="currentData.data.dosage"
+                         :formatter="value => `${Math.floor(value)}`"
+                         :parser="value => `${Math.floor(value)}`"
+                         @on-change="modify_recipe_detail({key:'dosage',val:$event})"
+            />
             <span class="input_label">剂</span>
           </div>
           <div class="width-240">
