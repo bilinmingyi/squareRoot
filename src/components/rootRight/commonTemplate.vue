@@ -4,7 +4,7 @@
     <div v-if="!showDetail">
       <div class="displayFlex">
         <div class="flexOne mr10">
-          <Input placeholder="请输入模板名称" v-model="searchName"/>
+          <Input placeholder="请输入模板名称" tabindex="-1" v-model="searchName"/>
         </div>
         <div>
           <button class="search-btn">搜索</button>

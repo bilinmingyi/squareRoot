@@ -182,6 +182,7 @@
             @blur="handleComma('diagnosis')"
             @input="searchDiagnosis('diagnosis')"
             @focus="changeBox('diagnosis')"
+            tabindex="-1"
             ref="diagnosis_input"
             @keydown="listenerKey($event, 'diagnosis')"
           >
@@ -225,6 +226,7 @@
             @blur="handleComma('diagnosis_xy')"
             @input="searchDiagnosis('diagnosis_xy')"
             @focus="changeBox('diagnosis_xy')"
+            tabindex="-1"
             ref="diagnosis_xy_input"
             @keydown="listenerKey($event, 'diagnosis_xy')"
           >

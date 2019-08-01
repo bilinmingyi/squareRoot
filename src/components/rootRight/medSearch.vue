@@ -2,7 +2,7 @@
   <div class="pt5 pl6 pr6 search-block">
     <div class="mb6 search-box">
       <div class="flexOne mr10">
-        <Input @on-keydown="listenerKey($event)" @on-blur="curSelect=-1" @input="searchMedicine(1)" placeholder="药品名称/拼音简码"
+        <Input @on-keydown="listenerKey($event)" @on-blur="curSelect=-1" tabindex="-1" @input="searchMedicine(1)" placeholder="药品名称/拼音简码"
                v-model="searchName"/>
       </div>
       <div>

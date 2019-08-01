@@ -3,7 +3,7 @@
     <f-loader v-if="showLoading" :fixed="false"></f-loader>
     <div class="mb6 displayFlex">
       <div class="flexOne mr10">
-        <Input placeholder="请输入模板名称" v-model="query" @input="queryByInput()"/>
+        <Input placeholder="请输入模板名称" tabindex="-1" v-model="query" @input="queryByInput()"/>
       </div>
       <div>
         <button class="search-btn" @click.stop="queryByname">搜索</button>

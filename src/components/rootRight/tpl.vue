@@ -4,7 +4,7 @@
     <div v-if="!showTpl">
       <div class="mb6" style="width:100%;display:flex;height:2rem;">
         <div class="flexOne mr10">
-          <Input placeholder="请输入模板名称" @input="tplSearch(1)" v-model="searchTplName"/>
+          <Input placeholder="请输入模板名称" tabindex="-1" @input="tplSearch(1)" v-model="searchTplName"/>
         </div>
         <div>
           <button class="search-btn" @click="tplSearch(1)">搜索</button>
