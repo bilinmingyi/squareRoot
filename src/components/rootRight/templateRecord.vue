@@ -171,6 +171,7 @@ export default {
           val: tplData[k]
         });
       });
+      self.useTplHide()
     }
   }
 }

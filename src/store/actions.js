@@ -112,7 +112,7 @@ const actions = {
           "cloud_item_id": item.id,
           "item_id": item.id,
           "name": Number(state.recipeList[state.currRecipe].data.is_cloud) === 1 ? (item.alias_name ? item.alias_name : item.name) : (item.clinic_alias_name ? item.clinic_alias_name : item.name),
-          "num": Number(item.num) || Number(item.adult_num) || 0,
+          "num": Number(item.num)  || 0,
           "price": Number(state.recipeList[state.currRecipe].data.is_cloud) === 1 ? item.default_sale_price : item.sale_price,
           "unit": item.unit_stock,
           "default_sale_price": item.default_sale_price,

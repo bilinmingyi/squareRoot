@@ -26,7 +26,7 @@
         <span v-show="recipeType===1">
           {{med.name}}
           <br>
-          （{{med.adult_num}}g）
+          （{{age > 12 ? med.adult_num : med.kids_num}}g）
         </span>
         <span v-show="recipeType===2">
           {{med.name}}
@@ -52,7 +52,7 @@
             v-for="item in useTplList"
             :key="item.id"
           >
-            <span v-if="recipeType === 1">{{item.name}} ({{item.adult_num}}{{item.unit}}/{{item.usage}})</span>
+            <span v-if="recipeType === 1">{{item.name}} ({{item.num}}{{item.unit}}/{{item.usage}})</span>
             <span v-if="recipeType === 2">{{item.name}} ({{item.num}}{{item.unit}})</span>
             <span v-show="item.is_match!=1" style="color:red;font-weight:bold;">暂无此药</span>
           </div>
@@ -92,6 +92,9 @@ export default {
     Checkbox
   },
   computed: {
+    ...mapState({
+      age: state => state.patientData.age
+    }),
     ...mapGetters(["currRecipeData"]),
     recipeType: function () {
       return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
@@ -140,11 +143,17 @@ export default {
               if (item.name == res.data[i].name || item.name == res.data[i].alias_name || item.name == res.data[i].clinic_alias_name) {
                 if (self.recipeType == 1) {
                   item.is_match = 1
-                  resultList.push(Object.assign(res.data[i], item))
+                  resultList.push(Object.assign(res.data[i], {
+                    num: self.age > 12 ? Number(item.adult_num) : Number(item.kids_num),
+                    name: item.name,
+                    unit: item.unit,
+                    usage: item.usage,
+                    is_match: 1
+                  }))
                 } else {
                   resultList.push(Object.assign(res.data[i], {
                     'name': item.name,
-                    'num' : item.spec == res.data[i] ? Number(item.num) : 0,
+                    'num': item.spec == res.data[i] ? Number(item.num) : 0,
                     'frequency': item.frequency,
                     'usage': item.usage,
                     'unit': item.spec == res.data[i] ? item.unit : '',
