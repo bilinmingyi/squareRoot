@@ -45,7 +45,7 @@
     </div>
     <template v-if="showDetail">
       <template-record v-if="recipeType===0" @close="showDetail=false" :tpl="currTpl"></template-record>
-      <template-recipe v-else @close="showDetail=false"></template-recipe>
+      <template-recipe v-else @close="showDetail=false" :tpl="currTpl"></template-recipe>
     </template>
 
   </div>
@@ -78,7 +78,12 @@ export default {
   },
   watch: {
     recipeType: function () {
-
+      this.searchName = ""
+      this.getData(1)
+    },
+    category: function () {
+      this.searchName = ""
+      this.getData(1)
     }
   },
   filters: {
@@ -89,7 +94,6 @@ export default {
       } else {
         return val.slice(0, lineNum * 3 - 1) + '...'
       }
-
     }
   },
   data() {
@@ -98,7 +102,6 @@ export default {
       currPage: 1,
       pageNum: 0,
       temItemWidth: '',
-      test: '胁肋疼痛，胸闷善太息，情志抑郁，易怒，脘腹胀满，脉弦，肝气郁滞证。胁肋疼痛，胸闷善太息，情志抑郁，易怒，脘腹胀满，脉弦，肝气郁。胁肋疼痛，胸闷善太息，情志抑郁，易怒，脘腹胀满，脉弦，肝气郁',
       pageSize: 0,
       showDetail: false,
       searchName: '',
@@ -125,7 +128,23 @@ export default {
       }
       return style
     },
-    changePage (type) {},
+    changePage (type) {
+      if (type === 0) {
+        if (this.currPage <=1) {
+          return
+        } else {
+          this.currPage--;
+          this.getData(this.currPage)
+        }
+      } else if (type === 1) {
+        if (this.currPage >= this.pageNum) {
+          return
+        } else {
+          this.currPage++;
+          this.getData(this.currPage)
+        }
+      }
+    },
     showTemplate (item) {
       this.showDetail = true
       this.currTpl = item

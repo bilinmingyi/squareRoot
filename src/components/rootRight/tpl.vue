@@ -820,7 +820,7 @@ export default {
         names.push(item.name)
       });
       if (this.recipeType == 1) {
-          params = {names: names, status: 1, category: self.category}
+          params = {names: names, status: 1, category: Number(self.category)}
       } else {
           params = {names: names, status: 1}
       }
