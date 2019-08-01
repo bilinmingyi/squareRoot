@@ -58,7 +58,7 @@
     <div class="mt5" v-show="showTpl">
       <div class="prescription_detail_btn" @click="tplHide()">返回</div>
       <div class="search-result-title">
-        <span>{{tplData.tplName}}</span>
+        <span>{{tplData.name}}</span>
         <span v-show="tplData.scope==0">(共享模板)</span>
         <span v-show="tplData.scope==1">(个人模板)</span>
       </div>
@@ -162,7 +162,7 @@
       </div>
       <div v-if="showUseTpl" class="alert-back">
         <div class="use-tpl">
-          <div class="alert-title">确定使用[{{tplData.tplName}}]模板？</div>
+          <div class="alert-title">确定使用[{{tplData.name}}]模板？</div>
           <div class="mt20 mb10">
             使用模板将覆盖已编辑之信息
             <span v-if="recipeType!=0">
@@ -251,7 +251,7 @@
           <div class="ml20 pt20">删除模板</div>
           <div class="ml20 pt10">
             <Icon type="md-help-circle" size="40" color="#3182FB"/>
-            <span class="ml10">确定要删除[{{tplData.tplName}}]模板?</span>
+            <span class="ml10">确定要删除[{{tplData.name}}]模板?</span>
           </div>
           <div style="position:absolute;right:5rem;bottom:2rem;">
             <span @click="delTplHide()">取消</span>
@@ -315,7 +315,7 @@ export default {
         creator_name: "",
         creator_id: "",
         id: 0,
-        tplName: "",
+        name: "",
         symptom: "",
         scope: 0,
         items: [],
@@ -1209,7 +1209,7 @@ export default {
     width: 100%;
     font-weight: normal;
     max-height: 50vh;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 
   .search-block {

@@ -57,7 +57,77 @@
       </div>
     </div>
     <div class="pb10">
-      <button class="prescription_detail_save mr2" @click.stop="useTpl">引用模板</button>
+      <button class="prescription_detail_save mr2" @click.stop="useTplShow">引用模板</button>
+    </div>
+    <div v-if="showUseTpl" class="alert-back">
+      <div class="use-tpl">
+        <div class="alert-title">确定使用[{{tpl.name}}]模板？</div>
+        <div class="mt20 mb10">
+          使用模板将覆盖已编辑之信息
+        </div>
+        <div class="use-list mt10">
+          <div class="record-content">
+            <div v-if="tpl.chief_complaint">
+              <span class="case-label">主述</span>
+              <span>{{tpl.chief_complaint}}</span>
+            </div>
+            <div v-if="tpl.present_illness">
+              <span class="case-label">现病史</span>
+              <span>{{tpl.present_illness}}</span>
+            </div>
+            <div v-if="tpl.allergic_history">
+              <span class="case-label">过敏史</span>
+              <span>{{tpl.allergic_history}}</span>
+            </div>
+            <div v-if="tpl.personal_history">
+              <span class="case-label">个人史</span>
+              <span>{{tpl.personal_history}}</span>
+            </div>
+            <div v-if="tpl.past_history">
+              <span class="case-label">既往史</span>
+              <span>{{tpl.past_history}}</span>
+            </div>
+            <div v-if="tpl.family_history">
+              <span class="case-label">家族史</span>
+              <span>{{tpl.family_history}}</span>
+            </div>
+            <div v-if="tpl.prophylactic_history">
+              <span class="case-label">预防接种史</span>
+              <span>{{tpl.prophylactic_history}}</span>
+            </div>
+            <div style="display:flex;" v-if="tpl.examination">
+              <span class="case-label" style="width: 4.25rem;">基础检查</span>
+              <div style="white-space:pre-wrap; flex:1;margin:0;">
+                {{tpl.examination}}
+              </div>
+            </div>
+            <div v-if="tpl.diagnosis">
+              <span class="case-label">中医诊断</span>
+              <span>{{tpl.diagnosis}}</span>
+            </div>
+            <div v-if="tpl.diagnosis_xy">
+              <span class="case-label">诊断结果</span>
+              <span>{{tpl.diagnosis_xy}}</span>
+            </div>
+            <div v-if="tpl.treat_advice">
+              <span class="case-label">处理意见</span>
+              <span>{{tpl.treat_advice}}</span>
+            </div>
+            <div v-if="tpl.sport_advice">
+              <span class="case-label">运动建议</span>
+              <span>{{tpl.sport_advice}}</span>
+            </div>
+            <div v-if="tpl.dietary_advice">
+              <span class="case-label">膳食建议</span>
+              <span>{{tpl.dietary_advice}}</span>
+            </div>
+          </div>
+        </div>
+        <div class=" tc mt30">
+          <button class="saveBtn mr20" @click.stop="useTpl()">确认</button>
+          <button class="saveBtn cancelBtn" @click.stop="useTplHide()">取消</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -68,12 +138,20 @@ export default {
   name: "templateRecord",
   props: ['tpl'],
   data() {
-    return {}
+    return {
+      showUseTpl: false
+    }
   },
   methods: {
     ...mapActions(["set_record_prop"]),
     cancel() {
       this.$emit('close')
+    },
+    useTplShow () {
+      this.showUseTpl = true
+    },
+    useTplHide () {
+      this.showUseTpl = false
     },
     useTpl () {
       let self = this
@@ -153,5 +231,75 @@ export default {
     color: #5096e0;
     float: left;
     background-color: transparent;
+  }
+
+  .alert-back {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  .alert-back .use-tpl {
+    background: #ffffff;
+    box-shadow: 0 0.25rem 1rem 0.25rem rgba(0, 0, 0, 0.2);
+    border-radius: 0.25rem;
+    z-index: 1050;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    width: 50rem;
+    padding: 1.25rem 3.125rem;
+    max-height: 50rem;
+    font-size: 0.875rem;
+    overflow: auto;
+    font-weight: bold;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+  .alert-title {
+    text-align: center;
+    font-weight: 900;
+    font-size: 1rem;
+    color: #5f95da;
+  }
+
+  .use-tpl .use-list {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .use-tpl .use-list .use-list-li {
+    width: 33.3%;
+    font-size: 0.875rem;
+  }
+  .saveBtn {
+    font-size: 0.875rem;
+    color: #ffffff;
+    font-weight: bold;
+    width: 8.75rem;
+    text-align: center;
+    padding: 0.375rem 0;
+    background: #5096e0;
+    border-radius: 6.25rem;
+    border: none;
+  }
+
+  .cancelBtn {
+    background: #ffffff;
+    border: 0.0625rem solid #5096e0;
+    color: #5096e0;
+  }
+  .record-content {
+    width: 100%;
+    font-weight: normal;
+    max-height: 50vh;
+    overflow-y: auto;
   }
 </style>
