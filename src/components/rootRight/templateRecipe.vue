@@ -143,8 +143,9 @@ export default {
               if (item.name == res.data[i].name || item.name == res.data[i].alias_name || item.name == res.data[i].clinic_alias_name) {
                 if (self.recipeType == 1) {
                   item.is_match = 1
+                  let num = self.age > 12 ? Number(item.adult_num) : (item.kids_num !== '' ? Number(item.kids_num) : Number(item.adult_num))
                   resultList.push(Object.assign(res.data[i], {
-                    num: self.age > 12 ? Number(item.adult_num) : (item.kids_num !== '' ? Number(item.kids_num) : Number(item.adult_num)),
+                    num: res.data[i].unit_sale == item.unit ? Math.ceil(num/res.data[i].stock_sale_ratio) : 0,
                     name: item.name,
                     unit: item.unit,
                     usage: item.usage,
