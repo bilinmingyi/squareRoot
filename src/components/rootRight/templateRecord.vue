@@ -35,12 +35,9 @@
         <span class="case-label">预防接种史</span>
         <span>{{tpl.prophylactic_history}}</span>
       </div>
-      <div v-if="examination" class="tpl-case-div displayFlex" style="padding-bottom: 0">
-        <span class="case-label" style="width: 4.25rem;">基础检查</span>
-        <div
-          style="white-space:pre-wrap; flex:1;"
-        >{{examination}}
-        </div>
+      <div v-if="examination" class="tpl-case-div">
+        <span class="case-label">基础检查</span>
+        <span>{{examination}}</span>
       </div>
 
       <div v-if="tpl.diagnosis" class="tpl-case-div">
@@ -95,11 +92,9 @@
               <span class="case-label">预防接种史</span>
               <span>{{tpl.prophylactic_history}}</span>
             </div>
-            <div class="mb10" style="display:flex;" v-if="examination">
-              <span class="case-label" style="width: 4.25rem;">基础检查</span>
-              <div style="flex:1;margin:0;">
-                {{examination}}
-              </div>
+            <div class="mb10" v-if="examination">
+              <span class="case-label">基础检查</span>
+              <span>{{examination}}</span>
             </div>
             <div class="mb10" v-if="tpl.diagnosis">
               <span class="case-label">中医诊断</span>
@@ -257,7 +252,7 @@ export default {
 
   .tpl-content {
     max-height: calc(100vh - 21rem);
-    overflow-y: scroll;
+    overflow-y: auto;
     font-size: 0.875rem;
   }
 

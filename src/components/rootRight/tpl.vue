@@ -66,7 +66,7 @@
         {{tplData.symptom}}
       </div>
       <div class="search-result-line"></div>
-      <div class="search-result mt12 ml5 mr5" v-show="recipeType!=0">
+      <div class="search-result mt12 mb20 ml5 mr5" v-show="recipeType!=0">
         <div
           :class="[{'herbal-result-li':recipeType===1},{'search-result-li':recipeType!=1}]"
           v-for="(item,index) in tplData.items"
@@ -86,16 +86,9 @@
               （{{item.num}}次）
             </span>
         </div>
+        <div class="clear"></div>
       </div>
-      <div class="clear"></div>
-<!--      <div class="mt10 ml6 mr6" v-show="recipeType==1">-->
-<!--        <span>剂数：</span>-->
-<!--        <span>{{tplData.dosage}}剂</span>-->
-<!--      </div>-->
-<!--      <div class="mt10 mb10 ml6 mr6" v-show="recipeType!=0">-->
-<!--        <span>医嘱：</span>-->
-<!--        <span>{{tplData.doctor_remark}}</span>-->
-<!--      </div>-->
+
       <div class="ml10 mb20 tpl-content" v-show="recipeType==0">
         <div v-if="tplData.chief_complaint" class="tpl-case-div">
           <span class="case-label">主述</span>
@@ -125,12 +118,9 @@
           <span class="case-label">预防接种史</span>
           <span>{{tplData.prophylactic_history}}</span>
         </div>
-        <div v-if="tplData.examination" class="tpl-case-div displayFlex" style="padding-bottom: 0">
-          <span class="case-label" style="width: 4.25rem;">基础检查</span>
-          <div
-            style="white-space:pre-wrap; flex:1;"
-          >{{tplExamination}}
-          </div>
+        <div v-if="tplExamination" class="tpl-case-div">
+          <span class="case-label">基础检查</span>
+          <span>{{tplExamination}}</span>
         </div>
 
         <div v-if="tplData.diagnosis" class="tpl-case-div">
@@ -183,58 +173,55 @@
               <span v-show="item.is_match!=1" style="color:red;font-weight:bold;">暂无此药</span>
             </div>
             <div v-if="recipeType==0" class="record-content">
-              <div v-if="tplData.chief_complaint">
+              <div class="mb10" v-if="tplData.chief_complaint">
                 <span class="case-label">主述</span>
                 <span>{{tplData.chief_complaint}}</span>
               </div>
-              <div v-if="tplData.present_illness">
+              <div class="mb10" v-if="tplData.present_illness">
                 <span class="case-label">现病史</span>
                 <span>{{tplData.present_illness}}</span>
               </div>
-              <div v-if="tplData.allergic_history">
+              <div class="mb10" v-if="tplData.allergic_history">
                 <span class="case-label">过敏史</span>
                 <span>{{tplData.allergic_history}}</span>
               </div>
-              <div v-if="tplData.personal_history">
+              <div class="mb10" v-if="tplData.personal_history">
                 <span class="case-label">个人史</span>
                 <span>{{tplData.personal_history}}</span>
               </div>
-              <div v-if="tplData.past_history">
+              <div class="mb10" v-if="tplData.past_history">
                 <span class="case-label">既往史</span>
                 <span>{{tplData.past_history}}</span>
               </div>
-              <div v-if="tplData.family_history">
+              <div class="mb10" v-if="tplData.family_history">
                 <span class="case-label">家族史</span>
                 <span>{{tplData.family_history}}</span>
               </div>
-              <div v-if="tplData.prophylactic_history">
+              <div class="mb10" v-if="tplData.prophylactic_history">
                 <span class="case-label">预防接种史</span>
                 <span>{{tplData.prophylactic_history}}</span>
               </div>
-              <div style="display:flex;">
-                <span class="case-label" style="width: 4.25rem;">基础检查</span>
-                <div
-                  style="white-space:pre-wrap; flex:1;margin:0;font-family:'microsoft yahei';border:0!important;"
-                >{{tplExamination}}
-                </div>
+              <div class="mb10" v-if="tplExamination">
+                <span class="case-label">基础检查</span>
+                <span>{{tplExamination}}</span>
               </div>
-              <div v-if="tplData.diagnosis">
+              <div class="mb10" v-if="tplData.diagnosis">
                 <span class="case-label">中医诊断</span>
                 <span>{{tplData.diagnosis}}</span>
               </div>
-              <div v-if="tplData.diagnosis_xy">
+              <div class="mb10" v-if="tplData.diagnosis_xy">
                 <span class="case-label">诊断结果</span>
                 <span>{{tplData.diagnosis_xy}}</span>
               </div>
-              <div v-if="tplData.treat_advice">
+              <div class="mb10" v-if="tplData.treat_advice">
                 <span class="case-label">处理意见</span>
                 <span>{{tplData.treat_advice}}</span>
               </div>
-              <div v-if="tplData.sport_advice">
+              <div class="mb10" v-if="tplData.sport_advice">
                 <span class="case-label">运动建议</span>
                 <span>{{tplData.sport_advice}}</span>
               </div>
-              <div v-if="tplData.dietary_advice">
+              <div class="mb10" v-if="tplData.dietary_advice">
                 <span class="case-label">膳食建议</span>
                 <span>{{tplData.dietary_advice}}</span>
               </div>
@@ -1194,7 +1181,7 @@ export default {
 
   .tpl-content {
     max-height: calc(100vh - 21rem);
-    overflow-y: scroll;
+    overflow-y: auto;
     font-size: 0.875rem;
   }
 

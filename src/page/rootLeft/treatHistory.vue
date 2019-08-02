@@ -12,7 +12,7 @@
             <div class="font-bold">{{ historyItem.create_time | dateFormat('yyyy-MM-dd')}}</div>
           </div>
           <div class="flexOne mb5">{{clinicType == 6 ? '营养师' : '医生'}}：{{historyItem.doctor_name}}</div>
-          <div class="display-flex">
+          <div class="" style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;width: 14vw">
             <span>诊断：</span>
             <span class="flex-1">{{historyItem.diagnosis_xy}}{{historyItem.diagnosis_xy!='' && historyItem.diagnosis!='' ? '，':''}}{{historyItem.diagnosis}}</span>
           </div>

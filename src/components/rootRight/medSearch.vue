@@ -206,14 +206,14 @@ export default {
       } else if (self.recipeType === 4) {
         params = {
           page: 1,
-          page_size: 10,
+          page_size: window.screen.height > 960 || window.screen.width >= 1600 ? 10 : 8,
           status: 1,
           is_combine: self.tabType == 5 ? 1 : 0
         }
       } else {
         params = {
           page: 1,
-          page_size: 10,
+          page_size: window.screen.height > 960 || window.screen.width >= 1600 ? 10 : 8,
           status: 1
         }
       }

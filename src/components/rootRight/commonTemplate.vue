@@ -4,21 +4,25 @@
     <div v-if="!showDetail">
       <div class="displayFlex">
         <div class="flexOne mr10">
-          <Input placeholder="请输入模板名称" tabindex="-1" v-model="searchName"/>
+          <Input placeholder="请输入模板名称" @input="searchByInput" tabindex="-1" v-model="searchName"/>
         </div>
         <div>
-          <button class="search-btn">搜索</button>
+          <button class="search-btn" @click="searchByInput">搜索</button>
         </div>
       </div>
       <section id="tplList">
         <div v-if="recipeType===0">
           <div class="prescript-list" v-for="item in tplList" @click.stop="showTemplate(item)">
             {{item.name}}
+            <span v-if="item.source">({{item.source}})</span>
           </div>
         </div>
         <div v-else>
           <div class="med-template" v-for="item in tplList" @click.stop="showTemplate(item)">
-            <div class="med-template-title"> {{item.name}}</div>
+            <div class="med-template-title">
+              {{item.name}}
+              <span v-if="item.source">《{{item.source}}》</span>
+            </div>
             <div class="med-template-content">
               {{item.symptom|textEllipsis(temItemWidth)}}
             </div>
@@ -109,7 +113,8 @@ export default {
       showDetail: false,
       searchName: '',
       tplList: [],
-      currTpl: {}
+      currTpl: {},
+      searchTime: null
     }
   },
   mounted () {
@@ -171,6 +176,12 @@ export default {
         this.showLoading = false
         console.log(error)
       })
+    },
+    searchByInput () {
+      clearTimeout(this.searchTime)
+      this.searchTime = setTimeout(() => {
+        this.getData(1)
+      }, 300)
     }
   }
 }
