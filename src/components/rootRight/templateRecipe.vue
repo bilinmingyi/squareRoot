@@ -26,7 +26,7 @@
         <span v-show="recipeType===1">
           {{med.name}}
           <br>
-          （{{age > 12 ? med.adult_num : med.kids_num}}g）
+          （{{age > 12 ? med.adult_num : (med.kids_num !== '' ? med.kids_num : med.adult_num)}}g）
         </span>
         <span v-show="recipeType===2">
           {{med.name}}
@@ -144,7 +144,7 @@ export default {
                 if (self.recipeType == 1) {
                   item.is_match = 1
                   resultList.push(Object.assign(res.data[i], {
-                    num: self.age > 12 ? Number(item.adult_num) : Number(item.kids_num),
+                    num: self.age > 12 ? Number(item.adult_num) : (item.kids_num !== '' ? Number(item.kids_num) : Number(item.adult_num)),
                     name: item.name,
                     unit: item.unit,
                     usage: item.usage,

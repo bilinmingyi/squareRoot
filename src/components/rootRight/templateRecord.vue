@@ -187,7 +187,20 @@ export default {
       let record_list = []
       list.forEach(item => {
         if (tplData[item] && JSON.stringify(tplData[item]) != '{}') {
-          record_list.push(item)
+          if(item !== 'examination') {
+            record_list.push(item)
+          } else {
+            let examination = JSON.parse(tplData.examination)
+            try {
+              Object.keys(examination).forEach(key => {
+                if (examination[key] !== ''){
+                  throw new Error('存在检查')
+                }
+              })
+            }catch (e) {
+              record_list.push('examination')
+            }
+          }
         }
       })
       self.set_record_prop({key: 'recordList', val: record_list})
