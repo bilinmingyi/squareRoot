@@ -89,6 +89,9 @@ export default {
   filters: {
     textEllipsis(val, width) {
       let lineNum = Math.floor((width - 20) / 14) - 1
+      if (val === '') {
+        return '症状：无'
+      }
       if (val.length <= lineNum * 3) {
         return val
       } else {
