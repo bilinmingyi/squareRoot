@@ -88,14 +88,14 @@
         </div>
       </div>
       <div class="clear"></div>
-      <div class="mt10 ml6 mr6" v-show="recipeType==1">
-        <span>剂数：</span>
-        <span>{{tplData.dosage}}剂</span>
-      </div>
-      <div class="mt10 mb10 ml6 mr6" v-show="recipeType!=0">
-        <span>医嘱：</span>
-        <span>{{tplData.doctor_remark}}</span>
-      </div>
+<!--      <div class="mt10 ml6 mr6" v-show="recipeType==1">-->
+<!--        <span>剂数：</span>-->
+<!--        <span>{{tplData.dosage}}剂</span>-->
+<!--      </div>-->
+<!--      <div class="mt10 mb10 ml6 mr6" v-show="recipeType!=0">-->
+<!--        <span>医嘱：</span>-->
+<!--        <span>{{tplData.doctor_remark}}</span>-->
+<!--      </div>-->
       <div class="ml10 mb20 tpl-content" v-show="recipeType==0">
         <div v-if="tplData.chief_complaint" class="tpl-case-div">
           <span class="case-label">主述</span>
@@ -417,11 +417,11 @@ export default {
     }
   },
   watch: {
-    isCloud: function () {
-      this.showTpl = false;
-      this.showResult = false;
-      this.firstSearch();
-    },
+    // isCloud: function () {
+    //   this.showTpl = false;
+    //   this.showResult = false;
+    //   this.firstSearch();
+    // },
     recipeType: function () {
       this.showTpl = false;
       this.showResult = false;
@@ -498,8 +498,6 @@ export default {
         }
         case 1: {
           params = {
-            category: self.category,
-            is_cloud: self.isCloud,
             name: self.searchTplName,
             page: self.currPage,
             page_size: self.page_size
@@ -509,7 +507,6 @@ export default {
         case 2: {
           params = {
             name: self.searchTplName,
-            is_cloud: self.isCloud,
             page: self.currPage,
             page_size: self.page_size
           };
@@ -758,10 +755,6 @@ export default {
         self.tplData.items.forEach(function (item) {
           self.add_new_medicine({item: item, type: self.recipeType});
         });
-        if (self.recipeType == 1) {
-          this.modify_recipe_detail({key: 'usage', val: self.tplData.treat_method})
-          this.modify_recipe_detail({key: 'dosage', val: self.tplData.dosage})
-        }
         this.showUseTpl = false;
       } else {
         var data = {

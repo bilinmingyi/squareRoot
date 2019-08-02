@@ -153,10 +153,10 @@ export default {
                 } else {
                   resultList.push(Object.assign(res.data[i], {
                     'name': item.name,
-                    'num': item.spec == res.data[i] ? Number(item.num) : 0,
+                    'num': item.spec == res.data[i].spec ? Number(item.num) : 0,
                     'frequency': item.frequency,
                     'usage': item.usage,
-                    'unit': item.spec == res.data[i] ? item.unit : '',
+                    'unit': item.spec == res.data[i].spec ? item.unit : '',
                     'dose_once': Number(item.dose_once.replace(/([^\d\.]*)/gim, '')),
                     'is_match': 1
                   }))

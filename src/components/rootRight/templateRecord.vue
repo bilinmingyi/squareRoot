@@ -35,11 +35,11 @@
         <span class="case-label">预防接种史</span>
         <span>{{tpl.prophylactic_history}}</span>
       </div>
-      <div v-if="tpl.examination" class="tpl-case-div displayFlex" style="padding-bottom: 0">
+      <div v-if="examination" class="tpl-case-div displayFlex" style="padding-bottom: 0">
         <span class="case-label" style="width: 4.25rem;">基础检查</span>
         <div
           style="white-space:pre-wrap; flex:1;"
-        >{{tpl.examination}}
+        >{{examination}}
         </div>
       </div>
 
@@ -67,57 +67,57 @@
         </div>
         <div class="use-list mt10">
           <div class="record-content">
-            <div v-if="tpl.chief_complaint">
+            <div class="mb10" v-if="tpl.chief_complaint">
               <span class="case-label">主述</span>
               <span>{{tpl.chief_complaint}}</span>
             </div>
-            <div v-if="tpl.present_illness">
+            <div class="mb10" v-if="tpl.present_illness">
               <span class="case-label">现病史</span>
               <span>{{tpl.present_illness}}</span>
             </div>
-            <div v-if="tpl.allergic_history">
+            <div class="mb10" v-if="tpl.allergic_history">
               <span class="case-label">过敏史</span>
               <span>{{tpl.allergic_history}}</span>
             </div>
-            <div v-if="tpl.personal_history">
+            <div class="mb10" v-if="tpl.personal_history">
               <span class="case-label">个人史</span>
               <span>{{tpl.personal_history}}</span>
             </div>
-            <div v-if="tpl.past_history">
+            <div class="mb10" v-if="tpl.past_history">
               <span class="case-label">既往史</span>
               <span>{{tpl.past_history}}</span>
             </div>
-            <div v-if="tpl.family_history">
+            <div class="mb10" v-if="tpl.family_history">
               <span class="case-label">家族史</span>
               <span>{{tpl.family_history}}</span>
             </div>
-            <div v-if="tpl.prophylactic_history">
+            <div class="mb10" v-if="tpl.prophylactic_history">
               <span class="case-label">预防接种史</span>
               <span>{{tpl.prophylactic_history}}</span>
             </div>
-            <div style="display:flex;" v-if="tpl.examination">
+            <div class="mb10" style="display:flex;" v-if="examination">
               <span class="case-label" style="width: 4.25rem;">基础检查</span>
-              <div style="white-space:pre-wrap; flex:1;margin:0;">
-                {{tpl.examination}}
+              <div style="flex:1;margin:0;">
+                {{examination}}
               </div>
             </div>
-            <div v-if="tpl.diagnosis">
+            <div class="mb10" v-if="tpl.diagnosis">
               <span class="case-label">中医诊断</span>
               <span>{{tpl.diagnosis}}</span>
             </div>
-            <div v-if="tpl.diagnosis_xy">
+            <div class="mb10" v-if="tpl.diagnosis_xy">
               <span class="case-label">诊断结果</span>
               <span>{{tpl.diagnosis_xy}}</span>
             </div>
-            <div v-if="tpl.treat_advice">
+            <div class="mb10" v-if="tpl.treat_advice">
               <span class="case-label">处理意见</span>
               <span>{{tpl.treat_advice}}</span>
             </div>
-            <div v-if="tpl.sport_advice">
+            <div class="mb10" v-if="tpl.sport_advice">
               <span class="case-label">运动建议</span>
               <span>{{tpl.sport_advice}}</span>
             </div>
-            <div v-if="tpl.dietary_advice">
+            <div class="mb10" v-if="tpl.dietary_advice">
               <span class="case-label">膳食建议</span>
               <span>{{tpl.dietary_advice}}</span>
             </div>
@@ -142,6 +142,32 @@ export default {
       showUseTpl: false
     }
   },
+  computed: {
+    examination() {
+      // 计算检查结果
+      var examination = JSON.parse(this.tpl.examination)
+      var ret = "";
+      (examination.bloodpressure_num1 || examination.bloodpressure_num2) &&
+      (ret +=
+        "血压" +
+        examination.bloodpressure_num1 +
+        "/" +
+        examination.bloodpressure_num2 +
+        "mmHg，");
+      examination.bloodglucose &&
+      (ret += "血糖" + examination.bloodglucose + "mg/ml，");
+      examination.trioxypurine &&
+      (ret += "尿酸" + examination.trioxypurine + "umol/L，");
+      examination.heartrate &&
+      (ret += "心率" + examination.heartrate + "次/分，");
+      examination.breathe && (ret += "呼吸" + examination.breathe + "次/分，");
+      examination.animalheat &&
+      (ret += "体温" + examination.animalheat + "℃，");
+      examination.weight && (ret += "体重" + examination.weight + "kg，");
+      examination.info && (ret += (ret ? '\n' : '') + examination.info);
+      return ret;
+    },
+  },
   methods: {
     ...mapActions(["set_record_prop"]),
     cancel() {
@@ -156,7 +182,7 @@ export default {
     useTpl () {
       let self = this
       let tplData = JSON.parse(JSON.stringify(self.tpl))
-      tplData.examination = {info: tplData.examination}
+
       let list = ['allergic_history', 'family_history', 'diagnosis', 'personal_history', 'prophylactic_history', 'sport_advice', 'past_history', 'examination', 'dietary_advice']
       let record_list = []
       list.forEach(item => {
@@ -165,7 +191,20 @@ export default {
         }
       })
       self.set_record_prop({key: 'recordList', val: record_list})
+      tplData.examination = JSON.parse(tplData.examination)
+      console.log(tplData)
       Object.keys(tplData).forEach(function (k) {
+        if (k == 'diagnosis') {
+          self.set_record_prop({
+            key: 'diagnosis_input',
+            val: tplData['diagnosis']
+          });
+        } else if (k == 'diagnosis_xy') {
+          self.set_record_prop({
+            key: 'diagnosis_xy_input',
+            val: tplData['diagnosis_xy']
+          });
+        }
         self.set_record_prop({
           key: k,
           val: tplData[k]
