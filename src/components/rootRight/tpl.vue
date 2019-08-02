@@ -163,10 +163,11 @@
             <div
               v-if="recipeType!=0"
               class="use-list-li"
-              v-for="(item,index) in tplData.items"
+              v-for="(item,index) in tplUseList"
               :key="index"
             >
-              {{item.alias_name||item.clinic_alias_name||item.name}} ({{item.num}}{{item.unit}}/{{item.usage}})
+              {{item.alias_name||item.clinic_alias_name||item.name}} ({{item.num}}{{item.unit}}<strong
+              v-if="item.usage">/</strong>{{item.usage}})
               <span
                 v-show="recipeType==4"
               >{{item.price}}/次</span>
@@ -323,6 +324,7 @@ export default {
         sport_advice: "", // 运动建议
         dietary_advice: "" // 膳食建议
       },
+      tplUseList: [],
       tplEditData: {
         category: 1,
         isCloud: 0,
@@ -346,6 +348,7 @@ export default {
   computed: {
     ...mapState({
       tplChange: state => state.tplChange,
+      age: state => state.patientData.age
     }),
     tplExamination: function () {
       if (this.recipeType == 0 && this.tplData.examination) {
@@ -739,7 +742,7 @@ export default {
       var self = this;
       if (this.recipeType !== 0) {
         this.clean_recipe();
-        self.tplData.items.forEach(function (item) {
+        self.tplUseList.forEach(function (item) {
           self.add_new_medicine({item: item, type: self.recipeType});
         });
         this.showUseTpl = false;
@@ -759,7 +762,7 @@ export default {
             ? JSON.parse(self.tplData.examination)
             : {},
           diagnosis: self.tplData.diagnosis != "" ? self.tplData.diagnosis + ";" : "",
-          diagnosis_xy:  self.tplData.diagnosis_xy != "" ? self.tplData.diagnosis_xy + ";" : "",
+          diagnosis_xy: self.tplData.diagnosis_xy != "" ? self.tplData.diagnosis_xy + ";" : "",
           diagnosis_input:
             self.tplData.diagnosis != "" ? self.tplData.diagnosis + ";" : "",
           diagnosis_xy_input:
@@ -800,38 +803,50 @@ export default {
         names.push(item.name)
       });
       if (this.recipeType == 1) {
-          params = {names: names, status: 1, category: Number(self.category)}
+        params = {names: names, status: 1, category: Number(self.category)}
       } else {
-          params = {names: names, status: 1}
+        params = {names: names, status: 1}
       }
       let resultList = []
 
       searchMed(params, this.recipeType, self.isCloud).then(function (res) {
         if (res.code == 1000) {
           items.forEach((item) => {
-            if (self.isCloud == 1) {
-              for (var i = 0, len = res.data.length; i < len; i++) {
-                if (item.name == res.data[i].name || item.name == res.data[i].alias_name) {
+            for (var i = 0, len = res.data.length; i < len; i++) {
+              if (item.name == res.data[i].name || item.name == res.data[i].alias_name || item.name == res.data[i].clinic_alias_name) {
+                if (self.recipeType == 1) {
+                  let num = self.age > 12 ? Number(item.adult_num) : (item.kids_num !== '' ? Number(item.kids_num) : Number(item.adult_num))
+                  resultList.push(Object.assign(res.data[i], {
+                    num: res.data[i].unit_sale == item.unit ? Math.ceil(num / res.data[i].stock_sale_ratio) : 0,
+                    name: item.name,
+                    unit: res.data[i].unit_sale == item.unit ? item.unit : res.data[i].unit_stock,
+                    usage: item.usage,
+                    is_match: 1
+                  }))
+                } else if (self.recipeType == 2) {
+                  resultList.push(Object.assign(res.data[i], {
+                    'name': item.name,
+                    'num': item.spec == res.data[i].spec ? Number(item.num) : 0,
+                    'frequency': item.frequency,
+                    'usage': item.usage,
+                    'unit': item.spec == res.data[i].spec ? item.unit : '',
+                    'dose_once': Number(item.dose_once.replace(/([^\d\.]*)/gim, '')),
+                    'is_match': 1
+                  }))
+                } else {
                   item.is_match = 1
                   resultList.push(Object.assign(res.data[i], item))
-                  break;
                 }
-              }
-            } else {
-              for (var i = 0, len = res.data.length; i < len; i++) {
-                if (item.name == res.data[i].name || item.name == res.data[i].clinic_alias_name) {
-                  item.is_match = 1
-                  resultList.push(Object.assign(res.data[i], item))
-                  break;
-                }
+                break;
               }
             }
+
             if (i == len) {
               item.is_match = 0;
               resultList.push(Object.assign({}, item))
             }
           });
-          self.tplData.items = resultList
+          self.tplUseList = resultList
           self.showUseTpl = true;
         } else {
           self.$Message.info(res.msg)

@@ -23,9 +23,9 @@
           <th style="width: 10%;display: inline-block;">序号</th>
           <th style="width: 20%;display: inline-block;">药名</th>
           <th style="width: 10%;display: inline-block;">规格</th>
-          <th style="width: 18%;display: inline-block;">药量</th>
-          <th style="width: 12%;display: inline-block">单价</th>
-          <th style="width: 15%;display: inline-block;">用法</th>
+          <th :style="{width: currentData.data.category == 1 ? '18%' : '25%' , display: 'inline-block'}">药量</th>
+          <th :style="{width: currentData.data.category == 1 ? '12%' : '20%' , display: 'inline-block'}">单价</th>
+          <th style="width: 15%;display: inline-block;" v-if="currentData.data.category == 1">用法</th>
           <th style="width: 10%;display: inline-block;">操作</th>
         </tr>
         </thead>
@@ -39,7 +39,7 @@
           <td style="width: 20%;display: inline-block;">{{item.name}}</td>
           <template v-if="item.is_match===1">
             <td style="width: 10%;display: inline-block;">{{item.spec==='1克/克'?'1克':item.spec}}</td>
-            <td style="width: 18%;display: inline-block;">
+            <td :style="{width: currentData.data.category == 1 ? '18%' : '25%' , display: 'inline-block'}">
               <InputNumber style="width:3.2rem"
                            :value="item.num"
                            @on-change="modify_medicine({key:'num',val:$event,index:index})"
@@ -51,8 +51,8 @@
                 <span class="num_text" v-if="currentData.data.category==2">({{item.num*item.stock_sale_ratio}}{{item.unit_sale}})</span>
               </div>
             </td>
-            <td style="width: 12%;display: inline-block">{{item.price|priceFormat}}</td>
-            <td style="width: 15%;display: inline-block;">
+            <td :style="{width: currentData.data.category == 1 ? '12%' : '20%' , display: 'inline-block'}">{{item.price|priceFormat}}</td>
+            <td style="width: 15%;display: inline-block;" v-if="currentData.data.category == 1">
               <Select style="width:4.25rem" :value="item.usage"
                       @on-change="modify_medicine({key:'usage',val:$event,index:index})">
                 <Option v-for="item in herbalMedUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
@@ -104,17 +104,17 @@
           </div>
         </div>
         <div class="displayFlex p10">
-          <div class="width-240">
-            <span class="input_label"> 附加：</span>
-            <Select class="input_120" :value="currentData.data.extra_feetype" @on-change="change_extra($event)">
-              <Option v-for="item in extraFeeTypes" :value="item.name" :key="item.id">{{ item.name }}</Option>
-            </Select>
-          </div>
-          <div class="width-240">
-            <span class="input_label">数量：</span>
-            <InputNumber class="input_120" :value="currentData.data.extra_num"
-                         @on-change="modify_recipe_detail({key:'extra_num',val:$event})"/>
-          </div>
+<!--          <div class="width-240">-->
+<!--            <span class="input_label"> 附加：</span>-->
+<!--            <Select class="input_120" :value="currentData.data.extra_feetype" @on-change="change_extra($event)">-->
+<!--              <Option v-for="item in extraFeeTypes" :value="item.name" :key="item.id">{{ item.name }}</Option>-->
+<!--            </Select>-->
+<!--          </div>-->
+<!--          <div class="width-240">-->
+<!--            <span class="input_label">数量：</span>-->
+<!--            <InputNumber class="input_120" :value="currentData.data.extra_num"-->
+<!--                         @on-change="modify_recipe_detail({key:'extra_num',val:$event})"/>-->
+<!--          </div>-->
           <div class="width-240">
             <span class="input_label"> 用量：</span>
             <InputNumber class="input_120" :value="currentData.data.eachDose"

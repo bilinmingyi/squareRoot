@@ -52,7 +52,7 @@
             v-for="item in useTplList"
             :key="item.id"
           >
-            <span v-if="recipeType === 1">{{item.name}} ({{item.num}}{{item.unit}}/{{item.usage}})</span>
+            <span v-if="recipeType === 1">{{item.name}} ({{item.num}}{{item.unit}}<strong v-if="item.usage">/</strong>{{item.usage}})</span>
             <span v-if="recipeType === 2">{{item.name}} ({{item.num}}{{item.unit}})</span>
             <span v-show="item.is_match!=1" style="color:red;font-weight:bold;">暂无此药</span>
           </div>
@@ -138,11 +138,9 @@ export default {
       searchMed(params, self.recipeType, self.isCloud).then(function (res) {
         if (res.code == 1000) {
           self.lastMedList.forEach((item) => {
-
             for (var i = 0, len = res.data.length; i < len; i++) {
               if (item.name == res.data[i].name || item.name == res.data[i].alias_name || item.name == res.data[i].clinic_alias_name) {
                 if (self.recipeType == 1) {
-                  item.is_match = 1
                   let num = self.age > 12 ? Number(item.adult_num) : (item.kids_num !== '' ? Number(item.kids_num) : Number(item.adult_num))
                   resultList.push(Object.assign(res.data[i], {
                     num: res.data[i].unit_sale == item.unit ? Math.ceil(num/res.data[i].stock_sale_ratio) : 0,
