@@ -37,7 +37,7 @@
             </td>
           </template>
           <template v-else>
-            <td colspan="3">
+            <td colspan="3" style="color: red;">
               系统内没有匹配到该项目
             </td>
           </template>

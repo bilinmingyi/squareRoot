@@ -819,7 +819,7 @@ export default {
                   resultList.push(Object.assign(res.data[i], {
                     num: res.data[i].unit_sale == item.unit ? Math.ceil(num / res.data[i].stock_sale_ratio) : 0,
                     name: item.name,
-                    unit: res.data[i].unit_sale == item.unit ? item.unit : res.data[i].unit_stock,
+                    unit: res.data[i].unit_stock,
                     usage: item.usage,
                     is_match: 1
                   }))
@@ -830,12 +830,16 @@ export default {
                     'frequency': item.frequency,
                     'usage': item.usage,
                     'unit': item.spec == res.data[i].spec ? item.unit : '',
-                    'dose_once': Number(item.dose_once.replace(/([^\d\.]*)/gim, '')),
+                    'dose_once': Number(item.dose_once.toString().replace(/([^\d\.]*)/gim, '')),
                     'is_match': 1
                   }))
                 } else {
-                  item.is_match = 1
-                  resultList.push(Object.assign(res.data[i], item))
+                  resultList.push(Object.assign(res.data[i], {
+                    'is_match': 1,
+                    'name': item.name,
+                    'num': item.num,
+                    'remark': item.remark
+                  }))
                 }
                 break;
               }

@@ -180,9 +180,9 @@ export default {
             return {
               'id': isCloud == 1 ? item.cloud_item_id : item.item_id,
               'name': item.name,
-              'unit': item.unit,
-              'adult_num': item.num,
-              'kids_num': item.num,
+              'unit': item.unit_sale,
+              'adult_num': Number(item.num * item.stock_sale_ratio),
+              'kids_num': Number(item.num * item.stock_sale_ratio),
               'usage': item.usage
             }
           })

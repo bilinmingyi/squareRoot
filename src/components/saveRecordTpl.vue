@@ -52,7 +52,7 @@ export default {
   },
   computed: {
     ...mapState({
-      recordData: state => state.recordData,
+
       tplChange: state => state.tplChange
     })
   },
