@@ -87,7 +87,8 @@ export default {
       let isCloud = self.currentData.data.is_cloud
       getHerbalList({
         'names': resultList,
-        'category': self.currentData.category
+        'status': 1,
+        'category': self.currentData.data.category
       }, isCloud)
         .then(res => {
           if (res.code === 1000) {

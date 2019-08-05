@@ -96,6 +96,10 @@
           id: this.patientData.id,
           name: this.patientData.name,
           mobile: this.patientData.mobile,
+          sex: Number(this.patientData.sex),
+          marital_status: Number(this.patientData.marital_status),
+          blood_abo: this.patientData.blood_abo,
+          blood_rh: this.patientData.blood_rh,
           personal_history: this.recordData.recordList.indexOf('personal_history') >= 0 ? this.recordData.personal_history : null, // 个人史
           allergic_history: this.recordData.recordList.indexOf('allergic_history') >= 0 ? this.recordData.allergic_history : null, // 过敏史
           past_history: this.recordData.recordList.indexOf('past_history') >= 0 ? this.recordData.past_history : null, // 既往史
