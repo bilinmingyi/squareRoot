@@ -52,7 +52,7 @@ export default {
   },
   computed: {
     ...mapState({
-
+      recordData: state => state.recordData,
       tplChange: state => state.tplChange
     })
   },
@@ -74,11 +74,11 @@ export default {
     saveAsTemplate() {
       let self = this
       if (self.recordTemplateName == "") {
-        self.$Message.info("请先填写模板名称");
+        self.$Message.warning("请先填写模板名称");
         return;
       }
       if (self.recordTemplateName.length > 32) {
-        self.$Message.info("模板名称过长，请修改");
+        self.$Message.warning("模板名称过长，请修改");
         return;
       }
       let params = {
