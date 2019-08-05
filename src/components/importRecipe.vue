@@ -124,7 +124,7 @@ export default {
                   "id": existence.id,
                   "clinic_alias_name": existence.clinic_alias_name || existence.alias_name,
                   "name": existence.name,
-                  "num": existence.unit_stock == "g" || existence.unit_stock == "克" ? Number(item.num) : 0,
+                  "num": existence.unit_sale == item.unit ? Math.ceil(item.num/existence.stock_sale_ratio) : 0,
                   "unit": existence.unit_stock,
                   "default_sale_price": isCloud == 1 ? existence.default_sale_price : existence.sale_price,
                   "sale_price": isCloud == 1 ? existence.default_sale_price : existence.sale_price,
