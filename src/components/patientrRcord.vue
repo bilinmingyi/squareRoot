@@ -865,7 +865,7 @@ export default {
     min-width: 10.9375rem;
     height: 1.75rem;
     color: #515a6e;
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
     outline: none;
   }
 

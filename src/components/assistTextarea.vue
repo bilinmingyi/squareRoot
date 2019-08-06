@@ -58,6 +58,8 @@ export default {
     resize: none;
     position: relative;
     padding: 8px;
+    font-size: 0.875rem;
+    color: #515a6e;
   }
   .textArea::-webkit-input-placeholder {
     color: rgba(204,204,204,1);
