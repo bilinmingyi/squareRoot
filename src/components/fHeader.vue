@@ -90,7 +90,7 @@
         let draftData = {
           recipeList: this.recipeList,
           recordData: this.recordData,
-          currRecipe: this.currRecipe
+          currRecipe: canReturn === 1 ? this.currRecipe : -1
         }
         updatePatientInfo({
           id: this.patientData.id,
