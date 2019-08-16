@@ -1,59 +1,61 @@
 <template>
   <div>
     <div class="prescription_detail_btn" @click.stop="cancel">返回</div>
-    <div class="search-result-title">
-      <span>{{tpl.name}}</span>
-      <span v-if="tpl.source">({{tpl.source}})</span>
-    </div>
-    <div class="search-result-line"></div>
-    <div class="ml10 mb20 tpl-content">
-      <div v-if="tpl.chief_complaint" class="tpl-case-div">
-        <span class="case-label">主述</span>
-        <span>{{tpl.chief_complaint}}</span>
+    <section class="tpl-content">
+      <div class="search-result-title">
+        <span>{{tpl.name}}</span>
+        <span v-if="tpl.source">({{tpl.source}})</span>
       </div>
-      <div v-if="tpl.present_illness" class="tpl-case-div">
-        <span class="case-label">现病史</span>
-        <span>{{tpl.present_illness}}</span>
-      </div>
-      <div v-if="tpl.allergic_history" class="tpl-case-div">
-        <span class="case-label">过敏史</span>
-        <span>{{tpl.allergic_history}}</span>
-      </div>
-      <div v-if="tpl.personal_history" class="tpl-case-div">
-        <span class="case-label">个人史</span>
-        <span>{{tpl.personal_history}}</span>
-      </div>
-      <div v-if="tpl.past_history" class="tpl-case-div">
-        <span class="case-label">既往史</span>
-        <span>{{tpl.past_history}}</span>
-      </div>
-      <div v-if="tpl.family_history" class="tpl-case-div">
-        <span class="case-label">家族史</span>
-        <span>{{tpl.family_history}}</span>
-      </div>
-      <div v-if="tpl.prophylactic_history" class="tpl-case-div">
-        <span class="case-label">预防接种史</span>
-        <span>{{tpl.prophylactic_history}}</span>
-      </div>
-      <div v-if="examination" class="tpl-case-div">
-        <span class="case-label">基础检查</span>
-        <span>{{examination}}</span>
-      </div>
+      <div class="search-result-line"></div>
+      <div class="ml10">
+        <div v-if="tpl.chief_complaint" class="tpl-case-div">
+          <span class="case-label">主述</span>
+          <span>{{tpl.chief_complaint}}</span>
+        </div>
+        <div v-if="tpl.present_illness" class="tpl-case-div">
+          <span class="case-label">现病史</span>
+          <span>{{tpl.present_illness}}</span>
+        </div>
+        <div v-if="tpl.allergic_history" class="tpl-case-div">
+          <span class="case-label">过敏史</span>
+          <span>{{tpl.allergic_history}}</span>
+        </div>
+        <div v-if="tpl.personal_history" class="tpl-case-div">
+          <span class="case-label">个人史</span>
+          <span>{{tpl.personal_history}}</span>
+        </div>
+        <div v-if="tpl.past_history" class="tpl-case-div">
+          <span class="case-label">既往史</span>
+          <span>{{tpl.past_history}}</span>
+        </div>
+        <div v-if="tpl.family_history" class="tpl-case-div">
+          <span class="case-label">家族史</span>
+          <span>{{tpl.family_history}}</span>
+        </div>
+        <div v-if="tpl.prophylactic_history" class="tpl-case-div">
+          <span class="case-label">预防接种史</span>
+          <span>{{tpl.prophylactic_history}}</span>
+        </div>
+        <div v-if="examination" class="tpl-case-div">
+          <span class="case-label">基础检查</span>
+          <span>{{examination}}</span>
+        </div>
 
-      <div v-if="tpl.diagnosis" class="tpl-case-div">
-        <span class="case-label">中医诊断</span>
-        <span>{{tpl.diagnosis}}</span>
+        <div v-if="tpl.diagnosis" class="tpl-case-div">
+          <span class="case-label">中医诊断</span>
+          <span>{{tpl.diagnosis}}</span>
+        </div>
+        <div v-if="tpl.diagnosis_xy" class="tpl-case-div">
+          <span class="case-label">诊断结果</span>
+          <span>{{tpl.diagnosis_xy}}</span>
+        </div>
+        <div v-if="tpl.treat_advice" class="tpl-case-div">
+          <span class="case-label">处理意见</span>
+          <span>{{tpl.treat_advice}}</span>
+        </div>
       </div>
-      <div v-if="tpl.diagnosis_xy" class="tpl-case-div">
-        <span class="case-label">诊断结果</span>
-        <span>{{tpl.diagnosis_xy}}</span>
-      </div>
-      <div v-if="tpl.treat_advice" class="tpl-case-div">
-        <span class="case-label">处理意见</span>
-        <span>{{tpl.treat_advice}}</span>
-      </div>
-    </div>
-    <div class="pb10">
+    </section>
+    <div class="mt20 pb20">
       <button class="prescription_detail_save mr2" @click.stop="useTplShow">引用模板</button>
     </div>
     <div v-if="showUseTpl" class="alert-back">
@@ -118,7 +120,7 @@
             </div>
           </div>
         </div>
-        <div class=" tc mt30">
+        <div class="tc mt30">
           <button class="saveBtn mr20" @click.stop="useTpl()">确认</button>
           <button class="saveBtn cancelBtn" @click.stop="useTplHide()">取消</button>
         </div>
@@ -129,6 +131,7 @@
 
 <script>
 import {mapActions} from "vuex";
+
 export default {
   name: "templateRecord",
   props: ['tpl'],
@@ -168,13 +171,13 @@ export default {
     cancel() {
       this.$emit('close')
     },
-    useTplShow () {
+    useTplShow() {
       this.showUseTpl = true
     },
-    useTplHide () {
+    useTplHide() {
       this.showUseTpl = false
     },
-    useTpl () {
+    useTpl() {
       let self = this
       let tplData = JSON.parse(JSON.stringify(self.tpl))
 
@@ -182,17 +185,17 @@ export default {
       let record_list = []
       list.forEach(item => {
         if (tplData[item] && JSON.stringify(tplData[item]) != '{}') {
-          if(item !== 'examination') {
+          if (item !== 'examination') {
             record_list.push(item)
           } else {
             let examination = JSON.parse(tplData.examination)
             try {
               Object.keys(examination).forEach(key => {
-                if (examination[key] !== ''){
+                if (examination[key] !== '') {
                   throw new Error('存在检查')
                 }
               })
-            }catch (e) {
+            } catch (e) {
               record_list.push('examination')
             }
           }
@@ -251,7 +254,7 @@ export default {
   }
 
   .tpl-content {
-    max-height: calc(100vh - 21rem);
+    max-height: calc(100vh - 19rem);
     overflow-y: auto;
     font-size: 0.875rem;
   }
@@ -311,6 +314,7 @@ export default {
     -o-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
   }
+
   .alert-title {
     text-align: center;
     font-weight: 900;
@@ -327,6 +331,7 @@ export default {
     width: 33.3%;
     font-size: 0.875rem;
   }
+
   .saveBtn {
     font-size: 0.875rem;
     color: #ffffff;
@@ -344,6 +349,7 @@ export default {
     border: 0.0625rem solid #5096e0;
     color: #5096e0;
   }
+
   .record-content {
     width: 100%;
     font-weight: normal;

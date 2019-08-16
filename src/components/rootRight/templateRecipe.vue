@@ -1,40 +1,42 @@
 <template>
   <div>
-    <div class="prescription_detail_btn" @click.stop="cancel">返回</div>
-    <div class="search-result-title">
-      <span>{{tpl.name}}</span>
-    </div>
-    <div class="search-result-indications">
-      {{tpl.symptom}}
-    </div>
-    <div class="search-result-line"></div>
-    <section v-if="recipeType===1 && tpl.symptom_list.length > 0">
-      <div class="checkbox-block">
-        <CheckboxGroup v-model="extraMedList" @on-change="addExtra">
-          <div :class="{'mb10':index !== (tpl.symptom_list.length - 1)}" v-for="(sym,index) in tpl.symptom_list">
-            <Checkbox :label="sym.tpl_id" :key="sym.tpl_id"><span class="label-text">{{sym.name}}</span></Checkbox>
-          </div>
-        </CheckboxGroup>
+    <div class="prescription_detail_btn mb16" @click.stop="cancel">返回</div>
+    <section class="tpl-content">
+      <div class="search-result-title">
+        <span>{{tpl.name}}</span>
+      </div>
+      <div class="search-result-indications">
+        {{tpl.symptom}}
       </div>
       <div class="search-result-line"></div>
-    </section>
-    <div class="search-result mt12 ml5 mr5">
-      <div
-        :class="[{'herbal-result-li':recipeType===1},{'search-result-li':recipeType!=1}]"
-        v-for="med in lastMedList"
-      >
+      <section v-if="recipeType===1 && tpl.symptom_list.length > 0">
+        <div class="checkbox-block">
+          <CheckboxGroup v-model="extraMedList" @on-change="addExtra">
+            <div :class="{'mb10':index !== (tpl.symptom_list.length - 1)}" v-for="(sym,index) in tpl.symptom_list">
+              <Checkbox :label="sym.tpl_id" :key="sym.tpl_id"><span class="label-text">{{sym.name}}</span></Checkbox>
+            </div>
+          </CheckboxGroup>
+        </div>
+        <div class="search-result-line"></div>
+      </section>
+      <div class="search-result mt12 ml5 mr5">
+        <div
+          :class="[{'herbal-result-li':recipeType===1},{'search-result-li':recipeType!=1}]"
+          v-for="med in lastMedList"
+        >
         <span v-show="recipeType===1">
           {{med.name}}
           <br>
           （{{age > 12 ? med.adult_num : (med.kids_num !== '' ? med.kids_num : med.adult_num)}}g）
         </span>
-        <span v-show="recipeType===2">
+          <span v-show="recipeType===2">
           {{med.name}}
           {{med.spec}}
         </span>
+        </div>
       </div>
-    </div>
-    <div class="clear"></div>
+      <div class="clear"></div>
+    </section>
     <div class="pb10 mt12">
       <button class="prescription_detail_save mr2" @click.stop="useTplShow">引用方剂</button>
     </div>
@@ -143,7 +145,7 @@ export default {
                 if (self.recipeType == 1) {
                   let num = self.age > 12 ? Number(item.adult_num) : (item.kids_num !== '' ? Number(item.kids_num) : Number(item.adult_num))
                   resultList.push(Object.assign(res.data[i], {
-                    num: res.data[i].unit_sale == item.unit ? Math.ceil(num/res.data[i].stock_sale_ratio) : 0,
+                    num: res.data[i].unit_sale == item.unit ? Math.ceil(num / res.data[i].stock_sale_ratio) : 0,
                     name: item.name,
                     unit: item.unit,
                     usage: item.usage,
@@ -212,7 +214,7 @@ export default {
     font-size: 0.9375rem;
     font-weight: bold;
     margin-left: 0.875rem;
-    padding: 1rem 0 0.375rem;
+    padding: 0rem 0 0.375rem;
   }
 
   .search-result-indications {
@@ -349,5 +351,10 @@ export default {
     font-weight: normal;
     max-height: 50vh;
     overflow-y: auto;
+  }
+  .tpl-content {
+    max-height: calc(100vh - 19rem);
+    overflow-y: auto;
+    font-size: 0.875rem;
   }
 </style>

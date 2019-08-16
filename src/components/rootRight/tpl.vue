@@ -56,96 +56,98 @@
       </div>
     </div>
     <div class="mt5" v-show="showTpl">
-      <div class="prescription_detail_btn" @click="tplHide()">返回</div>
-      <div class="search-result-title">
-        <span>{{tplData.name}}</span>
-        <span v-show="tplData.scope==0">(共享模板)</span>
-        <span v-show="tplData.scope==1">(个人模板)</span>
-      </div>
-      <div class="search-result-indications" v-show="recipeType!=0">
-        {{tplData.symptom}}
-      </div>
-      <div class="search-result-line"></div>
-      <div class="search-result mt12 mb20 ml5 mr5" v-show="recipeType!=0">
-        <div
-          :class="[{'herbal-result-li':recipeType===1},{'search-result-li':recipeType!=1}]"
-          v-for="(item,index) in tplData.items"
-          :key="index"
-        >
+      <div class="prescription_detail_btn mb16" @click="tplHide()">返回</div>
+      <section class="tpl-content">
+        <div class="search-result-title">
+          <span>{{tplData.name}}</span>
+          <span v-show="tplData.scope==0">(共享模板)</span>
+          <span v-show="tplData.scope==1">(个人模板)</span>
+        </div>
+        <div class="search-result-indications" v-show="recipeType!=0">
+          {{tplData.symptom}}
+        </div>
+        <div class="search-result-line"></div>
+        <div class="search-result mt12 ml5 mr5" v-show="recipeType!=0">
+          <div
+            :class="[{'herbal-result-li':recipeType===1},{'search-result-li':recipeType!=1}]"
+            v-for="(item,index) in tplData.items"
+            :key="index"
+          >
             <span v-show="recipeType===1">
               {{item.alias_name||item.clinic_alias_name||item.name}}
               <br>
               （{{item.adult_num}}{{item.unit}}）
             </span>
-          <span v-show="recipeType===2">
+            <span v-show="recipeType===2">
               {{item.alias_name||item.clinic_alias_name||item.name}}
               {{item.spec}}
             </span>
-          <span v-show="recipeType===4">
+            <span v-show="recipeType===4">
               {{item.alias_name||item.clinic_alias_name||item.name}}
               （{{item.num}}次）
             </span>
+          </div>
+          <div class="clear"></div>
         </div>
-        <div class="clear"></div>
-      </div>
+        <div class="ml10" v-show="recipeType==0">
+          <div v-if="tplData.chief_complaint" class="tpl-case-div">
+            <span class="case-label">主述</span>
+            <span>{{tplData.chief_complaint}}</span>
+          </div>
+          <div v-if="tplData.present_illness" class="tpl-case-div">
+            <span class="case-label">现病史</span>
+            <span>{{tplData.present_illness}}</span>
+          </div>
+          <div v-if="tplData.allergic_history" class="tpl-case-div">
+            <span class="case-label">过敏史</span>
+            <span>{{tplData.allergic_history}}</span>
+          </div>
+          <div v-if="tplData.personal_history" class="tpl-case-div">
+            <span class="case-label">个人史</span>
+            <span>{{tplData.personal_history}}</span>
+          </div>
+          <div v-if="tplData.past_history" class="tpl-case-div">
+            <span class="case-label">既往史</span>
+            <span>{{tplData.past_history}}</span>
+          </div>
+          <div v-if="tplData.family_history" class="tpl-case-div">
+            <span class="case-label">家族史</span>
+            <span>{{tplData.family_history}}</span>
+          </div>
+          <div v-if="tplData.prophylactic_history" class="tpl-case-div">
+            <span class="case-label">预防接种史</span>
+            <span>{{tplData.prophylactic_history}}</span>
+          </div>
+          <div v-if="tplExamination" class="tpl-case-div">
+            <span class="case-label">基础检查</span>
+            <span>{{tplExamination}}</span>
+          </div>
 
-      <div class="ml10 mb20 tpl-content" v-show="recipeType==0">
-        <div v-if="tplData.chief_complaint" class="tpl-case-div">
-          <span class="case-label">主述</span>
-          <span>{{tplData.chief_complaint}}</span>
-        </div>
-        <div v-if="tplData.present_illness" class="tpl-case-div">
-          <span class="case-label">现病史</span>
-          <span>{{tplData.present_illness}}</span>
-        </div>
-        <div v-if="tplData.allergic_history" class="tpl-case-div">
-          <span class="case-label">过敏史</span>
-          <span>{{tplData.allergic_history}}</span>
-        </div>
-        <div v-if="tplData.personal_history" class="tpl-case-div">
-          <span class="case-label">个人史</span>
-          <span>{{tplData.personal_history}}</span>
-        </div>
-        <div v-if="tplData.past_history" class="tpl-case-div">
-          <span class="case-label">既往史</span>
-          <span>{{tplData.past_history}}</span>
-        </div>
-        <div v-if="tplData.family_history" class="tpl-case-div">
-          <span class="case-label">家族史</span>
-          <span>{{tplData.family_history}}</span>
-        </div>
-        <div v-if="tplData.prophylactic_history" class="tpl-case-div">
-          <span class="case-label">预防接种史</span>
-          <span>{{tplData.prophylactic_history}}</span>
-        </div>
-        <div v-if="tplExamination" class="tpl-case-div">
-          <span class="case-label">基础检查</span>
-          <span>{{tplExamination}}</span>
-        </div>
+          <div v-if="tplData.diagnosis" class="tpl-case-div">
+            <span class="case-label">中医诊断</span>
+            <span>{{tplData.diagnosis}}</span>
+          </div>
+          <div v-if="tplData.diagnosis_xy" class="tpl-case-div">
+            <span class="case-label">诊断结果</span>
+            <span>{{tplData.diagnosis_xy}}</span>
+          </div>
+          <div v-if="tplData.treat_advice" class="tpl-case-div">
+            <span class="case-label">处理意见</span>
+            <span>{{tplData.treat_advice}}</span>
+          </div>
+          <div v-if="tplData.sport_advice" class="tpl-case-div">
+            <span class="case-label">运动建议</span>
+            <span>{{tplData.sport_advice}}</span>
+          </div>
+          <div v-if="tplData.dietary_advice" class="tpl-case-div">
+            <span class="case-label">膳食建议</span>
+            <span>{{tplData.dietary_advice}}</span>
+          </div>
 
-        <div v-if="tplData.diagnosis" class="tpl-case-div">
-          <span class="case-label">中医诊断</span>
-          <span>{{tplData.diagnosis}}</span>
         </div>
-        <div v-if="tplData.diagnosis_xy" class="tpl-case-div">
-          <span class="case-label">诊断结果</span>
-          <span>{{tplData.diagnosis_xy}}</span>
-        </div>
-        <div v-if="tplData.treat_advice" class="tpl-case-div">
-          <span class="case-label">处理意见</span>
-          <span>{{tplData.treat_advice}}</span>
-        </div>
-        <div v-if="tplData.sport_advice" class="tpl-case-div">
-          <span class="case-label">运动建议</span>
-          <span>{{tplData.sport_advice}}</span>
-        </div>
-        <div v-if="tplData.dietary_advice" class="tpl-case-div">
-          <span class="case-label">膳食建议</span>
-          <span>{{tplData.dietary_advice}}</span>
-        </div>
+      </section>
 
-      </div>
-      <div class="pb10">
+      <div class="mb20 mt20">
         <button class="prescription_detail_save mr2" @click.stop="useTplShow()">引用模板</button>
         <button class="prescription_detail_del" @click.stop="delTplShow()">删除模板</button>
         <div class="clear"></div>
@@ -935,7 +937,7 @@ export default {
     font-size: 0.9375rem;
     font-weight: bold;
     margin-left: 0.875rem;
-    padding: 1rem 0 0.375rem;
+    padding: 0 0 0.375rem;
   }
 
   .search-result-indications {
@@ -1199,7 +1201,7 @@ export default {
   }
 
   .tpl-content {
-    max-height: calc(100vh - 21rem);
+    max-height: calc(100vh - 19rem);
     overflow-y: auto;
     font-size: 0.875rem;
   }

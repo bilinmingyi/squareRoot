@@ -80,7 +80,7 @@
             </td>
           </template>
           <template v-else>
-            <td colspan="7" style="color: red;">系统内没有匹配到该药名</td>
+            <td colspan="8" style="color: red;">系统内没有匹配到该药名</td>
           </template>
 
           <td>
