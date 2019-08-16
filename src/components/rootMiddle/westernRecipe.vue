@@ -64,9 +64,9 @@
               </Select>
             </td>
             <td>
-              <InputNumber style="max-width:3.2rem" :value="Number(item.dose_once)"
-                           @on-change="modify_medicine({key:'dose_once',val:$event,index:index})"/>
-              <span class="unitText">{{item.unit_dose}}</span>
+              <Input style="max-width:4.5rem" :value="item.dose_once" type="text"
+                           @on-change="modify_medicine({key:'dose_once',val:$event.target.value, index:index})"/>
+<!--              <span class="unitText">{{item.unit_dose}}</span>-->
             </td>
             <td>
               <Select style="max-width:5.5rem" :value="item.frequency"
