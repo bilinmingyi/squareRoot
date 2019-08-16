@@ -74,6 +74,7 @@
                 <Option v-for="item in medFrequency" :value="item.name" :key="item.name">{{ item.name }}</Option>
               </Select>
             </td>
+
             <td>
               <InputNumber style="max-width:3.2rem" :value="item.days"
                            @on-change="modify_medicine({key:'days',val:$event,index:index})"/>
