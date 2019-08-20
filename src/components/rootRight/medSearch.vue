@@ -224,9 +224,14 @@ export default {
         if (res[0].code === 1000 && res[1].code === 1000) {
           self.showLoading = false
           let isCombine = self.tabType == 5 ? 1: 0
-          var resultList = res[1].data.filter(item => {
-            return item.is_combine == isCombine
-          })
+          if (self.recipeType == 4) {
+            var resultList = res[1].data.filter(item => {
+              return item.is_combine == isCombine
+            })
+          } else {
+            var resultList = res[1].data
+          }
+
           if (resultList.length < params.page_size) {
             for (let i = 0, len = res[0].data.length; i < len && resultList.length < params.page_size; i++) {
               if (!res[1].data.some(med => med.id === res[0].data[i].id)) {
