@@ -66,7 +66,7 @@
         </div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
-            <span style="font-weight: bolder">临床诊断及症型：</span>
+            <span style="font-weight: bolder">临床诊断：</span>
             <span>{{recordData.diagnosis}}&nbsp;{{recordData.diagnosis_xy}}</span>
           </div>
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
