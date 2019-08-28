@@ -37,7 +37,7 @@
           <span>{{tpl.prophylactic_history}}</span>
         </div>
         <div v-if="examination" class="tpl-case-div">
-          <span class="case-label">基础检查</span>
+          <span class="case-label">体格检查</span>
           <span>{{examination}}</span>
         </div>
 
@@ -50,7 +50,7 @@
           <span>{{tpl.diagnosis_xy}}</span>
         </div>
         <div v-if="tpl.treat_advice" class="tpl-case-div">
-          <span class="case-label">处理意见</span>
+          <span class="case-label">诊疗意见</span>
           <span>{{tpl.treat_advice}}</span>
         </div>
       </div>
@@ -95,7 +95,7 @@
               <span>{{tpl.prophylactic_history}}</span>
             </div>
             <div class="mb10" v-if="examination">
-              <span class="case-label">基础检查</span>
+              <span class="case-label">体格检查</span>
               <span>{{examination}}</span>
             </div>
             <div class="mb10" v-if="tpl.diagnosis">
@@ -107,7 +107,7 @@
               <span>{{tpl.diagnosis_xy}}</span>
             </div>
             <div class="mb10" v-if="tpl.treat_advice">
-              <span class="case-label">处理意见</span>
+              <span class="case-label">诊疗意见</span>
               <span>{{tpl.treat_advice}}</span>
             </div>
             <div class="mb10" v-if="tpl.sport_advice">

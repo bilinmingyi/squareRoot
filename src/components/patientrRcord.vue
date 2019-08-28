@@ -144,7 +144,7 @@
     </div>
     <div class="mt10 mid-record-item" v-if="checkRecord('examination')">
       <div class="text-justify mid-record-item-key">
-        <span>基础检查：</span>
+        <span>体格检查：</span>
       </div>
       <div class="mid-record-item-val" @click.stop="clinicRecord(3)">
         <Input
@@ -251,7 +251,7 @@
 
     <div class="mt10 mid-record-item">
       <div class="text-justify mid-record-item-key">
-        <span>处理意见：</span>
+        <span>诊疗意见：</span>
       </div>
       <div class="mid-record-item-val">
         <Input

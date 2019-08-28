@@ -12,7 +12,7 @@
             <br>
             <Checkbox label="family_history">家族史</Checkbox>
             <Checkbox label="prophylactic_history">预防接种史</Checkbox>
-            <Checkbox label="examination">基础检查</Checkbox>
+            <Checkbox label="examination">体格检查</Checkbox>
             <br>
             <Checkbox label="diagnosis">中医诊断</Checkbox>
             <Checkbox label="sport_advice">运动建议</Checkbox>

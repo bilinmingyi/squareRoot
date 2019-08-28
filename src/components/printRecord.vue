@@ -77,7 +77,7 @@
           <div style="flex: 1">{{recordData.prophylactic_history}}</div>
         </div>
         <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('examination')">
-          <div style="width: 80px;text-align: right;padding-right: 6px">基础检查：</div>
+          <div style="width: 80px;text-align: right;padding-right: 6px">体格检查：</div>
           <div style="flex: 1;">
             <div class="menu_big_input" @click="clinicRecord(3)">
               <div class="menu_big_input1" style="width: auto">
@@ -92,11 +92,11 @@
         </div>
 
         <div style="margin-bottom: 10px;margin-top: 10px;display: flex">
-          <div style="width: 80px;text-align: right;padding-right: 6px">诊断结果</div>
+          <div style="width: 80px;text-align: right;padding-right: 6px">初步诊断：</div>
           <div style="flex: 1">{{recordData.diagnosis_xy}}</div>
         </div>
         <div style="margin-bottom: 10px;margin-top: 10px;display: flex">
-          <div style="width: 80px;text-align: right;padding-right: 6px">处理意见：</div>
+          <div style="width: 80px;text-align: right;padding-right: 6px">诊疗意见：</div>
           <div style="flex: 1">{{recordData.treat_advice}}</div>
         </div>
         <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('sport_advice')">
