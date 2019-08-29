@@ -112,9 +112,7 @@
                 <div>
                   <span style="margin-right: 15px;">{{itemOne.name}}</span>
                   <span style="margin-right: 15px;">
-                    {{itemOne.unit == itemOne.unit_stock
-                    ? itemOne.sale_dose_ratio+''+itemOne.unit_dose+'*'+itemOne.stock_sale_ratio+''+itemOne.unit_sale
-                    : itemOne.sale_dose_ratio+''+itemOne.unit_dose+'*'+'1'+itemOne.unit_sale}}
+                     {{itemOne.spec}}
                   </span>
                   <span style="margin-right: 15px;">{{itemOne.num}}{{itemOne.unit}}</span>
                 </div>
@@ -141,9 +139,7 @@
               <span style="margin-right: 8px;">{{index+1}}、</span>
               <span style="margin-right: 30px;">{{itemOne.name}}</span>
               <span style="margin-right: 8px;">
-                 {{itemOne.unit == itemOne.unit_stock
-                    ? itemOne.sale_dose_ratio+''+itemOne.unit_dose+'*'+itemOne.stock_sale_ratio+''+itemOne.unit_sale
-                    : itemOne.sale_dose_ratio+''+itemOne.unit_dose+'*'+'1'+itemOne.unit_sale}}
+                 {{itemOne.spec}}
               </span>
               <span style="margin-right: 8px;">{{itemOne.num}}{{itemOne.unit}}</span>
               <span>{{itemOne.remark}}</span>
