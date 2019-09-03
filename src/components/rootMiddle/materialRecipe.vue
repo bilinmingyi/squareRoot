@@ -13,6 +13,7 @@
         <tr>
           <th>序号</th>
           <th>材料名称</th>
+          <th>规格</th>
           <th>数量</th>
           <th>单价</th>
           <th>备注</th>
@@ -23,6 +24,7 @@
         <tr v-for="(item,index) in currentData.data.items">
           <td>{{index+1}}</td>
           <td>{{item.name}}</td>
+          <td>{{item.spec}}</td>
           <template v-if="item.is_match===1">
             <td>
               <InputNumber style="width:3.2rem"

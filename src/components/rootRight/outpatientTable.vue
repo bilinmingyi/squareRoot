@@ -149,7 +149,6 @@ export default {
               "name": item.name,
               "content": JSON.stringify(content)
             })
-            console.log(self.outpatientList)
             self.set_record_prop({key: 'outpatient_table', val: self.outpatientList})
           } else {
             this.$Message.info(resp.msg)

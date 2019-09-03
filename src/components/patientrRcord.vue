@@ -2,9 +2,9 @@
   <!-- 患者病历 -->
   <div class="mid-box-content">
     <div class="mid-title-btn-box mb10 pr10">
-      <button class="prescriptionBtn mr10" @click.stop="showRecordSetAlert">
-        {{clinicType == 6 ? '档案' : '病历'}}项目设置
-      </button>
+<!--      <button class="prescriptionBtn mr10" @click.stop="showRecordSetAlert">-->
+<!--        {{clinicType == 6 ? '档案' : '病历'}}项目设置-->
+<!--      </button>-->
       <button class="prescriptionBtn mr10" @click.stop="showAddRecordAlert(-1)">添加报告</button>
       <button class="prescriptionBtn mr10" @click.stop="printPrescription()">
         打印{{clinicType == 6 ? '档案' : '病历'}}
@@ -34,6 +34,27 @@
         </assistTextarea>
       </div>
     </div>
+
+    <div class="mt15 mb15 mid-record-item">
+      <div class="mid-record-item-key" style="height: 1.5rem">
+        <span></span>
+      </div>
+      <div class="mid-record-item-val">
+        <CheckboxGroup :value="recordData.recordList" @on-change="changeRecordList">
+          <Checkbox label="allergic_history" class="width-60">过敏史</Checkbox>
+          <Checkbox label="personal_history" class="width-60">个人史</Checkbox>
+          <Checkbox label="past_history" class="width-60">既往史</Checkbox>
+          <Checkbox label="family_history" class="width-60">家族史</Checkbox>
+          <Checkbox label="prophylactic_history" class="width-60">预防接种史</Checkbox>
+          <Checkbox label="examination" class="width-60">体格检查</Checkbox>
+          <Checkbox label="diagnosis" class="width-60">中医诊断</Checkbox>
+          <Checkbox label="sport_advice" class="width-60">运动建议</Checkbox>
+          <Checkbox label="dietary_advice" class="width-60">膳食建议</Checkbox>
+          <Checkbox label="auxiliary_examination" class="width-60">辅助检查</Checkbox>
+        </CheckboxGroup>
+      </div>
+    </div>
+
     <div class="mt10 mid-record-item" v-if="checkRecord('past_history')">
       <div class="text-justify mid-record-item-key">
         <span>既往史：</span>
@@ -71,7 +92,6 @@
         </assistTextarea>
       </div>
     </div>
-
 
     <div class="mt10 mid-record-item" v-if="checkRecord('family_history')">
       <div class="text-justify mid-record-item-key">
@@ -116,7 +136,7 @@
             <div>
               {{item.name}}
             </div>
-<!--            <button @click.stop="delReport(item, index)">删除</button>-->
+            <!--            <button @click.stop="delReport(item, index)">删除</button>-->
           </div>
           <div class="delete-icon" @click.stop="delReport(item, index)">
             <Icon type="md-close" size="16"/>
@@ -173,7 +193,6 @@
         ></Input>
       </div>
     </div>
-
 
     <div class="mt10 mid-record-item" @click.stop="$refs.diagnosis_input.focus()" v-if="checkRecord('diagnosis')">
       <div class="text-justify mid-record-item-key">
@@ -327,7 +346,7 @@
       :printFlag="printFlag"
       @reset="printFlag = false"
     ></print-record>
-    <record-set v-if="recordSetAlert" @close="recordSetAlert = false"></record-set>
+<!--    <record-set v-if="recordSetAlert" @close="recordSetAlert = false"></record-set>-->
     <add-record v-if="addRecordAlert" :currIndex="currRecordIndex" @close="hideAddRecordAlert"></add-record>
     <write-questions v-if="writeQuestionsAlert" :currIndex="currQuestionIndex"
                      @close="hideWriteQuestionsAlert"></write-questions>
@@ -337,13 +356,12 @@
 
 <script>
 import {mapState, mapActions} from "vuex";
-import {Input, Tag, Icon} from "iview";
+import {Input, Tag, Icon, Checkbox, CheckboxGroup} from "iview";
 import patientAlert from "./patientAlert";
 import {getCaseHistory, getDiseaseList, deleteReport, saveDraft, deleteTreatAnswer} from "@/fetch/api.js";
 import saveRecordTpl from '@/components/saveRecordTpl';
 import printRecord from '@/components/printRecord';
 import assistTextarea from '@/components/assistTextarea'
-import recordSet from '@/components/recordSet'
 import addRecord from '@/components/addRecord'
 import writeQuestions from "@/components/writeQuestions";
 
@@ -356,10 +374,11 @@ export default {
     patientAlert,
     saveRecordTpl,
     printRecord,
-    recordSet,
     addRecord,
     assistTextarea,
-    writeQuestions
+    writeQuestions,
+    Checkbox,
+    CheckboxGroup
   },
   data() {
     return {
@@ -372,7 +391,7 @@ export default {
       diagnosisTimer: null,
       diagnosisDataIndex: 0,  // 诊断下拉数组当前选中索引
       printFlag: false, // 打印病历
-      recordSetAlert: false,
+      // recordSetAlert: false,
       addRecordAlert: false,
       writeQuestionsAlert: false,
       currRecordIndex: -1,
@@ -388,6 +407,7 @@ export default {
       'currRecipe': state => state.currRecipe,
       'clinicType': state => state.clinicType
     }),
+
     examination() {
       // 计算检查结果
       var examination = this.recordData.examination;
@@ -457,9 +477,12 @@ export default {
       var self = this
       return self.recordData.recordList.indexOf(type) >= 0
     },
-    showRecordSetAlert() {
-      this.recordSetAlert = true
+    changeRecordList(valueList) {
+      this.set_record_prop({key: 'recordList', val: valueList});
     },
+    // showRecordSetAlert() {
+    //   this.recordSetAlert = true
+    // },
     showAddRecordAlert(index) {
       this.currRecordIndex = Number(index)
       this.addRecordAlert = true
@@ -1003,7 +1026,7 @@ export default {
     margin-top: 6px;
   }
 
-  .delete-icon{
+  .delete-icon {
     position: absolute;
     right: 0.5rem;
     top: 0.5rem;

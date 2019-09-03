@@ -164,6 +164,9 @@ input {
   color: #4C4C4C;
 }
 
+.width-60 {
+  width: 5rem;
+}
 
 .width-100 {
   width: 6.25rem;
