@@ -17,6 +17,8 @@
             <Checkbox label="diagnosis">中医诊断</Checkbox>
             <Checkbox label="sport_advice">运动建议</Checkbox>
             <Checkbox label="dietary_advice">膳食建议</Checkbox>
+            <br>
+            <Checkbox label="auxiliary_examination">辅助检查</Checkbox>
           </CheckboxGroup>
         </div>
       </section>

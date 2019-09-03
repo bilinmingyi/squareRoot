@@ -91,7 +91,7 @@
       <div class="content_right">
         <div class="content_right_first">
           <div class="content_right_item mr20">
-            <Button size="large" @click.stop="submitOrder">确定无误</Button>
+            <Button size="large" @click.stop="submitOrders">确定无误</Button>
           </div>
           <div class="content_right_item">
             <Button size="large" @click="returnToModify">返回修改</Button>
@@ -233,7 +233,7 @@
       returnToModify() {
         this.$emit('hidePreview')
       },
-      submitOrder() {
+      submitOrders() {
         let recipeList = JSON.parse(JSON.stringify(this.recipeList)), resultList = [];
         this.showLoading = true;
         recipeList.forEach(item => {
@@ -330,6 +330,7 @@
           "order_seqno": this.orderSeqno,
           "chief_complaint": this.recordData.chief_complaint,
           "examination": this.recordData.recordList.indexOf('examination') >= 0 ? JSON.stringify(this.recordData.examination) : null,
+          "auxiliary_examination": this.recordData.recordList.indexOf('auxiliary_examination') >= 0 ? this.recordData.auxiliary_examination : null,
           "diagnosis": this.recordData.recordList.indexOf('diagnosis') >= 0 ? this.recordData.diagnosis : null,
           "sport_advice": this.recordData.recordList.indexOf('sport_advice') >= 0 ? this.recordData.sport_advice : null,
           "dietary_advice": this.recordData.recordList.indexOf('dietary_advice') >= 0 ? this.recordData.dietary_advice : null,

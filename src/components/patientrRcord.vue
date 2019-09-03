@@ -158,6 +158,21 @@
         ></Input>
       </div>
     </div>
+    <div class="mt10 mid-record-item" v-if="checkRecord('auxiliary_examination')">
+      <div class="text-justify mid-record-item-key">
+        <span>辅助检查：</span>
+      </div>
+      <div class="mid-record-item-val">
+        <Input
+          type="textarea"
+          :autosize="{minRows: 2,maxRows: 5}"
+          :rows="2"
+          placeholder="点此输入"
+          @on-change="set_record_prop({key: 'auxiliary_examination', val: $event.target.value})"
+          :value="recordData.auxiliary_examination"
+        ></Input>
+      </div>
+    </div>
 
 
     <div class="mt10 mid-record-item" @click.stop="$refs.diagnosis_input.focus()" v-if="checkRecord('diagnosis')">

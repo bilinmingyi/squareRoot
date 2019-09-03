@@ -88,6 +88,10 @@
             </div>
           </div>
         </div>
+        <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('auxiliary_examination')">
+          <div style="width: 80px;text-align: right;padding-right: 6px">辅助检查：</div>
+          <div style="flex: 1">{{recordData.auxiliary_examination}}</div>
+        </div>
         <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('diagnosis')">
           <div style="width: 80px;text-align: right;padding-right: 6px">中医诊断：</div>
           <div style="flex: 1">{{recordData.diagnosis}}</div>

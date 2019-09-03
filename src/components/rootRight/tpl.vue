@@ -98,6 +98,10 @@
             <span class="case-label">现病史</span>
             <span>{{tplData.present_illness}}</span>
           </div>
+          <div v-if="tplData.past_history" class="tpl-case-div">
+            <span class="case-label">既往史</span>
+            <span>{{tplData.past_history}}</span>
+          </div>
           <div v-if="tplData.allergic_history" class="tpl-case-div">
             <span class="case-label">过敏史</span>
             <span>{{tplData.allergic_history}}</span>
@@ -105,10 +109,6 @@
           <div v-if="tplData.personal_history" class="tpl-case-div">
             <span class="case-label">个人史</span>
             <span>{{tplData.personal_history}}</span>
-          </div>
-          <div v-if="tplData.past_history" class="tpl-case-div">
-            <span class="case-label">既往史</span>
-            <span>{{tplData.past_history}}</span>
           </div>
           <div v-if="tplData.family_history" class="tpl-case-div">
             <span class="case-label">家族史</span>
@@ -122,7 +122,10 @@
             <span class="case-label">体格检查</span>
             <span>{{tplExamination}}</span>
           </div>
-
+          <div v-if="tplData.auxiliary_examination" class="tpl-case-div">
+            <span class="case-label">辅助检查</span>
+            <span>{{tplData.auxiliary_examination}}</span>
+          </div>
           <div v-if="tplData.diagnosis" class="tpl-case-div">
             <span class="case-label">中医诊断</span>
             <span>{{tplData.diagnosis}}</span>
@@ -184,6 +187,10 @@
                 <span class="case-label">现病史</span>
                 <span>{{tplData.present_illness}}</span>
               </div>
+              <div class="mb10" v-if="tplData.past_history">
+                <span class="case-label">既往史</span>
+                <span>{{tplData.past_history}}</span>
+              </div>
               <div class="mb10" v-if="tplData.allergic_history">
                 <span class="case-label">过敏史</span>
                 <span>{{tplData.allergic_history}}</span>
@@ -191,10 +198,6 @@
               <div class="mb10" v-if="tplData.personal_history">
                 <span class="case-label">个人史</span>
                 <span>{{tplData.personal_history}}</span>
-              </div>
-              <div class="mb10" v-if="tplData.past_history">
-                <span class="case-label">既往史</span>
-                <span>{{tplData.past_history}}</span>
               </div>
               <div class="mb10" v-if="tplData.family_history">
                 <span class="case-label">家族史</span>
@@ -207,6 +210,10 @@
               <div class="mb10" v-if="tplExamination">
                 <span class="case-label">体格检查</span>
                 <span>{{tplExamination}}</span>
+              </div>
+              <div class="mb10" v-if="tplData.auxiliary_examination">
+                <span class="case-label">辅助检查</span>
+                <span>{{tplData.auxiliary_examination}}</span>
               </div>
               <div class="mb10" v-if="tplData.diagnosis">
                 <span class="case-label">中医诊断</span>
@@ -320,6 +327,7 @@ export default {
         family_history: "", // 家族史
         prophylactic_history: "", // 预防接种史
         examination: "", //检查
+        auxiliary_examination: "", // 辅助检查
         diagnosis: "", //中医诊断
         diagnosis_xy: "", //西医诊断
         treat_advice: "", //处理意见
@@ -757,6 +765,7 @@ export default {
           past_history: self.tplData.past_history || "",
           family_history: self.tplData.family_history || "",
           prophylactic_history: self.tplData.prophylactic_history || "",
+          auxiliary_examination: self.tplData.auxiliary_examination || "",
           examinationInfo: self.tplData.examination
             ? JSON.parse(self.tplData.examination)
             : {},
@@ -775,7 +784,7 @@ export default {
           sport_advice: self.tplData.sport_advice,
           dietary_advice: self.tplData.dietary_advice
         };
-        let list = ['allergic_history', 'family_history', 'diagnosis', 'personal_history', 'prophylactic_history', 'sport_advice', 'past_history', 'examination', 'dietary_advice']
+        let list = ['allergic_history', 'family_history', 'diagnosis', 'personal_history', 'prophylactic_history', 'sport_advice', 'past_history', 'examination','auxiliary_examination', 'dietary_advice']
         let record_list = []
         list.forEach(item => {
           if (data[item] && JSON.stringify(data[item]) != '{}') {

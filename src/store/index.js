@@ -53,6 +53,7 @@ const state = {
     outpatient_table: [], // 问诊表
 
     examination: {},    // 检查
+    auxiliary_examination: '', // 辅助检查
     diagnosis_xy: '',   // 西医诊断
     diagnosis: '',    // 中医诊断
     diagnosis_xy_input: '',  // 西医诊断输入框

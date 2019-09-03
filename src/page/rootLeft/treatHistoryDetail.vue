@@ -188,10 +188,11 @@ export default {
       recordTemplate: [
         {code: "主诉", key: "chief_complaint"},
         {code: "现病史", key: "present_illness"},
-        {code: "检查", key: "examination"},
-        {code: "初步诊断", key: "diagnosis_xy"},
+        {code: "体格检查", key: "examination"},
+        {code: "辅助检查", key: "auxiliary_examination"},
         {code: "中医诊断", key: "diagnosis"},
-        {code: "处理意见", key: "treat_advice"},
+        {code: "初步诊断", key: "diagnosis_xy"},
+        {code: "治疗处理", key: "treat_advice"},
         {code: "运动建议", key: "sport_advice"},
         {code: "膳食建议", key: "dietary_advice"}
       ],
@@ -263,7 +264,7 @@ export default {
       let data = this.recordTemplate;
       return data.filter(item => {
         item.val =
-          item.code !== "检查"
+          item.code !== "体格检查"
             ? selectedOrder[item.key]
             ? selectedOrder[item.key]
             : ""
@@ -327,7 +328,7 @@ export default {
             break;
         }
       });
-      let list = ['allergic_history', 'family_history', 'diagnosis', 'personal_history', 'prophylactic_history', 'sport_advice', 'past_history', 'examination', 'dietary_advice']
+      let list = ['allergic_history', 'family_history', 'diagnosis', 'personal_history', 'prophylactic_history', 'sport_advice', 'past_history', 'examination', 'auxiliary_examination', 'dietary_advice']
       let record_list = []
 
       list.forEach(item => {
