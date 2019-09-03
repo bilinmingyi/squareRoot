@@ -91,7 +91,7 @@
         </div>
         <div class="ml10" v-show="recipeType==0">
           <div v-if="tplData.chief_complaint" class="tpl-case-div">
-            <span class="case-label">主述</span>
+            <span class="case-label">主诉</span>
             <span>{{tplData.chief_complaint}}</span>
           </div>
           <div v-if="tplData.present_illness" class="tpl-case-div">
@@ -128,11 +128,11 @@
             <span>{{tplData.diagnosis}}</span>
           </div>
           <div v-if="tplData.diagnosis_xy" class="tpl-case-div">
-            <span class="case-label">诊断结果</span>
+            <span class="case-label">初步诊断</span>
             <span>{{tplData.diagnosis_xy}}</span>
           </div>
           <div v-if="tplData.treat_advice" class="tpl-case-div">
-            <span class="case-label">诊疗意见</span>
+            <span class="case-label">治疗处理</span>
             <span>{{tplData.treat_advice}}</span>
           </div>
           <div v-if="tplData.sport_advice" class="tpl-case-div">
@@ -177,7 +177,7 @@
             </div>
             <div v-if="recipeType==0" class="record-content">
               <div class="mb10" v-if="tplData.chief_complaint">
-                <span class="case-label">主述</span>
+                <span class="case-label">主诉</span>
                 <span>{{tplData.chief_complaint}}</span>
               </div>
               <div class="mb10" v-if="tplData.present_illness">
@@ -213,11 +213,11 @@
                 <span>{{tplData.diagnosis}}</span>
               </div>
               <div class="mb10" v-if="tplData.diagnosis_xy">
-                <span class="case-label">诊断结果</span>
+                <span class="case-label">初步诊断</span>
                 <span>{{tplData.diagnosis_xy}}</span>
               </div>
               <div class="mb10" v-if="tplData.treat_advice">
-                <span class="case-label">诊疗意见</span>
+                <span class="case-label">治疗处理</span>
                 <span>{{tplData.treat_advice}}</span>
               </div>
               <div class="mb10" v-if="tplData.sport_advice">

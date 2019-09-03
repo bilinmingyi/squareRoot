@@ -186,10 +186,10 @@ export default {
   data() {
     return {
       recordTemplate: [
-        {code: "主述", key: "chief_complaint"},
+        {code: "主诉", key: "chief_complaint"},
         {code: "现病史", key: "present_illness"},
         {code: "检查", key: "examination"},
-        {code: "诊断结果", key: "diagnosis_xy"},
+        {code: "初步诊断", key: "diagnosis_xy"},
         {code: "中医诊断", key: "diagnosis"},
         {code: "处理意见", key: "treat_advice"},
         {code: "运动建议", key: "sport_advice"},

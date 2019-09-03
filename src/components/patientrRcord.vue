@@ -14,7 +14,7 @@
     <hr class="mid-hr">
     <div class="mt10 mid-record-item">
       <div class="text-justify mid-record-item-key">
-        <span>主&nbsp;&nbsp;&nbsp;述：</span>
+        <span>主&nbsp;&nbsp;&nbsp;诉：</span>
       </div>
       <div class="mid-record-item-val">
         <assistTextarea rows="2" placeholder="点此输入" :value="recordData.chief_complaint"
@@ -32,6 +32,21 @@
                         @input="function(val) {recordData.present_illness = val}"
                         @assist="clinicRecord(4)">
         </assistTextarea>
+      </div>
+    </div>
+    <div class="mt10 mid-record-item" v-if="checkRecord('past_history')">
+      <div class="text-justify mid-record-item-key">
+        <span>既往史：</span>
+      </div>
+      <div class="mid-record-item-val">
+        <Input
+          type="textarea"
+          :autosize="{minRows: 2,maxRows: 5}"
+          :rows="2"
+          placeholder="点此输入"
+          @on-change="set_record_prop({key: 'past_history', val: $event.target.value})"
+          :value="recordData.past_history"
+        ></Input>
       </div>
     </div>
     <div class="mt10 mid-record-item" v-if="checkRecord('allergic_history')">
@@ -57,21 +72,7 @@
       </div>
     </div>
 
-    <div class="mt10 mid-record-item" v-if="checkRecord('past_history')">
-      <div class="text-justify mid-record-item-key">
-        <span>既往史：</span>
-      </div>
-      <div class="mid-record-item-val">
-        <Input
-          type="textarea"
-          :autosize="{minRows: 2,maxRows: 5}"
-          :rows="2"
-          placeholder="点此输入"
-          @on-change="set_record_prop({key: 'past_history', val: $event.target.value})"
-          :value="recordData.past_history"
-        ></Input>
-      </div>
-    </div>
+
     <div class="mt10 mid-record-item" v-if="checkRecord('family_history')">
       <div class="text-justify mid-record-item-key">
         <span>家族史：</span>
@@ -205,7 +206,7 @@
     </div>
     <div class="mt10 mid-record-item" @click.stop="$refs.diagnosis_xy_input.focus()">
       <div class="text-justify mid-record-item-key">
-        <span>诊断结果：</span>
+        <span>初步诊断：</span>
       </div>
       <div class="mid-record-item-val">
         <div class="diagnosis-input-box" ref="diagnosis_xy">
@@ -251,7 +252,7 @@
 
     <div class="mt10 mid-record-item">
       <div class="text-justify mid-record-item-key">
-        <span>诊疗意见：</span>
+        <span>治疗处理：</span>
       </div>
       <div class="mid-record-item-val">
         <Input

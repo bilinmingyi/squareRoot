@@ -9,7 +9,7 @@
       <div class="search-result-line"></div>
       <div class="ml10">
         <div v-if="tpl.chief_complaint" class="tpl-case-div">
-          <span class="case-label">主述</span>
+          <span class="case-label">主诉</span>
           <span>{{tpl.chief_complaint}}</span>
         </div>
         <div v-if="tpl.present_illness" class="tpl-case-div">
@@ -46,11 +46,11 @@
           <span>{{tpl.diagnosis}}</span>
         </div>
         <div v-if="tpl.diagnosis_xy" class="tpl-case-div">
-          <span class="case-label">诊断结果</span>
+          <span class="case-label">初步诊断</span>
           <span>{{tpl.diagnosis_xy}}</span>
         </div>
         <div v-if="tpl.treat_advice" class="tpl-case-div">
-          <span class="case-label">诊疗意见</span>
+          <span class="case-label">治疗处理</span>
           <span>{{tpl.treat_advice}}</span>
         </div>
       </div>
@@ -67,7 +67,7 @@
         <div class="use-list mt10">
           <div class="record-content">
             <div class="mb10" v-if="tpl.chief_complaint">
-              <span class="case-label">主述</span>
+              <span class="case-label">主诉</span>
               <span>{{tpl.chief_complaint}}</span>
             </div>
             <div class="mb10" v-if="tpl.present_illness">
@@ -103,11 +103,11 @@
               <span>{{tpl.diagnosis}}</span>
             </div>
             <div class="mb10" v-if="tpl.diagnosis_xy">
-              <span class="case-label">诊断结果</span>
+              <span class="case-label">初步诊断</span>
               <span>{{tpl.diagnosis_xy}}</span>
             </div>
             <div class="mb10" v-if="tpl.treat_advice">
-              <span class="case-label">诊疗意见</span>
+              <span class="case-label">治疗处理</span>
               <span>{{tpl.treat_advice}}</span>
             </div>
             <div class="mb10" v-if="tpl.sport_advice">

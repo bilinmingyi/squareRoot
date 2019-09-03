@@ -19,7 +19,7 @@
               <div class="flexOne">{{recordData.chief_complaint}}</div>
             </div>
             <div class="displayFlex mt5 mb5">
-              <div class="preview_label">{{clinicType == 6 ? '诊断结果' : '西医诊断'}}：</div>
+              <div class="preview_label">初步诊断：</div>
               <div class="flexOne">{{recordData.diagnosis_xy}}</div>
             </div>
             <div class="displayFlex mt5 mb5" v-if="clinicType != 6">
