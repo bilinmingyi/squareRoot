@@ -39,12 +39,12 @@
               <Select style="max-width:3.125rem" :value="item.unit"
                       @on-change="change_unit($event,index)">
                 <Option :value="item.unit_stock">{{ item.unit_stock }}</Option>
-                <Option :value="item.unit_sale">{{ item.unit_sale }}</Option>
+                <Option :value="item.unit_sale" v-if="item.unit_stock != item.unit_sale">{{ item.unit_sale }}</Option>
               </Select>
             </td>
             <td>
               <span v-show="item.unit == item.unit_stock">{{item.price|priceFormat}}</span>
-              <span v-show="item.unit == item.unit_sale">{{(item.price/item.stock_sale_ratio)|priceFormat}}</span>
+              <span v-show="item.unit == item.unit_sale && item.unit_stock != item.unit_sale">{{(item.price/item.stock_sale_ratio)|priceFormat}}</span>
             </td>
             <td>
               <Input type="text" :value="item.remark"
