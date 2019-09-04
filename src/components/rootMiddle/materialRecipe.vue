@@ -15,6 +15,7 @@
           <th>材料名称</th>
           <th>规格</th>
           <th>数量</th>
+          <th>单位</th>
           <th>单价</th>
           <th>备注</th>
           <th>操作</th>
@@ -33,16 +34,25 @@
                            :formatter="value => `${Math.floor(value)}`"
                            :parser="value => `${Math.floor(value)}`"
               />
-              <span class="unit_text">{{item.unit}}</span>
             </td>
-            <td>{{item.price|priceFormat}}</td>
+            <td>
+              <Select style="max-width:3.125rem" :value="item.unit"
+                      @on-change="change_unit($event,index)">
+                <Option :value="item.unit_stock">{{ item.unit_stock }}</Option>
+                <Option :value="item.unit_sale">{{ item.unit_sale }}</Option>
+              </Select>
+            </td>
+            <td>
+              <span v-show="item.unit == item.unit_stock">{{item.price|priceFormat}}</span>
+              <span v-show="item.unit == item.unit_sale">{{(item.price/item.stock_sale_ratio)|priceFormat}}</span>
+            </td>
             <td>
               <Input type="text" :value="item.remark"
                      @on-change="modify_medicine({key:'remark',val:$event.target.value,index:index})"/>
             </td>
           </template>
           <template v-else>
-            <td colspan="3" style="color: red;">
+            <td colspan="4" style="color: red;">
               系统内没有匹配到该材料
             </td>
           </template>
@@ -51,7 +61,7 @@
           </td>
         </tr>
         <tr v-if="currentData.data.items.length===0">
-          <td colspan="6">
+          <td colspan="8">
             右侧选择添加药品
           </td>
         </tr>
@@ -92,7 +102,11 @@ export default {
       handler: function (newVal, oldVal) {
         let allPrice = 0;
         newVal.map((item) => {
-          allPrice += Number(item.price) * Number(item.num);
+          if (item.unit === item.unit_stock) {
+            allPrice += Number(item.price) * Number(item.num);
+          } else if (item.unit === item.unit_sale) {
+            allPrice += Number(item.price * 1.0 / item.stock_sale_ratio) * Number(item.num);
+          }
         })
         setTimeout(() => {
           this.modify_recipe({key: 'money', val: Number(allPrice).toFixed(2)})
@@ -129,6 +143,22 @@ export default {
           console.log("88")
         }
       });
+    },
+    change_unit(event, index) {
+      let currItems = this.currentData.data.items[index];
+      this.modify_medicine({key: 'unit', val: event, index: index})
+      if (currItems.num !== '' && currItems.num !== 0) {
+        if (event === currItems.unit_stock) {
+          this.modify_medicine({
+            key: 'num',
+            val: Math.ceil(currItems.num * 1.0 / currItems.stock_sale_ratio),
+            index: index
+          })
+        } else if (event === currItems.unit_sale) {
+          this.modify_medicine({key: 'num', val: Math.ceil(currItems.num * currItems.stock_sale_ratio), index: index})
+        }
+      }
+
     },
   }
 }

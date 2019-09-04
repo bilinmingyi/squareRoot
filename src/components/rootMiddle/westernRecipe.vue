@@ -55,7 +55,8 @@
               </Select>
             </td>
             <td>
-              {{item.sale_price|priceFormat}}
+              <span v-show="item.unit == item.unit_stock">{{item.sale_price|priceFormat}}</span>
+              <span v-show="item.unit == item.unit_sale">{{(item.sale_price/item.stock_sale_ratio)|priceFormat}}</span>
             </td>
             <td>
               <Select style="max-width:4.5rem" :value="item.usage"

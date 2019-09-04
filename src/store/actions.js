@@ -209,9 +209,11 @@ const actions = {
           "name": item.clinic_alias_name != '' && item.clinic_alias_name != null ? item.clinic_alias_name : item.name,
           "num": !item.num ? 0 : item.num,
           "stock": item.stock,
-          "price": item.sale_price / item.stock_sale_ratio,
+          "price": item.sale_price,
           "stock_sale_ratio": item.stock_sale_ratio,
-          "unit": item.unit_sale,
+          "unit": item.unit_stock,
+          "unit_stock": item.unit_stock,
+          "unit_sale": item.unit_sale,
           "spec": item.spec,
           "is_match": item.is_match === undefined ? 1 : item.is_match,
           "types": 6

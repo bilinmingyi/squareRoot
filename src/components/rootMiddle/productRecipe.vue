@@ -52,7 +52,10 @@
                 <Option :value="item.unit_sale" key="item.unit_sale">{{item.unit_sale}}</Option>
               </Select>
             </td>
-            <td>{{item.price|priceFormat}}</td>
+            <td>
+              <span v-show="item.unit == item.unit_stock">{{item.price|priceFormat}}</span>
+              <span v-show="item.unit == item.unit_sale">{{(item.price/item.stock_sale_ratio)|priceFormat}}</span>
+            </td>
             <td>
               <Input type="text" :value="item.remark"
                      @on-change="modify_medicine({key:'remark',val:$event.target.value,index:index})"/>
