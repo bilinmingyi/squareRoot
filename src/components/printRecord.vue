@@ -1,7 +1,7 @@
 <template>
   <!--打印病历-->
   <div id="printCase" style="display: none;position: relative;">
-    <section style="color: #000000;" v-if="clinic.id !== 30">
+    <section style="color: #000000;" v-if="clinic.id == 30">
       <div style="min-height: 690px;">
         <section style="width: 100%;height: 60px;position: relative;border-bottom: 1px solid #000;">
           <div style="width: 100%;height: 32px;text-align: center;line-height: 32px;font-weight: bold;font-size: 20px;">
