@@ -1,7 +1,112 @@
 <template>
   <!--打印病历-->
-  <div id="printCase" style="display: none;">
-    <section style="color: #000000;">
+  <div id="printCase" style="display: none;position: relative;">
+    <section style="color: #000000;" v-if="clinic.id !== 30">
+      <div style="min-height: 690px;">
+        <section style="width: 100%;height: 60px;position: relative;border-bottom: 1px solid #000;">
+          <div style="width: 100%;height: 32px;text-align: center;line-height: 32px;font-weight: bold;font-size: 20px;">
+            {{clinicName}}
+          </div>
+          <div style="width: 100%;text-align: center;font-size: 16px;font-weight: bold">诊所病历</div>
+        </section>
+        <section style="font-size: 12px;margin: 5px 0;">
+          <div style="display: flex;width: 100%;margin-bottom: 12px;">
+            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">姓名：{{patientData.name}}</div>
+            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">性别：{{patientData.sex | parseSex}}</div>
+          </div>
+          <div style="display: flex;width: 100%;margin-bottom: 12px;">
+            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">年龄：{{patientData.birthday | calcAge}}岁</div>
+            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">病历号：{{orderSeqno}}</div>
+          </div>
+          <div style="display: flex;width: 100%;margin-bottom: 12px;">
+            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">科别：{{department}}</div>
+            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">电话：{{patientData.mobile}}</div>
+          </div>
+        </section>
+        <section style="padding-top: 5px;font-size: 12px;letter-spacing: 1px">
+          <div style="margin-bottom: 10px;margin-top: 10px;display: flex">
+            <div style="width: 80px;text-align: justify;text-align-last: justify;">[主诉]：</div>
+            <div style="flex: 1">{{recordData.chief_complaint}}</div>
+          </div>
+          <div style="margin-bottom: 10px;margin-top: 10px;display: flex">
+            <div style="width: 80px;text-align: justify;text-align-last: justify;">[现病史]：</div>
+            <div style="flex: 1">{{recordData.present_illness}}</div>
+          </div>
+          <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('past_history')">
+            <div style="width: 80px;text-align: justify;text-align-last: justify;">[既往史]：</div>
+            <div style="flex: 1">{{recordData.past_history}}</div>
+          </div>
+          <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('allergic_history')">
+            <div style="width: 80px;text-align: justify;text-align-last: justify;">[过敏史]：</div>
+            <div style="flex: 1">{{recordData.allergic_history}}</div>
+          </div>
+          <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('personal_history')">
+            <div style="width: 80px;text-align: justify;text-align-last: justify;">[个人史]：</div>
+            <div style="flex: 1">{{recordData.personal_history}}</div>
+          </div>
+          <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('family_history')">
+            <div style="width: 80px;text-align: justify;text-align-last: justify;">[家族史]：</div>
+            <div style="flex: 1">{{recordData.family_history}}</div>
+          </div>
+          <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('prophylactic_history')">
+            <div style="width: 80px;text-align: justify;text-align-last: justify;">[预防接种史]：</div>
+            <div style="flex: 1">{{recordData.prophylactic_history}}</div>
+          </div>
+          <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('examination')">
+            <div style="width: 80px;text-align: justify;text-align-last: justify;">[体格检查]：</div>
+            <div style="flex: 1;">
+              <div class="menu_big_input">
+                <div class="menu_big_input1" style="width: auto">
+                  <pre style="white-space:pre-wrap; margin: 0; font-family: 'microsoft yahei';">{{examination}}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('auxiliary_examination')">
+            <div style="width: 80px;text-align: justify;text-align-last: justify;">[辅助检查]：</div>
+            <div style="flex: 1">{{recordData.auxiliary_examination}}</div>
+          </div>
+          <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('diagnosis')">
+            <div style="width: 80px;text-align: justify;text-align-last: justify;">[中医诊断]：</div>
+            <div style="flex: 1">{{recordData.diagnosis}}</div>
+          </div>
+
+          <div style="margin-bottom: 10px;margin-top: 10px;display: flex">
+            <div style="width: 80px;text-align: justify;text-align-last: justify;">[初步诊断]：</div>
+            <div style="flex: 1">{{recordData.diagnosis_xy}}</div>
+          </div>
+          <div style="margin-bottom: 10px;margin-top: 10px;display: flex">
+            <div style="width: 80px;text-align: justify;text-align-last: justify;">[治疗处理]：</div>
+            <div style="flex: 1">{{recordData.treat_advice}}</div>
+          </div>
+          <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('sport_advice')">
+            <div style="width: 80px;text-align: justify;text-align-last: justify;">[运动建议]：</div>
+            <div style="flex: 1">{{recordData.sport_advice}}</div>
+          </div>
+          <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('dietary_advice')">
+            <div style="width: 80px;text-align: justify;text-align-last: justify;">[饮食建议]：</div>
+            <div style="flex: 1">{{recordData.dietary_advice}}</div>
+          </div>
+        </section>
+        <section style="font-size: 12px;display: flex;margin-top: 20px">
+          <div style="flex: 1;"></div>
+          <div style="width: 150px">
+            <span>{{clinicType == 6 ? '营养师' : '医生'}}签名：{{doctorName}}</span>
+          </div>
+        </section>
+        <section style="font-size: 12px;display: flex;margin-top: 5px;">
+          <div style="flex: 1;"></div>
+          <div style="width: 150px">
+            <span>日期：{{new Date() | dateFormat('yyyy-MM-dd')}}</span>
+          </div>
+        </section>
+      </div>
+      <section style="font-size: 12px;padding-top: 3px;border-top: 1px solid #000000;width: 100vw;text-align: center;">
+        <span style="padding-right: 5px">地址：{{clinic.city_name}}市{{clinic.county_name}}区{{clinic.address}}</span>
+        <span>服务热线：{{clinic.customer_phone}}</span>
+      </section>
+    </section>
+    <section style="color: #000000;" v-else>
       <div
         style="width: 100%;height: 35px;text-align: center;line-height: 35px;font-weight: bold;font-size: 20px;margin-bottom: 20px"
       >{{clinicName}}病历
@@ -81,7 +186,7 @@
         <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('examination')">
           <div style="width: 80px;text-align: right;padding-right: 6px">体格检查：</div>
           <div style="flex: 1;">
-            <div class="menu_big_input" @click="clinicRecord(3)">
+            <div class="menu_big_input">
               <div class="menu_big_input1" style="width: auto">
                 <pre style="white-space:pre-wrap; margin: 0; font-family: 'microsoft yahei';">{{examination}}</pre>
               </div>
@@ -144,7 +249,8 @@ export default {
       doctorName: state => state.doctorName,
       isYB: state => state.isYB,
       department: state => state.department,
-      clinicType: state => state.clinicType
+      clinicType: state => state.clinicType,
+      clinic: state => state.clinic
     }),
     examination() {
       // 计算检查结果

@@ -20,6 +20,7 @@ const state = {
   clinicType: 0,
   doctorName: '',
   clinicId: '',
+  clinic: {},
   doctorId: '',
   appointOrderSeqno: '',
   patientData: {
