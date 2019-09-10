@@ -309,7 +309,7 @@
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;border-bottom:1px solid #000000;padding-left:10px;padding-bottom:2px;">
           临床诊断：{{recordData.diagnosis}}&nbsp;{{recordData.diagnosis_xy}}</div>
       </section>
-      <section style="font-size: 12px;min-height: 325px;">
+      <section style="font-size: 12px;min-height: 280px;">
         <div style=" font-size: 18px;font-weight:bolder;">
           <span v-show="recipeType==1 || recipeType==2">Rp：</span>
           <i style="font-weight: normal;font-size: 12px;" v-show="recipeType==1">
