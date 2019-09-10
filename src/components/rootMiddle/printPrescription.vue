@@ -452,8 +452,8 @@
       </section>
       <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
         <div style="font-size:12px;padding-top:5px;">地址：
-          {{(clinic.city_name ? clinic.city_name + '(市)' : '') +
-                (clinic.county_name ? clinic.county_name + '(区县)' : '') +
+          {{(clinic.city_name ? clinic.city_name + '市' : '') +
+                (clinic.county_name ? clinic.county_name + '区' : '') +
                 clinic.address}}</div>
         <div style="font-size:12px;padding-top:5px;">服务热线：{{clinic.customer_phone}}</div>
       </div>
