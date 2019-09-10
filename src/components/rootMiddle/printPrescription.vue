@@ -1,6 +1,6 @@
 <template>
   <div id="print" style="display: none;">
-    <div v-if="clinicID!=30">
+    <div v-if="clinic.id!=30">
       <section style="color: #000000;">
         <section style=" width: 100%;height: 70px;position: relative;">
           <div style="width: 100%;height: 35px;text-align: center;line-height: 35px;font-weight: bold;font-size: 20px;">
@@ -462,14 +462,13 @@
 </template>
 <script>
 import { mapGetters, mapState } from "vuex";
-import { clinicName, clinicId } from '@/assets/js/mapType.js'
+import { clinicName } from '@/assets/js/mapType.js'
 
 export default {
   name: "printPrescription",
   data() {
     return {
       clinicName: clinicName,
-      clinicID: clinicId,
       sexOptions: [
         { code: 1, name: '男' },
         { code: 2, name: '女' },
