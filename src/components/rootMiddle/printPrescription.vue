@@ -1,6 +1,6 @@
 <template>
   <div id="print" style="display: none;">
-    <div v-if="clinic.id==30">
+    <div v-if="clinic.id!=30">
       <section style="color: #000000;">
         <section style=" width: 100%;height: 70px;position: relative;">
           <div style="width: 100%;height: 35px;text-align: center;line-height: 35px;font-weight: bold;font-size: 20px;">
