@@ -430,7 +430,7 @@
               style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;padding-left:5px;">{{doctorName}}</div>
           </div>
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
-            <div style="text-align:justify;text-align-last: justify;width:48px;margin-left:5px;">药品金额</div>:<div
+            <div style="text-align:justify;text-align-last: justify;width:48px;margin-left:5px;text-justify:inter-ideograph;">金额</div>:<div
               style="padding-left:5px;flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;">{{currRecipeData.money}}元</div>
           </div>
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
