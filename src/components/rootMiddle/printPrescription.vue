@@ -1,6 +1,6 @@
 <template>
   <div id="print" style="display: none;">
-    <div v-if="clinic.id!=30">
+    <div v-if="clinic.id==30">
       <section style="color: #000000;">
         <section style=" width: 100%;height: 70px;position: relative;">
           <div style="width: 100%;height: 35px;text-align: center;line-height: 35px;font-weight: bold;font-size: 20px;">
@@ -258,7 +258,7 @@
           <span v-show="recipeType==1">处方笺(中药)</span>
           <span v-show="recipeType==2">处方笺(中成药西药)</span>
           <span v-show="recipeType==3">{{clinicType == 6 ? '营养处方笺' : '处方笺(产品)'}}</span>
-          <span v-show="recipeType==4">
+          <span v-if="recipeType==4">
             <span v-if="currRecipeData.data.items[0].type==4">处方笺(项目)</span>
             <span v-else>{{currRecipeData.data.items[0].type|therapyType}}单</span>
           </span>
@@ -458,7 +458,7 @@
           {{(clinic.city_name ? clinic.city_name + '市' : '') +
                 (clinic.county_name ? clinic.county_name + '区' : '') +
                 clinic.address}}</div>
-        <div style="font-size:12px;padding-top:5px;">服务热线：{{clinic.customer_phone}}</div>
+        <div style="font-size:12px;padding-top:5px;" v-if="clinic.customer_phone">服务热线：{{clinic.customer_phone}}</div>
       </div>
     </div>
   </div>
