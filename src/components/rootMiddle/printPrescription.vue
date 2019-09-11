@@ -258,7 +258,10 @@
           <span v-show="recipeType==1">处方笺(中药)</span>
           <span v-show="recipeType==2">处方笺(中成药西药)</span>
           <span v-show="recipeType==3">{{clinicType == 6 ? '营养处方笺' : '处方笺(产品)'}}</span>
-          <span v-show="recipeType==4">处方笺(项目)</span>
+          <span v-show="recipeType==4">
+            <span v-if="currRecipeData.data.items[0].type==4">处方笺(项目)</span>
+            <span v-else>{{currRecipeData.data.items[0].type|therapyType}}单</span>
+          </span>
           <span v-show="recipeType==6">处方笺(材料)</span>
         </div>
       </section>
@@ -276,7 +279,7 @@
                   style="padding-left:5px;">医保卡号：{{ybCardNo}}</span></div>
             </div>
           </div>
-          <div>处方号：{{orderSeqno}}</div>
+          <div>处方号：{{prescriptionNum}}</div>
         </div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;padding-left:10px;padding-right:10px;justify-content:space-between;">
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1; display: flex;align-items:center;"><span>姓名：</span>
@@ -295,7 +298,7 @@
         </div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;padding-left:10px;padding-right:10px;justify-content:space-between;">
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1; display: flex;"><span>门诊号：</span>
-            <div style="width:60%;border-bottom:1px solid #000000;"></div>
+            <div style="width:65%;border-bottom:1px solid #000000;">{{orderSeqno}}</div>
           </div>
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1; "></div>
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display: flex;"><span>科室：</span>
@@ -309,7 +312,7 @@
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;border-bottom:1px solid #000000;padding-left:10px;padding-bottom:2px;">
           临床诊断：{{recordData.diagnosis}}&nbsp;{{recordData.diagnosis_xy}}</div>
       </section>
-      <section style="font-size: 12px;min-height: 280px;">
+      <section :style="HeightStyle">
         <div style=" font-size: 18px;font-weight:bolder;">
           <span v-show="recipeType==1 || recipeType==2">Rp：</span>
           <i style="font-weight: normal;font-size: 12px;" v-show="recipeType==1">
@@ -393,31 +396,31 @@
             </div>
           </div>
         </div>
-      </section>
-      <section style="border-bottom: #000000 solid 1px;color: #000000;font-size: 12px;">
-        <div v-show="recipeType==1">
-          <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
-            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
-              <span style="font-weight: bolder">总剂数：</span>
-              {{currRecipeData.data.dosage}}
+        <section style="border-bottom: #000000 solid 1px;color: #000000;font-size: 12px;position:absolute;bottom:0;width:100%;">
+          <div v-show="recipeType==1">
+            <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
+              <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
+                <span style="font-weight: bolder">总剂数：</span>
+                {{currRecipeData.data.dosage}}
+              </div>
+              <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
+                <span style="font-weight: bolder">频次：</span>
+                {{currRecipeData.data.frequency}}
+              </div>
+              <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
+                <span style="font-weight: bolder">用法：</span>
+                {{currRecipeData.data.usage}}
+              </div>
+              <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
+                <span style="font-weight: bolder">每次用量：</span>
+                {{currRecipeData.data.eachDose}}
+              </div>
             </div>
-            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
-              <span style="font-weight: bolder">频次：</span>
-              {{currRecipeData.data.frequency}}
-            </div>
-            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
-              <span style="font-weight: bolder">用法：</span>
-              {{currRecipeData.data.usage}}
-            </div>
-            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
-              <span style="font-weight: bolder">每次用量：</span>
-              {{currRecipeData.data.eachDose}}
-            </div>
-          </div>
 
-          <div style="clear: both;"></div>
-        </div>
-        <div style=" font-size: 12px;margin-bottom:5px;">若药品已取则无法退费</div>
+            <div style="clear: both;"></div>
+          </div>
+          <div style=" font-size: 12px;margin-bottom:5px;">若药品已取则无法退费</div>
+        </section>
       </section>
 
       <section style="border-bottom:1px solid #000000;padding:5px 0;font-size: 12px;flex-direction: row;-webkit-flex-direction: row;">
@@ -475,8 +478,23 @@ export default {
         { code: 0, name: '保密' }
       ],
       clinicAddress: '',
-      customerPhone: ''
+      customerPhone: '',
+      prescriptionNum: '',
+      HeightStyle: {
+        fontSize: '12px',
+        minHeight: '355px',
+        position: 'relative'
+      }
     }
+  },
+  created() {
+    var tempOrder =
+      this.print_data.dataType == 1
+        ? this.orderDetail.order_seqno
+        : this.orderDetail.orderSeqno
+    var tempNum = tempOrder.slice(-6)
+    this.prescriptionNum =
+      tempNum.length < 7 ? ('000000' + tempNum).slice(-6) : tempNum
   },
   computed: {
     ...mapGetters(["currRecipeData"]),

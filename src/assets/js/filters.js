@@ -1,43 +1,48 @@
 const fullTime = val => {
-  var dateObj = new Date(Number(val));
-  var year = dateObj.getFullYear();
+  var dateObj = new Date(Number(val))
+  var year = dateObj.getFullYear()
   var month =
     dateObj.getMonth() + 1 > 9
       ? (dateObj.getMonth() + 1).toString()
-      : "0" + (dateObj.getMonth() + 1).toString();
+      : '0' + (dateObj.getMonth() + 1).toString()
   var date =
     dateObj.getDate() > 9
       ? dateObj.getDate().toString()
-      : "0" + dateObj.getDate().toString();
+      : '0' + dateObj.getDate().toString()
   var hour =
     dateObj.getHours() > 9
       ? dateObj.getHours().toString()
-      : "0" + dateObj.getHours().toString();
+      : '0' + dateObj.getHours().toString()
   var minutes =
     dateObj.getMinutes() > 9
       ? dateObj.getMinutes().toString()
-      : "0" + dateObj.getMinutes().toString();
+      : '0' + dateObj.getMinutes().toString()
 
-  return year + "/" + month + "/" + date + "  " + hour + ":" + minutes;
-};
+  return year + '/' + month + '/' + date + '  ' + hour + ':' + minutes
+}
 
 /* 计算年龄 */
-const calcAge = (t) => {
-  if (t == null) return '';
-  var today = new Date();
-  var born = new Date(t);
+const calcAge = t => {
+  if (t == null) return ''
+  var today = new Date()
+  var born = new Date(t)
 
   if (born > today.getTime()) {
-    return -1;
+    return -1
   }
-  var age = today.getFullYear() - born.getFullYear();
-  if ((today.getMonth() * 100 + today.getDate()) - (born.getMonth() * 100 + born.getDate()) < 0) {
-    age -= 1;
+  var age = today.getFullYear() - born.getFullYear()
+  if (
+    today.getMonth() * 100 +
+      today.getDate() -
+      (born.getMonth() * 100 + born.getDate()) <
+    0
+  ) {
+    age -= 1
     if (age < 0) {
-      age = 0;
+      age = 0
     }
   }
-  return age;
+  return age
 }
 
 /**
@@ -52,23 +57,23 @@ const calcAge = (t) => {
  */
 
 const codeToName = (dict, code) => {
-  var dict = dict || [];
+  var dict = dict || []
   for (var i = 0, len = dict.length; i < len; i++) {
     if (dict[i].code === code) {
-      return dict[i].name;
+      return dict[i].name
     }
   }
-  return null;
+  return null
 }
 
 /* 解析性别 */
-const parseSex = (sexVal) => {
+const parseSex = sexVal => {
   var dict = [
-    {code: 0, name: '保密'},
-    {code: 1, name: '男'},
-    {code: 2, name: '女'},
-  ];
-  return codeToName(dict, sexVal);
+    { code: 0, name: '保密' },
+    { code: 1, name: '男' },
+    { code: 2, name: '女' }
+  ]
+  return codeToName(dict, sexVal)
 }
 
 /**
@@ -81,19 +86,19 @@ const parseSex = (sexVal) => {
  * @example priceFormat('12345.67890', '$', 3)    // '$12,345.679'
  */
 const priceFormat = (price, currency, decimals) => {
-  price = parseFloat(price);
-  if ((!price && price !== 0) || !isFinite(price)) return "";
-  currency = currency != null ? currency : "￥";
-  decimals = decimals != null ? decimals : 2;
-  var sign = price < 0 ? "-" : "";
-  var str = Math.abs(price).toFixed(decimals);
-  var _int = decimals ? str.slice(0, -1 - decimals) : "";
-  var _float = decimals ? str.slice(-1 - decimals) : "";
-  var i = _int.length % 3;
-  var head = i > 0 ? _int.slice(0, i) + (_int.length > 3 ? "," : "") : "";
-  var mid = _int.slice(i).replace(/(\d{3})(?=\d)/g, "$1,");
-  return sign + currency + head + mid + _float;
-};
+  price = parseFloat(price)
+  if ((!price && price !== 0) || !isFinite(price)) return ''
+  currency = currency != null ? currency : '￥'
+  decimals = decimals != null ? decimals : 2
+  var sign = price < 0 ? '-' : ''
+  var str = Math.abs(price).toFixed(decimals)
+  var _int = decimals ? str.slice(0, -1 - decimals) : ''
+  var _float = decimals ? str.slice(-1 - decimals) : ''
+  var i = _int.length % 3
+  var head = i > 0 ? _int.slice(0, i) + (_int.length > 3 ? ',' : '') : ''
+  var mid = _int.slice(i).replace(/(\d{3})(?=\d)/g, '$1,')
+  return sign + currency + head + mid + _float
+}
 
 /**
  * @desc: Date format
@@ -114,59 +119,59 @@ const priceFormat = (price, currency, decimals) => {
  * ss：秒
  * S：毫秒
  */
-const dateFormat = function (date, fmt) {
+const dateFormat = function(date, fmt) {
   if (!Date.prototype.Format) {
-    Object.defineProperty(Date.prototype, "Format", {
+    Object.defineProperty(Date.prototype, 'Format', {
       enumerable: false,
       configurable: false,
       writable: false,
-      value: function (fmt) {
-        var f = fmt != null ? fmt : "yyyy-MM-dd hh:mm:ss";
+      value: function(fmt) {
+        var f = fmt != null ? fmt : 'yyyy-MM-dd hh:mm:ss'
         var o = {
-          "q+": Math.floor((this.getMonth() + 3) / 3), // 季度
-          "M+": this.getMonth() + 1, // 月份
-          "d+": this.getDate(), // 日
-          "h+": this.getHours(), // 时
-          "m+": this.getMinutes(), // 分
-          "s+": this.getSeconds(), // 秒
+          'q+': Math.floor((this.getMonth() + 3) / 3), // 季度
+          'M+': this.getMonth() + 1, // 月份
+          'd+': this.getDate(), // 日
+          'h+': this.getHours(), // 时
+          'm+': this.getMinutes(), // 分
+          's+': this.getSeconds(), // 秒
           S: this.getMilliseconds() //毫秒
-        };
+        }
         if (/(y+)/.test(f)) {
           f = f.replace(
             RegExp.$1,
-            (this.getFullYear() + "").substr(4 - RegExp.$1.length)
-          );
+            (this.getFullYear() + '').substr(4 - RegExp.$1.length)
+          )
         }
         for (var k in o) {
-          if (new RegExp("(" + k + ")").test(f)) {
+          if (new RegExp('(' + k + ')').test(f)) {
             f = f.replace(
               RegExp.$1,
               RegExp.$1.length == 1
                 ? o[k]
-                : ("00" + o[k]).substr(("" + o[k]).length)
-            );
+                : ('00' + o[k]).substr(('' + o[k]).length)
+            )
           }
         }
-        return f;
+        return f
       }
-    });
+    })
   }
-  let d = Date.prototype.isPrototypeOf(date) ? date : new Date(date);
-  return d.getTime() === d.getTime() ? d.Format(fmt) : '';
-};
+  let d = Date.prototype.isPrototypeOf(date) ? date : new Date(date)
+  return d.getTime() === d.getTime() ? d.Format(fmt) : ''
+}
 
 const recipeType = (val, category, type) => {
   var typeList = [
-    {code: 1, name: "中药处方"},
-    {code: 2, name: "中成药西药"},
-    {code: 3, name: "产品处方"},
-    {code: 4, name: "诊疗项目"},
-    {code: 5, name: "附加服务"},
-    {code: 6, name: "材料处方"}
-  ];
+    { code: 1, name: '中药处方' },
+    { code: 2, name: '中成药西药' },
+    { code: 3, name: '产品处方' },
+    { code: 4, name: '诊疗项目' },
+    { code: 5, name: '附加服务' },
+    { code: 6, name: '材料处方' }
+  ]
   var result = typeList.filter(item => {
     return item.code === val
-  });
+  })
   if (val == 1) {
     if (category == 1) {
       return '中药饮片'
@@ -180,25 +185,40 @@ const recipeType = (val, category, type) => {
       return '产品处方'
     }
   }
-  return result[0].name;
+  return result[0].name
 }
 
-const productCategory = (val) => {
+const productCategory = val => {
   var categoryList = [
-    {code: 1, name: '中药协定方'},
-    {code: 2, name: '养生产品'},
-    {code: 3, name: '医疗器械'}
+    { code: 1, name: '中药协定方' },
+    { code: 2, name: '养生产品' },
+    { code: 3, name: '医疗器械' }
   ]
   var result = categoryList.filter(item => {
     return item.code === val
-  });
-  if(result.length === 0){
+  })
+  if (result.length === 0) {
     return ''
   } else {
     return result[0].name
   }
 }
-
+const therapyType = val => {
+  var therapyTypeList = [
+    { code: 1, name: '治疗' },
+    { code: 2, name: '检验' },
+    { code: 3, name: '检查' },
+    { code: 4, name: '其他' }
+  ]
+  var result = therapyTypeList.filter(item => {
+    return item.code === val
+  })
+  if (result.length === 0) {
+    return ''
+  } else {
+    return result[0].name
+  }
+}
 module.exports = {
   fullTime,
   recipeType,
@@ -206,5 +226,6 @@ module.exports = {
   parseSex,
   priceFormat,
   dateFormat,
-  productCategory
+  productCategory,
+  therapyType
 }
