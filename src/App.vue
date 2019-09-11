@@ -2,12 +2,12 @@
   <div id="app">
     <div class="page_content" v-if="initFinish">
       <!--      <router-view style="flex: 1;"></router-view>-->
-      <router-view class="left" name="Left"/>
+      <router-view class="left" name="Left" />
       <div class="right_block">
         <router-view name="Header"></router-view>
         <div class="displayFlex" style="min-height: calc(100vh - 8.35rem);">
-          <router-view class="middle" name="Middle"/>
-          <router-view class="right" name="Right"/>
+          <router-view class="middle" name="Middle" />
+          <router-view class="right" name="Right" />
         </div>
       </div>
     </div>
@@ -27,7 +27,7 @@ import {
   fetchClinic
 } from "@/fetch/api.js";
 import fLoader from "@/components/fLoader";
-import {mapState, mapActions} from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 
 export default {
   name: "App",
@@ -53,14 +53,16 @@ export default {
     this.loadDraftData();
   },
   methods: {
-    ...mapActions(['set_patient_info', 'set_order_seqno', 'init_recipe', 'init_recode', 'set_state_prop', 'set_recipe_help', 'change_curr_tab', 'set_cloud_shop', 'add_new_recipt']),
+    ...mapMutations(['PRINT_CREATE_TIME']),
+    ...mapActions(['set_print_createTime', 'set_patient_info', 'set_order_seqno', 'init_recipe', 'init_recode', 'set_state_prop', 'set_recipe_help', 'change_curr_tab', 'set_cloud_shop', 'add_new_recipt']),
     init() {
-      let params = {order_seqno: this.getOrderSeqno('orderSeqno')};
+      let params = { order_seqno: this.getOrderSeqno('orderSeqno') };
       this.showLoader = true;
       this.set_order_seqno(this.getOrderSeqno('orderSeqno'));
       getTreatOrderDetail(params).then(res => {
         if (res.code === 1000) {
           let data = res.data;
+          console.log(data)
           let patientData = this.patientData;
           //获取医生科室
           this.getDoctorData(data.doctor_id);
@@ -68,17 +70,18 @@ export default {
           Object.keys(patientData).forEach((item) => {
             let val = data['patient_' + item]
             if (val != null) {
-              this.set_patient_info({key: item, val})
+              this.set_patient_info({ key: item, val })
             }
           })
-          this.set_state_prop({key: 'isFirst', val: data.is_first});
-          this.set_state_prop({key: 'treatPrice', val: data.treat_price});
-          this.set_state_prop({key: 'doctorName', val: data.doctor_name});
-          this.set_state_prop({key: 'isYB', val: data.pay_category});
-          this.set_state_prop({key: 'ybCardNo', val: data.yb_card_no});
-          this.set_state_prop({key: 'appointOrderSeqno', val: data.appoint_order_seqno})
-          this.set_state_prop({key: 'clinicId', val: data.clinic_id})
-          this.set_state_prop({key: 'doctorId', val: data.doctor_id})
+          this.PRINT_CREATE_TIME(data.create_time)
+          this.set_state_prop({ key: 'isFirst', val: data.is_first });
+          this.set_state_prop({ key: 'treatPrice', val: data.treat_price });
+          this.set_state_prop({ key: 'doctorName', val: data.doctor_name });
+          this.set_state_prop({ key: 'isYB', val: data.pay_category });
+          this.set_state_prop({ key: 'ybCardNo', val: data.yb_card_no });
+          this.set_state_prop({ key: 'appointOrderSeqno', val: data.appoint_order_seqno })
+          this.set_state_prop({ key: 'clinicId', val: data.clinic_id })
+          this.set_state_prop({ key: 'doctorId', val: data.doctor_id })
           this.initFinish = true;
         } else {
           console.log(res.msg);
@@ -97,6 +100,7 @@ export default {
       loadDraft({
         "order_seqno": this.getOrderSeqno('orderSeqno')
       }).then(data => {
+
         if (data.code === 1000) {
           if (data.data == '') {
             if (this.clinicType === 6) {
@@ -112,9 +116,10 @@ export default {
             return
           }
           let result = JSON.parse(data.data);
-
+          console.log(result)
           try {
             if (result.recipeList && result.recordData) {
+
               this.checkOrder(result.recipeList);
               this.init_recipe(JSON.parse(JSON.stringify(result.recipeList)));
               this.init_recode(JSON.parse(JSON.stringify(result.recordData)));
@@ -129,6 +134,7 @@ export default {
               this.init_recipe(JSON.parse(JSON.stringify(recipeList)));
               this.init_recode(JSON.parse(JSON.stringify(recordData)));
             }
+            console.log(JSON.parse(JSON.stringify(result.recordData)))
             this.change_curr_tab(result.currRecipe !== undefined ? result.currRecipe : -1);
           } catch (e) {
             console.log(e);
@@ -528,8 +534,8 @@ export default {
       }).then(res => {
         let data = res.data;
         if (res.code == 1000) {
-          this.set_state_prop({key: 'department', val: data ? data.department : ''});
-          this.set_state_prop({key: 'departmentCode', val: data ? data.department_code : ''})
+          this.set_state_prop({ key: 'department', val: data ? data.department : '' });
+          this.set_state_prop({ key: 'departmentCode', val: data ? data.department_code : '' })
         } else {
           this.$Message.info(res.msg)
         }
@@ -548,39 +554,39 @@ export default {
                 })
                 switch (key) {
                   case 'yp_medshop_id':
-                    items.length > 0 ? list.push({type: 1, name: items[0].name, category: 1}) : list.push({
+                    items.length > 0 ? list.push({ type: 1, name: items[0].name, category: 1 }) : list.push({
                       type: 1,
                       name: '',
                       category: 1
                     })
                     break
                   case 'kl_medshop_id':
-                    items.length > 0 ? list.push({type: 1, name: items[0].name, category: 2}) : list.push({
+                    items.length > 0 ? list.push({ type: 1, name: items[0].name, category: 2 }) : list.push({
                       type: 1,
                       name: '',
                       category: 2
                     })
                     break
                   case 'xy_medshop_id':
-                    items.length > 0 ? list.push({type: 2, name: items[0].name}) : list.push({type: 2, name: ''})
+                    items.length > 0 ? list.push({ type: 2, name: items[0].name }) : list.push({ type: 2, name: '' })
                     break
                   case 'cp_medshop_id':
-                    items.length > 0 ? list.push({type: 3, name: items[0].name}) : list.push({type: 3, name: ''})
+                    items.length > 0 ? list.push({ type: 3, name: items[0].name }) : list.push({ type: 3, name: '' })
                     break
                 }
               } else {
                 switch (key) {
                   case 'yp_medshop_id':
-                    list.push({type: 1, name: '', category: 1})
+                    list.push({ type: 1, name: '', category: 1 })
                     break
                   case 'kl_medshop_id':
-                    list.push({type: 1, name: '', category: 2})
+                    list.push({ type: 1, name: '', category: 2 })
                     break
                   case 'xy_medshop_id':
-                    list.push({type: 2, name: ''})
+                    list.push({ type: 2, name: '' })
                     break
                   case 'cp_medshop_id':
-                    list.push({type: 3, name: ''})
+                    list.push({ type: 3, name: '' })
                     break
                 }
               }
@@ -600,8 +606,8 @@ export default {
       fetchClinic().then(
         res => {
           if (res.code === 1000) {
-            this.set_state_prop({key: 'clinic', val: res.data});
-            this.set_state_prop({key: 'clinicType', val: res.data.service_type ? res.data.service_type : 0});
+            this.set_state_prop({ key: 'clinic', val: res.data });
+            this.set_state_prop({ key: 'clinicType', val: res.data.service_type ? res.data.service_type : 0 });
           } else {
             this.$Message.info(res.msg)
           }
@@ -611,56 +617,56 @@ export default {
       })
     },
     addNewRecipt(type, category) {
-      this.add_new_recipt({type, category})
+      this.add_new_recipt({ type, category })
     }
   }
 };
 </script>
 
 <style>
-  @import "assets/css/reset.css";
+@import "assets/css/reset.css";
 
-  #app {
-    color: #2c3e50;
-    margin-top: 3.75rem;
-    padding: 0 1.25rem;
-    /*background: #F5F5F5;*/
-  }
+#app {
+  color: #2c3e50;
+  margin-top: 3.75rem;
+  padding: 0 1.25rem;
+  /*background: #F5F5F5;*/
+}
 
-  .page_content {
-    display: flex;
-    min-height: calc(100vh - 3.8rem);
-  }
+.page_content {
+  display: flex;
+  min-height: calc(100vh - 3.8rem);
+}
 
-  .hidden {
-    visibility: hidden;
-  }
+.hidden {
+  visibility: hidden;
+}
 
-  .left {
-    flex: 18;
-    margin-right: 0.5rem;
-    padding-right: 0.5rem;
-    padding-top: 1.25rem;
-    border-right: 1px solid #CCCCCC;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-  }
+.left {
+  flex: 18;
+  margin-right: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 1.25rem;
+  border-right: 1px solid #cccccc;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
 
-  .right_block {
-    flex: 82;
-    padding-top: 1.25rem;
-  }
+.right_block {
+  flex: 82;
+  padding-top: 1.25rem;
+}
 
-  .middle {
-    flex: 60;
-    margin-right: 1rem;
-    background: #ffffff;
-    /*min-width: 46.25rem;*/
-  }
+.middle {
+  flex: 60;
+  margin-right: 1rem;
+  background: #ffffff;
+  /*min-width: 46.25rem;*/
+}
 
-  .right {
-    flex: 22;
-    background: white;
-  }
+.right {
+  flex: 22;
+  background: white;
+}
 </style>

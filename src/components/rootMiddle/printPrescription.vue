@@ -279,7 +279,7 @@
                   style="padding-left:5px;">医保卡号：{{ybCardNo}}</span></div>
             </div>
           </div>
-          <div>处方号：{{prescriptionNum}}</div>
+          <div>处方号：{{print_createTime|dateFormat('yyyyMMdd')}}{{prescriptionNum}}</div>
         </div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;padding-left:10px;padding-right:10px;justify-content:space-between;">
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1; display: flex;align-items:center;"><span>姓名：</span>
@@ -373,7 +373,7 @@
           <div style="clear: both;"></div>
         </div>
         <div v-show="recipeType==4">
-          <div style="width: 100%;height: auto;margin-bottom: 15px;">
+          <div style="width: 100%;height: auto;margin-bottom:  5px;">
             <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;" v-for="(itemOne,index) in (currRecipeData.data.items||[])" :key="index">
               <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
                 <span style="margin-right: 8px;">{{index+1}}、</span>
@@ -385,7 +385,7 @@
           </div>
         </div>
         <div v-show="recipeType==6">
-          <div style="width: 100%;height: auto;margin-bottom: 15px;">
+          <div style="width: 100%;height: auto;margin-bottom: 5px;">
             <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;" v-for="(itemOne,index) in (currRecipeData.data.items||[])" :key="index">
               <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
                 <span style="margin-right: 8px;">{{index+1}}、</span>
@@ -398,7 +398,7 @@
         </div>
         <section style="border-bottom: #000000 solid 1px;color: #000000;font-size: 12px;position:absolute;bottom:0;width:100%;">
           <div v-show="recipeType==1">
-            <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
+            <div style="width: 100%;height: auto; display: flex;">
               <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
                 <span style="font-weight: bolder">总剂数：</span>
                 {{currRecipeData.data.dosage}}
@@ -423,10 +423,10 @@
         </section>
       </section>
 
-      <section style="border-bottom:1px solid #000000;padding:5px 0;font-size: 12px;flex-direction: row;-webkit-flex-direction: row;">
+      <section style="border-bottom:1px solid #000000;font-size: 12px;flex-direction: row;-webkit-flex-direction: row;">
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
-            <div style="text-align:justify;text-align-last: justify;width:48px;">医生</div>:<div
+            <div style="text-align:justify;text-align-last: justify;width:48px;text-justify:inter-ideograph;">医生</div>:<div
               style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;padding-left:5px;">{{doctorName}}</div>
           </div>
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
@@ -479,7 +479,6 @@ export default {
       ],
       clinicAddress: '',
       customerPhone: '',
-      prescriptionNum: '',
       HeightStyle: {
         fontSize: '12px',
         minHeight: '355px',
@@ -487,18 +486,10 @@ export default {
       }
     }
   },
-  created() {
-    var tempOrder =
-      this.print_data.dataType == 1
-        ? this.orderDetail.order_seqno
-        : this.orderDetail.orderSeqno
-    var tempNum = tempOrder.slice(-6)
-    this.prescriptionNum =
-      tempNum.length < 7 ? ('000000' + tempNum).slice(-6) : tempNum
-  },
+
   computed: {
     ...mapGetters(["currRecipeData"]),
-    ...mapState(["patientData", "recordData", "printPre", 'orderSeqno', 'doctorName', "isYB", "department", "ybCardNo", 'clinicType', 'clinic']),
+    ...mapState(["patientData", "recordData", "printPre", 'orderSeqno', 'doctorName', "isYB", "department", "ybCardNo", 'clinicType', 'clinic', 'print_createTime']),
     recipeType: function () {
       return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
     },
@@ -510,6 +501,10 @@ export default {
     getCurrDate: function () {
       var d = new Date();
       return d.getFullYear() + "-" + (d.getMonth() + 1) + '-' + d.getDate();
+    },
+    prescriptionNum: function () {
+      var tempNum = this.orderSeqno.slice(-6)
+      return tempNum.length < 7 ? ('000000' + tempNum).slice(-6) : tempNum
     }
   },
   watch: {
