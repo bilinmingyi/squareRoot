@@ -62,7 +62,6 @@ export default {
       getTreatOrderDetail(params).then(res => {
         if (res.code === 1000) {
           let data = res.data;
-          console.log(data)
           let patientData = this.patientData;
           //获取医生科室
           this.getDoctorData(data.doctor_id);
@@ -116,7 +115,7 @@ export default {
             return
           }
           let result = JSON.parse(data.data);
-          console.log(result)
+
           try {
             if (result.recipeList && result.recordData) {
 
@@ -134,7 +133,7 @@ export default {
               this.init_recipe(JSON.parse(JSON.stringify(recipeList)));
               this.init_recode(JSON.parse(JSON.stringify(recordData)));
             }
-            console.log(JSON.parse(JSON.stringify(result.recordData)))
+
             this.change_curr_tab(result.currRecipe !== undefined ? result.currRecipe : -1);
           } catch (e) {
             console.log(e);
