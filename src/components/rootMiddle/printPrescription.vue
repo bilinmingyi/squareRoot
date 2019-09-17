@@ -88,6 +88,7 @@
               </div>
             </div>
             <div style="clear: both;"></div>
+
           </div>
           <div v-show="recipeType==2">
             <div style="width: 100%;height: auto;margin-bottom: 5px;">
@@ -251,7 +252,7 @@
         </section>
       </section>
     </div>
-    <div v-else>
+    <div v-else style="position:relative;height:100%;">
       <section>
         <div style="width: 100%;height: 35px;text-align: center;line-height: 35px;font-weight: bold;font-size: 20px;">{{clinicName}}</div>
         <div style="width: 100%;height: 24px;text-align: center;line-height: 24px;font-weight: bold;font-size: 16px;">
@@ -312,7 +313,7 @@
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;border-bottom:1px solid #000000;padding-left:10px;padding-bottom:2px;">
           临床诊断：{{recordData.diagnosis}}&nbsp;{{recordData.diagnosis_xy}}</div>
       </section>
-      <section :style="HeightStyle">
+      <section :style="HeightStyle" id="content">
         <div style=" font-size: 18px;font-weight:bolder;">
           <span v-show="recipeType==1 || recipeType==2">Rp：</span>
           <i style="font-weight: normal;font-size: 12px;" v-show="recipeType==1">
@@ -396,7 +397,7 @@
             </div>
           </div>
         </div>
-        <section style="border-bottom: #000000 solid 1px;color: #000000;font-size: 12px;position:absolute;bottom:0;width:100%;">
+        <section style="color: #000000;font-size: 12px;position:absolute;bottom:0;width:100%;">
           <div v-show="recipeType==1">
             <div style="width: 100%;height: auto; display: flex;">
               <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
@@ -419,46 +420,49 @@
 
             <div style="clear: both;"></div>
           </div>
-          <div style=" font-size: 12px;margin-bottom:5px;">若药品已取则无法退费</div>
-        </section>
-      </section>
 
-      <section style="border-bottom:1px solid #000000;font-size: 12px;flex-direction: row;-webkit-flex-direction: row;">
-        <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
-          <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
-            <div style="text-align:justify;text-align-last: justify;width:48px;text-justify:inter-ideograph;">医生</div>:<div
-              style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;padding-left:5px;">{{doctorName}}</div>
-          </div>
-          <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
-            <div style="text-align:justify;text-align-last: justify;width:48px;margin-left:5px;text-justify:inter-ideograph;">金额</div>:<div
-              style="padding-left:5px;flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;">{{currRecipeData.money}}元</div>
-          </div>
-          <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
-            <div style="padding-left:5px;">收费章</div>:<div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;"></div>
-          </div>
-        </div>
-        <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;margin-top:10px;">
-          <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
-            <div>审核药师</div>:<div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;"></div>
-          </div>
-          <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
-            <div style="margin-left:5px;">调配药师/士</div>:<div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;"></div>
-          </div>
-          <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
-            <div style="padding-left:5px;">核对、发药药师</div>:<div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;"></div>
-          </div>
-        </div>
-        <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;padding-right:10px;justify-content:space-between;">
-          <div style="flex: 2;-webkit-flex: 2;-ms-flex: 2; display: flex;"><span>打印时间：</span>{{Date.now()|dateFormat('yyyy-MM-dd hh:mm:ss') }}</div>
-          <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;"><span>处方当日有效</span></div>
-        </div>
+        </section>
+        <div style="width:100%;text-align:center;margin-top:10px;padding-bottom:20px;">(以下空白)</div>
       </section>
-      <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
-        <div style="font-size:12px;padding-top:5px;">地址：
-          {{(clinic.city_name ? clinic.city_name + '市' : '') +
+      <div :style="bottomStyle" id="bottomContent">
+        <section style="border-bottom:1px solid #000000;font-size: 12px;flex-direction: row;-webkit-flex-direction: row;">
+          <div style="font-size: 12px;border-bottom:1px solid #000000;padding-bottom:5px;;">若药品已取则无法退费</div>
+          <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
+            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
+              <div style="text-align:justify;text-align-last: justify;width:48px;text-justify:inter-ideograph;">医生</div>:<div
+                style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;padding-left:5px;">{{doctorName}}</div>
+            </div>
+            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
+              <div style="text-align:justify;text-align-last: justify;width:48px;margin-left:5px;text-justify:inter-ideograph;">金额</div>:<div
+                style="padding-left:5px;flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;">{{currRecipeData.money}}元</div>
+            </div>
+            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
+              <div style="padding-left:5px;">收费章</div>:<div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;"></div>
+            </div>
+          </div>
+          <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;margin-top:10px;">
+            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
+              <div>审核药师</div>:<div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;"></div>
+            </div>
+            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
+              <div style="margin-left:5px;">调配药师/士</div>:<div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;"></div>
+            </div>
+            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
+              <div style="padding-left:5px;">核对、发药药师</div>:<div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;"></div>
+            </div>
+          </div>
+          <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;padding-right:10px;justify-content:space-between;">
+            <div style="flex: 2;-webkit-flex: 2;-ms-flex: 2; display: flex;"><span>打印时间：</span>{{Date.now()|dateFormat('yyyy-MM-dd hh:mm:ss') }}</div>
+            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;"><span>处方当日有效</span></div>
+          </div>
+        </section>
+        <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
+          <div style="font-size:12px;padding-top:5px;">地址：
+            {{(clinic.city_name ? clinic.city_name + '市' : '') +
                 (clinic.county_name ? clinic.county_name + '区' : '') +
                 clinic.address}}</div>
-        <div style="font-size:12px;padding-top:5px;" v-if="clinic.customer_phone">服务热线：{{clinic.customer_phone}}</div>
+          <div style="font-size:12px;padding-top:5px;" v-if="clinic.customer_phone">服务热线：{{clinic.customer_phone}}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -482,7 +486,14 @@ export default {
       HeightStyle: {
         fontSize: '12px',
         minHeight: '355px',
-        position: 'relative'
+        position: 'relative',
+        bottom: '0'
+      },
+      bottomStyle: {
+        position: 'absolute',
+        bottom: '2px',
+        left: '0px',
+        width: '100%'
       }
     }
   },
@@ -514,6 +525,7 @@ export default {
   },
   methods: {
     printPrescription: function () {
+      var self = this
       setTimeout(function () {
         var el = document.getElementById('print');
         var iframe = document.createElement("IFRAME");
@@ -528,6 +540,16 @@ export default {
         doc.write("<div>" + el.innerHTML + "</div>");
         doc.close();
         iframe.contentWindow.focus();
+        if (self.clinic.id == 30) {
+          //兼容底部的问题
+          iframe.contentWindow.document.getElementById(
+            'bottomContent'
+          ).style.position =
+            iframe.contentWindow.document.getElementById('content')
+              .offsetHeight > 362
+              ? 'static'
+              : 'absolute'
+        }
         iframe.contentWindow.print();
         if (navigator.userAgent.indexOf("MSIE") > 0) {
           document.body.removeChild(iframe);
