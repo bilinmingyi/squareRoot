@@ -67,6 +67,7 @@ const actions = {
           type: 4,
           money: 0,
           data: {
+            type: 1,
             doctor_remark: '',
             items: []
           }

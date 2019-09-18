@@ -1,7 +1,14 @@
 <template>
   <div>
     <section class="herbal_head">
-      <div class="herbal_head_left"></div>
+      <div class="herbal_head_left">
+        <f-radio value=1 :name="'therapyType'" :currVal="currentData.data.type" @change="changeType($event)">治疗
+        </f-radio>
+        <f-radio value=2 :name="'therapyType'" :currVal="currentData.data.type" @change="changeType($event)">检验
+        </f-radio>
+        <f-radio value=3 :name="'therapyType'" :currVal="currentData.data.type" @change="changeType($event)">检查
+        </f-radio>
+      </div>
       <div>
         <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
         <button class="btn" @click="print_pre()">打印处方</button>
@@ -27,7 +34,7 @@
           <template v-if="item.is_match===1">
             <td>
               <InputNumber style="width:3.2rem" :value="item.num"
-                     @on-change="modify_medicine({key:'num',val:$event,index:index})"/>
+                           @on-change="modify_medicine({key:'num',val:$event,index:index})"/>
               <span class="unit_text">{{item.unit}}</span>
             </td>
             <td>{{item.price|priceFormat}}</td>
@@ -69,86 +76,106 @@
 </template>
 
 <script>
-  import {Select, Option, Input, InputNumber} from 'iview'
-  import saveTpl from '@/components/rootMiddle/saveRecipeTpl'
-  import {mapActions} from 'vuex'
+import {Select, Option, Input, InputNumber} from 'iview'
+import fRadio from '@/components/fRadio.vue'
+import saveTpl from '@/components/rootMiddle/saveRecipeTpl'
+import {mapActions} from 'vuex'
 
-  export default {
-    name: "therapyRecipe",
-    data() {
-      return {
-        showAddTpl: false
-      }
+export default {
+  name: "therapyRecipe",
+  data() {
+    return {
+      showAddTpl: false
+    }
+  },
+  computed: {
+    currentData: function () {
+      return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
     },
-    computed: {
-      currentData: function () {
-        return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
-      },
-    },
-    components: {
-      Select,
-      Option,
-      Input,
-      InputNumber,
-      saveTpl
-    },
-    watch: {
-      'currentData.data.items': {
-        deep: true,
-        handler: function (newVal, oldVal) {
-          let allPrice = 0;
-          newVal.map((item) => {
-            allPrice += Number(item.price) * Number(item.num);
-          });
-          setTimeout(() => {
-            this.modify_recipe({key: 'money', val: Number(allPrice).toFixed(2)})
-          })
-        }
-      }
-    },
-    methods: {
-      ...mapActions([
-        'cancel_recipe',
-        'cancel_medicine',
-        'modify_medicine',
-        'modify_recipe_detail',
-        'modify_recipe',
-        'change_print_pre',
-      ]),
-      print_pre: function(){
-        this.change_print_pre();
-      },
-      cancelRecipe() {
-        this.$Modal.confirm({
-          title: '提示',
-          content: '<p>确定删除该处方？</p>',
-          onOk: () => {
-            this.cancel_recipe();
-          },
-          onCancel: () => {
-            console.log("88")
-          }
+  },
+  components: {
+    Select,
+    Option,
+    Input,
+    InputNumber,
+    saveTpl,
+    fRadio
+  },
+  watch: {
+    'currentData.data.items': {
+      deep: true,
+      handler: function (newVal, oldVal) {
+        let allPrice = 0;
+        newVal.map((item) => {
+          allPrice += Number(item.price) * Number(item.num);
         });
-      },
-      saveTplData() {
-        if (this.currentData.data.items.length === 0) {
-          this.$Message.info("请先至少添加一个项目！");
-          return
-        }
-        let itemList = this.currentData.data.items;
-        for (var i = 0; i < itemList.length; i++) {
-          if (itemList[i].num === '' || itemList[i].num === 0) {
-            this.$Message.info("项目【" + itemList[i].name + "】的数量为空！")
-            return
-          }
-        }
-        this.showAddTpl = true;
-      },
-      hideTplShow() {
-        this.showAddTpl = false;
+        setTimeout(() => {
+          this.modify_recipe({key: 'money', val: Number(allPrice).toFixed(2)})
+        })
       }
     }
+  },
+  methods: {
+    ...mapActions([
+      'cancel_recipe',
+      'cancel_medicine',
+      'modify_medicine',
+      'modify_recipe_detail',
+      'modify_recipe',
+      'change_print_pre',
+      'clean_recipe'
+    ]),
+    print_pre() {
+      this.change_print_pre();
+    },
+    cancelRecipe() {
+      this.$Modal.confirm({
+        title: '提示',
+        content: '<p>确定删除该处方？</p>',
+        onOk: () => {
+          this.cancel_recipe();
+        },
+        onCancel: () => {
+
+        }
+      });
+    },
+    changeType(event) {
+      if (this.currentData.data.items.length === 0) {
+        this.modify_recipe_detail({key: 'type', val: Number(event.target.value)})
+      } else {
+        this.$Modal.confirm({
+          title: '提示',
+          content: '<p>切换项目类型将清空已选的项目，确认要切换?</p>',
+          onOk: () => {
+            this.modify_recipe_detail({key: 'type', val: Number(event.target.value)})
+            this.clean_recipe();
+          },
+          onCancel: () => {
+            this.$forceUpdate()
+          }
+        })
+      }
+    },
+    saveTplData() {
+      if (this.currentData.data.items.length === 0) {
+        this.$Message.info("请先至少添加一个项目！");
+        return
+      }
+      let itemList = this.currentData.data.items;
+      for (var i = 0; i < itemList.length; i++) {
+        if (itemList[i].num === '' || itemList[i].num === 0) {
+          this.$Message.info("项目【" + itemList[i].name + "】的数量为空！")
+          return
+        }
+      }
+      this.showAddTpl = true;
+    },
+    hideTplShow() {
+      this.showAddTpl = false;
+    }
   }
+}
 </script>
 
 <style scoped>
@@ -182,6 +209,7 @@
     flex: 1;
     align-self: center;
   }
+
   .unit_text {
     display: inline-block;
     min-width: 2rem;

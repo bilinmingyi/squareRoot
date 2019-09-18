@@ -152,6 +152,7 @@ export default {
             name: this.tplName,
             scope: Number(this.tplType),
             component: JSON.stringify(this.formatData(this.currentData.data.items, 4)),
+            type: this.currentData.data.type,
             doctor_remark: this.currentData.data.doctor_remark,
             diagnosis: this.diagnosis,
             diagnosis_xy: this.diagnosisXy,
