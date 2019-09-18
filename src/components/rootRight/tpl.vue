@@ -761,7 +761,7 @@ export default {
           chief_complaint: self.tplData.chief_complaint || "",
           present_illness: self.tplData.present_illness || "",
           allergic_history: self.tplData.allergic_history || "",
-          personal_history: self.tplData.past_history || "",
+          personal_history: self.tplData.personal_history || "",
           past_history: self.tplData.past_history || "",
           family_history: self.tplData.family_history || "",
           prophylactic_history: self.tplData.prophylactic_history || "",
