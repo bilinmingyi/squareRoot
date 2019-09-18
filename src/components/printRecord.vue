@@ -22,6 +22,8 @@
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">科别：{{department}}</div>
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">电话：{{patientData.mobile}}</div>
           </div>
+          <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
+            就诊时间：{{print_createTime|dateFormat('yyyy-MM-dd hh:mm')}}</div>
         </section>
         <section style="padding-top: 5px;font-size: 12px;letter-spacing: 1px">
           <div style="margin-bottom: 10px;margin-top: 10px;display: flex">
@@ -107,13 +109,9 @@
       </section>
     </section>
     <section style="color: #000000;" v-else>
-      <div
-        style="width: 100%;height: 35px;text-align: center;line-height: 35px;font-weight: bold;font-size: 20px;margin-bottom: 20px"
-      >{{clinicName}}病历
+      <div style="width: 100%;height: 35px;text-align: center;line-height: 35px;font-weight: bold;font-size: 20px;margin-bottom: 20px">{{clinicName}}病历
       </div>
-      <section
-        style="border-bottom: #000000 solid 2px;border-top: #000000 solid 2px;padding: 10px 0px;font-size: 12px;"
-      >
+      <section style="border-bottom: #000000 solid 2px;border-top: #000000 solid 2px;padding: 10px 0px;font-size: 12px;">
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
             <span style="font-weight: bolder">姓名：</span>
@@ -231,8 +229,8 @@
 </template>
 
 <script>
-import {mapState, mapActions} from "vuex";
-import {clinicName} from '@/assets/js/mapType.js'
+import { mapState, mapActions } from "vuex";
+import { clinicName } from '@/assets/js/mapType.js'
 
 export default {
   props: ["printFlag"],
@@ -250,28 +248,29 @@ export default {
       isYB: state => state.isYB,
       department: state => state.department,
       clinicType: state => state.clinicType,
-      clinic: state => state.clinic
+      clinic: state => state.clinic,
+      print_createTime: state => state.print_createTime
     }),
     examination() {
       // 计算检查结果
       var examination = this.recordData.examination;
       var ret = "";
       (examination.bloodpressure_num1 || examination.bloodpressure_num2) &&
-      (ret +=
-        "血压" +
-        examination.bloodpressure_num1 +
-        "/" +
-        examination.bloodpressure_num2 +
-        "mmHg，");
+        (ret +=
+          "血压" +
+          examination.bloodpressure_num1 +
+          "/" +
+          examination.bloodpressure_num2 +
+          "mmHg，");
       examination.bloodglucose &&
-      (ret += "血糖" + examination.bloodglucose + "mg/ml，");
+        (ret += "血糖" + examination.bloodglucose + "mg/ml，");
       examination.trioxypurine &&
-      (ret += "尿酸" + examination.trioxypurine + "umol/L，");
+        (ret += "尿酸" + examination.trioxypurine + "umol/L，");
       examination.heartrate &&
-      (ret += "心率" + examination.heartrate + "次/分，");
+        (ret += "心率" + examination.heartrate + "次/分，");
       examination.breathe && (ret += "呼吸" + examination.breathe + "次/分，");
       examination.animalheat &&
-      (ret += "体温" + examination.animalheat + "℃，");
+        (ret += "体温" + examination.animalheat + "℃，");
       examination.weight && (ret += "体重" + examination.weight + "kg，");
       examination.info && (ret += (ret ? '\n' : '') + examination.info);
       return ret;

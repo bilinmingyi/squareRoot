@@ -260,8 +260,7 @@
           <span v-show="recipeType==2">处方笺(中成药西药)</span>
           <span v-show="recipeType==3">{{clinicType == 6 ? '营养处方笺' : '处方笺(产品)'}}</span>
           <span v-if="recipeType==4">
-            <span v-if="currRecipeData.data.items[0].type==4">处方笺(项目)</span>
-            <span v-else>{{currRecipeData.data.items[0].type|therapyType}}单</span>
+            申请单
           </span>
           <span v-show="recipeType==6">处方笺(材料)</span>
         </div>
@@ -306,7 +305,8 @@
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;margin-right:10px;border-bottom:1px solid #000000;">{{department}}</div>
           </div>
         </div>
-        <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;border-bottom:1px solid #000000;padding-left:10px;padding-bottom:2px;">
+        <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;border-bottom:1px solid #000000;padding-left:10px;padding-bottom:2px;"
+          v-if="recipeType!=4">
           过敏史：{{patientData.allergic_history}}</div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;border-bottom:1px solid #000000;padding-left:10px;padding-bottom:2px;">
           电话：{{patientData.mobile}}</div>
@@ -424,16 +424,16 @@
         </section>
         <div style="width:100%;text-align:center;margin-top:10px;padding-bottom:20px;">(以下空白)</div>
       </section>
-      <div :style="bottomStyle" id="bottomContent">
+      <div :style="bottomStyle" id="bottomContent" v-if="recipeType!=4">
         <section style="border-bottom:1px solid #000000;font-size: 12px;flex-direction: row;-webkit-flex-direction: row;">
-          <div style="font-size: 12px;border-bottom:1px solid #000000;padding-bottom:5px;;">若药品已取则无法退费</div>
-          <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
+          <div style="font-size: 12px;padding-bottom:5px;;" v-show="recipeType!=4">若药品已取则无法退费</div>
+          <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex; border-top:1px solid #000000;padding-top:5px;">
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
               <div style="text-align:justify;text-align-last: justify;width:48px;text-justify:inter-ideograph;">医生</div>:<div
                 style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;padding-left:5px;">{{doctorName}}</div>
             </div>
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
-              <div style="text-align:justify;text-align-last: justify;width:48px;margin-left:5px;text-justify:inter-ideograph;">金额</div>:<div
+              <div style="text-align:justify;text-align-last: justify;width:48px;margin-left:5px;text-justify:inter-ideograph;">药品金额</div>:<div
                 style="padding-left:5px;flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;">{{currRecipeData.money}}元</div>
             </div>
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
@@ -452,16 +452,44 @@
             </div>
           </div>
           <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;padding-right:10px;justify-content:space-between;">
-            <div style="flex: 2;-webkit-flex: 2;-ms-flex: 2; display: flex;"><span>打印时间：</span>{{Date.now()|dateFormat('yyyy-MM-dd hh:mm:ss') }}</div>
+            <div style="flex: 2;-webkit-flex: 2;-ms-flex: 2; display: flex;"><span>打印时间：</span>{{Date.now()|dateFormat('yyyy-MM-dd hh:mm') }}</div>
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;"><span>处方当日有效</span></div>
           </div>
         </section>
-        <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
-          <div style="font-size:12px;padding-top:5px;">地址：
+        <div style="text-align:center;width:100%;">
+          <span style="font-size:12px;padding-top:5px;padding-right:5px;">地址：
             {{(clinic.city_name ? clinic.city_name + '市' : '') +
                 (clinic.county_name ? clinic.county_name + '区' : '') +
-                clinic.address}}</div>
-          <div style="font-size:12px;padding-top:5px;" v-if="clinic.customer_phone">服务热线：{{clinic.customer_phone}}</div>
+                clinic.address}}</span>
+          <span style="font-size:12px;padding-top:5px;" v-if="clinic.customer_phone">服务热线：{{clinic.customer_phone}}</span>
+        </div>
+      </div>
+      <div :style="bottomStyle" id="bottomContent" v-else>
+        <section style="border-bottom:1px solid #000000;font-size: 12px;flex-direction: row;-webkit-flex-direction: row;height:105px;">
+
+          <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex; border-top:1px solid #000000;">
+
+          </div>
+          <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;margin-top:10px;">
+            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
+              <div>申请医生</div>:<div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;">{{doctorName}}</div>
+            </div>
+            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
+              <div style="margin-left:5px;">医生签名</div>:<div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;"></div>
+            </div>
+            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
+              <div style="width:48px;margin-left:5px;padding-left:5px;text-align:right;">金额</div>:<div
+                style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;">{{currRecipeData.money}}元</div>
+            </div>
+          </div>
+
+        </section>
+        <div style="text-align:center;width:100%;">
+          <span style="font-size:12px;padding-top:5px;padding-right:5px;">地址：
+            {{(clinic.city_name ? clinic.city_name + '市' : '') +
+                (clinic.county_name ? clinic.county_name + '区' : '') +
+                clinic.address}}</span>
+          <span style="font-size:12px;padding-top:5px;" v-if="clinic.customer_phone">服务热线：{{clinic.customer_phone}}</span>
         </div>
       </div>
     </div>
@@ -478,8 +506,7 @@ export default {
       clinicName: clinicName,
       sexOptions: [
         { code: 1, name: '男' },
-        { code: 2, name: '女' },
-        { code: 0, name: '保密' }
+        { code: 2, name: '女' }
       ],
       clinicAddress: '',
       customerPhone: '',
