@@ -474,6 +474,7 @@ export default {
           case 4:
             searchMed({
               ids: ids,
+              type: recipe.data.type ? recipe.data.type : 1,
               status: 1
             }, 4).then(data => {
               let recipeItems = recipe.data.items, responeItems = data.data;

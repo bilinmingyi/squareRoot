@@ -238,13 +238,12 @@ const actions = {
           unit: item.unit,
           remark: !item.remark ? '' : item.remark,
           item_id: item.id,
-          name:
-            item.alias_name != '' && item.alias_name != null
-              ? item.alias_name
-              : item.name,
+          name: item.alias_name ? item.alias_name : item.name,
           num: !item.num ? 0 : item.num,
           price: item.price,
+          sample: item.sample,
           type: item.type,
+          position: item.position,
           usage: !item.usage ? '' : item.usage,
           types: 4,
           is_match: item.is_match === undefined ? 1 : item.is_match

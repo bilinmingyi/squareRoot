@@ -295,6 +295,7 @@
             case 4:
               resultList.push({
                 'recipe_type': item.type,
+                'therapy_type': item.data.type,
                 'doctor_remark': item.data.doctor_remark,
                 "therapy_list": item.data.items
               })

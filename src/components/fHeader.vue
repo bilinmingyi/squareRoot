@@ -180,7 +180,7 @@
                   this.change_curr_tab(index)
                   throw new Error("药品名不匹配:请删除[" + med.name + "]")
                 }
-                if (med.num <= 0) {
+                if ((item.type != 4 || item.data.type == 1) && med.num <= 0) {
                   this.change_curr_tab(index)
                   throw new Error("请重新填写[" + med.name + "]的数量！")
                 }

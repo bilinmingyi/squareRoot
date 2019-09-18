@@ -389,6 +389,10 @@ export default {
         params = Object.assign(params, {category: recipeObj.category})
       }
 
+      if (recipeObj.recipe_type === 4) {
+        params = Object.assign(params, {type: recipeObj.therapy_type})
+      }
+
       let res = await checkIsMatch(
         params,
         type,

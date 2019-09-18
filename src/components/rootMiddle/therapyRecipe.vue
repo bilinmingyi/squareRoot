@@ -21,7 +21,9 @@
         <tr>
           <th>序号</th>
           <th>项目名称</th>
-          <th>数量</th>
+          <th v-if="currentData.data.type == 1">数量</th>
+          <th v-if="currentData.data.type == 2">标本</th>
+          <th v-if="currentData.data.type == 3">部位</th>
           <th>单价</th>
           <th>备注</th>
           <th>操作</th>
@@ -32,10 +34,17 @@
           <td>{{index+1}}</td>
           <td>{{item.name}}</td>
           <template v-if="item.is_match===1">
-            <td>
+            <td v-if="currentData.data.type == 1">
               <InputNumber style="width:3.2rem" :value="item.num"
                            @on-change="modify_medicine({key:'num',val:$event,index:index})"/>
               <span class="unit_text">{{item.unit}}</span>
+            </td>
+            <td v-if="currentData.data.type == 2">
+              {{item.sample}}
+            </td>
+            <td v-if="currentData.data.type == 3" style="width: 150px">
+              <Input type="text" :value="item.position"
+                     @on-change="modify_medicine({key:'position',val:$event.target.value,index:index})"/>
             </td>
             <td>{{item.price|priceFormat}}</td>
             <td>
@@ -164,7 +173,7 @@ export default {
       }
       let itemList = this.currentData.data.items;
       for (var i = 0; i < itemList.length; i++) {
-        if (itemList[i].num === '' || itemList[i].num === 0) {
+        if ((itemList[i].num === '' || itemList[i].num === 0) && this.currentData.data.type == 1) {
           this.$Message.info("项目【" + itemList[i].name + "】的数量为空！")
           return
         }
