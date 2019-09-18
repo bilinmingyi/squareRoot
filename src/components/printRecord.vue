@@ -7,7 +7,7 @@
           <div style="width: 100%;height: 32px;text-align: center;line-height: 32px;font-weight: bold;font-size: 20px;">
             {{clinicName}}
           </div>
-          <div style="width: 100%;text-align: center;font-size: 16px;font-weight: bold">诊所病历</div>
+          <div style="width: 100%;text-align: center;font-size: 16px;font-weight: bold">门诊病历</div>
         </section>
         <section style="font-size: 12px;margin: 5px 0;">
           <div style="display: flex;width: 100%;margin-bottom: 12px;">
@@ -54,7 +54,7 @@
             <div style="width: 80px;text-align: justify;text-align-last: justify;">[预防接种史]：</div>
             <div style="flex: 1">{{recordData.prophylactic_history}}</div>
           </div>
-          <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('examination')">
+          <div style="margin-bottom: 10px;margin-top: 10px;display: flex">
             <div style="width: 80px;text-align: justify;text-align-last: justify;">[体格检查]：</div>
             <div style="flex: 1;">
               <div class="menu_big_input">
@@ -64,7 +64,7 @@
               </div>
             </div>
           </div>
-          <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('auxiliary_examination')">
+          <div style="margin-bottom: 10px;margin-top: 10px;display: flex">
             <div style="width: 80px;text-align: justify;text-align-last: justify;">[辅助检查]：</div>
             <div style="flex: 1">{{recordData.auxiliary_examination}}</div>
           </div>
