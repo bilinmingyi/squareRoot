@@ -520,14 +520,14 @@ export default {
       customerPhone: '',
       HeightStyle: {
         fontSize: '12px',
-        minHeight: '360px',
+        minHeight: '370px',
         position: 'relative',
         bottom: '0'
       },
       HeightStyle2: {
         fontSize: '12px',
-        minHeight: '355px',
-        position: 'relative',
+        minHeight: '385px',
+        position: 'absolute',
         bottom: '0'
       },
       bottomStyle: {
