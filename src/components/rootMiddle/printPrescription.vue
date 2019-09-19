@@ -307,7 +307,7 @@
         </div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;border-bottom:1px solid #000000;padding-left:10px;padding-bottom:2px;"
           v-if="recipeType!=4">
-          过敏史：{{patientData.allergic_history}}</div>
+          过敏史：{{recordData.allergic_history}}</div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;border-bottom:1px solid #000000;padding-left:10px;padding-bottom:2px;">
           电话：{{patientData.mobile}}</div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;border-bottom:1px solid #000000;padding-left:10px;padding-bottom:2px;">
