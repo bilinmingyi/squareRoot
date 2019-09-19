@@ -1,6 +1,6 @@
 <template>
   <div id="print" style="display: none;">
-    <div v-if="clinic.id==30">
+    <div v-if="clinic.id!=30">
       <section style="color: #000000;">
         <section style=" width: 100%;height: 70px;position: relative;">
           <div style="width: 100%;height: 35px;text-align: center;line-height: 35px;font-weight: bold;font-size: 20px;">
@@ -581,7 +581,7 @@ export default {
         doc.write("<div>" + el.innerHTML + "</div>");
         doc.close();
         iframe.contentWindow.focus();
-        if (self.clinic.id != 30) {
+        if (self.clinic.id == 30) {
           //兼容底部的问题
           iframe.contentWindow.document.getElementById(
             'bottomContent'
