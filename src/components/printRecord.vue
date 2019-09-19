@@ -93,7 +93,7 @@
         <section style="font-size: 12px;display: flex;margin-top: 20px">
           <div style="flex: 1;"></div>
           <div style="width: 150px">
-            <span>{{clinicType == 6 ? '营养师' : '医生'}}签名：{{doctorName}}</span>
+            <span>{{clinicType == 6 ? '营养师' : '医生'}}签名：</span>
           </div>
         </section>
         <section style="font-size: 12px;display: flex;margin-top: 5px;">

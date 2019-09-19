@@ -256,13 +256,13 @@
       <section>
         <div style="width: 100%;height: 35px;text-align: center;line-height: 35px;font-weight: bold;font-size: 20px;">{{clinicName}}</div>
         <div style="width: 100%;height: 24px;text-align: center;line-height: 24px;font-weight: bold;font-size: 16px;">
-          <span v-show="recipeType==1">处方笺(中药)</span>
-          <span v-show="recipeType==2">处方笺(中成药西药)</span>
-          <span v-show="recipeType==3">{{clinicType == 6 ? '营养处方笺' : '处方笺(产品)'}}</span>
+          <span v-show="recipeType==1">处方笺</span>
+          <span v-show="recipeType==2">处方笺</span>
+          <span v-show="recipeType==3">{{clinicType == 6 ? '营养处方笺' : '处方笺'}}</span>
           <span v-if="recipeType==4">
             申请单
           </span>
-          <span v-show="recipeType==6">处方笺(材料)</span>
+          <span v-show="recipeType==6">处方笺</span>
         </div>
       </section>
       <section style="border-top: #000000 solid 1px;font-size: 12px;">
@@ -300,7 +300,13 @@
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1; display: flex;"><span>门诊号：</span>
             <div style="width:65%;border-bottom:1px solid #000000;">{{orderSeqno}}</div>
           </div>
-          <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1; "></div>
+          <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1; ">
+            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex; ">
+              <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1; display: flex;" v-if="recipeType==4"><span>时间：</span>
+                <div style="width:65%;border-bottom:1px solid #000000;">{{print_createTime|dateFormat('yyyy-MM-dd hh:mm')}}</div>
+              </div>
+            </div>
+          </div>
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display: flex;"><span>科室：</span>
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;margin-right:10px;border-bottom:1px solid #000000;">{{department}}</div>
           </div>
@@ -472,14 +478,16 @@
           </div>
           <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;margin-top:10px;">
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
-              <div>申请医生</div>:<div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;">{{doctorName}}</div>
+              <div>申请医生</div>:<div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;"><span
+                  style="padding-left:15px;">{{doctorName}}</span></div>
             </div>
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
               <div style="margin-left:5px;">医生签名</div>:<div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;"></div>
             </div>
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
               <div style="width:48px;margin-left:5px;padding-left:5px;text-align:right;">金额</div>:<div
-                style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;">{{currRecipeData.money}}元</div>
+                style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;"><span style="padding-left:15px;">{{currRecipeData.money}}元</span>
+              </div>
             </div>
           </div>
 
