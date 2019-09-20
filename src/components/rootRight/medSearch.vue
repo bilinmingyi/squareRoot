@@ -140,7 +140,6 @@ export default {
       this.firstSearch();
     }
   },
-
   created() {
     this.firstSearch();
   },
