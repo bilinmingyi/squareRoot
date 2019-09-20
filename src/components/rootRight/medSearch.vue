@@ -234,7 +234,7 @@ export default {
           let isCombine = self.tabType == 5 ? 1: 0
           if (self.recipeType == 4) {
             var resultList = res[1].data.filter(item => {
-              return item.is_combine == isCombine
+              return item.is_combine == isCombine && item.type == self.therapyType
             })
           } else {
             var resultList = res[1].data
