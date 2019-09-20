@@ -138,7 +138,8 @@
                   <span style="margin-right: 20px;" v-if="itemOne.type==2&&therapyType==2&&itemOne.sample">标本：{{itemOne.sample}}</span>
                   <span style="margin-right: 20px;" v-if="itemOne.type==3&&itemOne.position&&therapyType==3">部位：{{itemOne.position}}</span>
                   <!-- <span style="padding-right: 20px;">{{itemOne.price}}元/次</span> -->
-                  <span v-if="therapyType==1">{{itemOne.num}}次</span>
+                  <span style="margin-right: 20px;" v-if="therapyType==1">{{itemOne.num}}次</span>
+                  <span v-if="itemOne.remark">备注：{{itemOne.remark}}</span>
                 </div>
               </div>
             </div>
@@ -284,8 +285,8 @@
           <div>处方号：{{print_createTime|dateFormat('yyyyMMdd')}}{{prescriptionNum}}</div>
         </div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;padding-left:10px;padding-right:10px;justify-content:space-between;">
-          <div style="width:39%; display: flex;align-items:center;"><span>姓名：</span>
-            <div style="width:60%;border-bottom:1px solid #000000;">{{patientData.name}}</div>
+          <div style="width:39%; display: flex;align-items:center;"><span style="width:48px;text-align:left;">姓名：</span>
+            <div style="width:65%;border-bottom:1px solid #000000;">{{patientData.name}}</div>
           </div>
           <div style="width:33%; display: flex;align-items:center;"><span>性别：</span>
             <div v-for="(item,index) in sexOptions" :key="item.code">
@@ -299,7 +300,7 @@
           </div>
         </div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;padding-left:10px;padding-right:10px;justify-content:space-between;">
-          <div style="width:39%; display: flex;"><span>门诊号：</span>
+          <div style="width:39%; display: flex;"><span style="width:48px;">门诊号：</span>
             <div style="width:65%;border-bottom:1px solid #000000;">{{orderSeqno}}</div>
           </div>
           <div style="width:33%;">
@@ -390,7 +391,8 @@
                 <span style="margin-right: 20px;" v-if="itemOne.type==2&&therapyType==2&&itemOne.sample">标本：{{itemOne.sample}}</span>
                 <span style="margin-right: 20px;" v-if="itemOne.type==3&&itemOne.position&&therapyType==3">部位：{{itemOne.position}}</span>
                 <!-- <span style="padding-right: 20px;">{{itemOne.price}}元/次</span> -->
-                <span v-if="therapyType==1">{{itemOne.num}}次</span>
+                <span style="margin-right: 20px;" v-if="therapyType==1">{{itemOne.num}}次</span>
+                <span v-if="itemOne.remark">备注：{{itemOne.remark}}</span>
               </div>
             </div>
           </div>
