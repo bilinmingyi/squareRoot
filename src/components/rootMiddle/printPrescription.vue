@@ -284,10 +284,10 @@
           <div>处方号：{{print_createTime|dateFormat('yyyyMMdd')}}{{prescriptionNum}}</div>
         </div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;padding-left:10px;padding-right:10px;justify-content:space-between;">
-          <div style="width:38%; display: flex;align-items:center;"><span>姓名：</span>
+          <div style="width:39%; display: flex;align-items:center;"><span>姓名：</span>
             <div style="width:60%;border-bottom:1px solid #000000;">{{patientData.name}}</div>
           </div>
-          <div style="width:34%; display: flex;align-items:center;"><span>性别：</span>
+          <div style="width:33%; display: flex;align-items:center;"><span>性别：</span>
             <div v-for="(item,index) in sexOptions" :key="item.code">
               <label style="display: flex;align-items:center;height:20px;" v-if="item.code==patientData.sex"><input type="checkbox"
                   checked>{{item.name}}</label>
@@ -299,10 +299,10 @@
           </div>
         </div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;padding-left:10px;padding-right:10px;justify-content:space-between;">
-          <div style="width:38%; display: flex;"><span>门诊号：</span>
+          <div style="width:39%; display: flex;"><span>门诊号：</span>
             <div style="width:65%;border-bottom:1px solid #000000;">{{orderSeqno}}</div>
           </div>
-          <div style="width:34%;">
+          <div style="width:33%;">
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex; ">
               <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1; display: flex;"><span>时间：</span>
                 <div style="width:65%;border-bottom:1px solid #000000;">{{print_createTime|dateFormat('yyyy-MM-dd hh:mm')}}</div>
