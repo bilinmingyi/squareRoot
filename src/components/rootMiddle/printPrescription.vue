@@ -547,7 +547,7 @@ export default {
     ...mapGetters(["currRecipeData"]),
     ...mapState(["patientData", "recordData", "printPre", 'orderSeqno', 'doctorName', "isYB", "department", "ybCardNo", 'clinicType', 'clinic', 'print_createTime']),
     recipeType: function () {
-      console.log(this.currRecipeData)
+      // console.log(this.currRecipeData)
       return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
     },
     category: function () {
