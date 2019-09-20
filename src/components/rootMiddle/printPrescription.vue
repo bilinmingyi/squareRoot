@@ -137,8 +137,8 @@
                   <span style="margin-right: 20px;">{{itemOne.name}}</span>
                   <span style="margin-right: 20px;" v-if="itemOne.type==2&&therapyType==2&&itemOne.sample">标本：{{itemOne.sample}}</span>
                   <span style="margin-right: 20px;" v-if="itemOne.type==3&&itemOne.position&&therapyType==3">部位：{{itemOne.position}}</span>
-                  <span style="padding-right: 20px;">{{itemOne.price}}元/次</span>
-                  <span>{{itemOne.num}}次</span>
+                  <!-- <span style="padding-right: 20px;">{{itemOne.price}}元/次</span> -->
+                  <span v-if="therapyType==1">{{itemOne.num}}次</span>
                 </div>
               </div>
             </div>
@@ -284,10 +284,10 @@
           <div>处方号：{{print_createTime|dateFormat('yyyyMMdd')}}{{prescriptionNum}}</div>
         </div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;padding-left:10px;padding-right:10px;justify-content:space-between;">
-          <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1; display: flex;align-items:center;"><span>姓名：</span>
+          <div style="width:38%; display: flex;align-items:center;"><span>姓名：</span>
             <div style="width:60%;border-bottom:1px solid #000000;">{{patientData.name}}</div>
           </div>
-          <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1; display: flex;align-items:center;"><span>性别：</span>
+          <div style="width:34%; display: flex;align-items:center;"><span>性别：</span>
             <div v-for="(item,index) in sexOptions" :key="item.code">
               <label style="display: flex;align-items:center;height:20px;" v-if="item.code==patientData.sex"><input type="checkbox"
                   checked>{{item.name}}</label>
@@ -299,12 +299,12 @@
           </div>
         </div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;padding-left:10px;padding-right:10px;justify-content:space-between;">
-          <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1; display: flex;"><span>门诊号：</span>
+          <div style="width:38%; display: flex;"><span>门诊号：</span>
             <div style="width:65%;border-bottom:1px solid #000000;">{{orderSeqno}}</div>
           </div>
-          <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1; ">
+          <div style="width:34%;">
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex; ">
-              <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1; display: flex;" v-if="recipeType==4"><span>时间：</span>
+              <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1; display: flex;"><span>时间：</span>
                 <div style="width:65%;border-bottom:1px solid #000000;">{{print_createTime|dateFormat('yyyy-MM-dd hh:mm')}}</div>
               </div>
             </div>
@@ -389,8 +389,8 @@
                 <span style="margin-right: 20px;">{{itemOne.name}}</span>
                 <span style="margin-right: 20px;" v-if="itemOne.type==2&&therapyType==2&&itemOne.sample">标本：{{itemOne.sample}}</span>
                 <span style="margin-right: 20px;" v-if="itemOne.type==3&&itemOne.position&&therapyType==3">部位：{{itemOne.position}}</span>
-                <span style="padding-right: 20px;">{{itemOne.price}}元/次</span>
-                <span>{{itemOne.num}}次</span>
+                <!-- <span style="padding-right: 20px;">{{itemOne.price}}元/次</span> -->
+                <span v-if="therapyType==1">{{itemOne.num}}次</span>
               </div>
             </div>
           </div>
