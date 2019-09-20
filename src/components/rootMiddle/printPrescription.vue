@@ -131,9 +131,9 @@
           </div>
           <div v-show="recipeType==4">
             <div style="width: 100%;height: auto;margin-bottom: 15px;">
-              <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;" v-for="(itemOne,index) in (currRecipeData.data.items||[])" :key="index">
-                <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
-                  <span style="margin-right: 8px;">{{index+1}}、</span>
+              <div style="width: 100%;" v-for="(itemOne,index) in (currRecipeData.data.items||[])" :key="index" >
+                <div style="height: auto;margin-bottom: 5px;" v-if="printIndex == null || printIndex == index">
+                  <span style="margin-right: 8px;">{{printIndex == null ? (index+1) : 1}}、</span>
                   <span style="margin-right: 20px;">{{itemOne.name}}</span>
                   <span style="margin-right: 20px;" v-if="itemOne.type==2&&therapyType==2&&itemOne.sample">标本：{{itemOne.sample}}</span>
                   <span style="margin-right: 20px;" v-if="itemOne.type==3&&itemOne.position&&therapyType==3">部位：{{itemOne.position}}</span>
@@ -223,14 +223,14 @@
           </div>
           <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
-              <span style="font-weight: bolder">处方总金额（元）：{{currRecipeData.money}}</span>
+              <span style="font-weight: bolder">处方总金额（元）：{{currRecipeData.money}}元</span>
             </div>
           </div>
         </section>
         <section style="font-size: 12px;padding: 10px 0px;flex-direction: row;-webkit-flex-direction: row;" v-show="recipeType==4">
           <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
-              <span style="font-weight: bolder">总金额（元）：{{currRecipeData.money}}</span>
+              <span style="font-weight: bolder">总金额（元）：{{printIndex == null ? currRecipeData.money : currRecipeData.data.items[printIndex].num*currRecipeData.data.items[printIndex].price}}元</span>
             </div>
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
               <span style="font-weight: bolder">医生：</span>
@@ -383,9 +383,9 @@
         </div>
         <div v-show="recipeType==4">
           <div style="width: 100%;height: auto;margin-bottom:  5px;">
-            <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;" v-for="(itemOne,index) in (currRecipeData.data.items||[])" :key="index">
-              <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
-                <span style="margin-right: 8px;">{{index+1}}、</span>
+            <div style="width: 100%;" v-for="(itemOne,index) in (currRecipeData.data.items||[])" :key="index" >
+              <div style="height: auto;margin-bottom: 5px;" v-if="printIndex == null || printIndex == index">
+                <span style="margin-right: 8px;">{{printIndex == null ? (index+1) : '1'}}、</span>
                 <span style="margin-right: 20px;">{{itemOne.name}}</span>
                 <span style="margin-right: 20px;" v-if="itemOne.type==2&&therapyType==2&&itemOne.sample">标本：{{itemOne.sample}}</span>
                 <span style="margin-right: 20px;" v-if="itemOne.type==3&&itemOne.position&&therapyType==3">部位：{{itemOne.position}}</span>
@@ -490,7 +490,9 @@
             </div>
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
               <div style="width:48px;margin-left:5px;padding-left:5px;text-align:right;">金额</div>:<div
-                style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;"><span style="padding-left:15px;">{{currRecipeData.money}}元</span>
+                style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;"><span style="padding-left:15px;">
+              {{printIndex == null ? currRecipeData.money : currRecipeData.data.items[printIndex].num*currRecipeData.data.items[printIndex].price}}元
+            </span>
               </div>
             </div>
           </div>
@@ -545,7 +547,7 @@ export default {
 
   computed: {
     ...mapGetters(["currRecipeData"]),
-    ...mapState(["patientData", "recordData", "printPre", 'orderSeqno', 'doctorName', "isYB", "department", "ybCardNo", 'clinicType', 'clinic', 'print_createTime']),
+    ...mapState(["patientData", "recordData", "printPre", "printIndex", 'orderSeqno', 'doctorName', "isYB", "department", "ybCardNo", 'clinicType', 'clinic', 'print_createTime']),
     recipeType: function () {
       // console.log(this.currRecipeData)
       return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;

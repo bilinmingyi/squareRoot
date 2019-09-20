@@ -74,6 +74,9 @@ const mutations = {
   [mutationTypes.CHANGE_PRINT_PRE](state) {
     state.printPre = state.printPre === true ? false : true
   },
+  [mutationTypes.CHANGE_PRINT_INDEX](state, index) {
+    state.printIndex = index;
+  },
   [mutationTypes.INIT_RECIPE](state, list) {
     state.recipeList = list
   },
