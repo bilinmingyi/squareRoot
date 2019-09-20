@@ -141,7 +141,6 @@ export default {
     },
     saveHistory() {
       let recipe = this.recipeData;
-      console.log(recipe)
       let type = recipe.recipe_type;
       let map = this.mapList;
       let arr = recipe[map[type]];
@@ -152,6 +151,8 @@ export default {
         this.modify_recipe_detail({ key: 'is_cloud', val: Number(recipe.is_cloud)});
       } else if(type == 2 || type == 3) {
         this.modify_recipe_detail({ key: 'is_cloud', val: Number(recipe.is_cloud)});
+      } else if(type == 4){
+        this.modify_recipe_detail({ key: 'type', val: Number(recipe.therapy_type)});
       }
       if(type == 2){
         arr.forEach(item => {
@@ -217,19 +218,19 @@ export default {
   text-align: center !important;
 }
 .saveBtn {
-  font-size: 16px;
+  font-size: 0.875rem;
   color: #ffffff;
   font-weight: bold;
-  width: 140px;
+  width: 7.5rem;
   text-align: center;
-  padding: 9px 0;
+  padding: 0.375rem 0;
   background: #5096e0;
-  border-radius: 100px;
+  border-radius: 6.25rem;
   border: none;
 }
 .cancelBtn {
   background: #ffffff;
-  border: 1px solid #5096e0;
+  border: 0.0625rem solid #5096e0;
   color: #5096e0;
 }
 .display-flex {
