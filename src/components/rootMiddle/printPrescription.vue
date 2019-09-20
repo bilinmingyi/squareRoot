@@ -10,7 +10,7 @@
             <span v-show="recipeType==1">中药处方笺</span>
             <span v-show="recipeType==2">中成药西药笺</span>
             <span v-show="recipeType==3">{{clinicType == 6 ? '营养' : '产品'}}处方笺</span>
-            <span v-show="recipeType==4">项目处方笺</span>
+            <span v-show="recipeType==4">{{therapyType|therapyType}}处方笺</span>
             <span v-show="recipeType==6">材料处方笺</span>
           </div>
         </section>
@@ -134,8 +134,10 @@
               <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;" v-for="(itemOne,index) in (currRecipeData.data.items||[])" :key="index">
                 <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
                   <span style="margin-right: 8px;">{{index+1}}、</span>
-                  <span style="margin-right: 30px;">{{itemOne.name}}</span>
-                  <span style="padding-right: 30px;">{{itemOne.price}}元/次</span>
+                  <span style="margin-right: 20px;">{{itemOne.name}}</span>
+                  <span style="margin-right: 20px;" v-if="itemOne.type==2&&therapyType==2&&itemOne.sample">标本：{{itemOne.sample}}</span>
+                  <span style="margin-right: 20px;" v-if="itemOne.type==3&&itemOne.position&&therapyType==3">部位：{{itemOne.position}}</span>
+                  <span style="padding-right: 20px;">{{itemOne.price}}元/次</span>
                   <span>{{itemOne.num}}次</span>
                 </div>
               </div>
@@ -256,14 +258,13 @@
       <section>
         <div style="width: 100%;height: 35px;text-align: center;line-height: 35px;font-weight: bold;font-size: 20px;">{{clinicName}}</div>
         <div style="width: 100%;height: 24px;text-align: center;line-height: 24px;font-weight: bold;font-size: 16px;">
-          <span v-show="recipeType==1">处方笺(中药)</span>
-          <span v-show="recipeType==2">处方笺(中成药西药)</span>
-          <span v-show="recipeType==3">{{clinicType == 6 ? '营养处方笺' : '处方笺(产品)'}}</span>
+          <span v-show="recipeType==1">处方笺</span>
+          <span v-show="recipeType==2">处方笺</span>
+          <span v-show="recipeType==3">{{clinicType == 6 ? '营养处方笺' : '处方笺'}}</span>
           <span v-if="recipeType==4">
-            <span v-if="currRecipeData.data.items[0].type==4">处方笺(项目)</span>
-            <span v-else>{{currRecipeData.data.items[0].type|therapyType}}单</span>
+            申请单
           </span>
-          <span v-show="recipeType==6">处方笺(材料)</span>
+          <span v-show="recipeType==6">处方笺</span>
         </div>
       </section>
       <section style="border-top: #000000 solid 1px;font-size: 12px;">
@@ -301,19 +302,26 @@
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1; display: flex;"><span>门诊号：</span>
             <div style="width:65%;border-bottom:1px solid #000000;">{{orderSeqno}}</div>
           </div>
-          <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1; "></div>
+          <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1; ">
+            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex; ">
+              <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1; display: flex;" v-if="recipeType==4"><span>时间：</span>
+                <div style="width:65%;border-bottom:1px solid #000000;">{{print_createTime|dateFormat('yyyy-MM-dd hh:mm')}}</div>
+              </div>
+            </div>
+          </div>
           <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display: flex;"><span>科室：</span>
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;margin-right:10px;border-bottom:1px solid #000000;">{{department}}</div>
           </div>
         </div>
-        <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;border-bottom:1px solid #000000;padding-left:10px;padding-bottom:2px;">
-          过敏史：{{patientData.allergic_history}}</div>
+        <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;border-bottom:1px solid #000000;padding-left:10px;padding-bottom:2px;"
+          v-if="recipeType!=4">
+          过敏史：{{recordData.allergic_history}}</div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;border-bottom:1px solid #000000;padding-left:10px;padding-bottom:2px;">
           电话：{{patientData.mobile}}</div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;border-bottom:1px solid #000000;padding-left:10px;padding-bottom:2px;">
           临床诊断：{{recordData.diagnosis}}&nbsp;{{recordData.diagnosis_xy}}</div>
       </section>
-      <section :style="HeightStyle" id="content">
+      <section :style="recipeType!=4?HeightStyle:HeightStyle2" id="content">
         <div style=" font-size: 18px;font-weight:bolder;">
           <span v-show="recipeType==1 || recipeType==2">Rp：</span>
           <i style="font-weight: normal;font-size: 12px;" v-show="recipeType==1">
@@ -378,8 +386,10 @@
             <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;" v-for="(itemOne,index) in (currRecipeData.data.items||[])" :key="index">
               <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
                 <span style="margin-right: 8px;">{{index+1}}、</span>
-                <span style="margin-right: 30px;">{{itemOne.name}}</span>
-                <span style="padding-right: 30px;">{{itemOne.price}}元/次</span>
+                <span style="margin-right: 20px;">{{itemOne.name}}</span>
+                <span style="margin-right: 20px;" v-if="itemOne.type==2&&therapyType==2&&itemOne.sample">标本：{{itemOne.sample}}</span>
+                <span style="margin-right: 20px;" v-if="itemOne.type==3&&itemOne.position&&therapyType==3">部位：{{itemOne.position}}</span>
+                <span style="padding-right: 20px;">{{itemOne.price}}元/次</span>
                 <span>{{itemOne.num}}次</span>
               </div>
             </div>
@@ -424,16 +434,16 @@
         </section>
         <div style="width:100%;text-align:center;margin-top:10px;padding-bottom:20px;">(以下空白)</div>
       </section>
-      <div :style="bottomStyle" id="bottomContent">
+      <div :style="bottomStyle" id="bottomContent" v-if="recipeType!=4">
         <section style="border-bottom:1px solid #000000;font-size: 12px;flex-direction: row;-webkit-flex-direction: row;">
-          <div style="font-size: 12px;border-bottom:1px solid #000000;padding-bottom:5px;;">若药品已取则无法退费</div>
-          <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
+          <div style="font-size: 12px;padding-bottom:5px;;" v-show="recipeType!=4">若药品已取则无法退费</div>
+          <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex; border-top:1px solid #000000;padding-top:5px;">
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
               <div style="text-align:justify;text-align-last: justify;width:48px;text-justify:inter-ideograph;">医生</div>:<div
                 style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;padding-left:5px;">{{doctorName}}</div>
             </div>
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
-              <div style="text-align:justify;text-align-last: justify;width:48px;margin-left:5px;text-justify:inter-ideograph;">金额</div>:<div
+              <div style="text-align:justify;text-align-last: justify;width:48px;margin-left:5px;text-justify:inter-ideograph;">药品金额</div>:<div
                 style="padding-left:5px;flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;">{{currRecipeData.money}}元</div>
             </div>
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
@@ -452,16 +462,46 @@
             </div>
           </div>
           <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;padding-right:10px;justify-content:space-between;">
-            <div style="flex: 2;-webkit-flex: 2;-ms-flex: 2; display: flex;"><span>打印时间：</span>{{Date.now()|dateFormat('yyyy-MM-dd hh:mm:ss') }}</div>
+            <div style="flex: 2;-webkit-flex: 2;-ms-flex: 2; display: flex;"><span>打印时间：</span>{{Date.now()|dateFormat('yyyy-MM-dd hh:mm') }}</div>
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;"><span>处方当日有效</span></div>
           </div>
         </section>
-        <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
-          <div style="font-size:12px;padding-top:5px;">地址：
+        <div style="text-align:center;width:100%;">
+          <span style="font-size:12px;padding-top:5px;padding-right:5px;">地址：
             {{(clinic.city_name ? clinic.city_name + '市' : '') +
                 (clinic.county_name ? clinic.county_name + '区' : '') +
-                clinic.address}}</div>
-          <div style="font-size:12px;padding-top:5px;" v-if="clinic.customer_phone">服务热线：{{clinic.customer_phone}}</div>
+                clinic.address}}</span>
+          <span style="font-size:12px;padding-top:5px;" v-if="clinic.customer_phone">服务热线：{{clinic.customer_phone}}</span>
+        </div>
+      </div>
+      <div :style="bottomStyle" id="bottomContent" v-else>
+        <section style="border-bottom:1px solid #000000;font-size: 12px;flex-direction: row;-webkit-flex-direction: row;height:105px;">
+
+          <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex; border-top:1px solid #000000;">
+
+          </div>
+          <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;margin-top:10px;">
+            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
+              <div>申请医生</div>:<div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;"><span
+                  style="padding-left:15px;">{{doctorName}}</span></div>
+            </div>
+            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
+              <div style="margin-left:5px;">医生签名</div>:<div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;"></div>
+            </div>
+            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
+              <div style="width:48px;margin-left:5px;padding-left:5px;text-align:right;">金额</div>:<div
+                style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;"><span style="padding-left:15px;">{{currRecipeData.money}}元</span>
+              </div>
+            </div>
+          </div>
+
+        </section>
+        <div style="text-align:center;width:100%;">
+          <span style="font-size:12px;padding-top:5px;padding-right:5px;">地址：
+            {{(clinic.city_name ? clinic.city_name + '市' : '') +
+                (clinic.county_name ? clinic.county_name + '区' : '') +
+                clinic.address}}</span>
+          <span style="font-size:12px;padding-top:5px;" v-if="clinic.customer_phone">服务热线：{{clinic.customer_phone}}</span>
         </div>
       </div>
     </div>
@@ -478,14 +518,19 @@ export default {
       clinicName: clinicName,
       sexOptions: [
         { code: 1, name: '男' },
-        { code: 2, name: '女' },
-        { code: 0, name: '保密' }
+        { code: 2, name: '女' }
       ],
       clinicAddress: '',
       customerPhone: '',
       HeightStyle: {
         fontSize: '12px',
-        minHeight: '355px',
+        minHeight: '370px',
+        position: 'relative',
+        bottom: '0'
+      },
+      HeightStyle2: {
+        fontSize: '12px',
+        minHeight: '385px',
         position: 'relative',
         bottom: '0'
       },
@@ -502,6 +547,7 @@ export default {
     ...mapGetters(["currRecipeData"]),
     ...mapState(["patientData", "recordData", "printPre", 'orderSeqno', 'doctorName', "isYB", "department", "ybCardNo", 'clinicType', 'clinic', 'print_createTime']),
     recipeType: function () {
+      console.log(this.currRecipeData)
       return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
     },
     category: function () {
@@ -516,6 +562,10 @@ export default {
     prescriptionNum: function () {
       var tempNum = this.orderSeqno.slice(-6)
       return tempNum.length < 7 ? ('000000' + tempNum).slice(-6) : tempNum
+    },
+    therapyType: function () {
+      var type = this.currRecipeData === undefined ? 0 : this.currRecipeData.type
+      return type == 4 ? this.currRecipeData.data.type : 0
     }
   },
   watch: {
