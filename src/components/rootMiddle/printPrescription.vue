@@ -510,7 +510,7 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapGetters, mapState, mapActions } from "vuex";
 import { clinicName } from '@/assets/js/mapType.js'
 
 export default {
@@ -576,6 +576,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['change_print_index',]),
     printPrescription: function () {
       var self = this
       setTimeout(function () {
@@ -606,6 +607,7 @@ export default {
         if (navigator.userAgent.indexOf("MSIE") > 0) {
           document.body.removeChild(iframe);
         }
+        self.change_print_index(null);
       }, 30);
     }
   }
