@@ -239,7 +239,7 @@ const actions = {
           remark: !item.remark ? '' : item.remark,
           item_id: item.id,
           name: item.alias_name ? item.alias_name : item.name,
-          num: !item.num ? 0 : item.num,
+          num: !item.num ? 1 : item.num,
           price: item.price,
           sample: item.sample,
           type: item.type,
