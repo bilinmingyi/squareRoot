@@ -130,8 +130,8 @@
             <div style="clear: both;"></div>
           </div>
           <div v-show="recipeType==4">
-            <div style="width: 100%;height: auto;margin-bottom: 15px;">
-              <div style="width: 100%;" v-for="(itemOne,index) in (currRecipeData.data.items||[])" :key="index" >
+            <div style="width: 100%;height: auto;margin-bottom: 15px;" v-if="printIndex==null">
+              <div style="width: 100%;" v-for="(itemOne,index) in (currRecipeData.data.items||[])" :key="index">
                 <div style="height: auto;margin-bottom: 5px;" v-if="printIndex == null || printIndex == index">
                   <span style="margin-right: 8px;">{{printIndex == null ? (index+1) : 1}}、</span>
                   <span style="margin-right: 20px;">{{itemOne.name}}</span>
@@ -141,6 +141,74 @@
                   <span style="margin-right: 20px;" v-if="therapyType==1">{{itemOne.num}}次</span>
                   <span v-if="itemOne.remark">备注：{{itemOne.remark}}</span>
                 </div>
+              </div>
+            </div>
+            <div style="width: 100%;height: auto;margin-bottom:  5px;margin-top:10px;" v-else>
+              <div v-if="currRecipeData.data.items[printIndex].type==1">
+                <div style="font-weight:600;">
+                  项目名称:
+                </div>
+                <div style="minHeight:60px;text-indent: 2em;padding-top:5px;">
+                  {{currRecipeData.data.items[printIndex].name}}
+                  <span class="margin-left:20px;">{{currRecipeData.data.items[printIndex].num}}次</span>
+                </div>
+
+                <div style="minHeight:40px;text-indent: 2em;padding-top:10px;">
+                  {{currRecipeData.data.items[printIndex].sample}}
+                </div>
+                <div style="font-weight:600;">
+                  备注:
+                </div>
+                <div style="minHeight:40px;text-indent: 2em;padding-top:10px;">
+                  {{currRecipeData.data.items[printIndex].remark}}
+                </div>
+              </div>
+              <div v-if="currRecipeData.data.items[printIndex].type==3">
+                <div style="font-weight:600;">
+                  项目名称:
+                </div>
+                <div style="minHeight:60px;text-indent: 2em;padding-top:5px;">
+                  {{currRecipeData.data.items[printIndex].name}}
+                </div>
+                <div style="font-weight:600;">
+                  检查目的及要求:
+                </div>
+                <div style="minHeight:80px;text-indent: 2em;padding-top:5px;">
+                  {{currRecipeData.data.items[printIndex].remark}}
+                </div>
+                <div style="font-weight:600;">
+                  检查部位:
+                </div>
+                <div style="minHeight:80px;text-indent:2em;width:100%;word-break:break-all;padding-top:5px;">
+                  {{currRecipeData.data.items[printIndex].position}}
+                </div>
+                <div style="font-weight:600;">
+                  备注:
+                </div>
+                <div style="minHeight:40px;text-indent: 2em;">
+
+                </div>
+              </div>
+              <div v-if="currRecipeData.data.items[printIndex].type==2">
+                <div style="font-weight:600;">
+                  项目名称:
+                </div>
+                <div style="minHeight:60px;text-indent: 2em;padding-top:10px;">
+                  {{currRecipeData.data.items[printIndex].name}}
+                </div>
+                <div style="font-weight:600;" v-if="currRecipeData.data.items[printIndex].sample">
+                  标本:
+                </div>
+                <div style="minHeight:40px;text-indent: 2em;padding-top:10px;">
+                  {{currRecipeData.data.items[printIndex].sample}}
+                </div>
+                <div style="font-weight:600;">
+                  备注:
+                </div>
+                <div style="minHeight:40px;text-indent: 2em;padding-top:10px;">
+                  {{currRecipeData.data.items[printIndex].remark}}
+                </div>
+
               </div>
             </div>
           </div>
@@ -231,7 +299,8 @@
         <section style="font-size: 12px;padding: 10px 0px;flex-direction: row;-webkit-flex-direction: row;" v-show="recipeType==4">
           <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
-              <span style="font-weight: bolder">总金额（元）：{{printIndex == null ? currRecipeData.money : currRecipeData.data.items[printIndex].num*currRecipeData.data.items[printIndex].price}}元</span>
+              <span
+                style="font-weight: bolder">总金额（元）：{{printIndex == null ? currRecipeData.money : currRecipeData.data.items[printIndex].num*currRecipeData.data.items[printIndex].price}}元</span>
             </div>
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
               <span style="font-weight: bolder">医生：</span>
@@ -263,7 +332,7 @@
           <span v-show="recipeType==2">处方笺</span>
           <span v-show="recipeType==3">{{clinicType == 6 ? '营养处方笺' : '处方笺'}}</span>
           <span v-if="recipeType==4">
-            申请单
+            {{printIndex==null?'申请单': getTreatName(currRecipeData.data.items[printIndex])}}
           </span>
           <span v-show="recipeType==6">处方笺</span>
         </div>
@@ -285,7 +354,7 @@
           <div>处方号：{{print_createTime|dateFormat('yyyyMMdd')}}{{prescriptionNum}}</div>
         </div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;padding-left:10px;padding-right:10px;justify-content:space-between;">
-          <div style="width:39%; display: flex;align-items:center;"><span style="width:48px;text-align:left;">姓名：</span>
+          <div style="width:39%; display: flex;"><span style="width:48px;text-align:left;">姓名：</span>
             <div style="width:65%;border-bottom:1px solid #000000;">{{patientData.name}}</div>
           </div>
           <div style="width:33%; display: flex;align-items:center;"><span>性别：</span>
@@ -383,8 +452,8 @@
           <div style="clear: both;"></div>
         </div>
         <div v-show="recipeType==4">
-          <div style="width: 100%;height: auto;margin-bottom:  5px;">
-            <div style="width: 100%;" v-for="(itemOne,index) in (currRecipeData.data.items||[])" :key="index" >
+          <div style="width: 100%;height: auto;margin-bottom:  5px;" v-if="printIndex==null">
+            <div style="width: 100%;" v-for="(itemOne,index) in (currRecipeData.data.items||[])" :key="index">
               <div style="height: auto;margin-bottom: 5px;" v-if="printIndex == null || printIndex == index">
                 <span style="margin-right: 8px;">{{printIndex == null ? (index+1) : '1'}}、</span>
                 <span style="margin-right: 20px;">{{itemOne.name}}</span>
@@ -394,6 +463,72 @@
                 <span style="margin-right: 20px;" v-if="therapyType==1">{{itemOne.num}}次</span>
                 <span v-if="itemOne.remark">备注：{{itemOne.remark}}</span>
               </div>
+            </div>
+          </div>
+          <div style="width: 100%;height: auto;margin-bottom:  5px;margin-top:20px;" v-else>
+            <div v-if="currRecipeData.data.items[printIndex].type==1">
+              <div style="font-weight:600;">
+                治疗项目:
+              </div>
+              <div style="minHeight:60px;text-indent: 2em;padding-top:10px;">
+                {{currRecipeData.data.items[printIndex].name}}
+                <span class="margin-left:20px;">{{currRecipeData.data.items[printIndex].num}}次</span>
+              </div>
+
+              <div style="minHeight:40px;text-indent: 2em;padding-top:10px;">
+                {{currRecipeData.data.items[printIndex].sample}}
+              </div>
+              <div style="font-weight:600;">
+                备注:
+              </div>
+              <div style="minHeight:40px;text-indent: 2em;padding-top:10px;">
+                {{currRecipeData.data.items[printIndex].remark}}
+              </div>
+            </div>
+            <div v-if="currRecipeData.data.items[printIndex].type==3">
+              <div style="display: flex;minHeight:60px;">
+                <div style="font-weight:600;width:48px;">病史：</div>
+                <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">{{recordData.present_illness}}</div>
+              </div>
+              <div style="font-weight:600;">
+                检查目的及要求:
+              </div>
+              <div style="minHeight:80px;text-indent: 2em; padding-top:5px;">
+                {{currRecipeData.data.items[printIndex].remark}}
+              </div>
+              <div style="font-weight:600;">
+                检查部位:
+              </div>
+              <div style="minHeight:80px;text-indent:2em;width:100%;word-break:break-all;padding-top:5px;">
+                {{currRecipeData.data.items[printIndex].position}}
+              </div>
+              <div style="font-weight:600;">
+                备注:
+              </div>
+              <div style="minHeight:40px;text-indent: 2em;">
+
+              </div>
+            </div>
+            <div v-if="currRecipeData.data.items[printIndex].type==2">
+              <div style="font-weight:600;">
+                检验项目:
+              </div>
+              <div style="minHeight:60px;text-indent: 2em;padding-top:10px;">
+                {{currRecipeData.data.items[printIndex].name}}
+              </div>
+              <div style="font-weight:600;" v-if="currRecipeData.data.items[printIndex].sample">
+                标本:
+              </div>
+              <div style="minHeight:40px;text-indent: 2em;padding-top:10px;">
+                {{currRecipeData.data.items[printIndex].sample}}
+              </div>
+              <div style="font-weight:600;">
+                备注:
+              </div>
+              <div style="minHeight:40px;text-indent: 2em;padding-top:10px;">
+                {{currRecipeData.data.items[printIndex].remark}}
+              </div>
+
             </div>
           </div>
         </div>
@@ -482,19 +617,18 @@
           <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex; border-top:1px solid #000000;">
 
           </div>
-          <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;margin-top:10px;">
+          <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;margin-top:10px;justify-content:space-between;">
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
-              <div>申请医生</div>:<div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;"><span
-                  style="padding-left:15px;">{{doctorName}}</span></div>
+              <div>申请医生</div>:<div style="border-bottom:1px solid #000000;width:50%;"><span style="padding-left:15px;">{{doctorName}}</span></div>
+            </div>
+            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;margin-left:30px;">
+              <div style="margin-left:5px;">医生签名</div>:<div style="width:50%;border-bottom:1px solid #000000;"></div>
             </div>
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
-              <div style="margin-left:5px;">医生签名</div>:<div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;"></div>
-            </div>
-            <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
-              <div style="width:48px;margin-left:5px;padding-left:5px;text-align:right;">金额</div>:<div
-                style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;"><span style="padding-left:15px;">
-              {{printIndex == null ? currRecipeData.money : currRecipeData.data.items[printIndex].num*currRecipeData.data.items[printIndex].price}}元
-            </span>
+              <div style="width:48px;margin-left:5px;padding-left:5px;text-align:right;">金额</div>:<div style="width:50%;border-bottom:1px solid #000000;"><span
+                  style="padding-left:15px;">
+                  {{printIndex == null ? currRecipeData.money : currRecipeData.data.items[printIndex].num*currRecipeData.data.items[printIndex].price}}元
+                </span>
               </div>
             </div>
           </div>
@@ -529,13 +663,13 @@ export default {
       HeightStyle: {
         fontSize: '12px',
         minHeight: '370px',
-        position: 'relative',
+        position: 'static',
         bottom: '0'
       },
       HeightStyle2: {
         fontSize: '12px',
         minHeight: '385px',
-        position: 'relative',
+        position: 'static',
         bottom: '0'
       },
       bottomStyle: {
@@ -579,6 +713,18 @@ export default {
   },
   methods: {
     ...mapActions(['change_print_index',]),
+    getTreatName: function (val) {
+      switch (val.type) {
+        case 1:
+          return '申请单'
+        case 2:
+          return '检验申请单'
+        case 3:
+          return val.name + '申请单'
+        default:
+          return '申请单'
+      }
+    },
     printPrescription: function () {
       var self = this
       setTimeout(function () {
@@ -595,16 +741,16 @@ export default {
         doc.write("<div>" + el.innerHTML + "</div>");
         doc.close();
         iframe.contentWindow.focus();
-        if (self.clinic.id == 30) {
-          //兼容底部的问题
-          iframe.contentWindow.document.getElementById(
-            'bottomContent'
-          ).style.position =
-            iframe.contentWindow.document.getElementById('content')
-              .offsetHeight > 362
-              ? 'static'
-              : 'absolute'
-        }
+        // if (self.clinic.id == 30) {
+        //   //兼容底部的问题
+        //   iframe.contentWindow.document.getElementById(
+        //     'bottomContent'
+        //   ).style.position =
+        //     iframe.contentWindow.document.getElementById('content')
+        //       .offsetHeight > 362
+        //       ? 'static'
+        //       : 'absolute'
+        // }
         iframe.contentWindow.print();
         if (navigator.userAgent.indexOf("MSIE") > 0) {
           document.body.removeChild(iframe);
