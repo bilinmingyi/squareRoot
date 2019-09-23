@@ -465,7 +465,7 @@
               </div>
             </div>
           </div>
-          <div style="width: 100%;height: auto;margin-bottom:  5px;margin-top:20px;" v-else>
+          <div style="width: 100%;height: auto;margin-bottom:  5px;margin-top:10px;" v-else>
             <div v-if="currRecipeData.data.items[printIndex].type==1">
               <div style="font-weight:600;">
                 治疗项目:
