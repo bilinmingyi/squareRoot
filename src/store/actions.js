@@ -298,6 +298,9 @@ const actions = {
   change_print_pre: ({ commit, state }) => {
     commit(mutationTypes.CHANGE_PRINT_PRE)
   },
+  change_print_index: ({commit}, index) => {
+    commit(mutationTypes.CHANGE_PRINT_INDEX, index)
+  },
   init_recipe: ({ commit }, list) => {
     commit(mutationTypes.INIT_RECIPE, list)
   },

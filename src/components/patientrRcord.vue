@@ -5,7 +5,7 @@
 <!--      <button class="prescriptionBtn mr10" @click.stop="showRecordSetAlert">-->
 <!--        {{clinicType == 6 ? '档案' : '病历'}}项目设置-->
 <!--      </button>-->
-      <button class="prescriptionBtn mr10" @click.stop="showAddRecordAlert(-1)">添加报告</button>
+<!--      <button class="prescriptionBtn mr10" @click.stop="showAddRecordAlert(-1)">添加报告</button>-->
       <button class="prescriptionBtn mr10" @click.stop="printPrescription()">
         打印{{clinicType == 6 ? '档案' : '病历'}}
       </button>

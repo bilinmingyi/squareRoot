@@ -2,13 +2,13 @@
   <div class="right-block">
     <div>
       <div style="display: flex;">
-        <div
-          v-show="recipeType==0"
-          :class="['prescript-title',{'current-tab':tabType == 4}]"
-          @click.stop="changeTab(4)"
-        >
-          <span>{{clinicType == 6 ? '调查表' : '问诊表'}}</span>
-        </div>
+<!--        <div-->
+<!--          v-show="recipeType==0"-->
+<!--          :class="['prescript-title',{'current-tab':tabType == 4}]"-->
+<!--          @click.stop="changeTab(4)"-->
+<!--        >-->
+<!--          <span>{{clinicType == 6 ? '调查表' : '问诊表'}}</span>-->
+<!--        </div>-->
         <div
           v-show="recipeType==1||recipeType==2||recipeType==3||recipeType==4||recipeType==6"
           :class="['prescript-title',{'current-tab':tabType == 1}]"
@@ -73,7 +73,7 @@ export default {
   },
   created() {
     if (this.recipeType == 0) {
-      this.tabType = 4;
+      this.tabType = 2;
     } else {
       this.tabType = 1;
     }

@@ -70,7 +70,9 @@
               <div v-if="item.type===4">
                 <div v-for="med in item.data.items">
                   <span class="pr5">{{med.name}}</span>
-                  <span class="pr5">{{med.num}}{{med.unit}}</span>
+                  <span class="pr5" v-if="item.data.type == 1">{{med.num}}{{med.unit}}</span>
+                  <span class="pr5" v-if="item.data.type == 2">{{med.sample}}</span>
+                  <span class="pr5" v-if="item.data.type == 3">{{med.position}}</span>
                   <span class="pr5">{{med.remark}}</span>
                 </div>
               </div>

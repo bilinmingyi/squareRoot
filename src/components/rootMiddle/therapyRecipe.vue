@@ -57,7 +57,8 @@
               系统内没有匹配到该项目
             </td>
           </template>
-          <td>
+          <td style="width: 120px;">
+            <a @click.stop="print_index(index)">打印项目</a>
             <a @click.stop="cancel_medicine(index)">删除</a>
           </td>
         </tr>
@@ -132,9 +133,15 @@ export default {
       'modify_recipe_detail',
       'modify_recipe',
       'change_print_pre',
+      'change_print_index',
       'clean_recipe'
     ]),
     print_pre() {
+      this.change_print_index(null);
+      this.change_print_pre();
+    },
+    print_index(index) {
+      this.change_print_index(index);
       this.change_print_pre();
     },
     cancelRecipe() {
