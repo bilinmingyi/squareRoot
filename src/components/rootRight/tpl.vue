@@ -397,6 +397,9 @@ export default {
     },
     category: function () {
       return this.currRecipeData === undefined ? 1 : (this.currRecipeData.data.category === undefined ? 1 : this.currRecipeData.data.category);
+    },
+    therapyType: function () {
+      return this.currRecipeData === undefined ? 1 : (this.currRecipeData.data.type === undefined ? 1 : this.currRecipeData.data.type);
     }
   },
   mounted() {
@@ -443,6 +446,11 @@ export default {
           this.tplEditData.searchListShow = true;
         }
       }
+    },
+    therapyType: function () {
+      this.showTpl = false;
+      this.showResult = false;
+      this.firstSearch();
     }
   },
   methods: {
@@ -515,6 +523,7 @@ export default {
         case 4: {
           params = {
             name: self.searchTplName,
+            type: self.therapyType,
             page: self.currPage,
             page_size: self.page_size
           };
@@ -784,7 +793,7 @@ export default {
           sport_advice: self.tplData.sport_advice,
           dietary_advice: self.tplData.dietary_advice
         };
-        let list = ['allergic_history', 'family_history', 'diagnosis', 'personal_history', 'prophylactic_history', 'sport_advice', 'past_history', 'examination','auxiliary_examination', 'dietary_advice']
+        let list = ['allergic_history', 'family_history', 'diagnosis', 'personal_history', 'prophylactic_history', 'sport_advice', 'past_history', 'examination', 'auxiliary_examination', 'dietary_advice']
         let record_list = []
         list.forEach(item => {
           if (data[item] && JSON.stringify(data[item]) != '{}') {
@@ -815,6 +824,8 @@ export default {
       });
       if (this.recipeType == 1) {
         params = {names: names, status: 1, category: Number(self.category)}
+      } else if (this.recipeType == 4) {
+        params = {names: names, status: 1, type: Number(self.therapyType)}
       } else {
         params = {names: names, status: 1}
       }
@@ -829,7 +840,7 @@ export default {
                   let num = self.age > 12 ? Number(item.adult_num) : (item.kids_num !== '' ? Number(item.kids_num) : Number(item.adult_num))
                   resultList.push(Object.assign(res.data[i], {
                     num: res.data[i].unit_sale == item.unit ? Math.ceil(num / res.data[i].stock_sale_ratio) : 0,
-                    name:item.name,
+                    name: item.name,
                     unit: res.data[i].unit_stock,
                     usage: item.usage,
                     is_match: 1

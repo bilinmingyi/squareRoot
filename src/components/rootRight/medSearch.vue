@@ -113,6 +113,9 @@ export default {
     },
     category: function () {
       return this.currRecipeData === undefined ? 1 : (this.currRecipeData.data.category === undefined ? 1 : this.currRecipeData.data.category);
+    },
+    therapyType: function () {
+      return this.currRecipeData === undefined ? 1 : (this.currRecipeData.data.type === undefined ? 1 : this.currRecipeData.data.type);
     }
   },
   watch: {
@@ -131,9 +134,12 @@ export default {
     tabType: function () {
       this.searchName = "";
       this.firstSearch();
+    },
+    therapyType: function () {
+      this.searchName = "";
+      this.firstSearch();
     }
   },
-
   created() {
     this.firstSearch();
   },
@@ -208,6 +214,7 @@ export default {
           page: 1,
           page_size: window.screen.height > 960 || window.screen.width >= 1600 ? 10 : 8,
           status: 1,
+          type: self.therapyType,
           is_combine: self.tabType == 5 ? 1 : 0
         }
       } else {
@@ -226,7 +233,7 @@ export default {
           let isCombine = self.tabType == 5 ? 1: 0
           if (self.recipeType == 4) {
             var resultList = res[1].data.filter(item => {
-              return item.is_combine == isCombine
+              return item.is_combine == isCombine && item.type == self.therapyType
             })
           } else {
             var resultList = res[1].data
@@ -335,6 +342,7 @@ export default {
             name: self.searchName,
             page: self.currPage,
             status: 1,
+            type: self.therapyType,
             is_combine: self.tabType == 5 ? 1 : 0,
             page_size: self.page_size
           };

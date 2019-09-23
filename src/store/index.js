@@ -72,6 +72,7 @@ const state = {
   currRecipe: -1,
   fjbRecipe: {},
   printPre: false,
+  printIndex: null,
   draftData: '',
   canGetRecipeHelp: 0,
   fjList: [],
