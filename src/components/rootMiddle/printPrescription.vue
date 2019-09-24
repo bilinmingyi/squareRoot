@@ -267,7 +267,7 @@
           </div>
         </section>
         <section style="font-size: 12px;padding: 10px 0px;flex-direction: row;-webkit-flex-direction: row;"
-                 v-show="recipeType==1 || recipeType==2 || recipeType==3 || recipeType==6">
+          v-show="recipeType==1 || recipeType==2 || recipeType==3 || recipeType==6">
           <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
               <span style="font-weight: bolder">审核：</span>
@@ -348,7 +348,7 @@
             <div v-else>
               <div style="display: flex;align-items:center;height:20px; "><input type="checkbox">自费</div>
               <div style="display: flex;align-items:center;height:20px; "><input type="checkbox" checked />医保卡 <span
-                style="padding-left:5px;">医保卡号：{{ybCardNo}}</span></div>
+                  style="padding-left:5px;">医保卡号：{{ybCardNo}}</span></div>
             </div>
           </div>
           <div>处方号：{{print_createTime|dateFormat('yyyyMMdd')}}{{prescriptionNum}}</div>
@@ -360,7 +360,7 @@
           <div style="width:33%; display: flex;align-items:center;"><span>性别：</span>
             <div v-for="(item,index) in sexOptions" :key="item.code">
               <label style="display: flex;align-items:center;height:20px;" v-if="item.code==patientData.sex"><input type="checkbox"
-                                                                                                                    checked>{{item.name}}</label>
+                  checked>{{item.name}}</label>
               <label style="display: flex;align-items:center;height:20px;" v-else><input type="checkbox">{{item.name}}</label>
             </div>
           </div>
@@ -384,7 +384,7 @@
           </div>
         </div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;border-bottom:1px solid #000000;padding-left:10px;padding-bottom:2px;"
-             v-if="recipeType!=4">
+          v-if="recipeType!=4">
           过敏史：{{recordData.allergic_history}}</div>
         <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;border-bottom:1px solid #000000;padding-left:10px;padding-bottom:2px;">
           电话：{{patientData.mobile}}</div>
@@ -577,11 +577,11 @@
           <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex; border-top:1px solid #000000;padding-top:5px;">
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
               <div style="text-align:justify;text-align-last: justify;width:48px;text-justify:inter-ideograph;">医生</div>:<div
-              style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;padding-left:5px;">{{doctorName}}</div>
+                style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;padding-left:5px;">{{doctorName}}</div>
             </div>
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
               <div style="text-align:justify;text-align-last: justify;width:48px;margin-left:5px;text-justify:inter-ideograph;">药品金额</div>:<div
-              style="padding-left:5px;flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;">{{currRecipeData.money}}元</div>
+                style="padding-left:5px;flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;">{{currRecipeData.money}}元</div>
             </div>
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
               <div style="padding-left:5px;">收费章</div>:<div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;border-bottom:1px solid #000000;"></div>
@@ -626,10 +626,10 @@
             </div>
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
               <div style="width:48px;margin-left:5px;padding-left:5px;text-align:right;">金额</div>:<div style="width:50%;border-bottom:1px solid #000000;"><span
-              style="padding-left:15px;">
+                  style="padding-left:15px;">
                   {{printIndex == null ? currRecipeData.money : currRecipeData.data.items[printIndex].num*currRecipeData.data.items[printIndex].price}}元
                 </span>
-            </div>
+              </div>
             </div>
           </div>
 
@@ -661,8 +661,8 @@ export default {
       customerPhone: '',
       HeightStyle: {
         fontSize: '12px',
-        minHeight: '370px',
-        position: 'static',
+        minHeight: '375px',
+        position: 'relative',
         bottom: '0'
       },
       HeightStyle2: {
@@ -672,7 +672,7 @@ export default {
         bottom: '0'
       },
       bottomStyle: {
-        position: 'absolute',
+        position: 'static',
         bottom: '2px',
         left: '0px',
         width: '100%'
