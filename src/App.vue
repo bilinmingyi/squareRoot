@@ -43,12 +43,12 @@ export default {
   computed: {
     ...mapState({
       patientData: state => state.patientData,
-      clinicType: state => state.clinicType
+      clinicType: state => state.clinicType,
+      recordData: state => state.recordData
     })
   },
   created() {
     this.init();
-    this.getClinicData()
     this.getMedShop();
     this.loadDraftData();
   },
@@ -142,6 +142,7 @@ export default {
           this.$Message.info(data.msg)
         }
       }).then(() => {
+        this.getClinicData()
         this.showLoader = false;
       })
     },
@@ -608,7 +609,9 @@ export default {
           if (res.code === 1000) {
             this.set_state_prop({key: 'clinic', val: res.data});
             if(res.data.id == 30) {
-              this.set_record_prop({key: 'recordList', val: ['past_history', 'auxiliary_examination']})
+              if (this.recordData.recordList.length == 0) {
+                this.set_record_prop({key: 'recordList', val: ['past_history', 'auxiliary_examination', 'allergic_history', 'examination']})
+              }
             }
             this.set_state_prop({key: 'clinicType', val: res.data.service_type ? res.data.service_type : 0});
           } else {

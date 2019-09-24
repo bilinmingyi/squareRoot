@@ -188,6 +188,7 @@ export default {
       recordTemplate: [
         {code: "主诉", key: "chief_complaint"},
         {code: "现病史", key: "present_illness"},
+        {code: "月经生育史", key: "childbearing_history"},
         {code: "体格检查", key: "examination"},
         {code: "辅助检查", key: "auxiliary_examination"},
         {code: "中医诊断", key: "diagnosis"},
@@ -328,7 +329,7 @@ export default {
             break;
         }
       });
-      let list = ['allergic_history', 'family_history', 'diagnosis', 'personal_history', 'prophylactic_history', 'sport_advice', 'past_history', 'examination', 'auxiliary_examination', 'dietary_advice']
+      let list = ['allergic_history', 'family_history', 'diagnosis', 'personal_history', 'prophylactic_history', 'sport_advice', 'past_history', 'examination', 'auxiliary_examination', 'dietary_advice', 'childbearing_history']
       let record_list = []
 
       list.forEach(item => {

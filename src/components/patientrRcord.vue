@@ -41,20 +41,37 @@
       </div>
       <div class="mid-record-item-val">
         <CheckboxGroup :value="recordData.recordList" @on-change="changeRecordList">
-          <Checkbox label="allergic_history" class="width-60">过敏史</Checkbox>
-          <Checkbox label="personal_history" class="width-60">个人史</Checkbox>
-          <Checkbox label="past_history" class="width-60">既往史</Checkbox>
-          <Checkbox label="family_history" class="width-60">家族史</Checkbox>
-          <Checkbox label="prophylactic_history" class="width-60">预防接种史</Checkbox>
-          <Checkbox label="examination" class="width-60">体格检查</Checkbox>
-          <Checkbox label="diagnosis" class="width-60">中医诊断</Checkbox>
-          <Checkbox label="sport_advice" class="width-60">运动建议</Checkbox>
-          <Checkbox label="dietary_advice" class="width-60">膳食建议</Checkbox>
-          <Checkbox label="auxiliary_examination" class="width-60">辅助检查</Checkbox>
+          <Checkbox label="childbearing_history" class="width-84">月经生育史</Checkbox>
+          <Checkbox label="past_history" class="width-84">既往史</Checkbox>
+          <Checkbox label="allergic_history" class="width-84">过敏史</Checkbox>
+          <Checkbox label="personal_history" class="width-84">个人史</Checkbox>
+
+          <Checkbox label="family_history" class="width-84">家族史</Checkbox>
+          <Checkbox label="prophylactic_history" class="width-84">预防接种史</Checkbox>
+          <Checkbox label="examination" class="width-84">体格检查</Checkbox>
+          <Checkbox label="auxiliary_examination" class="width-84">辅助检查</Checkbox>
+          <Checkbox label="diagnosis" class="width-84">中医诊断</Checkbox>
+          <Checkbox label="sport_advice" class="width-84">运动建议</Checkbox>
+          <Checkbox label="dietary_advice" class="width-84">膳食建议</Checkbox>
+
         </CheckboxGroup>
       </div>
     </div>
-
+    <div class="mt10 mid-record-item" v-if="checkRecord('childbearing_history')">
+      <div class="text-justify mid-record-item-key">
+        <span>月经生育史：</span>
+      </div>
+      <div class="mid-record-item-val">
+        <Input
+          type="textarea"
+          :autosize="{minRows: 2,maxRows: 5}"
+          :rows="2"
+          placeholder="点此输入"
+          @on-change="set_record_prop({key: 'childbearing_history', val: $event.target.value})"
+          :value="recordData.childbearing_history"
+        ></Input>
+      </div>
+    </div>
     <div class="mt10 mid-record-item" v-if="checkRecord('past_history')">
       <div class="text-justify mid-record-item-key">
         <span>既往史：</span>
