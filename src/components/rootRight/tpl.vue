@@ -98,6 +98,10 @@
             <span class="case-label">现病史</span>
             <span>{{tplData.present_illness}}</span>
           </div>
+          <div v-if="tplData.childbearing_history" class="tpl-case-div">
+            <span class="case-label">月经生育史</span>
+            <span>{{tplData.childbearing_history}}</span>
+          </div>
           <div v-if="tplData.past_history" class="tpl-case-div">
             <span class="case-label">既往史</span>
             <span>{{tplData.past_history}}</span>
@@ -186,6 +190,10 @@
               <div class="mb10" v-if="tplData.present_illness">
                 <span class="case-label">现病史</span>
                 <span>{{tplData.present_illness}}</span>
+              </div>
+              <div class="mb10" v-if="tplData.childbearing_history">
+                <span class="case-label">月经生育史</span>
+                <span>{{tplData.childbearing_history}}</span>
               </div>
               <div class="mb10" v-if="tplData.past_history">
                 <span class="case-label">既往史</span>
@@ -321,6 +329,7 @@ export default {
 
         chief_complaint: "", //主诉
         present_illness: "", //病史
+        childbearing_history: "",//月经生育史
         allergic_history: "", //过敏史
         personal_history: "", // 个人史
         past_history: "", //既往史
@@ -769,6 +778,7 @@ export default {
         var data = {
           chief_complaint: self.tplData.chief_complaint || "",
           present_illness: self.tplData.present_illness || "",
+          childbearing_history: self.tplData.childbearing_history || "",
           allergic_history: self.tplData.allergic_history || "",
           personal_history: self.tplData.personal_history || "",
           past_history: self.tplData.past_history || "",
@@ -793,7 +803,7 @@ export default {
           sport_advice: self.tplData.sport_advice,
           dietary_advice: self.tplData.dietary_advice
         };
-        let list = ['allergic_history', 'family_history', 'diagnosis', 'personal_history', 'prophylactic_history', 'sport_advice', 'past_history', 'examination', 'auxiliary_examination', 'dietary_advice']
+        let list = ['allergic_history', 'family_history', 'diagnosis', 'personal_history', 'prophylactic_history', 'sport_advice', 'past_history', 'examination', 'auxiliary_examination', 'dietary_advice', 'childbearing_history']
         let record_list = []
         list.forEach(item => {
           if (data[item] && JSON.stringify(data[item]) != '{}') {
