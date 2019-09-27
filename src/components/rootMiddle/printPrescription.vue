@@ -500,7 +500,7 @@
                 检查部位:
               </div>
               <div style="minHeight:80px;text-indent:2em;width:100%;word-break:break-all;padding-top:5px;">
-                {{currRecipeData.data.items[printIndex].position}}
+                {{currRecipeData.data.items[printIndex].name}}({{currRecipeData.data.items[printIndex].position}})
               </div>
               <div style="font-weight:600;">
                 备注:
@@ -569,7 +569,9 @@
           </div>
 
         </section>
-        <div style="width:100%;text-align:center;margin-top:10px;padding-bottom:20px;">(以下空白)</div>
+        <div style="width:100%;text-align:center;margin-top:10px;padding-bottom:20px;">
+          {{recipeType != 4 ? '(以下空白)' : ' '}}
+          </div>
       </section>
       <div :style="bottomStyle" id="bottomContent" v-if="recipeType!=4">
         <section style="border-bottom:1px solid #000000;font-size: 12px;flex-direction: row;-webkit-flex-direction: row;">
@@ -627,7 +629,7 @@
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;display:flex;">
               <div style="width:48px;margin-left:5px;padding-left:5px;text-align:right;">金额</div>:<div style="width:50%;border-bottom:1px solid #000000;"><span
                   style="padding-left:15px;">
-                  {{printIndex == null ? currRecipeData.money : currRecipeData.data.items[printIndex].num*currRecipeData.data.items[printIndex].price}}元
+                  {{printIndex == null ? currRecipeData.money : (currRecipeData.data.items[printIndex].num*currRecipeData.data.items[printIndex].price).toFixed(2)}}元
                 </span>
               </div>
             </div>

@@ -367,7 +367,8 @@ export default {
   computed: {
     ...mapState({
       tplChange: state => state.tplChange,
-      age: state => state.patientData.age
+      age: state => state.patientData.age,
+      sex: state => state.patientData.sex
     }),
     tplExamination: function () {
       if (this.recipeType == 0 && this.tplData.examination) {
@@ -803,7 +804,11 @@ export default {
           sport_advice: self.tplData.sport_advice,
           dietary_advice: self.tplData.dietary_advice
         };
-        let list = ['allergic_history', 'family_history', 'diagnosis', 'personal_history', 'prophylactic_history', 'sport_advice', 'past_history', 'examination', 'auxiliary_examination', 'dietary_advice', 'childbearing_history']
+        let list = ['allergic_history', 'family_history', 'diagnosis', 'personal_history', 'prophylactic_history', 'sport_advice', 'past_history', 'examination', 'auxiliary_examination', 'dietary_advice'];
+        if (self.sex == 2) {
+          list.push('childbearing_history')
+        }
+
         let record_list = []
         list.forEach(item => {
           if (data[item] && JSON.stringify(data[item]) != '{}') {
