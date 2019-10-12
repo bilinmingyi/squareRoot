@@ -5,7 +5,7 @@
         <f-radio value=0 :name="'herCate'" :currVal="currentData.data.is_cloud" @change="changeCategory($event)">诊所药房
         </f-radio>
         <f-radio value=1 :name="'herCate'" :currVal="currentData.data.is_cloud" @change="changeCategory($event)"
-                 v-if="currentCloud ? currentCloud.name != '' : 0">{{currentCloud ? currentCloud.name : ''}}
+          v-if="currentCloud ? currentCloud.name != '' : 0">{{currentCloud ? currentCloud.name : ''}}
         </f-radio>
       </div>
       <div>
@@ -19,58 +19,53 @@
     <section>
       <table class="recipe_table">
         <thead>
-        <tr class="displayBlock">
-          <th style="width: 10%;display: inline-block;">序号</th>
-          <th style="width: 20%;display: inline-block;">药名</th>
-          <th style="width: 10%;display: inline-block;">规格</th>
-          <th :style="{width: currentData.data.category == 1 ? '18%' : '25%' , display: 'inline-block'}">药量</th>
-          <th :style="{width: currentData.data.category == 1 ? '12%' : '20%' , display: 'inline-block'}">单价</th>
-          <th style="width: 15%;display: inline-block;" v-if="currentData.data.category == 1">用法</th>
-          <th style="width: 10%;display: inline-block;">操作</th>
-        </tr>
+          <tr class="displayBlock">
+            <th style="width: 10%;display: inline-block;">序号</th>
+            <th style="width: 20%;display: inline-block;">药名</th>
+            <th style="width: 10%;display: inline-block;">规格</th>
+            <th :style="{width: currentData.data.category == 1 ? '18%' : '25%' , display: 'inline-block'}">药量</th>
+            <th :style="{width: currentData.data.category == 1 ? '12%' : '20%' , display: 'inline-block'}">单价</th>
+            <th style="width: 15%;display: inline-block;" v-if="currentData.data.category == 1">用法</th>
+            <th style="width: 10%;display: inline-block;">操作</th>
+          </tr>
         </thead>
       </table>
     </section>
     <section class="herbal_table_body" ref="herbal_table_body">
       <table class="recipe_table">
         <tbody>
-        <tr v-for="(item,index) in currentData.data.items" class="displayBlock">
-          <td style="width: 10%;display: inline-block;">{{index+1}}</td>
-          <td style="width: 20%;display: inline-block;">{{item.name}}</td>
-          <template v-if="item.is_match===1">
-            <td style="width: 10%;display: inline-block;">{{item.spec==='1克/克'?'1克':item.spec}}</td>
-            <td :style="{width: currentData.data.category == 1 ? '18%' : '25%' , display: 'inline-block'}">
-              <InputNumber style="width:3.2rem"
-                           :value="item.num"
-                           @on-change="modify_medicine({key:'num',val:$event,index:index})"
-                           :formatter="value => `${Math.floor(value)}`"
-                           :parser="value => `${Math.floor(value)}`"
-              />
-              <div :class="currentData.data.category== 2 ? 'keli_unit' : 'yinpian_unit'">
-                <span class="unitText">{{item.unit}}</span>
-                <span class="num_text" v-if="currentData.data.category==2">({{item.num*item.stock_sale_ratio}}{{item.unit_sale}})</span>
-              </div>
+          <tr v-for="(item,index) in currentData.data.items" class="displayBlock">
+            <td style="width: 10%;display: inline-block;">{{index+1}}</td>
+            <td style="width: 20%;display: inline-block;">{{item.name}}</td>
+            <template v-if="item.is_match===1">
+              <td style="width: 10%;display: inline-block;">{{item.spec==='1克/克'?'1克':item.spec}}</td>
+              <td :style="{width: currentData.data.category == 1 ? '18%' : '25%' , display: 'inline-block'}">
+                <InputNumber style="width:3.2rem" :value="item.num" @on-change="modify_medicine({key:'num',val:$event,index:index})"
+                  :formatter="value => `${Math.floor(value)}`" :parser="value => `${Math.floor(value)}`" />
+                <div :class="currentData.data.category== 2 ? 'keli_unit' : 'yinpian_unit'">
+                  <span class="unitText">{{item.unit}}</span>
+                  <span class="num_text" v-if="currentData.data.category==2">({{item.num*item.stock_sale_ratio}}{{item.unit_sale}})</span>
+                </div>
+              </td>
+              <td :style="{width: currentData.data.category == 1 ? '12%' : '20%' , display: 'inline-block'}">{{item.price|priceFormat}}</td>
+              <td style="width: 15%;display: inline-block;" v-if="currentData.data.category == 1">
+                <Select style="width:4.25rem" :value="item.usage" @on-change="modify_medicine({key:'usage',val:$event,index:index})">
+                  <Option v-for="item in herbalMedUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
+                </Select>
+              </td>
+            </template>
+            <template v-else>
+              <td style="color: red;width: 56%;display: inline-block;line-height: 32px" colspan="2">
+                系统内没有匹配到该药名
+              </td>
+            </template>
+            <td style="width: 10%;display: inline-block;">
+              <a @click.stop="cancel_medicine(index)">删除</a>
             </td>
-            <td :style="{width: currentData.data.category == 1 ? '12%' : '20%' , display: 'inline-block'}">{{item.price|priceFormat}}</td>
-            <td style="width: 15%;display: inline-block;" v-if="currentData.data.category == 1">
-              <Select style="width:4.25rem" :value="item.usage"
-                      @on-change="modify_medicine({key:'usage',val:$event,index:index})">
-                <Option v-for="item in herbalMedUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
-              </Select>
-            </td>
-          </template>
-          <template v-else>
-            <td style="color: red;width: 56%;display: inline-block;line-height: 32px" colspan="2">
-              系统内没有匹配到该药名
-            </td>
-          </template>
-          <td style="width: 10%;display: inline-block;">
-            <a @click.stop="cancel_medicine(index)">删除</a>
-          </td>
-        </tr>
-        <tr v-if="currentData.data.items.length==0" class="displayBlock">
-          <td class="displayBlock">右侧选择添加药品</td>
-        </tr>
+          </tr>
+          <tr v-if="currentData.data.items.length==0" class="displayBlock">
+            <td class="displayBlock">右侧选择添加药品</td>
+          </tr>
         </tbody>
       </table>
       <section class="mb50">
@@ -80,53 +75,45 @@
         <div class="displayFlex pl10 pr10 pt10">
           <div class="width-240">
             <span class="input_label"> 剂数：</span>
-            <InputNumber class="input_120"
-                         :value="currentData.data.dosage"
-                         :formatter="value => `${Math.floor(value)}`"
-                         :parser="value => `${Math.floor(value)}`"
-                         @on-change="modify_recipe_detail({key:'dosage',val:$event})"
-            />
+            <InputNumber class="input_120" :value="currentData.data.dosage" :formatter="value => `${Math.floor(value)}`"
+              :parser="value => `${Math.floor(value)}`" @on-change="modify_recipe_detail({key:'dosage',val:$event})" />
             <span class="input_label">剂</span>
           </div>
           <div class="width-240">
             <span class="input_label">频次：</span>
-            <Select class="input_120" :value="currentData.data.frequency"
-                    @on-change="modify_recipe_detail({key:'frequency',val:$event})">
+            <Select class="input_120" :value="currentData.data.frequency" @on-change="modify_recipe_detail({key:'frequency',val:$event})">
               <Option v-for="item in medFrequency" :value="item.name" :key="item.name">{{ item.name }}</Option>
             </Select>
           </div>
           <div class="width-240">
             <span class="input_label"> 用法：</span>
-            <Select class="input_120" :value="currentData.data.usage"
-                    @on-change="modify_recipe_detail({key:'usage',val:$event})">
+            <Select class="input_120" :value="currentData.data.usage" @on-change="modify_recipe_detail({key:'usage',val:$event})">
               <Option v-for="item in herbalRpUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
             </Select>
           </div>
         </div>
         <div class="displayFlex p10">
-<!--          <div class="width-240">-->
-<!--            <span class="input_label"> 附加：</span>-->
-<!--            <Select class="input_120" :value="currentData.data.extra_feetype" @on-change="change_extra($event)">-->
-<!--              <Option v-for="item in extraFeeTypes" :value="item.name" :key="item.id">{{ item.name }}</Option>-->
-<!--            </Select>-->
-<!--          </div>-->
-<!--          <div class="width-240">-->
-<!--            <span class="input_label">数量：</span>-->
-<!--            <InputNumber class="input_120" :value="currentData.data.extra_num"-->
-<!--                         @on-change="modify_recipe_detail({key:'extra_num',val:$event})"/>-->
-<!--          </div>-->
+          <!--          <div class="width-240">-->
+          <!--            <span class="input_label"> 附加：</span>-->
+          <!--            <Select class="input_120" :value="currentData.data.extra_feetype" @on-change="change_extra($event)">-->
+          <!--              <Option v-for="item in extraFeeTypes" :value="item.name" :key="item.id">{{ item.name }}</Option>-->
+          <!--            </Select>-->
+          <!--          </div>-->
+          <!--          <div class="width-240">-->
+          <!--            <span class="input_label">数量：</span>-->
+          <!--            <InputNumber class="input_120" :value="currentData.data.extra_num"-->
+          <!--                         @on-change="modify_recipe_detail({key:'extra_num',val:$event})"/>-->
+          <!--          </div>-->
           <div class="width-240">
             <span class="input_label"> 用量：</span>
-            <InputNumber class="input_120" :value="currentData.data.eachDose"
-                         @on-change="modify_recipe_detail({key:'eachDose',val:$event})"/>
+            <InputNumber class="input_120" :value="currentData.data.eachDose" @on-change="modify_recipe_detail({key:'eachDose',val:$event})" />
             <span class="input_label">ml</span>
           </div>
         </div>
         <div class="displayFlex pl10 pt10 width-620">
           <span class="input_label pr4">医嘱：</span>
-          <Input class="flexOne" type="textarea" :autosize="{minRows: 3,maxRows: 3}" placeholder="医嘱提示"
-                 :value="currentData.data.doctor_remark"
-                 @on-change="modify_recipe_detail({key:'doctor_remark',val:$event.target.value})"/>
+          <Input class="flexOne" type="textarea" :autosize="{minRows: 3,maxRows: 3}" placeholder="医嘱提示" :value="currentData.data.doctor_remark"
+            @on-change="modify_recipe_detail({key:'doctor_remark',val:$event.target.value})" />
         </div>
       </section>
     </section>
@@ -138,15 +125,16 @@
 </template>
 
 <script>
-import {RadioGroup, Radio, Select, Option, Input, InputNumber} from 'iview'
+import { RadioGroup, Radio, Select, Option, Input, InputNumber } from 'iview'
 import fRadio from '@/components/fRadio.vue'
-import {mapActions, mapState} from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import saveTpl from '@/components/rootMiddle/saveRecipeTpl'
 import wisdomYb from '@/components/wisdomyb.vue'
 import importRecipe from '@/components/importRecipe.vue'
-import {herbalMedUsages, herbalRpUsages, extraFeeTypes, medFrequency, userName, userId} from '@/assets/js/mapType'
-import {saveDraft, wisdomyb} from '@/fetch/api.js'
+import { herbalMedUsages, herbalRpUsages, extraFeeTypes, medFrequency, userName, userId } from '@/assets/js/mapType'
+import { saveDraft, wisdomyb } from '@/fetch/api.js'
 import Link from "iview/src/mixins/link";
+
 
 export default {
   name: "herbalRecipe",
@@ -255,7 +243,7 @@ export default {
         } else {
           allPrice = recipePrice * Number(newVal.dosage)
         }
-        this.modify_recipe({key: 'money', val: Number(allPrice).toFixed(2)})
+        this.modify_recipe({ key: 'money', val: Number(allPrice).toFixed(2) })
       }
     }
   },
@@ -291,13 +279,13 @@ export default {
     },
     changeCategory(event) {
       if (this.currentData.data.items.length === 0) {
-        this.modify_recipe_detail({key: 'is_cloud', val: Number(event.target.value)})
+        this.modify_recipe_detail({ key: 'is_cloud', val: Number(event.target.value) })
       } else {
         this.$Modal.confirm({
           title: '提示',
           content: '<p>切换药品来源将清空已选的药，确认要切换?</p>',
           onOk: () => {
-            this.modify_recipe_detail({key: 'is_cloud', val: Number(event.target.value)})
+            this.modify_recipe_detail({ key: 'is_cloud', val: Number(event.target.value) })
             this.clean_recipe();
           },
           onCancel: () => {
@@ -328,18 +316,18 @@ export default {
       this.showAddTpl = false;
     },
     change_extra(val) {
-      this.modify_recipe_detail({key: 'extra_feetype', val: val});
+      this.modify_recipe_detail({ key: 'extra_feetype', val: val });
       let extraItem = this.extraFeeTypes.filter((typeOne) => {
         return typeOne.name === val;
       })
       if (extraItem[0]) {
-        this.modify_recipe_detail({key: 'extra_price', val: extraItem[0].price})
+        this.modify_recipe_detail({ key: 'extra_price', val: extraItem[0].price })
       }
 
     },
     toAssist() {
       this.saveDraftData();
-      this.$router.push({path: 'assist'});
+      this.$router.push({ path: 'assist' });
     },
     saveDraftData() {
       let draftData = {
@@ -389,7 +377,7 @@ export default {
         if (this.currentData.data.frequency) {
           fre = this.findInFre(this.currentData.data.frequency)
         } else {
-          fre = {code: 'qd', name: '每天一次', ratio: 1}
+          fre = { code: 'qd', name: '每天一次', ratio: 1 }
         }
         return {
           "yb_code": med.yb_code,
@@ -441,16 +429,16 @@ export default {
     },
     findInFre(val) {
       let list = [
-        {code: 'qd', name: '每天一次', ratio: 1},
-        {code: 'bid', name: '每天两次', ratio: 2},
-        {code: 'tid', name: '每天三次', ratio: 3},
-        {code: 'qid', name: '每天四次', ratio: 4},
-        {code: 'qod', name: '两天一次', ratio: 0.5},
-        {code: 'qw', name: '每周一次', ratio: 1 / 7},
-        {code: '', name: '饭前', ratio: 3},
-        {code: '', name: '饭后', ratio: 3},
-        {code: 'hs', name: '睡前', ratio: 1},
-        {code: 'OTH', name: '医嘱', ratio: 1}
+        { code: 'qd', name: '每天一次', ratio: 1 },
+        { code: 'bid', name: '每天两次', ratio: 2 },
+        { code: 'tid', name: '每天三次', ratio: 3 },
+        { code: 'qid', name: '每天四次', ratio: 4 },
+        { code: 'qod', name: '两天一次', ratio: 0.5 },
+        { code: 'qw', name: '每周一次', ratio: 1 / 7 },
+        { code: '', name: '饭前', ratio: 3 },
+        { code: '', name: '饭后', ratio: 3 },
+        { code: 'hs', name: '睡前', ratio: 1 },
+        { code: 'OTH', name: '医嘱', ratio: 1 }
       ]
       for (let i = 0, len = list.length; i < len; i++) {
         if (list[i].name == val) {
@@ -468,71 +456,71 @@ export default {
 </script>
 
 <style scoped>
-  .btn {
-    border: 0.0625rem solid #5096E0;
-    border-radius: 1.875rem;
-    font-size: 0.875rem;
-    color: #5096E0;
-    background: none;
-    line-height: 1.875rem;
-    min-width: 5.125rem;
-  }
+.btn {
+  border: 0.0625rem solid #5096e0;
+  border-radius: 1.875rem;
+  font-size: 0.875rem;
+  color: #5096e0;
+  background: none;
+  line-height: 1.875rem;
+  min-width: 5.125rem;
+}
 
-  .btn_cancel {
-    border-color: #FC3B3B;
-    color: #FC3B3B;
-  }
+.btn_cancel {
+  border-color: #fc3b3b;
+  color: #fc3b3b;
+}
 
-  .btn_print {
-    border-color: #4DBC89;
-    color: #4DBC89;
-  }
+.btn_print {
+  border-color: #4dbc89;
+  color: #4dbc89;
+}
 
-  .btn_yb_check {
-    padding: 0 0.625rem;
-  }
+.btn_yb_check {
+  padding: 0 0.625rem;
+}
 
-  .herbal_head {
-    display: flex;
-    padding: 0.625rem;
-    padding-top: 0;
-  }
+.herbal_head {
+  display: flex;
+  padding: 0.625rem;
+  padding-top: 0;
+}
 
-  .num_text {
-    display: inline-block;
-    color: #4DBC89;
-  }
+.num_text {
+  display: inline-block;
+  color: #4dbc89;
+}
 
-  .herbal_head_left {
-    flex: 1;
-    align-self: center;
-  }
+.herbal_head_left {
+  flex: 1;
+  align-self: center;
+}
 
-  .unitText {
-    display: inline-block;
-    text-align: left;
-  }
+.unitText {
+  display: inline-block;
+  text-align: left;
+}
 
-  .herbal_table_body {
-    display: block;
-    overflow-y: auto;
-    max-height: calc(100vh - 220px);
-  }
+.herbal_table_body {
+  display: block;
+  overflow-y: auto;
+  max-height: calc(100vh - 220px);
+}
 
-  .displayBlock {
-    display: block;
-    width: 100%;
-  }
+.displayBlock {
+  display: block;
+  width: 100%;
+}
 
-  .yinpian_unit {
-    display: inline-block;
-    min-width: 2rem;
-    text-align: left
-  }
+.yinpian_unit {
+  display: inline-block;
+  min-width: 2rem;
+  text-align: left;
+}
 
-  .keli_unit {
-    display: inline-block;
-    min-width: 4rem;
-    text-align: left
-  }
+.keli_unit {
+  display: inline-block;
+  min-width: 4rem;
+  text-align: left;
+}
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div id="print" style="display: none;">
-    <div v-if="clinic.id!=30">
+    <!-- <div v-if="clinic.id==30">
       <section style="color: #000000;">
         <section style=" width: 100%;height: 70px;position: relative;">
           <div style="width: 100%;height: 35px;text-align: center;line-height: 35px;font-weight: bold;font-size: 20px;">
@@ -114,7 +114,7 @@
             </div>
             <div style="clear: both;"></div>
           </div>
-          <!--        这里未绑定正确的产品处方笺-->
+   
           <div v-show="recipeType==3">
             <div style="width: 100%;height: auto;margin-bottom: 5px;">
               <div style="line-height: 24px;" v-for="(itemOne,index) in (currRecipeData.data.items||[])" :key="index">
@@ -137,7 +137,6 @@
                   <span style="margin-right: 20px;">{{itemOne.name}}</span>
                   <span style="margin-right: 20px;" v-if="itemOne.type==2&&therapyType==2&&itemOne.sample">标本：{{itemOne.sample}}</span>
                   <span style="margin-right: 20px;" v-if="itemOne.type==3&&itemOne.position&&therapyType==3">部位：{{itemOne.position}}</span>
-                  <!-- <span style="padding-right: 20px;">{{itemOne.price}}元/次</span> -->
                   <span style="margin-right: 20px;" v-if="therapyType==1">{{itemOne.num}}次</span>
                   <span v-if="itemOne.remark">备注：{{itemOne.remark}}</span>
                 </div>
@@ -250,10 +249,7 @@
                 <span style="font-weight: bolder">项目数量：</span>
                 {{currRecipeData.data.extra_num}}
               </div>
-              <!-- <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
-                                                        <span style="font-weight: bolder">附加费用：</span>
-                                                        {{printData.extra_price}}
-            </div>-->
+     
               <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
                 <span style="font-weight: bolder">每次用量：</span>
                 {{currRecipeData.data.eachDose}}
@@ -278,7 +274,7 @@
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
               <span style="font-weight: bolder">{{clinicType==6?'营养师':'医师'}}：</span>
               {{doctorName}}
-              <!--<span>${controllers.AuthController.userName}</span>-->
+
             </div>
           </div>
           <div style="width: 100%;height: auto;margin-bottom: 5px; display: flex;">
@@ -305,7 +301,7 @@
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
               <span style="font-weight: bolder">医生：</span>
               {{doctorName}}
-              <!--<span>${controllers.AuthController.userName}</span>-->
+  
             </div>
             <div style="flex: 1;-webkit-flex: 1;-ms-flex: 1;">
               <span style="font-weight: bolder">执行人：--</span>
@@ -323,8 +319,8 @@
           </div>
         </section>
       </section>
-    </div>
-    <div v-else style="position:relative;height:100%;">
+    </div> -->
+    <!-- <div v-else style="position:relative;height:100%;">
       <section>
         <div style="width: 100%;height: 35px;text-align: center;line-height: 35px;font-weight: bold;font-size: 20px;">{{clinicName}}</div>
         <div style="width: 100%;height: 24px;text-align: center;line-height: 24px;font-weight: bold;font-size: 16px;">
@@ -436,7 +432,7 @@
           </div>
           <div style="clear: both;"></div>
         </div>
-        <!--        这里未绑定正确的产品处方笺-->
+
         <div v-show="recipeType==3">
           <div style="width: 100%;height: auto;margin-bottom: 5px;">
             <div style="line-height: 24px;" v-for="(itemOne,index) in (currRecipeData.data.items||[])" :key="index">
@@ -459,7 +455,7 @@
                 <span style="margin-right: 20px;">{{itemOne.name}}</span>
                 <span style="margin-right: 20px;" v-if="itemOne.type==2&&therapyType==2&&itemOne.sample">标本：{{itemOne.sample}}</span>
                 <span style="margin-right: 20px;" v-if="itemOne.type==3&&itemOne.position&&therapyType==3">部位：{{itemOne.position}}</span>
-                <!-- <span style="padding-right: 20px;">{{itemOne.price}}元/次</span> -->
+          
                 <span style="margin-right: 20px;" v-if="therapyType==1">{{itemOne.num}}次</span>
                 <span v-if="itemOne.remark">备注：{{itemOne.remark}}</span>
               </div>
@@ -642,16 +638,26 @@
           <span style="font-size:12px;padding-top:5px;" v-if="clinic.customer_phone">服务热线：{{clinic.customer_phone}}</span>
         </div>
       </div>
-    </div>
+    </div> -->
+    <f-loader v-if="showLoading"></f-loader>
   </div>
 </template>
 <script>
 import { mapGetters, mapState, mapActions } from "vuex";
 import { clinicName } from '@/assets/js/mapType.js'
+import fLoader from '@/components/fLoader.vue'
+import axios from 'axios'
+import filter from "@/assets/js/filters.js"
+import { printRendering } from '@/assets/js/printRendering.js'
+import clodopToggle from '@/assets/js/clodop_toggle.js'
 export default {
   name: "printPrescription",
+  components: {
+    fLoader
+  },
   data() {
     return {
+      showLoading: false,
       clinicName: clinicName,
       sexOptions: [
         { code: 1, name: '男' },
@@ -683,7 +689,7 @@ export default {
     ...mapGetters(["currRecipeData"]),
     ...mapState(["patientData", "recordData", "printPre", "printIndex", 'orderSeqno', 'doctorName', "isYB", "department", "ybCardNo", 'clinicType', 'clinic', 'print_createTime']),
     recipeType: function () {
-      // console.log(this.currRecipeData)
+      console.log(this.currRecipeData)
       return this.currRecipeData === undefined ? 0 : this.currRecipeData.type;
     },
     category: function () {
@@ -702,16 +708,41 @@ export default {
     therapyType: function () {
       var type = this.currRecipeData === undefined ? 0 : this.currRecipeData.type
       return type == 4 ? this.currRecipeData.data.type : 0
+    },
+    examination() {
+      // 计算检查结果
+      var examination = this.recordData.examination;
+      var ret = "";
+      (examination.bloodpressure_num1 || examination.bloodpressure_num2) &&
+        (ret +=
+          "血压" +
+          examination.bloodpressure_num1 +
+          "/" +
+          examination.bloodpressure_num2 +
+          "mmHg，");
+      examination.bloodglucose &&
+        (ret += "血糖" + examination.bloodglucose + "mg/ml，");
+      examination.trioxypurine &&
+        (ret += "尿酸" + examination.trioxypurine + "umol/L，");
+      examination.heartrate &&
+        (ret += "心率" + examination.heartrate + "次/分，");
+      examination.breathe && (ret += "呼吸" + examination.breathe + "次/分，");
+      examination.animalheat &&
+        (ret += "体温" + examination.animalheat + "℃，");
+      examination.weight && (ret += "体重" + examination.weight + "kg，");
+      examination.info && (ret += (ret ? '\n' : '') + examination.info);
+      return ret;
     }
   },
   watch: {
     printPre: function () {
-      this.printPrescription();
+      this.printPrescription()
     }
   },
   methods: {
     ...mapActions(['change_print_index',]),
     getTreatName: function (val) {
+      console.log(val)
       switch (val.type) {
         case 1:
           return '申请单'
@@ -725,36 +756,210 @@ export default {
     },
     printPrescription: function () {
       var self = this
-      setTimeout(function () {
-        var el = document.getElementById('print');
-        var iframe = document.createElement("IFRAME");
-        var doc = null;
-        iframe.setAttribute(
-          "style",
-          "position:absolute;width:0px;height:0px;left:-500px;top:-500px;"
-        );
-        document.body.appendChild(iframe);
-        doc = iframe.contentWindow.document;
-        doc.write("<LINK rel='stylesheet' type='text/css'>");
-        doc.write("<div>" + el.innerHTML + "</div>");
-        doc.close();
-        iframe.contentWindow.focus();
-        // if (self.clinic.id == 30) {
-        //   //兼容底部的问题
-        //   iframe.contentWindow.document.getElementById(
-        //     'bottomContent'
-        //   ).style.position =
-        //     iframe.contentWindow.document.getElementById('content')
-        //       .offsetHeight > 362
-        //       ? 'static'
-        //       : 'absolute'
-        // }
-        iframe.contentWindow.print();
-        if (navigator.userAgent.indexOf("MSIE") > 0) {
-          document.body.removeChild(iframe);
+      self.showLoading = true
+      var printType = ''
+      var recipe = self.currRecipeData.data
+      var fn = function (htmlStr, width, height) {
+        var printParams = {
+          pageHeight: height,
+          pageWidth: width
         }
-        self.change_print_index(null);
-      }, 30);
+        self.showLoading = false
+        clodopToggle(htmlStr, printParams)
+      }
+      var vue = axios
+      var filterExam = JSON.stringify(self.examination)
+      var commonVar = {
+        '$机构名称': self.clinic.name || '',
+        '$机构地址': self.clinic.city_name + '市' + self.clinic.county_name + '区' + self.clinic.address,
+        '$服务热线': self.clinic.customer_phone || '',
+        '$打印时间': filter.dateFormat(new Date(), 'yyyy-MM-dd hh:mm'),
+        '$年': filter.dateFormat(new Date(), 'yyyy'),
+        '$月': filter.dateFormat(new Date(), 'MM'),
+        '$日': filter.dateFormat(new Date(), 'dd'),
+        '$时': filter.dateFormat(new Date(), 'hh'),
+        '$分': filter.dateFormat(new Date(), 'mm'),
+        '$医保卡号': self.ybCardNo,
+        '$就诊订单号': self.orderSeqno,
+        '$费别': self.isYB == 0 ? '自费' : '医保',
+        '$患者姓名': self.patientData.name || '',
+        '$患者年龄': self.patientData.age || '',
+        '$患者性别': self.patientData.sex == 0 ? '未知' : (self.patientData.sex == 1 ? '男' : '女'),
+        '$患者电话': self.patientData.mobile || '',
+        '$患者地址': self.patientData.province_name +
+          '省' +
+          self.patientData.city_name +
+          '市' +
+          self.patientData.county_name +
+          '区' +
+          self.patientData.address,
+        '$医生姓名': self.doctorName || '',
+        '$医生科室': self.department || '',
+        '$主诉': self.recordData.chief_complaint || '',
+        '$现病史': self.recordData.present_illness || '',
+        '$既往史': self.recordData.past_history || '',
+        '$过敏史': self.recordData.allergic_history || '',
+        '$个人史': self.recordData.personal_history || '',
+        '$家族史': self.recordData.family_history || '',
+        '$预防接种史': self.recordData.prophylactic_history || '',
+        '$体格检查': JSON.stringify(self.recordData.examination) || '',
+        '$辅助检查': self.recordData.auxiliary_examination || '',
+        '$中医诊断': self.recordData.diagnosis || '',
+        '$初步诊断': self.recordData.diagnosis_xy || '',
+        '$治疗处理': self.recordData.treat_advice || '',
+        '$运动建议': self.recordData.sport_advice || '',
+        '$膳食建议': self.recordData.dietary_advice || '',
+        '$病历号': self.orderSeqno,
+        '$处方订单号':
+          filter.dateFormat(new Date(), 'yyyyMMdd') +
+          self.orderSeqno.slice(-6),
+        '$处方金额': self.currRecipeData.money || '',
+        '$医嘱': self.currRecipeData.data.doctor_remark || ''
+      }
+      console.log(self.currRecipeData.type)
+
+      switch (self.currRecipeData.type) {
+        case 0:
+          return new printRendering(
+            'herbalRecipe',
+            Object.assign({}, commonVar, {
+              '$中药列表': recipe.items,
+              '$中药类型': recipe.category == 1 ? '饮片' : '颗粒',
+              '$中药剂数': recipe.dosage,
+              '$中药频次': recipe.frequency,
+              '$中药用法': recipe.usage,
+              '$中药用量': recipe.dose_once || self.currRecipeData.data.eachDose,
+            }),
+            vue,
+            fn);
+          break;
+        case 1:
+          return new printRendering(
+            'herbalRecipe',
+            Object.assign({}, commonVar, {
+              '$中药列表': recipe.items,
+              '$中药类型': recipe.category == 1 ? '饮片' : '颗粒',
+              '$中药剂数': recipe.dosage,
+              '$中药频次': recipe.frequency,
+              '$中药用法': recipe.usage,
+              '$中药用量': recipe.dose_once || self.currRecipeData.data.eachDose,
+            }),
+            vue,
+            fn);
+          break;
+        case 2:
+          return new printRendering(
+            'westernRecipe',
+            Object.assign({}, commonVar, {
+              '$成药列表': recipe.items,
+            }),
+            vue,
+            fn);
+          break;
+        case 6:
+          return new printRendering(
+            'materialRecipe',
+            Object.assign({}, commonVar, {
+              '$材料列表': recipe.items,
+            }),
+            vue,
+            fn);
+          break;
+        case 3:
+          return new printRendering(
+            'westernRecipe',
+            Object.assign({}, commonVar, {
+              '$产品列表': recipe.items,
+            }),
+            vue,
+            fn);
+          break;
+        case 4:
+          switch (recipe.type) {
+            case 1:
+              if (self.printIndex !== undefined && self.printIndex !== null) {
+                return new printRendering(
+                  'treatApply',
+                  Object.assign({}, commonVar, {
+                    '$项目名称': recipe.items[self.printIndex].name,
+                    '$执行次数': recipe.items[self.printIndex].num,
+                    '$备注': recipe.items[self.printIndex].remark,
+                    '$处方金额': (
+                      recipe.items[self.printIndex].price *
+                      recipe.items[self.printIndex].num
+                    ).toFixed(2)
+                  }),
+                  vue,
+                  fn
+                )
+              } else {
+                return new printRendering(
+                  'treatRecipe',
+                  Object.assign({}, commonVar, {
+                    '$治疗项目列表': recipe.items
+                  }),
+                  vue,
+                  fn
+                )
+              }
+              break
+            case 2:
+              if (self.printIndex !== undefined && self.printIndex !== null) {
+                return new printRendering(
+                  'textApply',
+                  Object.assign({}, commonVar, {
+                    '$项目名称': recipe.items[self.printIndex].name,
+                    '$标本': recipe.items[self.printIndex].sample,
+                    '$备注': recipe.items[self.printIndex].remark,
+                    '$处方金额': (
+                      recipe.items[self.printIndex].price *
+                      recipe.items[self.printIndex].num
+                    ).toFixed(2)
+                  }),
+                  vue,
+                  fn
+                )
+              } else {
+                return new printRendering(
+                  'textRecipe',
+                  Object.assign({}, commonVar, {
+                    '$检验项目列表': recipe.items
+                  }),
+                  vue,
+                  fn
+                )
+              }
+              break
+            case 3:
+              if (self.printIndex !== undefined && self.printIndex !== null) {
+                return new printRendering(
+                  'examineApply',
+                  Object.assign({}, commonVar, {
+                    '$项目名称': recipe.items[self.printIndex].name,
+                    '$部位': recipe.items[self.printIndex].position,
+                    '$检查目的': recipe.items[self.printIndex].remark,
+                    '$处方金额': (
+                      recipe.items[self.printIndex].price *
+                      recipe.items[self.printIndex].num
+                    ).toFixed(2)
+                  }),
+                  vue,
+                  fn
+                )
+              } else {
+                return new printRendering(
+                  'examineRecipe',
+                  Object.assign({}, commonVar, {
+                    '$检查项目列表': recipe.items
+                  }),
+                  vue,
+                  fn
+                )
+              }
+              break
+          }
+          break
+      }
     }
   }
 };

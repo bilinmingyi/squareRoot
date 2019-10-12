@@ -8,17 +8,17 @@ import components from './assets/js/components'
 import store from './store/index'
 import 'babel-polyfill'
 
-import 'iview/dist/styles/iview.css';
-import {Message,Modal} from 'iview';
-
-Vue.prototype.$Message=Message;
-Vue.prototype.$Modal=Modal;
+import 'iview/dist/styles/iview.css'
+import { Message, Modal } from 'iview'
+import '@/assets/js/clodop_toggle.js'
+Vue.prototype.$Message = Message
+Vue.prototype.$Modal = Modal
 
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
 Object.keys(components).forEach(key => {
-  Vue.component(key,components[key])
+  Vue.component(key, components[key])
 })
 Vue.config.productionTip = false
 
@@ -27,6 +27,6 @@ new Vue({
   el: '#app',
   router,
   store,
-  components: {App},
+  components: { App },
   template: '<App/>'
 })
