@@ -2,10 +2,10 @@
   <!-- 患者病历 -->
   <div class="mid-box-content">
     <div class="mid-title-btn-box mb10 pr10">
-<!--      <button class="prescriptionBtn mr10" @click.stop="showRecordSetAlert">-->
-<!--        {{clinicType == 6 ? '档案' : '病历'}}项目设置-->
-<!--      </button>-->
-<!--      <button class="prescriptionBtn mr10" @click.stop="showAddRecordAlert(-1)">添加报告</button>-->
+      <!--      <button class="prescriptionBtn mr10" @click.stop="showRecordSetAlert">-->
+      <!--        {{clinicType == 6 ? '档案' : '病历'}}项目设置-->
+      <!--      </button>-->
+      <!--      <button class="prescriptionBtn mr10" @click.stop="showAddRecordAlert(-1)">添加报告</button>-->
       <button class="prescriptionBtn mr10" @click.stop="printPrescription()">
         打印{{clinicType == 6 ? '档案' : '病历'}}
       </button>
@@ -17,9 +17,8 @@
         <span>主&nbsp;&nbsp;&nbsp;诉：</span>
       </div>
       <div class="mid-record-item-val">
-        <assistTextarea rows="2" placeholder="点此输入" :value="recordData.chief_complaint"
-                        @input="function(val) {recordData.chief_complaint = val}"
-                        @assist="clinicRecord(2)">
+        <assistTextarea rows="2" placeholder="点此输入" :value="recordData.chief_complaint" @input="function(val) {recordData.chief_complaint = val}"
+          @assist="clinicRecord(2)">
         </assistTextarea>
       </div>
     </div>
@@ -28,9 +27,8 @@
         <span>现病史：</span>
       </div>
       <div class="mid-record-item-val">
-        <assistTextarea rows="2" placeholder="点此输入" :value="recordData.present_illness"
-                        @input="function(val) {recordData.present_illness = val}"
-                        @assist="clinicRecord(4)">
+        <assistTextarea rows="2" placeholder="点此输入" :value="recordData.present_illness" @input="function(val) {recordData.present_illness = val}"
+          @assist="clinicRecord(4)">
         </assistTextarea>
       </div>
     </div>
@@ -62,14 +60,8 @@
         <span>月经生育史：</span>
       </div>
       <div class="mid-record-item-val">
-        <Input
-          type="textarea"
-          :autosize="{minRows: 2,maxRows: 5}"
-          :rows="2"
-          placeholder="点此输入"
-          @on-change="set_record_prop({key: 'childbearing_history', val: $event.target.value})"
-          :value="recordData.childbearing_history"
-        ></Input>
+        <Input type="textarea" :autosize="{minRows: 2,maxRows: 5}" :rows="2" placeholder="点此输入"
+          @on-change="set_record_prop({key: 'childbearing_history', val: $event.target.value})" :value="recordData.childbearing_history"></Input>
       </div>
     </div>
     <div class="mt10 mid-record-item" v-if="checkRecord('past_history')">
@@ -77,14 +69,8 @@
         <span>既往史：</span>
       </div>
       <div class="mid-record-item-val">
-        <Input
-          type="textarea"
-          :autosize="{minRows: 2,maxRows: 5}"
-          :rows="2"
-          placeholder="点此输入"
-          @on-change="set_record_prop({key: 'past_history', val: $event.target.value})"
-          :value="recordData.past_history"
-        ></Input>
+        <Input type="textarea" :autosize="{minRows: 2,maxRows: 5}" :rows="2" placeholder="点此输入"
+          @on-change="set_record_prop({key: 'past_history', val: $event.target.value})" :value="recordData.past_history"></Input>
       </div>
     </div>
     <div class="mt10 mid-record-item" v-if="checkRecord('allergic_history')">
@@ -92,9 +78,8 @@
         <span>过敏史：</span>
       </div>
       <div class="mid-record-item-val">
-        <assistTextarea rows="2" placeholder="点此输入" :value="recordData.allergic_history"
-                        @input="function(val) {recordData.allergic_history = val}"
-                        @assist="clinicRecord(1)">
+        <assistTextarea rows="2" placeholder="点此输入" :value="recordData.allergic_history" @input="function(val) {recordData.allergic_history = val}"
+          @assist="clinicRecord(1)">
         </assistTextarea>
       </div>
     </div>
@@ -103,9 +88,8 @@
         <span>个人史：</span>
       </div>
       <div class="mid-record-item-val">
-        <assistTextarea rows="2" placeholder="点此输入" :value="recordData.personal_history"
-                        @input="function(val) {recordData.personal_history = val}"
-                        @assist="clinicRecord(0)">
+        <assistTextarea rows="2" placeholder="点此输入" :value="recordData.personal_history" @input="function(val) {recordData.personal_history = val}"
+          @assist="clinicRecord(0)">
         </assistTextarea>
       </div>
     </div>
@@ -115,14 +99,8 @@
         <span>家族史：</span>
       </div>
       <div class="mid-record-item-val">
-        <Input
-          type="textarea"
-          :autosize="{minRows: 2,maxRows: 5}"
-          :rows="2"
-          placeholder="点此输入"
-          @on-change="set_record_prop({key: 'family_history', val: $event.target.value})"
-          :value="recordData.family_history"
-        ></Input>
+        <Input type="textarea" :autosize="{minRows: 2,maxRows: 5}" :rows="2" placeholder="点此输入"
+          @on-change="set_record_prop({key: 'family_history', val: $event.target.value})" :value="recordData.family_history"></Input>
       </div>
     </div>
     <div class="mt10 mid-record-item" v-if="checkRecord('prophylactic_history')">
@@ -130,14 +108,8 @@
         <span>预防接种史：</span>
       </div>
       <div class="mid-record-item-val">
-        <Input
-          type="textarea"
-          :autosize="{minRows: 2,maxRows: 5}"
-          :rows="2"
-          placeholder="点此输入"
-          @on-change="set_record_prop({key: 'prophylactic_history', val: $event.target.value})"
-          :value="recordData.prophylactic_history"
-        ></Input>
+        <Input type="textarea" :autosize="{minRows: 2,maxRows: 5}" :rows="2" placeholder="点此输入"
+          @on-change="set_record_prop({key: 'prophylactic_history', val: $event.target.value})" :value="recordData.prophylactic_history"></Input>
       </div>
     </div>
 
@@ -146,8 +118,7 @@
         <span>检查报告：</span>
       </div>
       <div class="mid-record-item-val display-flex">
-        <div class="examine-report" v-for="(item, index) in recordData.inspection_report"
-             @click.stop="showAddRecordAlert(index)">
+        <div class="examine-report" v-for="(item, index) in recordData.inspection_report" @click.stop="showAddRecordAlert(index)">
           <img src="../assets/img/jc@2x.png">
           <div class="examine-infor">
             <div>
@@ -156,7 +127,7 @@
             <!--            <button @click.stop="delReport(item, index)">删除</button>-->
           </div>
           <div class="delete-icon" @click.stop="delReport(item, index)">
-            <Icon type="md-close" size="16"/>
+            <Icon type="md-close" size="16" />
           </div>
         </div>
       </div>
@@ -166,8 +137,7 @@
         <span>问诊表：</span>
       </div>
       <div class="mid-record-item-val display-flex" style="flex-wrap: wrap">
-        <div class="examine-report" v-for="(item, index) in recordData.outpatient_table"
-             @click.stop="showWriteQuestionsAlert(index)">
+        <div class="examine-report" v-for="(item, index) in recordData.outpatient_table" @click.stop="showWriteQuestionsAlert(index)">
           <img src="../assets/img/dcb@2x.png">
           <div class="examine-infor">
             <div>
@@ -175,7 +145,7 @@
             </div>
           </div>
           <div class="delete-icon" @click.stop="delQuestions(item, index)">
-            <Icon type="md-close" size="16"/>
+            <Icon type="md-close" size="16" />
           </div>
         </div>
       </div>
@@ -185,14 +155,7 @@
         <span>体格检查：</span>
       </div>
       <div class="mid-record-item-val" @click.stop="clinicRecord(3)">
-        <Input
-          type="textarea"
-          :autosize="{minRows: 2,maxRows: 5}"
-          :rows="2"
-          placeholder="点此输入"
-          v-model="examination"
-          readonly
-        ></Input>
+        <Input type="textarea" :autosize="{minRows: 2,maxRows: 5}" :rows="2" placeholder="点此输入" v-model="examination" readonly></Input>
       </div>
     </div>
     <div class="mt10 mid-record-item" v-if="checkRecord('auxiliary_examination')">
@@ -200,14 +163,8 @@
         <span>辅助检查：</span>
       </div>
       <div class="mid-record-item-val">
-        <Input
-          type="textarea"
-          :autosize="{minRows: 2,maxRows: 5}"
-          :rows="2"
-          placeholder="点此输入"
-          @on-change="set_record_prop({key: 'auxiliary_examination', val: $event.target.value})"
-          :value="recordData.auxiliary_examination"
-        ></Input>
+        <Input type="textarea" :autosize="{minRows: 2,maxRows: 5}" :rows="2" placeholder="点此输入"
+          @on-change="set_record_prop({key: 'auxiliary_examination', val: $event.target.value})" :value="recordData.auxiliary_examination"></Input>
       </div>
     </div>
 
@@ -218,38 +175,18 @@
       <div class="mid-record-item-val">
         <div class="diagnosis-input-box" ref="diagnosis">
           <div class="label-box" v-show="recordData.diagnosis_labels.length > 0">
-            <Tag
-              closable
-              v-for="(tag, index) in recordData.diagnosis_labels"
-              @on-close="deleteDiagnosisLabel('diagnosis', index)"
-              :key="tag.code"
-            >{{tag.name}}
+            <Tag closable v-for="(tag, index) in recordData.diagnosis_labels" @on-close="deleteDiagnosisLabel('diagnosis', index)" :key="tag.code">{{tag.name}}
             </Tag>
           </div>
-          <input
-            class="diagnosis-input"
-            type="text"
-            placeholder="点此输入"
-            v-model="recordData.diagnosis_input"
-            @blur="handleComma('diagnosis')"
-            @input="searchDiagnosis('diagnosis')"
-            @focus="changeBox('diagnosis')"
-            tabindex="-1"
-            ref="diagnosis_input"
-            @keydown="listenerKey($event, 'diagnosis')"
-          >
+          <input class="diagnosis-input" type="text" placeholder="点此输入" v-model="recordData.diagnosis_input" @blur="handleComma('diagnosis')"
+            @input="searchDiagnosis('diagnosis')" @focus="changeBox('diagnosis')" tabindex="-1" ref="diagnosis_input"
+            @keydown="listenerKey($event, 'diagnosis')">
         </div>
-        <div
-          class="mid-record-item-drop-down-box"
-          v-show="recordData.diagnosis_search_data.length > 0"
-        >
+        <div class="mid-record-item-drop-down-box" v-show="recordData.diagnosis_search_data.length > 0">
           <div class="drop-down-mask" @click="clearDiagnosisSearchData('diagnosis')"></div>
           <ul class="drop-down" ref="diagnosis_drop_down">
-            <li
-              v-for="(item, index) in recordData.diagnosis_search_data"
-              @click="chooseDiagnosisLabel('diagnosis', index)"
-              :class="{cur: diagnosisDataIndex == (index + 1)}"
-            >{{item.name}}
+            <li v-for="(item, index) in recordData.diagnosis_search_data" @click="chooseDiagnosisLabel('diagnosis', index)"
+              :class="{cur: diagnosisDataIndex == (index + 1)}">{{item.name}}
             </li>
           </ul>
         </div>
@@ -262,39 +199,19 @@
       <div class="mid-record-item-val">
         <div class="diagnosis-input-box" ref="diagnosis_xy">
           <div class="label-box" v-show="recordData.diagnosis_xy_labels.length > 0">
-            <Tag
-              closable
-              v-for="(tag, index) in recordData.diagnosis_xy_labels"
-              @on-close="deleteDiagnosisLabel('diagnosis_xy', index)"
-              :key="tag.code"
-            >{{tag.name}}
+            <Tag closable v-for="(tag, index) in recordData.diagnosis_xy_labels" @on-close="deleteDiagnosisLabel('diagnosis_xy', index)" :key="tag.code">
+              {{tag.name}}
             </Tag>
           </div>
-          <input
-            class="diagnosis-input"
-            placeholder="点此输入"
-            type="text"
-            v-model="recordData.diagnosis_xy_input"
-            @blur="handleComma('diagnosis_xy')"
-            @input="searchDiagnosis('diagnosis_xy')"
-            @focus="changeBox('diagnosis_xy')"
-            tabindex="-1"
-            ref="diagnosis_xy_input"
-            @keydown="listenerKey($event, 'diagnosis_xy')"
-          >
+          <input class="diagnosis-input" placeholder="点此输入" type="text" v-model="recordData.diagnosis_xy_input" @blur="handleComma('diagnosis_xy')"
+            @input="searchDiagnosis('diagnosis_xy')" @focus="changeBox('diagnosis_xy')" tabindex="-1" ref="diagnosis_xy_input"
+            @keydown="listenerKey($event, 'diagnosis_xy')">
         </div>
-        <div
-          class="mid-record-item-drop-down-box"
-          v-show="recordData.diagnosis_xy_search_data.length > 0"
-        >
+        <div class="mid-record-item-drop-down-box" v-show="recordData.diagnosis_xy_search_data.length > 0">
           <div class="drop-down-mask" @click="clearDiagnosisSearchData('diagnosis_xy')"></div>
           <ul class="drop-down" ref="diagnosis_xy_drop_down">
-            <li
-              v-for="(item, index) in recordData.diagnosis_xy_search_data"
-              @click="chooseDiagnosisLabel('diagnosis_xy', index)"
-              :class="{cur: diagnosisDataIndex == (index + 1)}"
-              :id="'diagnosis_xy_drop_down_li_' + (index + 1)"
-            >{{item.name}}
+            <li v-for="(item, index) in recordData.diagnosis_xy_search_data" @click="chooseDiagnosisLabel('diagnosis_xy', index)"
+              :class="{cur: diagnosisDataIndex == (index + 1)}" :id="'diagnosis_xy_drop_down_li_' + (index + 1)">{{item.name}}
             </li>
           </ul>
         </div>
@@ -306,14 +223,8 @@
         <span>治疗处理：</span>
       </div>
       <div class="mid-record-item-val">
-        <Input
-          type="textarea"
-          :autosize="{minRows: 2,maxRows: 5}"
-          :rows="2"
-          :value="recordData.treat_advice"
-          placeholder="点此输入"
-          @on-change="set_record_prop({key: 'treat_advice', val: $event.target.value})"
-        ></Input>
+        <Input type="textarea" :autosize="{minRows: 2,maxRows: 5}" :rows="2" :value="recordData.treat_advice" placeholder="点此输入"
+          @on-change="set_record_prop({key: 'treat_advice', val: $event.target.value})"></Input>
       </div>
     </div>
     <div class="mt10 mid-record-item" v-if="checkRecord('sport_advice')">
@@ -321,14 +232,8 @@
         <span>运动建议：</span>
       </div>
       <div class="mid-record-item-val">
-        <Input
-          type="textarea"
-          :autosize="{minRows: 2,maxRows: 5}"
-          :rows="2"
-          placeholder="点此输入"
-          @on-change="set_record_prop({key: 'sport_advice', val: $event.target.value})"
-          :value="recordData.sport_advice"
-        ></Input>
+        <Input type="textarea" :autosize="{minRows: 2,maxRows: 5}" :rows="2" placeholder="点此输入"
+          @on-change="set_record_prop({key: 'sport_advice', val: $event.target.value})" :value="recordData.sport_advice"></Input>
       </div>
     </div>
     <div class="mt10 mid-record-item" v-if="checkRecord('dietary_advice')">
@@ -336,46 +241,26 @@
         <span>膳食建议：</span>
       </div>
       <div class="mid-record-item-val">
-        <Input
-          type="textarea"
-          :autosize="{minRows: 2,maxRows: 5}"
-          :rows="2"
-          placeholder="点此输入"
-          @on-change="set_record_prop({key: 'dietary_advice', val: $event.target.value})"
-          :value="recordData.dietary_advice"
-        ></Input>
+        <Input type="textarea" :autosize="{minRows: 2,maxRows: 5}" :rows="2" placeholder="点此输入"
+          @on-change="set_record_prop({key: 'dietary_advice', val: $event.target.value})" :value="recordData.dietary_advice"></Input>
       </div>
     </div>
-    <patient-alert
-      v-show="showPatientAlert"
-      :caseHistoryProp="recordCaseHistory"
-      :diagnosisTypeProp="diagnosisType"
-      @close="closePatientAlert"
-      :timeStamp="Date.now()"
-    ></patient-alert>
-    <save-record-tpl
-      v-if="showSaveRecordTpl"
-      @close="showSaveRecordTpl = false"
-    ></save-record-tpl>
-    <print-record
-      v-show="showPrintRecord"
-      @close="showPrintRecord = false"
-      :printFlag="printFlag"
-      @reset="printFlag = false"
-    ></print-record>
-<!--    <record-set v-if="recordSetAlert" @close="recordSetAlert = false"></record-set>-->
+    <patient-alert v-show="showPatientAlert" :caseHistoryProp="recordCaseHistory" :diagnosisTypeProp="diagnosisType" @close="closePatientAlert"
+      :timeStamp="Date.now()"></patient-alert>
+    <save-record-tpl v-if="showSaveRecordTpl" @close="showSaveRecordTpl = false"></save-record-tpl>
+    <print-record v-show="showPrintRecord" @close="showPrintRecord = false" :printFlag="printFlag" @reset="printFlag = false"></print-record>
+    <!--    <record-set v-if="recordSetAlert" @close="recordSetAlert = false"></record-set>-->
     <add-record v-if="addRecordAlert" :currIndex="currRecordIndex" @close="hideAddRecordAlert"></add-record>
-    <write-questions v-if="writeQuestionsAlert" :currIndex="currQuestionIndex"
-                     @close="hideWriteQuestionsAlert"></write-questions>
+    <write-questions v-if="writeQuestionsAlert" :currIndex="currQuestionIndex" @close="hideWriteQuestionsAlert"></write-questions>
   </div>
   <!-- 患者病历 -->
 </template>
 
 <script>
-import {mapState, mapActions} from "vuex";
-import {Input, Tag, Icon, Checkbox, CheckboxGroup} from "iview";
+import { mapState, mapActions } from "vuex";
+import { Input, Tag, Icon, Checkbox, CheckboxGroup } from "iview";
 import patientAlert from "./patientAlert";
-import {getCaseHistory, getDiseaseList, deleteReport, saveDraft, deleteTreatAnswer} from "@/fetch/api.js";
+import { getCaseHistory, getDiseaseList, deleteReport, saveDraft, deleteTreatAnswer } from "@/fetch/api.js";
 import saveRecordTpl from '@/components/saveRecordTpl';
 import printRecord from '@/components/printRecord';
 import assistTextarea from '@/components/assistTextarea'
@@ -430,21 +315,21 @@ export default {
       var examination = this.recordData.examination;
       var ret = "";
       (examination.bloodpressure_num1 || examination.bloodpressure_num2) &&
-      (ret +=
-        "血压" +
-        examination.bloodpressure_num1 +
-        "/" +
-        examination.bloodpressure_num2 +
-        "mmHg，");
+        (ret +=
+          "血压" +
+          examination.bloodpressure_num1 +
+          "/" +
+          examination.bloodpressure_num2 +
+          "mmHg，");
       examination.bloodglucose &&
-      (ret += "血糖" + examination.bloodglucose + "mg/ml，");
+        (ret += "血糖" + examination.bloodglucose + "mg/ml，");
       examination.trioxypurine &&
-      (ret += "尿酸" + examination.trioxypurine + "umol/L，");
+        (ret += "尿酸" + examination.trioxypurine + "umol/L，");
       examination.heartrate &&
-      (ret += "心率" + examination.heartrate + "次/分，");
+        (ret += "心率" + examination.heartrate + "次/分，");
       examination.breathe && (ret += "呼吸" + examination.breathe + "次/分，");
       examination.animalheat &&
-      (ret += "体温" + examination.animalheat + "℃，");
+        (ret += "体温" + examination.animalheat + "℃，");
       examination.weight && (ret += "体重" + examination.weight + "kg，");
       examination.info && (ret += (ret ? '\n' : '') + examination.info);
       return ret;
@@ -495,7 +380,7 @@ export default {
       return self.recordData.recordList.indexOf(type) >= 0
     },
     changeRecordList(valueList) {
-      this.set_record_prop({key: 'recordList', val: valueList});
+      this.set_record_prop({ key: 'recordList', val: valueList });
     },
     // showRecordSetAlert() {
     //   this.recordSetAlert = true
@@ -522,7 +407,7 @@ export default {
           }).then(res => {
             if (res.code === 1000) {
               inspectionList.splice(index, 1)
-              self.set_record_prop({key: 'inspection_report', val: inspectionList});
+              self.set_record_prop({ key: 'inspection_report', val: inspectionList });
               self.saveDraftData()
             } else {
               self.$Message.info(res.msg)
@@ -557,7 +442,7 @@ export default {
             .then(function (res) {
               if (res.code === 1000) {
                 outpatientList.splice(index, 1)
-                self.set_record_prop({key: 'outpatient_table', val: outpatientList});
+                self.set_record_prop({ key: 'outpatient_table', val: outpatientList });
                 self.saveDraftData()
               } else {
                 this.$Message.info(res.msg)
@@ -623,7 +508,7 @@ export default {
     },
     printPrescription() {
       // 打印病历
-      // this.showPrintRecord = true;
+      this.showPrintRecord = true;
       this.printFlag = true;
     },
     showSaveTemplate() {
@@ -654,7 +539,7 @@ export default {
         val: this.handleCommaCore(this.recordData[type + "_input"])
       });
       setTimeout(() => {
-        this.set_record_prop({key: type + "_search_data", val: []});
+        this.set_record_prop({ key: type + "_search_data", val: [] });
         this.diagnosisDataIndex = 0;
       }, 200);
     },
@@ -730,10 +615,10 @@ export default {
     // 清空查询的诊断结果,并重新聚焦回输入框
     clearDiagnosisSearchData: function (type) {
       if (type === "diagnosis") {
-        this.set_record_prop({key: "diagnosis_search_data", val: []});
+        this.set_record_prop({ key: "diagnosis_search_data", val: [] });
         this.$refs.diagnosis_input.focus();
       } else if (type === "diagnosis_xy") {
-        this.set_record_prop({key: "diagnosis_xy_search_data", val: []});
+        this.set_record_prop({ key: "diagnosis_xy_search_data", val: [] });
         this.$refs.diagnosis_xy_input.focus();
       }
       this.diagnosisDataIndex = 0;
@@ -777,7 +662,7 @@ export default {
     chooseDiagnosisLabel: function (type, index) {
       let labels = this.recordData[type + "_labels"];
       labels.push(this.recordData[type + "_search_data"][index]);
-      this.set_record_prop({key: type + "_labels", val: labels});
+      this.set_record_prop({ key: type + "_labels", val: labels });
       this.deleteQueryDiagnosisStr(type);
       this.handleComma(type);
       this.clearDiagnosisSearchData(type);
@@ -801,7 +686,7 @@ export default {
       }
       arr.pop();
       str = arr.join(";");
-      this.set_record_prop({key: type + "_input", val: str});
+      this.set_record_prop({ key: type + "_input", val: str });
     },
     // 诊断监听按钮
     listenerKey: function (event, type) {
@@ -845,207 +730,207 @@ export default {
 </script>
 
 <style scoped>
-  .mid-box-content {
-    background: #fff;
-    padding-bottom: 60px;
-  }
+.mid-box-content {
+  background: #fff;
+  padding-bottom: 60px;
+}
 
-  .mid-title-btn-box {
-    display: flex;
-    justify-content: flex-end;
-  }
+.mid-title-btn-box {
+  display: flex;
+  justify-content: flex-end;
+}
 
-  .mid-hr {
-    border: none;
-    height: 1px;
-    background-color: #ccc;
-  }
+.mid-hr {
+  border: none;
+  height: 1px;
+  background-color: #ccc;
+}
 
-  .mid-record-item {
-    display: flex;
-  }
+.mid-record-item {
+  display: flex;
+}
 
-  .mid-record-item-key {
-    padding-left: 1.5rem;
-    min-width: 6.1875rem;
-    height: 2rem;
-    line-height: 2rem;
-    font-size: 0.9375rem;
-    font-family: PingFangSC-Semibold;
-    font-weight: 600;
-    color: rgba(76, 76, 76, 1);
-  }
+.mid-record-item-key {
+  padding-left: 1.5rem;
+  min-width: 6.1875rem;
+  height: 2rem;
+  line-height: 2rem;
+  font-size: 0.9375rem;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  color: rgba(76, 76, 76, 1);
+}
 
-  .mid-record-item-val {
-    flex: 1;
-    padding: 0 1.5rem 0 0.3125rem;
-    position: relative;
-  }
+.mid-record-item-val {
+  flex: 1;
+  padding: 0 1.5rem 0 0.3125rem;
+  position: relative;
+}
 
-  .prescriptionBtn {
-    border: 1px solid #5096e0;
-    border-radius: 1.875rem;
-    font-size: 0.875rem;
-    color: #5096e0;
-    background: none;
-    padding: 0 0.5rem;
-    line-height: 1.875rem;
-    min-width: 5.125rem;
-  }
+.prescriptionBtn {
+  border: 1px solid #5096e0;
+  border-radius: 1.875rem;
+  font-size: 0.875rem;
+  color: #5096e0;
+  background: none;
+  padding: 0 0.5rem;
+  line-height: 1.875rem;
+  min-width: 5.125rem;
+}
 
-  .diagnosis-input-box {
-    margin-bottom: 0.3125rem;
-    width: 100%;
-    min-height: 2.375rem;
-    line-height: 1.5rem;
-    padding: 0.25rem 0.5rem;
-    font-size: 1rem;
-    border: 1px solid #dcdee2;
-    border-radius: 0.25rem;
-    color: #515a6e;
-    background-image: none;
-    position: relative;
-    cursor: text;
-    transition: border 0.2s ease-in-out, background 0.2s ease-in-out,
+.diagnosis-input-box {
+  margin-bottom: 0.3125rem;
+  width: 100%;
+  min-height: 2.375rem;
+  line-height: 1.5rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #dcdee2;
+  border-radius: 0.25rem;
+  color: #515a6e;
+  background-image: none;
+  position: relative;
+  cursor: text;
+  transition: border 0.2s ease-in-out, background 0.2s ease-in-out,
     box-shadow 0.2s ease-in-out;
-  }
+}
 
-  .diagnosis-input-box:hover {
-    border-color: #57a3f3;
-  }
+.diagnosis-input-box:hover {
+  border-color: #57a3f3;
+}
 
-  .diagnosis-input {
-    flex: 1;
-    border: none;
-    width: 100%;
-    min-width: 10.9375rem;
-    height: 1.75rem;
-    color: #515a6e;
-    font-size: 0.875rem;
-    outline: none;
-  }
+.diagnosis-input {
+  flex: 1;
+  border: none;
+  width: 100%;
+  min-width: 10.9375rem;
+  height: 1.75rem;
+  color: #515a6e;
+  font-size: 0.875rem;
+  outline: none;
+}
 
-  .diagnosis-input:focus {
-    outline-color: transparent;
-  }
+.diagnosis-input:focus {
+  outline-color: transparent;
+}
 
-  .mid-record-item-drop-down-box {
-    position: relative;
-    width: 100%;
-    height: 0;
-    padding: 0 10px;
-  }
+.mid-record-item-drop-down-box {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding: 0 10px;
+}
 
-  .drop-down-mask {
-    position: fixed;
-    z-index: 9;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
+.drop-down-mask {
+  position: fixed;
+  z-index: 9;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
 
-  .mid-record-item-drop-down-box .drop-down {
-    position: absolute;
-    top: -6px;
-    left: 10px;
-    width: 95%;
-    height: 180px;
-    border: 1px solid #ccc;
-    border-top: none;
-    background: #fff;
-    z-index: 10;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    overflow: auto;
-  }
+.mid-record-item-drop-down-box .drop-down {
+  position: absolute;
+  top: -6px;
+  left: 10px;
+  width: 95%;
+  height: 180px;
+  border: 1px solid #ccc;
+  border-top: none;
+  background: #fff;
+  z-index: 10;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  overflow: auto;
+}
 
-  .drop-down li {
-    height: 30px;
-    line-height: 30px;
-    padding: 0 18px;
-    font-size: 14px;
-    vertical-align: middle;
-    opacity: 1;
-    overflow: hidden;
-    cursor: pointer;
-    border-bottom: 1px solid #ccc;
-  }
+.drop-down li {
+  height: 30px;
+  line-height: 30px;
+  padding: 0 18px;
+  font-size: 14px;
+  vertical-align: middle;
+  opacity: 1;
+  overflow: hidden;
+  cursor: pointer;
+  border-bottom: 1px solid #ccc;
+}
 
-  .drop-down li:nth-last-child(1) {
-    border-bottom: none;
-  }
+.drop-down li:nth-last-child(1) {
+  border-bottom: none;
+}
 
-  .drop-down li:hover {
-    opacity: 0.8;
-  }
+.drop-down li:hover {
+  opacity: 0.8;
+}
 
-  .drop-down li:active {
-    opacity: 0.5;
-  }
+.drop-down li:active {
+  opacity: 0.5;
+}
 
-  .drop-down .cur {
-    background: #5096e0;
-    color: #fff;
-  }
+.drop-down .cur {
+  background: #5096e0;
+  color: #fff;
+}
 
-  .pointer {
-    cursor: pointer;
-  }
+.pointer {
+  cursor: pointer;
+}
 
-  .display-flex {
-    display: flex;
-  }
+.display-flex {
+  display: flex;
+}
 
-  .text-justify {
-    text-align: justify;
-  }
+.text-justify {
+  text-align: justify;
+}
 
-  .text-justify::after {
-    content: "";
-    overflow: hidden;
-    width: 100%;
-    height: 0;
-    display: inline-block;
-  }
+.text-justify::after {
+  content: "";
+  overflow: hidden;
+  width: 100%;
+  height: 0;
+  display: inline-block;
+}
 
-  .examine-report {
-    display: flex;
-    position: relative;
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-    padding: 16px;
-    margin-right: 16px;
-    margin-bottom: 4px;
-  }
+.examine-report {
+  display: flex;
+  position: relative;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  padding: 16px;
+  margin-right: 16px;
+  margin-bottom: 4px;
+}
 
-  .examine-report img {
-    width: 44px;
-    height: 44px;
-    margin-right: 12px;
-  }
+.examine-report img {
+  width: 44px;
+  height: 44px;
+  margin-right: 12px;
+}
 
-  .examine-infor {
-    display: flex;
-    align-items: center;
-  }
+.examine-infor {
+  display: flex;
+  align-items: center;
+}
 
-  .examine-infor button {
-    width: 48px;
-    line-height: 20px;
-    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-    border: 1px solid rgba(204, 204, 204, 1);
-    font-size: 11px;
-    color: #8C8C8C;
-    background: transparent;
-    margin-top: 6px;
-  }
+.examine-infor button {
+  width: 48px;
+  line-height: 20px;
+  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  border: 1px solid rgba(204, 204, 204, 1);
+  font-size: 11px;
+  color: #8c8c8c;
+  background: transparent;
+  margin-top: 6px;
+}
 
-  .delete-icon {
-    position: absolute;
-    right: 0.5rem;
-    top: 0.5rem;
-  }
+.delete-icon {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
+}
 </style>

@@ -21,6 +21,7 @@ import vue from 'vue'
 
 function clodopToggle(dom, printParams) {
   try {
+    installModal('预览界面正在打开，请稍等一会.')
     if (LODOP.webskt && LODOP.webskt.readyState == 1) {
       //打印初始化
       LODOP.PRINT_INIT('')
