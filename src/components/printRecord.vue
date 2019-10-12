@@ -35,7 +35,7 @@
             <div style="flex: 1">{{recordData.present_illness}}</div>
           </div>
           <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('childbearing_history')">
-            <div style="width: 80px;text-align: justify;text-align-last: justify;">[月经生育史]：</div>
+            <div style="width: 100px;text-align: justify;text-align-last: justify;">[月经生育史]：</div>
             <div style="flex: 1">{{recordData.childbearing_history}}</div>
           </div>
           <div style="margin-bottom: 10px;margin-top: 10px;display: flex" v-if="checkRecord('past_history')">

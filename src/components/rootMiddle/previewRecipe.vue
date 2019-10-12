@@ -200,7 +200,7 @@ export default {
             'drug_usage_name': med.usage,
             'drug_per_dos': med.dose_once,
             'dosage_unit': med.unit_dose,
-            'frequency_code': med.frequency ? this.findInFre(med.frequency) : 'qd',
+            'frequency_code': 'OTH',
             'pres_act_days': med.days
           }
         })
@@ -339,6 +339,7 @@ export default {
       submitOrder({
         "order_seqno": this.orderSeqno,
         "chief_complaint": this.recordData.chief_complaint,
+        "childbearing_history": this.recordData.recordList.indexOf('childbearing_history') >= 0 ? this.recordData.childbearing_history : null,
         "examination": this.recordData.recordList.indexOf('examination') >= 0 ? JSON.stringify(this.recordData.examination) : null,
         "auxiliary_examination": this.recordData.recordList.indexOf('auxiliary_examination') >= 0 ? this.recordData.auxiliary_examination : null,
         "diagnosis": this.recordData.recordList.indexOf('diagnosis') >= 0 ? this.recordData.diagnosis : null,

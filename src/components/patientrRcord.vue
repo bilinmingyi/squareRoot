@@ -41,7 +41,7 @@
       </div>
       <div class="mid-record-item-val">
         <CheckboxGroup :value="recordData.recordList" @on-change="changeRecordList">
-          <Checkbox label="childbearing_history" class="width-84">月经生育史</Checkbox>
+          <Checkbox label="childbearing_history" class="width-84" v-if="patientData.sex == 2">月经生育史</Checkbox>
           <Checkbox label="past_history" class="width-84">既往史</Checkbox>
           <Checkbox label="allergic_history" class="width-84">过敏史</Checkbox>
           <Checkbox label="personal_history" class="width-84">个人史</Checkbox>
