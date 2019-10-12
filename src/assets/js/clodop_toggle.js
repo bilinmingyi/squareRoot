@@ -297,7 +297,7 @@ function initCLodop() {
   var src3 = 'https://localhost:8443/CLodopfuncs.js?priority=1'
   var src4 = 'https://localhost:8444/CLodopfuncs.js?priority=0'
   // var initArr = [src1, src2, src3, src4] //测试环境
-  var initArr = [src1, src2, src3, src4]
+  var initArr = [src3, src4]
   var head =
     document.head ||
     document.getElementsByTagName('head')[0] ||
