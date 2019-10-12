@@ -212,8 +212,7 @@ function clodopToggle(dom, printParams) {
   }
   //打印提示
   function PromptInstall() {
-    var app = new Vue()
-    app.$Modal.confirm({
+    vue.prototype.$Modal.confirm({
       title:
         '<div style="font-weight:600;font-size:17px;">您本地没有安装打印服务，您要安装吗?</div>',
       content:
