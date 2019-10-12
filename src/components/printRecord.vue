@@ -1,6 +1,6 @@
 <template>
   <!--打印病历-->
-  <div id="printCase" style="display: none;position: relative;">
+  <!-- <div id="printCase" style="display: none;position: relative;">
     <section style="color: #000000;" v-if="clinic.id == 30">
       <div style="min-height: 690px;">
         <section style="width: 100%;height: 60px;position: relative;border-bottom: 1px solid #000;">
@@ -234,7 +234,7 @@
 
     </section>
     <f-loader v-if="showLoading"></f-loader>
-  </div>
+  </div> -->
   <!--打印病历-->
 </template>
 
@@ -301,6 +301,7 @@ export default {
       }
     }
   },
+
   methods: {
     checkRecord(type) {
       var self = this
@@ -364,6 +365,7 @@ export default {
           filter.dateFormat(new Date(), 'yyyyMMdd') +
           self.orderSeqno.slice(-6),
       }
+      this.$emit('reset')
       return new printRendering('patientHistory', commonVar, vue, fn)
 
 
