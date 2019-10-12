@@ -508,7 +508,6 @@ export default {
         case 0: {
           params = {
             name: self.searchTplName,
-            scope: 1,
             page: self.currPage,
             page_size: self.page_size
           };
