@@ -79,10 +79,11 @@ export default {
     printPrescription: function (id_str) {
       var self = this
       var printType = ''
-      var fn = function (htmlStr, width, height) {
+      var fn = function (htmlStr, width, height, margin) {
         var printParams = {
           pageHeight: height,
-          pageWidth: width
+          pageWidth: width,
+          printMargin: margin
         }
         self.showLoading = false
         clodopToggle(htmlStr, printParams)

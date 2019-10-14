@@ -120,11 +120,12 @@ export default {
       self.showLoading = true
       var printType = ''
       var recipe = self.currRecipeData.data
-      var fn = function (htmlStr, width, height) {
+      var fn = function (htmlStr, width, height, margin) {
         self.showLoading = false
         var printParams = {
           pageHeight: height,
-          pageWidth: width
+          pageWidth: width,
+          printMargin: margin
         }
 
         clodopToggle(htmlStr, printParams)

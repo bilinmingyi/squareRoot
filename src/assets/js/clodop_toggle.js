@@ -21,11 +21,10 @@ import vue from 'vue'
 
 function clodopToggle(dom, printParams) {
   try {
-    installModal('预览界面正在打开，请稍等一会.')
     if (LODOP.webskt && LODOP.webskt.readyState == 1) {
       //打印初始化
       LODOP.PRINT_INIT('')
-
+      installModal('预览界面正在打开，请稍等一会.')
       //获取打印内容结点
       var DOM = renderDom(dom, 'render')
       var commonStyle = DOM.children[0]
@@ -34,7 +33,16 @@ function clodopToggle(dom, printParams) {
       var footer = DOM.children[3]
       // return
       var dpi = 96
-      var printMargin = (6 * dpi) / 25.4
+      var initMargin = {
+        top: (6 * dpi) / 25.4,
+        bottom: (6 * dpi) / 25.4,
+        left: (6 * dpi) / 25.4,
+        right: (6 * dpi) / 25.4
+      }
+
+      //
+      var printMargin = JSON.parse(JSON.stringify(initMargin))
+
       //默认是A5纸
       var pageWidth = 148
       var pageHeight = 210
@@ -42,8 +50,8 @@ function clodopToggle(dom, printParams) {
       //打印参数
       if (printParams) {
         printMargin = printParams.printMargin
-          ? (printParams.printMargin * dpi) / 25.4
-          : (6 * dpi) / 25.4
+          ? filterMargin(printParams.printMargin, dpi)
+          : JSON.parse(JSON.stringify(initMargin))
         pageHeight = printParams.pageHeight || 210
         pageWidth = printParams.pageWidth || 148
       }
@@ -54,19 +62,18 @@ function clodopToggle(dom, printParams) {
       } else {
         pageType = pageWidth + 'x' + pageHeight
       }
+      console.log(printMargin)
       LODOP.SET_PRINT_PAGESIZE(0, '', '', pageType)
-      // LODOP.SET_PRINT_PAGESIZE(0, pageWidth + 'mm', pageHeight + 'mm', '')
-      // LODOP.SET_PRINT_PAGESIZE(0, '70mm', '100mm', 'CreateCustomPage')
       //初始化打印的值 真正的打印区域 减去左右两边大约3mm得边距
       var initHeight = ((pageHeight - 8) * dpi) / 25.4
       var initWidth = ((pageWidth - 8) * dpi) / 25.4
       var headerObj = {
-          top: '',
-          left: '',
-          width: '',
-          height: '',
-          content: ''
-        },
+        top: '',
+        left: '',
+        width: '',
+        height: '',
+        content: ''
+      },
         contentObj = {
           top: '',
           left: '',
@@ -84,24 +91,28 @@ function clodopToggle(dom, printParams) {
       var headerH = getHeight(header, initWidth, printMargin),
         contentH = getHeight(content, initWidth, printMargin),
         footerH = getHeight(footer, initWidth, printMargin)
+
       //页眉信息
-      headerObj.top = printMargin
-      headerObj.left = printMargin
-      headerObj.width = 'RightMargin:' + printMargin
+      headerObj.top = printMargin.top
+      headerObj.left = printMargin.left
+      headerObj.width = 'RightMargin:' + printMargin.right
       headerObj.height = Math.ceil((headerH / initHeight) * 100) + 2 + '%'
       headerObj.content = getContent(header, commonStyle)
       //页脚信息 位置偏上 所以+1
+
       footerObj.top =
-        Math.floor((1 - (footerH + printMargin) / initHeight) * 100) - 1 + '%'
-      footerObj.left = printMargin
-      footerObj.width = 'RightMargin:' + printMargin
+        Math.floor((1 - (footerH + printMargin.bottom) / initHeight) * 100) -
+        1 +
+        '%'
+      footerObj.left = printMargin.left
+      footerObj.width = 'RightMargin:' + printMargin.right
       footerObj.height = (footerH / initHeight) * 100 + 2 + '%'
       footerObj.content = getContent(footer, commonStyle)
 
       //主要内容信息
       contentObj.top = couterCotentTop(headerH, printMargin, initHeight)
-      contentObj.left = printMargin
-      contentObj.width = 'RightMargin:' + printMargin
+      contentObj.left = printMargin.left
+      contentObj.width = 'RightMargin:' + printMargin.right
       contentObj.height = couterContentH(
         headerH,
         footerH,
@@ -110,7 +121,6 @@ function clodopToggle(dom, printParams) {
       )
       contentObj.content = getContent(content, commonStyle)
       //  LODOP.SET_SHOW_MODE('HIDE_PBUTTIN_PREVIEW', true) //隐藏打印机的功能
-
       if (headerH != 0) {
         // //页眉的内容
         LODOP.ADD_PRINT_HTM(
@@ -120,7 +130,6 @@ function clodopToggle(dom, printParams) {
           headerObj.height,
           headerObj.content
         )
-        // LODOP.SET_PRINT_STYLEA('all', 'FontName', 'KaiTi')
         LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1) //页眉项，每页输出
       }
       // 主要内容
@@ -131,7 +140,6 @@ function clodopToggle(dom, printParams) {
         contentObj.height,
         contentObj.content
       )
-      // LODOP.SET_PRINT_STYLEA('all', 'FontName', 'KaiTi')
       if (footerH != 0) {
         // //页脚项，每页输出
         LODOP.ADD_PRINT_HTM(
@@ -141,7 +149,6 @@ function clodopToggle(dom, printParams) {
           footerObj.height,
           footerObj.content
         )
-        // LODOP.SET_PRINT_STYLEA('all', 'FontName', 'KaiTi')
         LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
       }
       LODOP.SET_PRINT_STYLEA(0, 'TextNeatRow', 1) //行对齐
@@ -164,13 +171,31 @@ function clodopToggle(dom, printParams) {
       console.log(error)
     }
   }
+  function filterMargin(params, dpi) {
+    return {
+      top:
+        Number(params.top - 4) <= 0 ? 0 : (Number(params.top - 4) * dpi) / 25.4,
+      bottom:
+        Number(params.bottom - 4) <= 0
+          ? 0
+          : (Number(params.bottom - 4) * dpi) / 25.4,
+      left:
+        Number(params.left - 4) <= 0
+          ? 0
+          : (Number(params.left - 4) * dpi) / 25.4,
+      right:
+        Number(params.right - 4) <= 0
+          ? 0
+          : (Number(params.right - 4) * dpi) / 25.4
+    }
+  }
 
   //检测是否安装
   function CheckIsInstall() {
     var LODOP = undefined
     try {
       var LODOP = getCLodop()
-    } catch (err) {}
+    } catch (err) { }
     if (!LODOP && document.readyState !== 'complete') {
       installModal('正在连接云打印功能，请稍等一下再操作.', 1000)
       return
@@ -208,19 +233,20 @@ function clodopToggle(dom, printParams) {
       try {
         var dom = document.getElementById('printRenderDOM')
         document.body.removeChild(dom)
-      } catch (err) {}
+      } catch (err) { }
     }
   }
   //打印提示
   function PromptInstall() {
-    vue.prototype.$Modal.confirm({
+    var app = new Vue()
+    app.$Modal.confirm({
       title:
         '<div style="font-weight:600;font-size:17px;">您本地没有安装打印服务，您要安装吗?</div>',
       content:
         '<div style="height:30px;font-size:15px;">1、打印服务仅仅是一个控件,您可放心安装使用。</div>' +
         '<div style="height:30px;font-size:15px;">2、安装成功后,请刷新浏览器即可使用打印功能。</div>',
       width: '450px',
-      onOk: function() {
+      onOk: function () {
         window.location.href =
           appRoot +
           '/public/static/js/clodop_Toggle/CLodop_Setup_for_Win32NT_https_3.092Extend.exe'
@@ -231,7 +257,7 @@ function clodopToggle(dom, printParams) {
 
   // 获取DOM加载后的高度
   function getHeight(dom, pageWidth2, printMargin) {
-    dom.style.width = pageWidth2 - 2 * printMargin + 'px' //获取纸张的宽度 求其内容的高度
+    dom.style.width = pageWidth2 - printMargin.left - printMargin.right + 'px' //获取纸张的宽度 求其内容的高度
     // console.log(dom.style.width)
     // 避免页眉页脚不设的时候为0
     if (window.getComputedStyle(dom).height.indexOf('px') > -1) {
@@ -253,13 +279,13 @@ function clodopToggle(dom, printParams) {
   // 计算主要内容到头部距离
   function couterCotentTop(headerH, printMargin, initHeight) {
     return headerH == 0
-      ? printMargin
-      : Math.ceil(((headerH + printMargin) / initHeight) * 100) + 2 + '%'
+      ? printMargin.top
+      : Math.ceil(((headerH + printMargin.top) / initHeight) * 100) + 2 + '%'
   }
   function couterContentH(headerH, footerH, printMargin, initHeight) {
     var tfHeight = footerH + headerH
     if (headerH == 0 && footerH == 0) {
-      return 'BottomMargin:' + printMargin
+      return 'BottomMargin:' + printMargin.bottom
     }
     var reducePercent = 4
     if (footerH == 0) {
@@ -270,7 +296,8 @@ function clodopToggle(dom, printParams) {
     }
     return (
       Math.floor(
-        (1 - (tfHeight + printMargin + printMargin) / initHeight) * 100
+        (1 - (tfHeight + printMargin.top + printMargin.bottom) / initHeight) *
+        100
       ) -
       reducePercent +
       '%'
@@ -289,6 +316,8 @@ function clodopToggle(dom, printParams) {
     })
   }
 }
+
+
 
 function initCLodop() {
   //不适用needCLodop判断 强制所有浏览器用clodop
