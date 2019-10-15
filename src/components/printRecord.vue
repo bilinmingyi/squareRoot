@@ -94,11 +94,11 @@ export default {
         '$机构地址': self.clinic.city_name + '市' + self.clinic.county_name + '区' + self.clinic.address,
         '$服务热线': self.clinic.customer_phone || '',
         '$打印时间': filter.dateFormat(new Date(), 'yyyy-MM-dd hh:mm'),
-        '$年': filter.dateFormat(new Date(), 'yyyy'),
-        '$月': filter.dateFormat(new Date(), 'MM'),
-        '$日': filter.dateFormat(new Date(), 'dd'),
-        '$时': filter.dateFormat(new Date(), 'hh'),
-        '$分': filter.dateFormat(new Date(), 'mm'),
+        '$年': filter.dateFormat(self.print_createTime, 'yyyy'),
+        '$月': filter.dateFormat(self.print_createTime, 'MM'),
+        '$日': filter.dateFormat(self.print_createTime, 'dd'),
+        '$时': filter.dateFormat(self.print_createTime, 'hh'),
+        '$分': filter.dateFormat(self.print_createTime, 'mm'),
         '$医保卡号': self.ybCardNo,
         '$就诊订单号': self.orderSeqno,
         '$费别': self.isYB == 0 ? '自费' : '医保',
@@ -130,8 +130,9 @@ export default {
         '$运动建议': self.recordData.sport_advice || '',
         '$膳食建议': self.recordData.dietary_advice || '',
         '$病历号': self.orderSeqno,
+        '$就诊时间': filter.dateFormat(self.print_createTime, 'yyyy-MM-dd'),
         '$处方订单号':
-          filter.dateFormat(new Date(), 'yyyyMMdd') +
+          filter.dateFormat(self.print_createTime, 'yyyyMMdd') +
           self.orderSeqno.slice(-6),
       }
       this.$emit('reset')
