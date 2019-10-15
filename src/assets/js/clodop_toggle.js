@@ -62,7 +62,6 @@ function clodopToggle(dom, printParams) {
       } else {
         pageType = pageWidth + 'x' + pageHeight
       }
-      console.log(printMargin)
       LODOP.SET_PRINT_PAGESIZE(0, '', '', pageType)
       //初始化打印的值 真正的打印区域 减去左右两边大约3mm得边距
       var initHeight = ((pageHeight - 8) * dpi) / 25.4
@@ -96,7 +95,7 @@ function clodopToggle(dom, printParams) {
       headerObj.top = printMargin.top
       headerObj.left = printMargin.left
       headerObj.width = 'RightMargin:' + printMargin.right
-      headerObj.height = Math.ceil((headerH / initHeight) * 100) + 2 + '%'
+      headerObj.height = Math.ceil((headerH / initHeight) * 100) + 1 + '%'
       headerObj.content = getContent(header, commonStyle)
       //页脚信息 位置偏上 所以+1
 
@@ -280,7 +279,7 @@ function clodopToggle(dom, printParams) {
   function couterCotentTop(headerH, printMargin, initHeight) {
     return headerH == 0
       ? printMargin.top
-      : Math.ceil(((headerH + printMargin.top) / initHeight) * 100) + 2 + '%'
+      : Math.ceil(((headerH + printMargin.top) / initHeight) * 100) + 1 + '%'
   }
   function couterContentH(headerH, footerH, printMargin, initHeight) {
     var tfHeight = footerH + headerH
