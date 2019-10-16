@@ -67,12 +67,12 @@ function clodopToggle(dom, printParams) {
       var initHeight = ((pageHeight - 8) * dpi) / 25.4
       var initWidth = ((pageWidth - 8) * dpi) / 25.4
       var headerObj = {
-        top: '',
-        left: '',
-        width: '',
-        height: '',
-        content: ''
-      },
+          top: '',
+          left: '',
+          width: '',
+          height: '',
+          content: ''
+        },
         contentObj = {
           top: '',
           left: '',
@@ -194,7 +194,7 @@ function clodopToggle(dom, printParams) {
     var LODOP = undefined
     try {
       var LODOP = getCLodop()
-    } catch (err) { }
+    } catch (err) {}
     if (!LODOP && document.readyState !== 'complete') {
       installModal('正在连接云打印功能，请稍等一下再操作.', 1000)
       return
@@ -232,19 +232,19 @@ function clodopToggle(dom, printParams) {
       try {
         var dom = document.getElementById('printRenderDOM')
         document.body.removeChild(dom)
-      } catch (err) { }
+      } catch (err) {}
     }
   }
   //打印提示
   function PromptInstall() {
-    vue.$Modal.confirm({
+    vue.prototype.$Modal.confirm({
       title:
         '<div style="font-weight:600;font-size:17px;">您本地没有安装打印服务，您要安装吗?</div>',
       content:
         '<div style="height:30px;font-size:15px;">1、打印服务仅仅是一个控件,您可放心安装使用。</div>' +
         '<div style="height:30px;font-size:15px;">2、安装成功后,请刷新浏览器即可使用打印功能。</div>',
       width: '450px',
-      onOk: function () {
+      onOk: function() {
         window.location.href =
           appRoot +
           '/public/static/js/clodop_Toggle/CLodop_Setup_for_Win32NT_https_3.092Extend.exe'
@@ -295,7 +295,7 @@ function clodopToggle(dom, printParams) {
     return (
       Math.floor(
         (1 - (tfHeight + printMargin.top + printMargin.bottom) / initHeight) *
-        100
+          100
       ) -
       reducePercent +
       '%'
@@ -314,8 +314,6 @@ function clodopToggle(dom, printParams) {
     })
   }
 }
-
-
 
 function initCLodop() {
   //不适用needCLodop判断 强制所有浏览器用clodop
