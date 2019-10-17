@@ -62,7 +62,10 @@ function clodopToggle(dom, printParams) {
       } else {
         pageType = pageWidth + 'x' + pageHeight
       }
-      LODOP.SET_PRINT_PAGESIZE(0, '', '', pageType)
+      var printPage = getPrintPage(pageType)
+      if (printPage != '') {
+        LODOP.SET_PRINT_PAGESIZE(0, '', '', printPage)
+      }
       //初始化打印的值 真正的打印区域 减去左右两边大约3mm得边距
       var initHeight = ((pageHeight - 8) * dpi) / 25.4
       var initWidth = ((pageWidth - 8) * dpi) / 25.4
@@ -187,6 +190,25 @@ function clodopToggle(dom, printParams) {
           ? 0
           : (Number(params.right - 4) * dpi) / 25.4
     }
+  }
+
+  //获取打印纸张类型
+  function getPrintPage(type) {
+    var printPage = LODOP.GET_PAGESIZES_LIST(-1, ',')
+    var printPageArr = printPage.split(',')
+    for (var i = 0; i < printPageArr.length; i++) {
+      if (printPageArr[i] === type) {
+        return printPageArr[i]
+      }
+    }
+    //若没有完全相等纸张，再遍历去括号的纸张
+    for (var i = 0; i < printPageArr.length; i++) {
+      var temp = printPageArr[i].split('(')[0].trim()
+      if (temp === type) {
+        return printPageArr[i]
+      }
+    }
+    return ''
   }
 
   //检测是否安装

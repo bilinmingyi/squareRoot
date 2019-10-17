@@ -130,7 +130,6 @@ export default {
 
         clodopToggle(htmlStr, printParams)
       }
-      console.log(self.print_createTime)
       var vue = axios
       var filterExam = JSON.stringify(self.examination)
       var commonVar = {
