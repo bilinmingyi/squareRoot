@@ -48,9 +48,9 @@ export default {
     })
   },
   async created() {
+    await this.getClinicData()
     this.init();
     this.getMedShop();
-    await this.getClinicData()
     this.loadDraftData();
   },
   methods: {
