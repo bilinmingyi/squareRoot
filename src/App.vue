@@ -47,9 +47,10 @@ export default {
       recordData: state => state.recordData
     })
   },
-  created() {
+  async created() {
     this.init();
     this.getMedShop();
+    await this.getClinicData();
     this.loadDraftData();
   },
   methods: {
@@ -142,7 +143,6 @@ export default {
           this.$Message.info(data.msg)
         }
       }).then(() => {
-        this.getClinicData()
         this.showLoader = false;
       })
     },
@@ -608,9 +608,12 @@ export default {
         res => {
           if (res.code === 1000) {
             this.set_state_prop({key: 'clinic', val: res.data});
-            if(res.data.id == 30) {
+            if (res.data.id == 30) {
               if (this.recordData.recordList.length == 0) {
-                this.set_record_prop({key: 'recordList', val: ['past_history', 'auxiliary_examination', 'allergic_history', 'examination']})
+                this.set_record_prop({
+                  key: 'recordList',
+                  val: ['past_history', 'auxiliary_examination', 'allergic_history', 'examination']
+                })
               }
             }
             this.set_state_prop({key: 'clinicType', val: res.data.service_type ? res.data.service_type : 0});
