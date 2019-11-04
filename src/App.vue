@@ -105,12 +105,14 @@ export default {
           if (data.data == '') {
             if (this.clinicType === 6) {
               this.addNewRecipt(3);
-              this.addNewRecipt(4);
+              this.addNewRecipt(4, 1);
             } else {
               this.addNewRecipt(1, 1);
               this.addNewRecipt(1, 2);
               this.addNewRecipt(2);
-              this.addNewRecipt(4);
+              this.addNewRecipt(4, 1);
+              this.addNewRecipt(4, 2);
+              this.addNewRecipt(4, 3);
             }
             this.change_curr_tab(-1)
             return

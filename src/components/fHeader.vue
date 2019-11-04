@@ -8,7 +8,7 @@
         </li>
         <li v-for="(recipe,index) in recipeList" :class="['tab_li',{'currentLi':index === currRecipe}]"
             @click.stop="change_curr_tab(index)">
-          {{recipe.type|recipeType(recipe.data.category, clinicType)}}
+          {{recipe.type|recipeType(recipe.data, clinicType)}}
           <div class="green_line" v-show="index === currRecipe"></div>
         </li>
       </ul>

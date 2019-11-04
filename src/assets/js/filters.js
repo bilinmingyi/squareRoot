@@ -160,7 +160,7 @@ const dateFormat = function(date, fmt) {
   return d.getTime() === d.getTime() ? d.Format(fmt) : ''
 }
 
-const recipeType = (val, category, type) => {
+const recipeType = (val, data, type) => {
   var typeList = [
     { code: 1, name: '中药处方' },
     { code: 2, name: '中成药西药' },
@@ -173,9 +173,9 @@ const recipeType = (val, category, type) => {
     return item.code === val
   })
   if (val == 1) {
-    if (category == 1) {
+    if (data.category == 1) {
       return '中药饮片'
-    } else if (category == 2) {
+    } else if (data.category == 2) {
       return '配方颗粒'
     }
   } else if (val == 3) {
@@ -183,6 +183,14 @@ const recipeType = (val, category, type) => {
       return '营养处方'
     } else {
       return '产品处方'
+    }
+  } else if (val == 4) {
+    if (data.type == 1) {
+      return '治疗处方'
+    } else if (data.type == 2) {
+      return '检验处方'
+    } else if (data.type == 3) {
+      return '检查处方'
     }
   }
   return result[0].name

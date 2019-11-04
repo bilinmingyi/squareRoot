@@ -2,12 +2,12 @@
   <div>
     <section class="herbal_head">
       <div class="herbal_head_left">
-        <f-radio value=1 :name="'therapyType'" :currVal="currentData.data.type" @change="changeType($event)">治疗
-        </f-radio>
-        <f-radio value=2 :name="'therapyType'" :currVal="currentData.data.type" @change="changeType($event)">检验
-        </f-radio>
-        <f-radio value=3 :name="'therapyType'" :currVal="currentData.data.type" @change="changeType($event)">检查
-        </f-radio>
+<!--        <f-radio value=1 :name="'therapyType'" :currVal="currentData.data.type" @change="changeType($event)">治疗-->
+<!--        </f-radio>-->
+<!--        <f-radio value=2 :name="'therapyType'" :currVal="currentData.data.type" @change="changeType($event)">检验-->
+<!--        </f-radio>-->
+<!--        <f-radio value=3 :name="'therapyType'" :currVal="currentData.data.type" @change="changeType($event)">检查-->
+<!--        </f-radio>-->
       </div>
       <div>
         <button class="btn btn_cancel" @click.stop="cancelRecipe">删除</button>
