@@ -90,7 +90,32 @@ try {
 try {
   medFrequency = window.baseInfo.medFrequency;
 } catch (e) {
-  medFrequency = [{"name": "每天一次"}, {"name": "每天两次"}, {"name": "每天三次"}, {"name": "每天四次"}, {"name": "两天一次"}, {"name": "每周一次"}, {"name": "饭前"}, {"name": "饭后"}, {"name": "睡前"}, {"name": "医嘱"}];
+  medFrequency = [
+    {"name": "每天一次", "ratio": 1},
+    {"name": "每天两次", "ratio": 2},
+    {"name": "每天三次", "ratio": 3},
+    {"name": "每晚一次", "ratio": 1},
+    {"name": "隔天一次", "ratio": 1 / 2},
+    {"name": "必要时", "ratio": 0},
+    {"name": "立即", "ratio": 1},
+    {"name": "每天四次", "ratio": 4},
+    {"name": "每日五次", "ratio": 5},
+    {"name": "每小时一次", "ratio": 24},
+    {"name": "每两小时一次", "ratio": 12},
+    {"name": "每三小时一次", "ratio": 8},
+    {"name": "每四小时一次", "ratio": 6},
+    {"name": "每五小时一次", "ratio": 24 / 5},
+    {"name": "每六小时一次", "ratio": 4},
+    {"name": "每七小时一次", "ratio": 24 / 7},
+    {"name": "每八小时一次", "ratio": 3},
+    {"name": "每十二小时一次", "ratio": 2},
+    {"name": "每隔两天一次", "ratio": 1 / 3},
+    {"name": "每隔三天一次", "ratio": 1 / 4},
+    {"name": "每隔四天一次", "ratio": 1 / 5},
+    {"name": "每周一次", "ratio": 1 / 7},
+    {"name": "隔周1次", "ratio": 1 / 14},
+    {"name": "每早1次", "ratio": 1}
+  ];
 }
 
 
