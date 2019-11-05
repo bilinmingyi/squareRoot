@@ -45,19 +45,19 @@
               </Select>
             </td>
             <td>
-              <Input style="max-width:2.5rem" :value="item.dose_once" type="text"
-                     @on-change="modify_medicine({key:'dose_once',val:$event.target.value, index:index})"/>
-              <span class="unitText">{{item.unit_once}}测试</span>
+              <InputNumber style="max-width:3.5rem" :value="Number(item.dose_once)"
+                           @on-change="changeCalculate({key:'dose_once',val:$event, index:index})"/>
+              <span class="unitText">{{item.unit_once}}</span>
             </td>
             <td>
               <Select style="max-width:5.5rem" :value="item.frequency"
-                      @on-change="modify_medicine({key:'frequency',val:$event,index:index})">
+                      @on-change="changeCalculate({key:'frequency',val:$event,index:index})">
                 <Option v-for="item in medFrequency" :value="item.name" :key="item.name">{{ item.name }}</Option>
               </Select>
             </td>
             <td>
               <InputNumber style="max-width:3.2rem" :value="item.days"
-                           @on-change="changeDays({key:'days',val:$event,index:index})"/>
+                           @on-change="changeCalculate({key:'days',val:$event,index:index})"/>
             </td>
 
             <td>
@@ -372,19 +372,23 @@ export default {
     hideWis() {
       this.wisdomShow = false
     },
-    changeDays(action) {
+    changeCalculate(action) {
       this.modify_medicine(action)
       let currItems = this.currentData.data.items[action.index];
-      this.calculate(currItems)
+      this.calculate(currItems, action.index)
     },
-    calculate(med) {
-      var spec = {
+    calculate(med, index) {
+      let spec = {
         unit_stock: '',
         unit_sale: '',
         unit_dose: '',
         stock_sale_ratio: 0,
         sale_dose_ratio: 0
       }
+      let stockNum = 0
+      let saleNum = 0
+      let doseNum = 0
+
       if (/^([0-9]+)([^0-9\/]+)\/([^0-9]+?)(\*([0-9]+)([^0-9\/]+)\/([^0-9]+))?$/.test(med.spec)) {
         if (RegExp.$4) {
           spec.unit_stock = RegExp.$7
@@ -392,14 +396,81 @@ export default {
           spec.unit_dose = RegExp.$2
           spec.stock_sale_ratio = RegExp.$5
           spec.sale_dose_ratio = RegExp.$1
+          if (
+            (
+              med.unit_stock !== med.unit_sale
+              && (
+                (spec.unit_sale === med.unit_sale && spec.unit_stock === med.unit_stock && Number(spec.stock_sale_ratio) === Number(med.stock_sale_ratio))
+                || (spec.unit_sale === med.unit_sale && spec.unit_dose === med.unit_dose && Number(spec.stock_sale_ratio) === Number(med.stock_sale_ratio))
+              )
+            )
+            || med.unit_stock === med.unit_sale
+          ) {
+            switch (med.unit_once) {
+              case spec.unit_stock:
+                stockNum = Math.ceil(Number(med.dose_once) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days))
+                saleNum = Math.ceil(Number(med.dose_once) * Number(spec.stock_sale_ratio) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days))
+                doseNum = Math.ceil(Number(med.dose_once) * Number(spec.stock_sale_ratio) * Number(spec.sale_dose_ratio) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days))
+                break
+              case spec.unit_sale:
+                stockNum = Math.ceil(Number(med.dose_once) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days) / Number(spec.stock_sale_ratio))
+                saleNum = Math.ceil(Number(med.dose_once) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days))
+                doseNum = Math.ceil(Number(med.dose_once) * Number(spec.sale_dose_ratio) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days))
+                break
+              case spec.unit_dose:
+                stockNum = Math.ceil(Number(med.dose_once) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days) / (Number(spec.sale_dose_ratio) * Number(spec.stock_sale_ratio)))
+                saleNum = Math.ceil(Number(med.dose_once) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days) / Number(spec.sale_dose_ratio))
+                doseNum = Math.ceil(Number(med.dose_once) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days))
+                break
+            }
+            switch (med.unit) {
+              case spec.unit_stock:
+                this.modify_medicine({key: 'num', val: stockNum, index: index})
+                break
+              case spec.unit_sale:
+                this.modify_medicine({key: 'num', val: saleNum, index: index})
+                break
+              case spec.unit_dose:
+                this.modify_medicine({key: 'num', val: doseNum, index: index})
+                break
+              default:
+            }
+          }
         } else {
-          spec.unit_sale = RegExp.$3
-          spec.unit_dose = RegExp.$2
-          spec.sale_dose_ratio = RegExp.$1
+          spec.unit_stock = RegExp.$3
+          spec.unit_sale = RegExp.$2
+          spec.stock_sale_ratio = RegExp.$1
+          if (
+            (
+              med.unit_stock !== med.unit_sale
+              && spec.unit_sale === med.unit_sale
+              && spec.unit_stock === med.unit_stock
+              && Number(spec.stock_sale_ratio) === Number(med.stock_sale_ratio)
+            )
+            || med.unit_stock === med.unit_sale
+          ) {
+            switch (med.unit_once) {
+              case spec.unit_stock:
+                stockNum = Math.ceil(Number(med.dose_once) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days))
+                saleNum = Math.ceil(Number(med.dose_once) * Number(spec.stock_sale_ratio) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days))
+                break
+              case spec.unit_sale:
+                stockNum = Math.ceil(Number(med.dose_once) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days) / Number(spec.stock_sale_ratio))
+                saleNum = Math.ceil(Number(med.dose_once) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days))
+                break
+            }
+            switch (med.unit) {
+              case spec.unit_stock:
+                this.modify_medicine({key: 'num', val: stockNum, index: index})
+                break
+              case spec.unit_sale:
+                this.modify_medicine({key: 'num', val: saleNum, index: index})
+                break
+              default:
+            }
+          }
         }
       }
-
-      console.log(med)
     },
     frequencyToRatio(frequency) {
       let result = this.medFrequency.filter(item => {
@@ -450,6 +521,6 @@ export default {
   .unitText {
     min-width: 2rem;
     display: inline-block;
-    text-align: left;
+    text-align: center;
   }
 </style>
