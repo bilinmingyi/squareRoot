@@ -44,6 +44,7 @@ export default {
     ...mapState({
       patientData: state => state.patientData,
       clinicType: state => state.clinicType,
+      paramsSetting: state => state.paramsSetting,
       recordData: state => state.recordData
     })
   },
@@ -100,20 +101,47 @@ export default {
       loadDraft({
         "order_seqno": this.getOrderSeqno('orderSeqno')
       }).then(data => {
-
         if (data.code === 1000) {
           if (data.data == '') {
-            if (this.clinicType === 6) {
-              this.addNewRecipt(3);
-              this.addNewRecipt(4, 1);
+            let recipeList = []
+            if(this.paramsSetting !='') {
+              recipeList = JSON.parse(JSON.parse(this.paramsSetting).filter(item => item.group == 'cd002')[0]["property_value"])
             } else {
-              this.addNewRecipt(1, 1);
-              this.addNewRecipt(1, 2);
-              this.addNewRecipt(2);
-              this.addNewRecipt(4, 1);
-              this.addNewRecipt(4, 2);
-              this.addNewRecipt(4, 3);
+              if (this.clinicType === 6) {
+                recipeList = ['产品处方', '治疗项目']
+              } else {
+                recipeList = ['中药饮片', '中西成药', '治疗项目']
+              }
             }
+            recipeList.forEach(recipe => {
+              switch (recipe) {
+                case '中药饮片':
+                  this.addNewRecipt(1, 1);
+                  break
+                case '配方颗粒':
+                  this.addNewRecipt(1, 2);
+                  break
+                case '中西成药':
+                  this.addNewRecipt(2);
+                  break
+                case '产品处方':
+                  this.addNewRecipt(3);
+                  break
+                case '治疗项目':
+                  this.addNewRecipt(4, 1);
+                  break
+                case '检验项目':
+                  this.addNewRecipt(4, 2);
+                  break
+                case '检查项目':
+                  this.addNewRecipt(4, 3);
+                  break
+                case '材料处方':
+                  this.addNewRecipt(6);
+                  break
+              }
+            })
+
             this.change_curr_tab(-1)
             return
           }
@@ -618,6 +646,7 @@ export default {
                 })
               }
             }
+            this.set_state_prop({key: 'paramsSetting', val: res.data.params_setting});
             this.set_state_prop({key: 'clinicType', val: res.data.service_type ? res.data.service_type : 0});
           } else {
             this.$Message.info(res.msg)

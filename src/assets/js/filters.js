@@ -186,11 +186,11 @@ const recipeType = (val, data, type) => {
     }
   } else if (val == 4) {
     if (data.type == 1) {
-      return '治疗处方'
+      return '治疗项目'
     } else if (data.type == 2) {
-      return '检验处方'
+      return '检验项目'
     } else if (data.type == 3) {
-      return '检查处方'
+      return '检查项目'
     }
   }
   return result[0].name
