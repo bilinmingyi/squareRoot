@@ -68,7 +68,7 @@
                            @on-change="modify_medicine({key:'num',val:$event,index:index})"
               />
               <Select style="width:3.125rem" :value="item.unit"
-                      @on-change="change_unit($event,index)">
+                      @on-change="changeCalculate({key: 'unit', val: $event, index: index}, true)">
                 <Option :value="item.unit_stock" key="item.unit_stock">{{item.unit_stock}}</Option>
                 <Option :value="item.unit_sale" key="item.unit_sale" v-if="item.unit_stock != item.unit_sale">
                   {{item.unit_sale}}
@@ -240,18 +240,16 @@ export default {
         }
       });
     },
-    change_unit(event, index) {
-      let currItems = this.currentData.data.items[index];
-      this.modify_medicine({key: 'unit', val: event, index: index})
-      if (currItems.num !== '' && currItems.num !== 0) {
-        if (event === currItems.unit_stock) {
+    change_unit(med, event, index) {
+      if (med.num !== '' && med.num !== 0) {
+        if (event === med.unit_stock) {
           this.modify_medicine({
             key: 'num',
-            val: Math.ceil(currItems.num * 1.0 / currItems.stock_sale_ratio),
+            val: Math.ceil(med.num * 1.0 / med.stock_sale_ratio),
             index: index
           })
-        } else if (event === currItems.unit_sale) {
-          this.modify_medicine({key: 'num', val: Math.ceil(currItems.num * currItems.stock_sale_ratio), index: index})
+        } else if (event === med.unit_sale) {
+          this.modify_medicine({key: 'num', val: Math.ceil(med.num * med.stock_sale_ratio), index: index})
         }
       }
 
@@ -372,12 +370,12 @@ export default {
     hideWis() {
       this.wisdomShow = false
     },
-    changeCalculate(action) {
+    changeCalculate(action, isChangeUnit) {
       this.modify_medicine(action)
       let currItems = this.currentData.data.items[action.index];
-      this.calculate(currItems, action.index)
+      this.calculate(currItems, action, isChangeUnit)
     },
-    calculate(med, index) {
+    calculate(med, action, isChangeUnit) {
       let spec = {
         unit_stock: '',
         unit_sale: '',
@@ -422,18 +420,31 @@ export default {
                 saleNum = Math.ceil(Number(med.dose_once) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days) / Number(spec.sale_dose_ratio))
                 doseNum = Math.ceil(Number(med.dose_once) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days))
                 break
+              default:
+                if (isChangeUnit) {
+                  this.change_unit(med, action.val, action.index)
+                }
+                return
             }
             switch (med.unit) {
               case spec.unit_stock:
-                this.modify_medicine({key: 'num', val: stockNum, index: index})
+                this.modify_medicine({key: 'num', val: stockNum, index: action.index})
                 break
               case spec.unit_sale:
-                this.modify_medicine({key: 'num', val: saleNum, index: index})
+                this.modify_medicine({key: 'num', val: saleNum, index: action.index})
                 break
               case spec.unit_dose:
-                this.modify_medicine({key: 'num', val: doseNum, index: index})
+                this.modify_medicine({key: 'num', val: doseNum, index: action.index})
                 break
               default:
+                if (isChangeUnit) {
+                  this.change_unit(med, action.val, action.index)
+                }
+                return
+            }
+          } else {
+            if (isChangeUnit) {
+              this.change_unit(med, action.val, action.index)
             }
           }
         } else {
@@ -458,17 +469,34 @@ export default {
                 stockNum = Math.ceil(Number(med.dose_once) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days) / Number(spec.stock_sale_ratio))
                 saleNum = Math.ceil(Number(med.dose_once) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days))
                 break
+              default:
+                if (isChangeUnit) {
+                  this.change_unit(med, action.val, action.index)
+                }
+                return
             }
             switch (med.unit) {
               case spec.unit_stock:
-                this.modify_medicine({key: 'num', val: stockNum, index: index})
+                this.modify_medicine({key: 'num', val: stockNum, index: action.index})
                 break
               case spec.unit_sale:
-                this.modify_medicine({key: 'num', val: saleNum, index: index})
+                this.modify_medicine({key: 'num', val: saleNum, index: action.index})
                 break
               default:
+                if (isChangeUnit) {
+                  this.change_unit(med, action.val, action.index)
+                }
+                return
+            }
+          } else {
+            if (isChangeUnit) {
+              this.change_unit(med, action.val, action.index)
             }
           }
+        }
+      } else {
+        if (isChangeUnit) {
+          this.change_unit(med, action.val, action.index)
         }
       }
     },
