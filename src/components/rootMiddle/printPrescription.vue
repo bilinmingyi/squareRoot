@@ -104,7 +104,7 @@
                   </div>
                   <div style="margin-left: 15px">
                     用法:
-                    <span style="margin-right: 8px;" v-if="itemOne.dose_once!=''">{{itemOne.dose_once}}</span>
+                    <span style="margin-right: 8px;" v-if="itemOne.dose_once!=''">{{itemOne.dose_once}}{{itemOne.unit_once}}</span>
                     <span style="margin-right: 8px;" v-if="itemOne.usage!=''">{{itemOne.usage}}</span>
                     <span style="margin-right: 8px;">{{itemOne.frequency}}</span>
                     <span v-if="itemOne.days!=0">{{itemOne.days}}天</span>

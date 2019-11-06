@@ -406,19 +406,19 @@ export default {
           ) {
             switch (med.unit_once) {
               case spec.unit_stock:
-                stockNum = Math.ceil(Number(med.dose_once) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days))
-                saleNum = Math.ceil(Number(med.dose_once) * Number(spec.stock_sale_ratio) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days))
-                doseNum = Math.ceil(Number(med.dose_once) * Number(spec.stock_sale_ratio) * Number(spec.sale_dose_ratio) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days))
+                stockNum = Math.ceil(Number(med.dose_once) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)))
+                saleNum = Math.ceil(Number(med.dose_once) * Number(spec.stock_sale_ratio) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)))
+                doseNum = Math.ceil(Number(med.dose_once) * Number(spec.stock_sale_ratio) * Number(spec.sale_dose_ratio) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)))
                 break
               case spec.unit_sale:
-                stockNum = Math.ceil(Number(med.dose_once) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days) / Number(spec.stock_sale_ratio))
-                saleNum = Math.ceil(Number(med.dose_once) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days))
-                doseNum = Math.ceil(Number(med.dose_once) * Number(spec.sale_dose_ratio) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days))
+                stockNum = Math.ceil(Number(med.dose_once) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)) / Number(spec.stock_sale_ratio))
+                saleNum = Math.ceil(Number(med.dose_once) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)))
+                doseNum = Math.ceil(Number(med.dose_once) * Number(spec.sale_dose_ratio) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)))
                 break
               case spec.unit_dose:
-                stockNum = Math.ceil(Number(med.dose_once) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days) / (Number(spec.sale_dose_ratio) * Number(spec.stock_sale_ratio)))
-                saleNum = Math.ceil(Number(med.dose_once) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days) / Number(spec.sale_dose_ratio))
-                doseNum = Math.ceil(Number(med.dose_once) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days))
+                stockNum = Math.ceil(Number(med.dose_once) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)) / (Number(spec.sale_dose_ratio) * Number(spec.stock_sale_ratio)))
+                saleNum = Math.ceil(Number(med.dose_once) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)) / Number(spec.sale_dose_ratio))
+                doseNum = Math.ceil(Number(med.dose_once) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)))
                 break
               default:
                 if (isChangeUnit) {
@@ -462,12 +462,12 @@ export default {
           ) {
             switch (med.unit_once) {
               case spec.unit_stock:
-                stockNum = Math.ceil(Number(med.dose_once) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days))
-                saleNum = Math.ceil(Number(med.dose_once) * Number(spec.stock_sale_ratio) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days))
+                stockNum = Math.ceil(Number(med.dose_once) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)))
+                saleNum = Math.ceil(Number(med.dose_once) * Number(spec.stock_sale_ratio) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)))
                 break
               case spec.unit_sale:
-                stockNum = Math.ceil(Number(med.dose_once) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days) / Number(spec.stock_sale_ratio))
-                saleNum = Math.ceil(Number(med.dose_once) * Number(this.frequencyToRatio(med.frequency)) * Number(med.days))
+                stockNum = Math.ceil(Number(med.dose_once) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)) / Number(spec.stock_sale_ratio))
+                saleNum = Math.ceil(Number(med.dose_once) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)))
                 break
               default:
                 if (isChangeUnit) {

@@ -23,7 +23,9 @@
             <DropdownItem @click.stop.native="addNewRecipt(1, 1)" v-if="clinicType!=6">中药饮片</DropdownItem>
             <DropdownItem @click.stop.native="addNewRecipt(1, 2)" v-if="clinicType!=6">配方颗粒</DropdownItem>
             <DropdownItem @click.stop.native="addNewRecipt(2)" v-if="clinicType!=6">中成药西药</DropdownItem>
-            <DropdownItem @click.stop.native="addNewRecipt(4)">诊疗项目</DropdownItem>
+            <DropdownItem @click.stop.native="addNewRecipt(4, 1)">治疗项目</DropdownItem>
+            <DropdownItem @click.stop.native="addNewRecipt(4, 2)">检验项目</DropdownItem>
+            <DropdownItem @click.stop.native="addNewRecipt(4, 3)">检查项目</DropdownItem>
             <DropdownItem @click.stop.native="addNewRecipt(3)">{{clinicType== 6 ? '营养处方' : '产品处方'}}</DropdownItem>
             <DropdownItem @click.stop.native="addNewRecipt(6)" v-if="clinicType!=6">材料处方</DropdownItem>
           </DropdownMenu>

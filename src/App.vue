@@ -52,7 +52,7 @@ export default {
     this.init();
     this.getMedShop();
     await this.getClinicData();
-    this.loadDraftData();
+    await this.loadDraftData();
   },
   methods: {
     ...mapMutations(['PRINT_CREATE_TIME']),

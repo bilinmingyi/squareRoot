@@ -272,8 +272,8 @@ export default {
             // 合并每次用量的数值与单位
             let westernList = JSON.parse(JSON.stringify(item.data.items));
             westernList.forEach((med) => {
-              if (med.dose_once && med.unit_dose && !/[^\d]/.test(med.dose_once)) {
-                med.dose_once += med.unit_dose;
+              if (med.dose_once && med.unit_once && !/[^\d]/.test(med.dose_once)) {
+                med.dose_once += med.unit_once;
               }
               if (item.data.is_cloud == 1) {
                 med.item_id = 0
@@ -338,6 +338,9 @@ export default {
 
       submitOrder({
         "order_seqno": this.orderSeqno,
+        "personal_history": this.recordData.recordList.indexOf('personal_history') >= 0 ? this.recordData.personal_history : '',
+        "past_history": this.recordData.recordList.indexOf('past_history') >= 0 ? this.recordData.past_history : '',
+        "allergic_history": this.recordData.recordList.indexOf('allergic_history') >= 0 ? this.recordData.allergic_history : '',
         "chief_complaint": this.recordData.chief_complaint,
         "childbearing_history": this.recordData.recordList.indexOf('childbearing_history') >= 0 ? this.recordData.childbearing_history : null,
         "examination": this.recordData.recordList.indexOf('examination') >= 0 ? JSON.stringify(this.recordData.examination) : null,
