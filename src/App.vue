@@ -52,7 +52,7 @@ export default {
     this.init();
     this.getMedShop();
     await this.getClinicData();
-    await this.loadDraftData();
+    this.loadDraftData();
   },
   methods: {
     ...mapMutations(['PRINT_CREATE_TIME']),
@@ -104,7 +104,7 @@ export default {
         if (data.code === 1000) {
           if (data.data == '') {
             let recipeList = []
-            if(this.paramsSetting !='') {
+            if (this.paramsSetting != '') {
               let valueList = JSON.parse(this.paramsSetting).filter(item => item.group == 'cd002')
               if (valueList.length > 0) {
                 recipeList = JSON.parse(valueList[0]["property_value"])
@@ -643,26 +643,31 @@ export default {
       })
     },
     getClinicData() {
-      fetchClinic().then(
-        res => {
-          if (res.code === 1000) {
-            this.set_state_prop({key: 'clinic', val: res.data});
-            if (res.data.id == 30) {
-              if (this.recordData.recordList.length == 0) {
-                this.set_record_prop({
-                  key: 'recordList',
-                  val: ['past_history', 'auxiliary_examination', 'allergic_history', 'examination']
-                })
+      return new Promise((resolve, reject) => {
+        fetchClinic().then(
+          res => {
+            if (res.code === 1000) {
+              this.set_state_prop({key: 'clinic', val: res.data});
+              if (res.data.id == 30) {
+                if (this.recordData.recordList.length == 0) {
+                  this.set_record_prop({
+                    key: 'recordList',
+                    val: ['past_history', 'auxiliary_examination', 'allergic_history', 'examination']
+                  })
+                }
               }
+              this.set_state_prop({key: 'paramsSetting', val: res.data.params_setting});
+              this.set_state_prop({key: 'clinicType', val: res.data.service_type ? res.data.service_type : 0});
+            } else {
+              this.$Message.info(res.msg)
             }
-            this.set_state_prop({key: 'paramsSetting', val: res.data.params_setting});
-            this.set_state_prop({key: 'clinicType', val: res.data.service_type ? res.data.service_type : 0});
-          } else {
-            this.$Message.info(res.msg)
+            resolve()
           }
-        }
-      ).catch(error => {
-        console.log(error)
+        ).catch(error => {
+          console.log(error)
+        }).finally(() => {
+          resolve()
+        })
       })
     },
     addNewRecipt(type, category) {
