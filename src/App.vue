@@ -105,7 +105,16 @@ export default {
           if (data.data == '') {
             let recipeList = []
             if(this.paramsSetting !='') {
-              recipeList = JSON.parse(JSON.parse(this.paramsSetting).filter(item => item.group == 'cd002')[0]["property_value"])
+              let valueList = JSON.parse(this.paramsSetting).filter(item => item.group == 'cd002')
+              if (valueList.length > 0) {
+                recipeList = JSON.parse(valueList[0]["property_value"])
+              } else {
+                if (this.clinicType === 6) {
+                  recipeList = ['产品处方', '治疗项目']
+                } else {
+                  recipeList = ['中药饮片', '中西成药', '治疗项目']
+                }
+              }
             } else {
               if (this.clinicType === 6) {
                 recipeList = ['产品处方', '治疗项目']
