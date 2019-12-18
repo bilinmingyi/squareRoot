@@ -22,13 +22,12 @@
           <th>序号</th>
           <th style="width: 15%">药名</th>
           <th>规格</th>
-          <th>总量</th>
-          <th>单位</th>
-          <th>单价</th>
           <th>用法</th>
           <th>每次用量</th>
           <th>频次</th>
           <th>天数</th>
+          <th>总量</th>
+          <th>单价</th>
           <th>操作</th>
         </tr>
         </thead>
@@ -40,45 +39,45 @@
           <template v-if="item.is_match===1">
             <td>{{item.spec}}</td>
             <td>
-              <InputNumber style="width:3.2rem;"
-                           :value="item.num"
-                           :formatter="value => `${Math.floor(value)}`"
-                           :parser="value => `${Math.floor(value)}`"
-                           @on-change="modify_medicine({key:'num',val:$event,index:index})"
-              />
-            </td>
-            <td>
-              <Select style="width:3.125rem" :value="item.unit"
-                      @on-change="change_unit($event,index)">
-                <Option :value="item.unit_stock" key="item.unit_stock">{{item.unit_stock}}</Option>
-                <Option :value="item.unit_sale" key="item.unit_sale"  v-if="item.unit_stock != item.unit_sale">{{item.unit_sale}}</Option>
-              </Select>
-            </td>
-            <td>
-              <span v-show="item.unit == item.unit_stock">{{item.sale_price|priceFormat}}</span>
-              <span v-show="item.unit == item.unit_sale && item.unit_stock != item.unit_sale">{{(item.sale_price/item.stock_sale_ratio)|priceFormat}}</span>
-            </td>
-            <td>
               <Select style="max-width:4.5rem" :value="item.usage"
                       @on-change="modify_medicine({key:'usage',val:$event,index:index})">
                 <Option v-for="item in westernMedUsages" :value="item.name" :key="item.id">{{ item.name }}</Option>
               </Select>
             </td>
             <td>
-              <Input style="max-width:4.5rem" :value="item.dose_once" type="text"
-                           @on-change="modify_medicine({key:'dose_once',val:$event.target.value, index:index})"/>
-<!--              <span class="unitText">{{item.unit_dose}}</span>-->
+              <InputNumber style="max-width:3.5rem" :value="Number(item.dose_once)"
+                           @on-change="changeCalculate({key:'dose_once',val:$event, index:index})"/>
+              <span class="unitText">{{item.unit_once}}</span>
             </td>
             <td>
               <Select style="max-width:5.5rem" :value="item.frequency"
-                      @on-change="modify_medicine({key:'frequency',val:$event,index:index})">
+                      @on-change="changeCalculate({key:'frequency',val:$event,index:index})">
                 <Option v-for="item in medFrequency" :value="item.name" :key="item.name">{{ item.name }}</Option>
               </Select>
             </td>
-
             <td>
               <InputNumber style="max-width:3.2rem" :value="item.days"
-                           @on-change="modify_medicine({key:'days',val:$event,index:index})"/>
+                           @on-change="changeCalculate({key:'days',val:$event,index:index})"/>
+            </td>
+
+            <td>
+              <InputNumber style="width:3.2rem;"
+                           :value="item.num"
+                           :formatter="value => `${Math.floor(value)}`"
+                           :parser="value => `${Math.floor(value)}`"
+                           @on-change="modify_medicine({key:'num',val:$event,index:index})"
+              />
+              <Select style="width:3.125rem" :value="item.unit"
+                      @on-change="changeCalculate({key: 'unit', val: $event, index: index}, true)">
+                <Option :value="item.unit_stock" key="item.unit_stock">{{item.unit_stock}}</Option>
+                <Option :value="item.unit_sale" key="item.unit_sale" v-if="item.unit_stock != item.unit_sale">
+                  {{item.unit_sale}}
+                </Option>
+              </Select>
+            </td>
+            <td>
+              <span v-show="item.unit == item.unit_stock">{{item.sale_price|priceFormat}}</span>
+              <span v-show="item.unit == item.unit_sale && item.unit_stock != item.unit_sale">{{(item.sale_price/item.stock_sale_ratio)|priceFormat}}</span>
             </td>
           </template>
           <template v-else>
@@ -114,267 +113,401 @@
 </template>
 
 <script>
-  import {westernMedUsages, medFrequency, userName, userId} from '@/assets/js/mapType'
-  import fRadio from '@/components/fRadio.vue'
-  import saveTpl from '@/components/rootMiddle/saveRecipeTpl'
-  import wisdomYb from '@/components/wisdomyb.vue'
-  import {mapActions, mapState} from 'vuex'
-  import {Select, Option, Input, InputNumber} from 'iview'
-  import {wisdomyb} from '@/fetch/api.js'
+import {westernMedUsages, medFrequency, userName, userId} from '@/assets/js/mapType'
+import fRadio from '@/components/fRadio.vue'
+import saveTpl from '@/components/rootMiddle/saveRecipeTpl'
+import wisdomYb from '@/components/wisdomyb.vue'
+import {mapActions, mapState} from 'vuex'
+import {Select, Option, Input, InputNumber} from 'iview'
+import {wisdomyb} from '@/fetch/api.js'
 
-  export default {
-    name: "westernRecipe",
-    data() {
-      return {
-        medFrequency: medFrequency,
-        showAddTpl: false,
-        windowUrl: '',
-        wisdomShow: false
+export default {
+  name: "westernRecipe",
+  data() {
+    return {
+      medFrequency: medFrequency,
+      showAddTpl: false,
+      windowUrl: '',
+      wisdomShow: false
+    }
+  },
+  components: {
+    Select,
+    Option,
+    Input,
+    saveTpl,
+    InputNumber,
+    wisdomYb,
+    fRadio
+  },
+  computed: {
+    ...mapState({
+      'isYB': state => state.isYB,
+      'recordData': state => state.recordData,
+      'clinicId': state => state.clinicId,
+      'doctorId': state => state.doctorId,
+      'appointOrderSeqno': state => state.appointOrderSeqno,
+      'ybCardNo': state => state.ybCardNo,
+      'cloudShopList': state => state.cloudShopList
+    }),
+    westernMedUsages: function () {
+      return westernMedUsages.filter(item => {
+        return item.status === 1;
+      })
+    },
+    currentData: function () {
+      return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
+    },
+    currentCloud: function () {
+      let list = this.cloudShopList
+      let type = this.currentData.type
+      let category
+      if (type == 1) {
+        category = this.currentData.data.category
       }
-    },
-    components: {
-      Select,
-      Option,
-      Input,
-      saveTpl,
-      InputNumber,
-      wisdomYb,
-      fRadio
-    },
-    computed: {
-      ...mapState({
-        'isYB': state => state.isYB,
-        'recordData': state => state.recordData,
-        'clinicId': state => state.clinicId,
-        'doctorId': state => state.doctorId,
-        'appointOrderSeqno': state => state.appointOrderSeqno,
-        'ybCardNo': state => state.ybCardNo,
-        'cloudShopList': state => state.cloudShopList
-      }),
-      westernMedUsages: function () {
-        return westernMedUsages.filter(item => {
-          return item.status === 1;
-        })
-      },
-      currentData: function () {
-        return JSON.parse(JSON.stringify(this.$store.getters.currRecipeData))
-      },
-      currentCloud: function () {
-        let list = this.cloudShopList
-        let type = this.currentData.type
-        let category
-        if (type == 1) {
-          category = this.currentData.data.category
+      let result = list.filter(item => {
+        return item.type == type
+      }).filter(item => {
+        if (item.type == 1) {
+          return item.category == category
+        } else {
+          return item
         }
-        let result = list.filter(item => {
-          return item.type == type
-        }).filter(item => {
-          if (item.type == 1) {
-            return item.category == category
+      })
+      return result[0]
+    }
+  },
+  watch: {
+    'currentData.data.items': {
+      deep: true,
+      handler: function (newVal, oldVal) {
+        let allPrice = 0;
+        newVal.map((item, index) => {
+          if (item.unit === item.unit_stock) {
+            allPrice += Number(item.sale_price) * Number(item.num);
+          } else if (item.unit === item.unit_sale) {
+            allPrice += Number(item.sale_price * 1.0 / item.stock_sale_ratio) * Number(item.num);
           } else {
-            return item
+            allPrice += Number(item.sale_price) * Number(item.num);
           }
         })
-        return result[0]
+        setTimeout(() => {
+          this.modify_recipe({key: 'money', val: Number(allPrice).toFixed(2)})
+        })
       }
     },
-    watch: {
-      'currentData.data.items': {
-        deep: true,
-        handler: function (newVal, oldVal) {
-          let allPrice = 0;
-          newVal.map((item, index) => {
-            if (item.unit === item.unit_stock) {
-              allPrice += Number(item.sale_price) * Number(item.num);
-            } else if (item.unit === item.unit_sale) {
-              allPrice += Number(item.sale_price * 1.0 / item.stock_sale_ratio) * Number(item.num);
-            } else {
-              allPrice += Number(item.sale_price) * Number(item.num);
-            }
-          })
-          setTimeout(() => {
-            this.modify_recipe({key: 'money', val: Number(allPrice).toFixed(2)})
-          })
-        }
-      },
+  },
+  methods: {
+    ...mapActions([
+      'change_curr_tab',
+      'cancel_recipe',
+      'modify_medicine',
+      'cancel_medicine',
+      'modify_recipe_detail',
+      'clean_recipe',
+      'modify_recipe',
+      'change_print_pre',
+    ]),
+    print_pre: function () {
+      this.change_print_pre();
     },
-    methods: {
-      ...mapActions([
-        'change_curr_tab',
-        'cancel_recipe',
-        'modify_medicine',
-        'cancel_medicine',
-        'modify_recipe_detail',
-        'clean_recipe',
-        'modify_recipe',
-        'change_print_pre',
-      ]),
-      print_pre: function () {
-        this.change_print_pre();
-      },
-      changeCategory(event) {
-        if (this.currentData.data.items.length === 0) {
-          this.modify_recipe_detail({key: 'is_cloud', val: Number(event.target.value)})
-        } else {
-          this.$Modal.confirm({
-            title: '提示',
-            content: '<p>切换药品来源将清空已选的药，确认要切换?</p>',
-            onOk: () => {
-              this.modify_recipe_detail({key: 'is_cloud', val: Number(event.target.value)})
-              this.clean_recipe();
-            },
-            onCancel: () => {
-              this.$forceUpdate()
-            }
-          })
-        }
-      },
-      cancelRecipe() {
+    changeCategory(event) {
+      if (this.currentData.data.items.length === 0) {
+        this.modify_recipe_detail({key: 'is_cloud', val: Number(event.target.value)})
+      } else {
         this.$Modal.confirm({
           title: '提示',
-          content: '<p>确定删除该处方？</p>',
+          content: '<p>切换药品来源将清空已选的药，确认要切换?</p>',
           onOk: () => {
-            this.cancel_recipe();
+            this.modify_recipe_detail({key: 'is_cloud', val: Number(event.target.value)})
+            this.clean_recipe();
           },
           onCancel: () => {
-            console.log("88")
-          }
-        });
-      },
-      change_unit(event, index) {
-        let currItems = this.currentData.data.items[index];
-        this.modify_medicine({key: 'unit', val: event, index: index})
-        if (currItems.num !== '' && currItems.num !== 0) {
-          if (event === currItems.unit_stock) {
-            this.modify_medicine({
-              key: 'num',
-              val: Math.ceil(currItems.num * 1.0 / currItems.stock_sale_ratio),
-              index: index
-            })
-          } else if (event === currItems.unit_sale) {
-            this.modify_medicine({key: 'num', val: Math.ceil(currItems.num * currItems.stock_sale_ratio), index: index})
-          }
-        }
-
-      },
-      saveTplData() {
-        if (this.currentData.data.items.length === 0) {
-          this.$Message.info("请先至少添加一个药品！");
-          return
-        }
-        let itemList = this.currentData.data.items;
-        for (var i = 0; i < itemList.length; i++) {
-          if (itemList[i].num === '' || itemList[i].num === 0) {
-            this.$Message.info("药品【" + itemList[i].name + "】的药量为空！")
-            return
-          }
-        }
-        this.showAddTpl = true;
-      },
-
-      hideTplShow() {
-        this.showAddTpl = false;
-      },
-      examineYB() {
-        if (this.recordData.diagnosis_xy === '') {
-          this.change_curr_tab(-1)
-          this.$Message.info("请先选择西医诊断!");
-          return
-        }
-        let diagnoses = this.recordData.diagnosis_xy_labels.map((item) => {
-          return {
-            "diagnose_code": item.code,
-            "diagnose_desc": item.name
+            this.$forceUpdate()
           }
         })
-        let itemList = this.currentData.data.items
-        for (let i = 0, len = itemList.length; i < len; i++) {
-          if (itemList[i].yb_code === '') {
-            this.$Message.info("药品" + itemList[i].name + "不属于医保范畴!")
-            return;
-          }
+      }
+    },
+    cancelRecipe() {
+      this.$Modal.confirm({
+        title: '提示',
+        content: '<p>确定删除该处方？</p>',
+        onOk: () => {
+          this.cancel_recipe();
+        },
+        onCancel: () => {
+          console.log("88")
         }
-
-        let medList = itemList.map(med => {
-          let fre = {}
-          if (this.currentData.data.frequency) {
-            fre = this.findInFre(this.currentData.data.frequency)
-          } else {
-            fre = {code: 'qd', name: '每天一次', ratio: 1}
-          }
-          return {
-            "yb_code": med.yb_code,
-            "medicine_id": med.item_id,
-            "name": med.name,
-            "price": med.price,
-            "num": med.num,
-            "dose_unit": med.unit_dose,
-            "amount": Number(med.price) * Number(med.num),
-            "use_day": Number(med.days ? med.days : 1),
-            "single_dose_number": med.dose_once,
-            "single_dose_unit": med.unit_dose,
-            "single_take_number": med.dose_once,
-            "single_take_unit": med.unit_dose,
-            "take_medical_number": med.num,
-            "take_medical_unit": med.unit,
-            "frequence": fre.code
-          }
-        })
-
-        let params = {
-          "clinic_id": this.clinicId,
-          "doctor_id": this.doctorId,
-          "user_id": userId,
-          "user_name": userName,
-          "appoint_order_seqno": this.appointOrderSeqno,
-          "card_no": this.ybCardNo,
-          "recipe_id": new Date().getTime().toString() + Math.ceil(Math.random() * 1000).toString(),
-          "diagnoses": diagnoses,
-          "medicines": medList
+      });
+    },
+    change_unit(med, event, index) {
+      if (med.num !== '' && med.num !== 0) {
+        if (event === med.unit_stock) {
+          this.modify_medicine({
+            key: 'num',
+            val: Math.ceil(med.num * 1.0 / med.stock_sale_ratio),
+            index: index
+          })
+        } else if (event === med.unit_sale) {
+          this.modify_medicine({key: 'num', val: Math.ceil(med.num * med.stock_sale_ratio), index: index})
         }
-        wisdomyb(params).then(res => {
-          if (res.code === 1000) {
-            if (res.data.success == 'F') {
-              this.$Message.info(res.data.error_msg)
-            } else if (res.data.success == 'T' && res.data.result.length == 0) {
-              this.$Message.info("审核通过！")
-            } else if (res.data.success == 'T' && res.data.result.length != 0) {
-              this.wisdomShow = true
-              this.windowUrl = res.data.window_url
+      }
+
+    },
+    saveTplData() {
+      if (this.currentData.data.items.length === 0) {
+        this.$Message.info("请先至少添加一个药品！");
+        return
+      }
+      let itemList = this.currentData.data.items;
+      for (var i = 0; i < itemList.length; i++) {
+        if (itemList[i].num === '' || itemList[i].num === 0) {
+          this.$Message.info("药品【" + itemList[i].name + "】的药量为空！")
+          return
+        }
+      }
+      this.showAddTpl = true;
+    },
+
+    hideTplShow() {
+      this.showAddTpl = false;
+    },
+    examineYB() {
+      if (this.recordData.diagnosis_xy === '') {
+        this.change_curr_tab(-1)
+        this.$Message.info("请先选择西医诊断!");
+        return
+      }
+      let diagnoses = this.recordData.diagnosis_xy_labels.map((item) => {
+        return {
+          "diagnose_code": item.code,
+          "diagnose_desc": item.name
+        }
+      })
+      let itemList = this.currentData.data.items
+      for (let i = 0, len = itemList.length; i < len; i++) {
+        if (itemList[i].yb_code === '') {
+          this.$Message.info("药品" + itemList[i].name + "不属于医保范畴!")
+          return;
+        }
+      }
+
+      let medList = itemList.map(med => {
+        let fre = {}
+        if (this.currentData.data.frequency) {
+          fre = this.findInFre(this.currentData.data.frequency)
+        } else {
+          fre = {code: 'qd', name: '每天一次', ratio: 1}
+        }
+        return {
+          "yb_code": med.yb_code,
+          "medicine_id": med.item_id,
+          "name": med.name,
+          "price": med.price,
+          "num": med.num,
+          "dose_unit": med.unit_dose,
+          "amount": Number(med.price) * Number(med.num),
+          "use_day": Number(med.days ? med.days : 1),
+          "single_dose_number": med.dose_once,
+          "single_dose_unit": med.unit_dose,
+          "single_take_number": med.dose_once,
+          "single_take_unit": med.unit_dose,
+          "take_medical_number": med.num,
+          "take_medical_unit": med.unit,
+          "frequence": fre.code
+        }
+      })
+
+      let params = {
+        "clinic_id": this.clinicId,
+        "doctor_id": this.doctorId,
+        "user_id": userId,
+        "user_name": userName,
+        "appoint_order_seqno": this.appointOrderSeqno,
+        "card_no": this.ybCardNo,
+        "recipe_id": new Date().getTime().toString() + Math.ceil(Math.random() * 1000).toString(),
+        "diagnoses": diagnoses,
+        "medicines": medList
+      }
+      wisdomyb(params).then(res => {
+        if (res.code === 1000) {
+          if (res.data.success == 'F') {
+            this.$Message.info(res.data.error_msg)
+          } else if (res.data.success == 'T' && res.data.result.length == 0) {
+            this.$Message.info("审核通过！")
+          } else if (res.data.success == 'T' && res.data.result.length != 0) {
+            this.wisdomShow = true
+            this.windowUrl = res.data.window_url
+          }
+        } else {
+          this.$Message.info(res.msg)
+        }
+      }).catch(error => {
+        console.log(error)
+        this.$Message.info('网络出错！')
+      })
+    },
+    findInFre(val) {
+      let list = [
+        {code: 'qd', name: '每天一次', ratio: 1},
+        {code: 'bid', name: '每天两次', ratio: 2},
+        {code: 'tid', name: '每天三次', ratio: 3},
+        {code: 'qid', name: '每天四次', ratio: 4},
+        {code: 'qod', name: '两天一次', ratio: 0.5},
+        {code: 'qw', name: '每周一次', ratio: 1 / 7},
+        {code: '', name: '饭前', ratio: 3},
+        {code: '', name: '饭后', ratio: 3},
+        {code: 'hs', name: '睡前', ratio: 1},
+        {code: 'OTH', name: '医嘱', ratio: 1}
+      ]
+      for (let i = 0, len = list.length; i < len; i++) {
+        if (list[i].name == val) {
+          return list[i]
+        }
+      }
+      return {}
+    },
+    hideWis() {
+      this.wisdomShow = false
+    },
+    changeCalculate(action, isChangeUnit) {
+      this.modify_medicine(action)
+      let currItems = this.currentData.data.items[action.index];
+      this.calculate(currItems, action, isChangeUnit)
+    },
+    calculate(med, action, isChangeUnit) {
+      let spec = {
+        unit_stock: '',
+        unit_sale: '',
+        unit_dose: '',
+        stock_sale_ratio: 0,
+        sale_dose_ratio: 0
+      }
+      let stockNum = 0
+      let saleNum = 0
+      let doseNum = 0
+
+      if (/^([0-9]+)([^0-9\/]+)\/([^0-9]+?)(\*([0-9]+)([^0-9\/]+)\/([^0-9]+))?$/.test(med.spec)) {
+        if (RegExp.$4) {
+          spec.unit_stock = RegExp.$7
+          spec.unit_sale = RegExp.$6
+          spec.unit_dose = RegExp.$2
+          spec.stock_sale_ratio = RegExp.$5
+          spec.sale_dose_ratio = RegExp.$1
+          if (
+            (
+              med.unit_stock !== med.unit_sale
+              && (
+                (spec.unit_sale === med.unit_sale && spec.unit_stock === med.unit_stock && Number(spec.stock_sale_ratio) === Number(med.stock_sale_ratio))
+                || (spec.unit_sale === med.unit_sale && spec.unit_dose === med.unit_dose && Number(spec.stock_sale_ratio) === Number(med.stock_sale_ratio))
+              )
+            )
+            || med.unit_stock === med.unit_sale
+          ) {
+            switch (med.unit_once) {
+              case spec.unit_stock:
+                stockNum = Math.ceil(Number(med.dose_once) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)))
+                saleNum = Math.ceil(Number(med.dose_once) * Number(spec.stock_sale_ratio) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)))
+                doseNum = Math.ceil(Number(med.dose_once) * Number(spec.stock_sale_ratio) * Number(spec.sale_dose_ratio) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)))
+                break
+              case spec.unit_sale:
+                stockNum = Math.ceil(Number(med.dose_once) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)) / Number(spec.stock_sale_ratio))
+                saleNum = Math.ceil(Number(med.dose_once) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)))
+                doseNum = Math.ceil(Number(med.dose_once) * Number(spec.sale_dose_ratio) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)))
+                break
+              case spec.unit_dose:
+                stockNum = Math.ceil(Number(med.dose_once) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)) / (Number(spec.sale_dose_ratio) * Number(spec.stock_sale_ratio)))
+                saleNum = Math.ceil(Number(med.dose_once) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)) / Number(spec.sale_dose_ratio))
+                doseNum = Math.ceil(Number(med.dose_once) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)))
+                break
+              default:
+                if (isChangeUnit) {
+                  this.change_unit(med, action.val, action.index)
+                }
+                return
+            }
+            switch (med.unit) {
+              case spec.unit_stock:
+                this.modify_medicine({key: 'num', val: stockNum, index: action.index})
+                break
+              case spec.unit_sale:
+                this.modify_medicine({key: 'num', val: saleNum, index: action.index})
+                break
+              case spec.unit_dose:
+                this.modify_medicine({key: 'num', val: doseNum, index: action.index})
+                break
+              default:
+                if (isChangeUnit) {
+                  this.change_unit(med, action.val, action.index)
+                }
+                return
             }
           } else {
-            this.$Message.info(res.msg)
+            if (isChangeUnit) {
+              this.change_unit(med, action.val, action.index)
+            }
           }
-        }).catch(error => {
-          console.log(error)
-          this.$Message.info('网络出错！')
-        })
-      },
-      findInFre(val) {
-        let list = [
-          {code: 'qd', name: '每天一次', ratio: 1},
-          {code: 'bid', name: '每天两次', ratio: 2},
-          {code: 'tid', name: '每天三次', ratio: 3},
-          {code: 'qid', name: '每天四次', ratio: 4},
-          {code: 'qod', name: '两天一次', ratio: 0.5},
-          {code: 'qw', name: '每周一次', ratio: 1 / 7},
-          {code: '', name: '饭前', ratio: 3},
-          {code: '', name: '饭后', ratio: 3},
-          {code: 'hs', name: '睡前', ratio: 1},
-          {code: 'OTH', name: '医嘱', ratio: 1}
-        ]
-        for (let i = 0, len = list.length; i < len; i++) {
-          if (list[i].name == val) {
-            return list[i]
+        } else {
+          spec.unit_stock = RegExp.$3
+          spec.unit_sale = RegExp.$2
+          spec.stock_sale_ratio = RegExp.$1
+          if (
+            (
+              med.unit_stock !== med.unit_sale
+              && spec.unit_sale === med.unit_sale
+              && spec.unit_stock === med.unit_stock
+              && Number(spec.stock_sale_ratio) === Number(med.stock_sale_ratio)
+            )
+            || med.unit_stock === med.unit_sale
+          ) {
+            switch (med.unit_once) {
+              case spec.unit_stock:
+                stockNum = Math.ceil(Number(med.dose_once) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)))
+                saleNum = Math.ceil(Number(med.dose_once) * Number(spec.stock_sale_ratio) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)))
+                break
+              case spec.unit_sale:
+                stockNum = Math.ceil(Number(med.dose_once) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)) / Number(spec.stock_sale_ratio))
+                saleNum = Math.ceil(Number(med.dose_once) * Math.ceil(Number(this.frequencyToRatio(med.frequency)) * Number(med.days)))
+                break
+              default:
+                if (isChangeUnit) {
+                  this.change_unit(med, action.val, action.index)
+                }
+                return
+            }
+            switch (med.unit) {
+              case spec.unit_stock:
+                this.modify_medicine({key: 'num', val: stockNum, index: action.index})
+                break
+              case spec.unit_sale:
+                this.modify_medicine({key: 'num', val: saleNum, index: action.index})
+                break
+              default:
+                if (isChangeUnit) {
+                  this.change_unit(med, action.val, action.index)
+                }
+                return
+            }
+          } else {
+            if (isChangeUnit) {
+              this.change_unit(med, action.val, action.index)
+            }
           }
         }
-        return {}
-      },
-      hideWis() {
-        this.wisdomShow = false
+      } else {
+        if (isChangeUnit) {
+          this.change_unit(med, action.val, action.index)
+        }
       }
+    },
+    frequencyToRatio(frequency) {
+      let result = this.medFrequency.filter(item => {
+        return item.name === frequency
+      })
+      return result[0].ratio
     }
   }
+}
 </script>
 
 <style scoped>
@@ -416,6 +549,6 @@
   .unitText {
     min-width: 2rem;
     display: inline-block;
-    text-align: left;
+    text-align: center;
   }
 </style>

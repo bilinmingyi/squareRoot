@@ -44,13 +44,14 @@ export default {
     ...mapState({
       patientData: state => state.patientData,
       clinicType: state => state.clinicType,
+      paramsSetting: state => state.paramsSetting,
       recordData: state => state.recordData
     })
   },
   async created() {
-    await this.getClinicData()
     this.init();
     this.getMedShop();
+    await this.getClinicData();
     this.loadDraftData();
   },
   methods: {
@@ -102,15 +103,54 @@ export default {
       }).then(data => {
         if (data.code === 1000) {
           if (data.data == '') {
-            if (this.clinicType === 6) {
-              this.addNewRecipt(3);
-              this.addNewRecipt(4);
+            let recipeList = []
+            if (this.paramsSetting != '') {
+              let valueList = JSON.parse(this.paramsSetting).filter(item => item.group == 'cd002')
+              if (valueList.length > 0) {
+                recipeList = JSON.parse(valueList[0]["property_value"])
+              } else {
+                if (this.clinicType === 6) {
+                  recipeList = ['产品处方', '治疗项目']
+                } else {
+                  recipeList = ['中药饮片', '中西成药', '治疗项目']
+                }
+              }
             } else {
-              this.addNewRecipt(1, 1);
-              this.addNewRecipt(1, 2);
-              this.addNewRecipt(2);
-              this.addNewRecipt(4);
+              if (this.clinicType === 6) {
+                recipeList = ['产品处方', '治疗项目']
+              } else {
+                recipeList = ['中药饮片', '中西成药', '治疗项目']
+              }
             }
+            recipeList.forEach(recipe => {
+              switch (recipe) {
+                case '中药饮片':
+                  this.addNewRecipt(1, 1);
+                  break
+                case '配方颗粒':
+                  this.addNewRecipt(1, 2);
+                  break
+                case '中西成药':
+                  this.addNewRecipt(2);
+                  break
+                case '产品处方':
+                  this.addNewRecipt(3);
+                  break
+                case '治疗项目':
+                  this.addNewRecipt(4, 1);
+                  break
+                case '检验项目':
+                  this.addNewRecipt(4, 2);
+                  break
+                case '检查项目':
+                  this.addNewRecipt(4, 3);
+                  break
+                case '材料处方':
+                  this.addNewRecipt(6);
+                  break
+              }
+            })
+
             this.change_curr_tab(-1)
             return
           }
@@ -608,21 +648,26 @@ export default {
         fetchClinic().then(
           res => {
             if (res.code === 1000) {
-              this.set_state_prop({ key: 'clinic', val: res.data });
+              this.set_state_prop({key: 'clinic', val: res.data});
               if (res.data.id == 30) {
                 if (this.recordData.recordList.length == 0) {
-                  this.set_record_prop({ key: 'recordList', val: ['past_history', 'auxiliary_examination', 'allergic_history', 'examination'] })
+                  this.set_record_prop({
+                    key: 'recordList',
+                    val: ['past_history', 'auxiliary_examination', 'allergic_history', 'examination']
+                  })
                 }
               }
-              this.set_state_prop({ key: 'clinicType', val: res.data.service_type ? res.data.service_type : 0 });
+              this.set_state_prop({key: 'paramsSetting', val: res.data.params_setting});
+              this.set_state_prop({key: 'clinicType', val: res.data.service_type ? res.data.service_type : 0});
             } else {
               this.$Message.info(res.msg)
             }
             resolve()
-
           }
         ).catch(error => {
           console.log(error)
+        }).finally(() => {
+          resolve()
         })
       })
     },
