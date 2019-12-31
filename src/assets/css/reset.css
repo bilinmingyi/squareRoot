@@ -1,11 +1,11 @@
 /*重置*/
+
 body, h1, h2, h3, h4, h5, p, dl, dd, ol, ul, th, td, form, fieldset, input, button, textarea {
   margin: 0;
   padding: 0;
   font-weight: normal;
   font-family: "microsoft yahei";
 }
-
 
 html {
   -webkit-text-size-adjust: none;
@@ -32,7 +32,6 @@ fieldset, img {
   border: 0
 }
 
-
 * {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -52,7 +51,6 @@ li {
 img {
   display: block;
   border: none;
-
 }
 
 a {
@@ -68,12 +66,7 @@ a:link, a:visited, a:hover, a:active {
   outline: none;
 }
 
-input[type="submit"],
-input[type="reset"],
-input[type="button"],
-input[type="text"],
-input[type="number "],
-button {
+input[type="submit"], input[type="reset"], input[type="button"], input[type="text"], input[type="number "], button {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -97,7 +90,6 @@ input:-ms-input-placeholder {
 input {
   color: #3F3F3F;
 }
-
 
 .full-screen-hr {
   width: 100%;
@@ -173,7 +165,7 @@ input {
 }
 
 .width-200 {
-    width: 12.5rem !important;
+  width: 12.5rem !important;
 }
 
 .width-240 {
@@ -185,7 +177,9 @@ input {
 }
 
 /* 默认样式表 */
+
 /* background */
+
 .bg-fff {
   background: #fff;
 }
@@ -195,6 +189,7 @@ input {
 }
 
 /* padding */
+
 .p5 {
   padding: 0.3125rem;
 }
@@ -228,6 +223,7 @@ input {
 }
 
 /* padding-left */
+
 .pl5 {
   padding-left: 0.3125rem;
 }
@@ -261,6 +257,7 @@ input {
 }
 
 /* padding-right */
+
 .pr4 {
   padding-right: 0.25rem;
 }
@@ -306,6 +303,7 @@ input {
 }
 
 /* padding-top */
+
 .pt5 {
   padding-top: 0.3125rem;
 }
@@ -339,6 +337,7 @@ input {
 }
 
 /* padding-bottom */
+
 .pb5 {
   padding-bottom: 0.3125rem;
 }
@@ -372,6 +371,7 @@ input {
 }
 
 /* margin */
+
 .m5 {
   margin: 0.3125rem;
 }
@@ -405,6 +405,7 @@ input {
 }
 
 /* margin-left */
+
 .ml5 {
   margin-left: 0.3125rem;
 }
@@ -443,10 +444,10 @@ input {
 
 .ml40 {
   margin-left: 2.5rem;
-
 }
 
 /* margin-right */
+
 .mr5 {
   margin-right: 0.3125rem;
 }
@@ -488,6 +489,7 @@ input {
 }
 
 /* margin-top */
+
 .mt5 {
   margin-top: 0.3125rem;
 }
@@ -533,6 +535,7 @@ input {
 }
 
 /* margin-bottom */
+
 .mb5 {
   margin-bottom: 0.3125rem;
 }
@@ -574,6 +577,7 @@ input {
 }
 
 /*排版*/
+
 .col5 {
   width: 5% !important;
 }
@@ -643,6 +647,7 @@ input {
 }
 
 /* font-size */
+
 .font-12 {
   font-size: 0.75rem;
 }
@@ -668,6 +673,7 @@ input {
 }
 
 /* font-weight */
+
 .font-bold {
   font-weight: bold;
 }
@@ -712,8 +718,7 @@ input {
   color: #ffffff;
 }
 
-.e-p-i-content-item .ivu-input,
-.e-p-i-content-item .ivu-select-selection {
+.e-p-i-content-item .ivu-input, .e-p-i-content-item .ivu-select-selection {
   height: 2.5rem;
   border: 1px solid #5096e0;
   font-size: 1rem;
@@ -744,6 +749,7 @@ input {
 }
 
 /* 修改iview tag样式 */
+
 .diagnosis-input-box .ivu-tag {
   height: auto;
   min-height: 1.375rem;
@@ -801,8 +807,7 @@ input {
   height: 1rem;
 }
 
-::-webkit-scrollbar-track,
-::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-track, ::-webkit-scrollbar-thumb {
   border-radius: 62.4375rem;
   border: 0.3125rem solid transparent;
 }
@@ -822,6 +827,7 @@ input {
 }
 
 /* patient-record input */
+
 .patient-record-input .ivu-input {
   min-height: 2.375rem !important;
   line-height: 1.875rem;
@@ -853,4 +859,15 @@ textarea.ivu-input {
 
 .ivu-radio-wrapper {
   font-size: 14px;
+}
+
+.flexM {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
 }

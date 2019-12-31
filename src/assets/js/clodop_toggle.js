@@ -381,7 +381,7 @@ function directPrint(printParams) {
       _div.style.position = 'relative'
       _div.style.left = '-9999px'
       _div.style.top = '-1000px'
-      // _div.style = 'position:relative;left:500px;'
+      _div.style = 'position:relative;left:500px;'
       _div.id = 'directDom'
       document.body.appendChild(_div)
       _div.innerHTML = str
@@ -409,10 +409,14 @@ function directPrint(printParams) {
       return arrDPI
     },
     mmTopx: function(value, DPI) {
+      // console.log((Number(value) * DPI[1]) / 25.4)
       return (Number(value) * DPI[1]) / 25.4
     },
     printPreview: function() {
       var self = this
+      var dpi = methods.js_getDPI()
+      var printWidth = Math.ceil(this.mmTopx(printParams.pageWidth, dpi))
+      var printHeight = Math.ceil(this.mmTopx(printParams.pageHeight, dpi))
       setTimeout(function() {
         var bg = self.createDom(
           'div',
@@ -458,7 +462,7 @@ function directPrint(printParams) {
                     },
                     style: {
                       width: '300px',
-                      height: 'calc(100vh - 40px)',
+                      // height: 'calc(100vh - 40px)',
                       background: '#fff',
                       borderRight: '1px solid rgb(82, 86, 89)'
                     }
@@ -555,13 +559,15 @@ function directPrint(printParams) {
                     style: {
                       background: 'rgb(82, 86, 89)',
                       // position: "relative",
-                      overflow: 'auto',
+                      overflow: 'hidden',
                       paddingTop: '6px',
                       paddingBottom: '6px',
-                      width: 'calc( 100% - 300px)'
-                      // display: "flex",
-                      // flexDirection: 'column',
-                      // alignItems: "center"
+                      width: 'calc( 100% - 300px)',
+                      display: 'flex'
+                    },
+                    attrs: {
+                      id: 'preview-block',
+                      class: 'flexM'
                     }
                   },
                   [
@@ -575,12 +581,13 @@ function directPrint(printParams) {
                       },
                       style: {
                         background: '#fff',
-                        width: '630px',
-                        minHeight: 'calc(100vh - 52px)',
+                        width: printWidth + 'px',
+                        height: printHeight + 'px',
                         // marginTop: '6px',
                         boxShadow: '0 4px 16px 4px rgba(0,0,0,0.50)',
                         padding: '25.4px 31.8px',
                         margin: '0 auto'
+                        // marginTop: '30px'
                       }
                     }),
                     self.createDom('div', {
@@ -610,6 +617,41 @@ function directPrint(printParams) {
             self.printPrescription()
             document.documentElement.style.overflow = 'auto'
           })
+          var scaleX = Number(
+            (
+              document.getElementById('preview-block').offsetWidth / printWidth
+            ).toFixed(2)
+          )
+          var scaleY = Number(
+            (
+              (Number(document.getElementById('preview-block').offsetHeight) -
+                100) /
+              printHeight
+            ).toFixed(2)
+          )
+
+          var scale = scaleX < scaleY ? scaleX : scaleY
+          if (scale > 1) {
+            scale = 1
+          }
+          // console.log(printWidth)
+          // console.log(printHeight)
+          var printContentBox = document.getElementById('vue-print-content-box')
+          printContentBox.style.top = '0px'
+          printContentBox.style.transform = 'scale(' + scale + ')'
+          printContentBox.style['-ms-transform'] = 'scale(' + scale + ')'
+          printContentBox.style['-moz-transform'] = 'scale(' + scale + ')'
+          printContentBox.style['-webkit-transform'] = 'scale(' + scale + ')'
+          printContentBox.style['-o-transform'] = 'scale(' + scale + ')'
+
+          // console.log(scale)
+          // document.getElementById('vue-print-content-box').style = {
+          //   transform: 'scale(' + scale + ')',
+          //   '-ms-transform': 'scale(' + scale + ')',
+          //   '-moz-transform': 'scale(' + scale + ')',
+          //   '-webkit-transform': 'scale(' + scale + ')',
+          //   '-o-transform': 'scale(' + scale + ')'
+          // }
         })
       })
     },
@@ -673,7 +715,7 @@ function directPrint(printParams) {
         if (navigator.userAgent.indexOf('MSIE') > 0) {
           document.body.removeChild(iframe)
         }
-        // 移除DOM
+        // // 移除DOM
         var dom = document.getElementById('directDom')
         document.body.removeChild(dom)
       }, 30)
@@ -689,7 +731,10 @@ function directPrint(printParams) {
     // 获取DOM加载后的高度
     getHeight: function(dom, pageWidth2, printMargin) {
       // console.log(dom)
-      dom.style.width = pageWidth2 - printMargin.left - printMargin.right + 'px' //获取纸张的宽度 求其内容的高度
+      dom.style.width =
+        Math.floor(pageWidth2 - printMargin.left - printMargin.right - 12) +
+        'px' //获取纸张的宽度 求其内容的高度
+      // console.log(dom.style.width)
       // 避免页眉页脚不设的时候为0
       if (window.getComputedStyle(dom).height.indexOf('px') > -1) {
         return Number(window.getComputedStyle(dom).height.split('px')[0])
