@@ -19,14 +19,19 @@ var appRoot = '/yzshis'
 import vue from 'vue'
 /* 从诊所复制带来需要保存的代码 */
 
-function clodopToggle(dom, printParams) {
+function clodopToggle(printParams) {
+  // 不适用插件
+  if (!Number(printParams.printMode)) {
+    directPrint(printParams)
+    return
+  }
   try {
     if (LODOP.webskt && LODOP.webskt.readyState == 1) {
       //打印初始化
       LODOP.PRINT_INIT('')
       installModal('预览界面正在打开，请稍等一会.')
       //获取打印内容结点
-      var DOM = renderDom(dom, 'render')
+      var DOM = renderDom(printParams.htmlStr, 'render')
       var commonStyle = DOM.children[0]
       var header = DOM.children[1]
       var content = DOM.children[2]
@@ -155,7 +160,7 @@ function clodopToggle(dom, printParams) {
       }
       LODOP.SET_PRINT_STYLEA(0, 'TextNeatRow', 1) //行对齐
       LODOP.PREVIEW()
-      renderDom(dom, 'delete')
+      renderDom(printParams.htmlStr, 'delete')
     } else {
       // websocket 未成功链接
       installModal('正在连接云打印功能，请稍等一下再操作.', 1000)
@@ -357,6 +362,381 @@ function initCLodop() {
   var CLodopIsLocal = !!(src1 + src2).match(/\/\/localho|\/\/127.0.0./i)
 }
 initCLodop()
+
+// 直接打印函数
+function directPrint(printParams) {
+  // 先前vue的 methods方法
+  var methods = {
+    printFn: function() {
+      var isChrome = window.navigator.userAgent.indexOf('Chrome') > -1
+      if (isChrome) {
+        this.printPrescription()
+      } else {
+        document.documentElement.style.overflow = 'hidden'
+        this.printPreview()
+      }
+    },
+    renderDom: function(str) {
+      var _div = document.createElement('div')
+      _div.style.position = 'relative'
+      _div.style.left = '-9999px'
+      _div.style.top = '-1000px'
+      // _div.style = 'position:relative;left:500px;'
+      _div.id = 'directDom'
+      document.body.appendChild(_div)
+      _div.innerHTML = str
+      var dom_temp = _div.childNodes
+      for (var i = 0, len = dom_temp.length; i < len; i++) {
+        if (dom_temp[i].nodeType === 1) {
+          return dom_temp[i]
+        }
+      }
+    },
+    js_getDPI: function() {
+      var arrDPI = new Array()
+      if (window.screen.deviceXDPI != undefined) {
+        arrDPI[0] = window.screen.deviceXDPI
+        arrDPI[1] = window.screen.deviceYDPI
+      } else {
+        var tmpNode = document.createElement('DIV')
+        tmpNode.style.cssText =
+          'width:1in;height:1in;position:absolute;left:0px;top:0px;z-index:99;visibility:hidden'
+        document.body.appendChild(tmpNode)
+        arrDPI[0] = parseInt(tmpNode.offsetWidth)
+        arrDPI[1] = parseInt(tmpNode.offsetHeight)
+        tmpNode.parentNode.removeChild(tmpNode)
+      }
+      return arrDPI
+    },
+    mmTopx: function(value, DPI) {
+      return (Number(value) * DPI[1]) / 25.4
+    },
+    printPreview: function() {
+      var self = this
+      setTimeout(function() {
+        var bg = self.createDom(
+          'div',
+          {
+            attrs: {
+              id: 'vue-print-bg'
+            },
+            style: {
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              position: 'fixed',
+              width: '100%',
+              zIndex: 9999
+            }
+          },
+          [
+            self.createDom(
+              'div',
+              {
+                attrs: {
+                  id: 'vue-print-modal'
+                },
+                style: {
+                  position: 'relative',
+                  top: '20px',
+                  left: '20px',
+                  right: '20px',
+                  bottom: '20px',
+                  height: '100%',
+                  background: 'rgb(82, 86, 89)',
+                  display: 'flex',
+                  boxShadow: '0 4px 16px 4px rgba(0,0,0,0.20)'
+                }
+              },
+              [
+                self.createDom(
+                  'div',
+                  {
+                    attrs: {
+                      id: 'vue-print-sidebar'
+                    },
+                    style: {
+                      width: '300px',
+                      height: 'calc(100vh - 40px)',
+                      background: '#fff',
+                      borderRight: '1px solid rgb(82, 86, 89)'
+                    }
+                  },
+                  [
+                    self.createDom(
+                      'div',
+                      {
+                        attrs: {
+                          id: 'vue-print-header'
+                        },
+                        style: {
+                          width: '100%',
+                          padding: '20px 18px'
+                        }
+                      },
+                      [
+                        self.createDom('h1', {
+                          attrs: {
+                            id: 'vue-print-title'
+                          },
+                          style: {
+                            fontSize: '16px',
+                            fontWeight: 400,
+                            lineHeight: '24px',
+                            margin: 0,
+                            paddingBottom: '12px'
+                          },
+                          domProps: {
+                            innerText: '打印'
+                          }
+                        }),
+                        self.createDom('span', {
+                          style: {
+                            fontSize: '13px',
+                            fontFamily: 'Arial',
+                            display: 'flex',
+                            minHeight: '20px'
+                          },
+                          domProps: {
+                            innerText: ''
+                          }
+                        }),
+                        self.createDom(
+                          'div',
+                          {
+                            style: {
+                              display: 'flex',
+                              justifyContent: 'flex-end',
+                              paddingTop: '16px'
+                            }
+                          },
+                          [
+                            self.createDom('button', {
+                              attrs: {
+                                id: 'vue-print-print-btn'
+                              },
+                              style: {
+                                backgroundColor: '#1a73e8',
+                                border: 'none',
+                                color: '#fff',
+                                padding: '8px 16px',
+                                marginRight: '8px',
+                                borderRadius: '4px'
+                              },
+                              domProps: {
+                                innerText: '打印'
+                              }
+                            }),
+                            self.createDom('button', {
+                              attrs: {
+                                id: 'vue-print-cancel-btn'
+                              },
+                              style: {
+                                border: '1px solid rgb(218, 220, 224)',
+                                backgroundColor: '#fff',
+                                color: '#1a73e8',
+                                padding: '8px 16px',
+                                borderRadius: '4px'
+                              },
+                              domProps: {
+                                innerText: '取消'
+                              }
+                            })
+                          ]
+                        )
+                      ]
+                    )
+                  ]
+                ),
+                self.createDom(
+                  'div',
+                  {
+                    style: {
+                      background: 'rgb(82, 86, 89)',
+                      // position: "relative",
+                      overflow: 'auto',
+                      paddingTop: '6px',
+                      paddingBottom: '6px',
+                      width: 'calc( 100% - 300px)'
+                      // display: "flex",
+                      // flexDirection: 'column',
+                      // alignItems: "center"
+                    }
+                  },
+                  [
+                    self.createDom('div', {
+                      attrs: {
+                        id: 'vue-print-content-box'
+                      },
+                      domProps: {
+                        innerHTML: document.getElementById('print-template')
+                          .innerHTML
+                      },
+                      style: {
+                        background: '#fff',
+                        width: '630px',
+                        minHeight: 'calc(100vh - 52px)',
+                        // marginTop: '6px',
+                        boxShadow: '0 4px 16px 4px rgba(0,0,0,0.50)',
+                        padding: '25.4px 31.8px',
+                        margin: '0 auto'
+                      }
+                    }),
+                    self.createDom('div', {
+                      style: {
+                        padding: '5px'
+                      }
+                    })
+                  ]
+                )
+              ]
+            )
+          ]
+        )
+        document.body.appendChild(bg)
+        setTimeout(function() {
+          var cancel = document.getElementById('vue-print-cancel-btn')
+          cancel.addEventListener('click', function() {
+            document.body.removeChild(bg)
+            var dom = document.getElementById('directDom')
+            document.body.removeChild(dom)
+            // self.$emit('reset')
+            document.documentElement.style.overflow = 'auto'
+          })
+          var print = document.getElementById('vue-print-print-btn')
+          print.addEventListener('click', function() {
+            document.body.removeChild(bg)
+            self.printPrescription()
+            document.documentElement.style.overflow = 'auto'
+          })
+        })
+      })
+    },
+    createDom: function(target, attributes, children) {
+      var dom = document.createElement(target)
+      attributes = attributes || {}
+      if (attributes.style) {
+        this.addStyle(dom, attributes.style)
+      }
+      if (attributes.attrs) {
+        this.addAttr(dom, attributes.attrs)
+      }
+      if (attributes.domProps) {
+        this.addDomProps(dom, attributes.domProps)
+      }
+      children = children || []
+      if (children.length > 0) {
+        children.forEach(function(child) {
+          dom.appendChild(child)
+        })
+      }
+      return dom
+    },
+    addStyle: function(dom, styles) {
+      if (!dom.style) return
+      styles = styles || {}
+      Object.keys(styles).forEach(function(key) {
+        dom.style[key] = styles[key]
+      })
+    },
+    addAttr: function(dom, attrs) {
+      attrs = attrs || {}
+      Object.keys(attrs).forEach(function(key) {
+        dom.setAttribute(key, attrs[key])
+      })
+    },
+    addDomProps: function(dom, domProps) {
+      domProps = domProps || {}
+      Object.keys(domProps).forEach(function(key) {
+        dom[key] = domProps[key]
+      })
+    },
+    printPrescription: function() {
+      setTimeout(function() {
+        var el = document.getElementById('print-template')
+        var iframe = document.createElement('IFRAME')
+        var doc = null
+        iframe.setAttribute(
+          'style',
+          'position:absolute;width:0px;height:0px;left:-500px;top:-500px;'
+        )
+        document.body.appendChild(iframe)
+        doc = iframe.contentWindow.document
+        doc.write("<LINK rel='stylesheet' type='text/css'>")
+        doc.write('<div>' + el.innerHTML + '</div>')
+
+        doc.close()
+        iframe.contentWindow.focus()
+        iframe.contentWindow.print()
+
+        if (navigator.userAgent.indexOf('MSIE') > 0) {
+          document.body.removeChild(iframe)
+        }
+        // 移除DOM
+        var dom = document.getElementById('directDom')
+        document.body.removeChild(dom)
+      }, 30)
+    },
+    filterMargin: function(params, dpi) {
+      return {
+        top: this.mmTopx(params.top, dpi),
+        bottom: this.mmTopx(params.bottom, dpi),
+        left: this.mmTopx(params.left, dpi),
+        right: this.mmTopx(params.right, dpi)
+      }
+    },
+    // 获取DOM加载后的高度
+    getHeight: function(dom, pageWidth2, printMargin) {
+      // console.log(dom)
+      dom.style.width = pageWidth2 - printMargin.left - printMargin.right + 'px' //获取纸张的宽度 求其内容的高度
+      // 避免页眉页脚不设的时候为0
+      if (window.getComputedStyle(dom).height.indexOf('px') > -1) {
+        return Number(window.getComputedStyle(dom).height.split('px')[0])
+      } else {
+        return 0
+      }
+    }
+  }
+  // console.log(printParams)
+  var DOM = methods.renderDom(printParams.htmlStr)
+  // console.log(printParams)
+  var dpi = methods.js_getDPI()
+  var initMargin = {
+    top: methods.mmTopx(10, dpi),
+    bottom: methods.mmTopx(10, dpi),
+    left: methods.mmTopx(10, dpi),
+    right: methods.mmTopx(10, dpi)
+  }
+
+  // 打印参数   默认是A5纸
+  var printMargin = printParams.printMargin
+    ? methods.filterMargin(printParams.printMargin, dpi)
+    : JSON.parse(JSON.stringify(initMargin))
+  var pageHeight = printParams.pageHeight
+    ? methods.mmTopx(printParams.pageHeight, dpi)
+    : methods.mmTopx(210, dpi)
+  var pageWidth = printParams.pageWidth
+    ? methods.mmTopx(printParams.pageWidth, dpi)
+    : methods.mmTopx(148, dpi)
+
+  var header = DOM.children[1]
+  var content = DOM.children[2]
+  var _footer = DOM.children[3]
+  // console.log(DOM)
+  // 计算三个结点的高度
+  var headerH = methods.getHeight(header, pageWidth, printMargin),
+    contentH = methods.getHeight(content, pageWidth, printMargin),
+    footerH = methods.getHeight(_footer, pageWidth, printMargin)
+
+  // 计算中间内容最小高度 撑开样式
+  var minHeightContent =
+    pageHeight - headerH - footerH - printMargin.top - printMargin.bottom
+
+  content.style.minHeight = minHeightContent - 10 + 'px'
+
+  methods.printFn()
+}
 /* 从诊所复制带来需要保存的代码 */
 export default clodopToggle
 /* 从诊所复制带来需要保存的代码 */
