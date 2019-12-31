@@ -76,17 +76,11 @@ export default {
       var self = this
       return self.recordData.recordList.indexOf(type) >= 0
     },
-    printPrescription: function (id_str) {
+    printPrescription: function () {
       var self = this
-      var printType = ''
-      var fn = function (htmlStr, width, height, margin) {
-        var printParams = {
-          pageHeight: height,
-          pageWidth: width,
-          printMargin: margin
-        }
+      var fn = function (settingOptions) {
         self.showLoading = false
-        clodopToggle(htmlStr, printParams)
+        clodopToggle(settingOptions)
       }
       var vue = axios
       var commonVar = {
@@ -136,7 +130,7 @@ export default {
           self.orderSeqno.slice(-6),
       }
       this.$emit('reset')
-      return new printRendering('patientHistory', commonVar, vue, fn)
+      return new printRendering('patientHistory', commonVar, vue, fn, self.clinic.params_setting)
 
 
 

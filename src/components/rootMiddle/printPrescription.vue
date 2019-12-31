@@ -4,13 +4,14 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapState, mapActions } from "vuex";
-import { clinicName } from '@/assets/js/mapType.js'
+import {mapGetters, mapState, mapActions} from "vuex";
+import {clinicName} from '@/assets/js/mapType.js'
 import fLoader from '@/components/fLoader.vue'
 import axios from 'axios'
 import filter from "@/assets/js/filters.js"
-import { printRendering } from '@/assets/js/printRendering.js'
+import {printRendering} from '@/assets/js/printRendering.js'
 import clodopToggle from '@/assets/js/clodop_toggle.js'
+
 export default {
   name: "printPrescription",
   components: {
@@ -21,8 +22,8 @@ export default {
       showLoading: false,
       clinicName: clinicName,
       sexOptions: [
-        { code: 1, name: '男' },
-        { code: 2, name: '女' }
+        {code: 1, name: '男'},
+        {code: 2, name: '女'}
       ],
       clinicAddress: '',
       customerPhone: '',
@@ -75,21 +76,21 @@ export default {
       var examination = this.recordData.examination;
       var ret = "";
       (examination.bloodpressure_num1 || examination.bloodpressure_num2) &&
-        (ret +=
-          "血压" +
-          examination.bloodpressure_num1 +
-          "/" +
-          examination.bloodpressure_num2 +
-          "mmHg，");
+      (ret +=
+        "血压" +
+        examination.bloodpressure_num1 +
+        "/" +
+        examination.bloodpressure_num2 +
+        "mmHg，");
       examination.bloodglucose &&
-        (ret += "血糖" + examination.bloodglucose + "mg/ml，");
+      (ret += "血糖" + examination.bloodglucose + "mg/ml，");
       examination.trioxypurine &&
-        (ret += "尿酸" + examination.trioxypurine + "umol/L，");
+      (ret += "尿酸" + examination.trioxypurine + "umol/L，");
       examination.heartrate &&
-        (ret += "心率" + examination.heartrate + "次/分，");
+      (ret += "心率" + examination.heartrate + "次/分，");
       examination.breathe && (ret += "呼吸" + examination.breathe + "次/分，");
       examination.animalheat &&
-        (ret += "体温" + examination.animalheat + "℃，");
+      (ret += "体温" + examination.animalheat + "℃，");
       examination.weight && (ret += "体重" + examination.weight + "kg，");
       examination.info && (ret += (ret ? '\n' : '') + examination.info);
       return ret;
@@ -118,20 +119,12 @@ export default {
     printPrescription: function () {
       var self = this
       self.showLoading = true
-      var printType = ''
       var recipe = self.currRecipeData.data
-      var fn = function (htmlStr, width, height, margin) {
+      var fn = function (settingOptions) {
         self.showLoading = false
-        var printParams = {
-          pageHeight: height,
-          pageWidth: width,
-          printMargin: margin
-        }
-
-        clodopToggle(htmlStr, printParams)
+        clodopToggle(settingOptions)
       }
       var vue = axios
-      var filterExam = JSON.stringify(self.examination)
       var commonVar = {
         '$机构名称': self.clinic.name || '',
         '$机构地址': self.clinic.city_name + '市' + self.clinic.county_name + '区' + self.clinic.address,
@@ -194,7 +187,8 @@ export default {
               '$中药用量': recipe.dose_once || self.currRecipeData.data.eachDose,
             }),
             vue,
-            fn);
+            fn,
+            self.clinic.params_setting);
           break;
         case 1:
           return new printRendering(
@@ -217,7 +211,8 @@ export default {
               '$成药列表': recipe.items,
             }),
             vue,
-            fn);
+            fn,
+            self.clinic.params_setting);
           break;
         case 6:
           return new printRendering(
@@ -226,7 +221,8 @@ export default {
               '$材料列表': recipe.items,
             }),
             vue,
-            fn);
+            fn,
+            self.clinic.params_setting);
           break;
         case 3:
           return new printRendering(
@@ -235,7 +231,8 @@ export default {
               '$产品列表': recipe.items,
             }),
             vue,
-            fn);
+            fn,
+            self.clinic.params_setting);
           break;
         case 4:
           switch (recipe.type) {
@@ -253,7 +250,8 @@ export default {
                     ).toFixed(2)
                   }),
                   vue,
-                  fn
+                  fn,
+                  self.clinic.params_setting
                 )
               } else {
                 return new printRendering(
@@ -262,7 +260,8 @@ export default {
                     '$治疗项目列表': recipe.items
                   }),
                   vue,
-                  fn
+                  fn,
+                  self.clinic.params_setting
                 )
               }
               break
@@ -280,7 +279,8 @@ export default {
                     ).toFixed(2)
                   }),
                   vue,
-                  fn
+                  fn,
+                  self.clinic.params_setting
                 )
               } else {
                 return new printRendering(
@@ -289,7 +289,8 @@ export default {
                     '$检验项目列表': recipe.items
                   }),
                   vue,
-                  fn
+                  fn,
+                  self.clinic.params_setting
                 )
               }
               break
@@ -307,7 +308,8 @@ export default {
                     ).toFixed(2)
                   }),
                   vue,
-                  fn
+                  fn,
+                  self.clinic.params_setting
                 )
               } else {
                 return new printRendering(
@@ -316,7 +318,8 @@ export default {
                     '$检查项目列表': recipe.items
                   }),
                   vue,
-                  fn
+                  fn,
+                  self.clinic.params_setting
                 )
               }
               break
