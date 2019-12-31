@@ -630,11 +630,11 @@ var printRendering = function (type, dataObj, vue, fn, clinicSet) {
         self.render();
       }
     } else {
-      modal('打印失败3，请重试！')
+      installModal('打印失败3，请重试！')
     }
   }).catch(function (error) {
     console.log(error)
-    modal('打印失败2，请重试！')
+    installModal('打印失败2，请重试！')
   });
 }
 
@@ -714,10 +714,10 @@ function printReport(vue, order, fn) {
       }
       printObject = new printRendering('patientHistory', commonVar, vue, fn, clinic.params_setting);
     } else {
-      modal('打印失败1，请重试！')
+      installModal('打印失败1，请重试！')
     }
   }).catch(function (error) {
-    modal('网络出错，请重试！')
+    installModal('网络出错，请重试！')
     console.log(error)
   })
 }
