@@ -367,7 +367,7 @@ initCLodop()
 function directPrint(printParams) {
   // 先前vue的 methods方法
   var methods = {
-    printFn: function () {
+    printFn: function() {
       var isChrome = window.navigator.userAgent.indexOf('Chrome') > -1
       if (isChrome) {
         this.printPrescription()
@@ -376,7 +376,7 @@ function directPrint(printParams) {
         this.printPreview()
       }
     },
-    renderDom: function (str) {
+    renderDom: function(str) {
       var _div = document.createElement('div')
       _div.style.position = 'relative'
       _div.style.left = '-9999px'
@@ -392,7 +392,7 @@ function directPrint(printParams) {
         }
       }
     },
-    js_getDPI: function () {
+    js_getDPI: function() {
       var arrDPI = new Array()
       if (window.screen.deviceXDPI != undefined) {
         arrDPI[0] = window.screen.deviceXDPI
@@ -408,11 +408,11 @@ function directPrint(printParams) {
       }
       return arrDPI
     },
-    mmTopx: function (value, DPI) {
+    mmTopx: function(value, DPI) {
       // console.log((Number(value) * DPI[1]) / 25.4)
       return (Number(value) * DPI[1]) / 25.4
     },
-    printPreview: function () {
+    printPreview: function() {
       var self = this
       var dpi = methods.js_getDPI()
       var printWidth = Math.ceil(this.mmTopx(printParams.pageWidth, dpi))
@@ -435,7 +435,7 @@ function directPrint(printParams) {
         marginLeft +
         'px'
 
-      setTimeout(function () {
+      setTimeout(function() {
         var bg = self.createDom(
           'div',
           {
@@ -620,9 +620,9 @@ function directPrint(printParams) {
           ]
         )
         document.body.appendChild(bg)
-        setTimeout(function () {
+        setTimeout(function() {
           var cancel = document.getElementById('vue-print-cancel-btn')
-          cancel.addEventListener('click', function () {
+          cancel.addEventListener('click', function() {
             document.body.removeChild(bg)
             var dom = document.getElementById('directDom')
             document.body.removeChild(dom)
@@ -630,7 +630,7 @@ function directPrint(printParams) {
             document.documentElement.style.overflow = 'auto'
           })
           var print = document.getElementById('vue-print-print-btn')
-          print.addEventListener('click', function () {
+          print.addEventListener('click', function() {
             document.body.removeChild(bg)
             self.printPrescription()
             document.documentElement.style.overflow = 'auto'
@@ -673,7 +673,7 @@ function directPrint(printParams) {
         })
       })
     },
-    createDom: function (target, attributes, children) {
+    createDom: function(target, attributes, children) {
       var dom = document.createElement(target)
       attributes = attributes || {}
       if (attributes.style) {
@@ -687,33 +687,33 @@ function directPrint(printParams) {
       }
       children = children || []
       if (children.length > 0) {
-        children.forEach(function (child) {
+        children.forEach(function(child) {
           dom.appendChild(child)
         })
       }
       return dom
     },
-    addStyle: function (dom, styles) {
+    addStyle: function(dom, styles) {
       if (!dom.style) return
       styles = styles || {}
-      Object.keys(styles).forEach(function (key) {
+      Object.keys(styles).forEach(function(key) {
         dom.style[key] = styles[key]
       })
     },
-    addAttr: function (dom, attrs) {
+    addAttr: function(dom, attrs) {
       attrs = attrs || {}
-      Object.keys(attrs).forEach(function (key) {
+      Object.keys(attrs).forEach(function(key) {
         dom.setAttribute(key, attrs[key])
       })
     },
-    addDomProps: function (dom, domProps) {
+    addDomProps: function(dom, domProps) {
       domProps = domProps || {}
-      Object.keys(domProps).forEach(function (key) {
+      Object.keys(domProps).forEach(function(key) {
         dom[key] = domProps[key]
       })
     },
-    printPrescription: function () {
-      setTimeout(function () {
+    printPrescription: function() {
+      setTimeout(function() {
         var el = document.getElementById('print-template')
         var iframe = document.createElement('IFRAME')
         var doc = null
@@ -738,7 +738,7 @@ function directPrint(printParams) {
         document.body.removeChild(dom)
       }, 30)
     },
-    filterMargin: function (params, dpi) {
+    filterMargin: function(params, dpi) {
       return {
         top: this.mmTopx(params.top, dpi),
         bottom: this.mmTopx(params.bottom, dpi),
@@ -747,7 +747,7 @@ function directPrint(printParams) {
       }
     },
     // 获取DOM加载后的高度
-    getHeight: function (dom, pageWidth2, printMargin) {
+    getHeight: function(dom, pageWidth2, printMargin) {
       // console.log(dom)
 
       dom.style.width =
