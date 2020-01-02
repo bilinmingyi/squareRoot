@@ -367,7 +367,7 @@ initCLodop()
 function directPrint(printParams) {
   // 先前vue的 methods方法
   var methods = {
-    printFn: function() {
+    printFn: function () {
       var isChrome = window.navigator.userAgent.indexOf('Chrome') > -1
       if (isChrome) {
         this.printPrescription()
@@ -376,12 +376,12 @@ function directPrint(printParams) {
         this.printPreview()
       }
     },
-    renderDom: function(str) {
+    renderDom: function (str) {
       var _div = document.createElement('div')
       _div.style.position = 'relative'
       _div.style.left = '-9999px'
       _div.style.top = '-1000px'
-      _div.style = 'position:relative;left:500px;'
+      // _div.style = 'position:relative;left:500px;'
       _div.id = 'directDom'
       document.body.appendChild(_div)
       _div.innerHTML = str
@@ -392,7 +392,7 @@ function directPrint(printParams) {
         }
       }
     },
-    js_getDPI: function() {
+    js_getDPI: function () {
       var arrDPI = new Array()
       if (window.screen.deviceXDPI != undefined) {
         arrDPI[0] = window.screen.deviceXDPI
@@ -408,16 +408,34 @@ function directPrint(printParams) {
       }
       return arrDPI
     },
-    mmTopx: function(value, DPI) {
+    mmTopx: function (value, DPI) {
       // console.log((Number(value) * DPI[1]) / 25.4)
       return (Number(value) * DPI[1]) / 25.4
     },
-    printPreview: function() {
+    printPreview: function () {
       var self = this
       var dpi = methods.js_getDPI()
       var printWidth = Math.ceil(this.mmTopx(printParams.pageWidth, dpi))
       var printHeight = Math.ceil(this.mmTopx(printParams.pageHeight, dpi))
-      setTimeout(function() {
+      var marginTop = Math.ceil(this.mmTopx(printParams.printMargin.top, dpi))
+      var marginBottom = Math.ceil(
+        this.mmTopx(printParams.printMargin.bottom, dpi)
+      )
+      var marginLeft = Math.ceil(this.mmTopx(printParams.printMargin.left, dpi))
+      var marginRight = Math.ceil(
+        this.mmTopx(printParams.printMargin.right, dpi)
+      )
+      var printPadding =
+        marginTop +
+        'px ' +
+        marginRight +
+        'px ' +
+        marginBottom +
+        'px ' +
+        marginLeft +
+        'px'
+
+      setTimeout(function () {
         var bg = self.createDom(
           'div',
           {
@@ -585,7 +603,7 @@ function directPrint(printParams) {
                         height: printHeight + 'px',
                         // marginTop: '6px',
                         boxShadow: '0 4px 16px 4px rgba(0,0,0,0.50)',
-                        padding: '25.4px 31.8px',
+                        padding: printPadding,
                         margin: '0 auto'
                         // marginTop: '30px'
                       }
@@ -602,9 +620,9 @@ function directPrint(printParams) {
           ]
         )
         document.body.appendChild(bg)
-        setTimeout(function() {
+        setTimeout(function () {
           var cancel = document.getElementById('vue-print-cancel-btn')
-          cancel.addEventListener('click', function() {
+          cancel.addEventListener('click', function () {
             document.body.removeChild(bg)
             var dom = document.getElementById('directDom')
             document.body.removeChild(dom)
@@ -612,7 +630,7 @@ function directPrint(printParams) {
             document.documentElement.style.overflow = 'auto'
           })
           var print = document.getElementById('vue-print-print-btn')
-          print.addEventListener('click', function() {
+          print.addEventListener('click', function () {
             document.body.removeChild(bg)
             self.printPrescription()
             document.documentElement.style.overflow = 'auto'
@@ -655,7 +673,7 @@ function directPrint(printParams) {
         })
       })
     },
-    createDom: function(target, attributes, children) {
+    createDom: function (target, attributes, children) {
       var dom = document.createElement(target)
       attributes = attributes || {}
       if (attributes.style) {
@@ -669,45 +687,45 @@ function directPrint(printParams) {
       }
       children = children || []
       if (children.length > 0) {
-        children.forEach(function(child) {
+        children.forEach(function (child) {
           dom.appendChild(child)
         })
       }
       return dom
     },
-    addStyle: function(dom, styles) {
+    addStyle: function (dom, styles) {
       if (!dom.style) return
       styles = styles || {}
-      Object.keys(styles).forEach(function(key) {
+      Object.keys(styles).forEach(function (key) {
         dom.style[key] = styles[key]
       })
     },
-    addAttr: function(dom, attrs) {
+    addAttr: function (dom, attrs) {
       attrs = attrs || {}
-      Object.keys(attrs).forEach(function(key) {
+      Object.keys(attrs).forEach(function (key) {
         dom.setAttribute(key, attrs[key])
       })
     },
-    addDomProps: function(dom, domProps) {
+    addDomProps: function (dom, domProps) {
       domProps = domProps || {}
-      Object.keys(domProps).forEach(function(key) {
+      Object.keys(domProps).forEach(function (key) {
         dom[key] = domProps[key]
       })
     },
-    printPrescription: function() {
-      setTimeout(function() {
+    printPrescription: function () {
+      setTimeout(function () {
         var el = document.getElementById('print-template')
         var iframe = document.createElement('IFRAME')
         var doc = null
         iframe.setAttribute(
           'style',
-          'position:absolute;width:0px;height:0px;left:-500px;top:-500px;'
+          'position:absolute;width:0;height:0;left:-500px;top:-500px; '
         )
         document.body.appendChild(iframe)
         doc = iframe.contentWindow.document
         doc.write("<LINK rel='stylesheet' type='text/css'>")
+        doc.write('<style>body{border:0px;padding:0px;margin:0px;}</style>')
         doc.write('<div>' + el.innerHTML + '</div>')
-
         doc.close()
         iframe.contentWindow.focus()
         iframe.contentWindow.print()
@@ -720,7 +738,7 @@ function directPrint(printParams) {
         document.body.removeChild(dom)
       }, 30)
     },
-    filterMargin: function(params, dpi) {
+    filterMargin: function (params, dpi) {
       return {
         top: this.mmTopx(params.top, dpi),
         bottom: this.mmTopx(params.bottom, dpi),
@@ -729,12 +747,12 @@ function directPrint(printParams) {
       }
     },
     // 获取DOM加载后的高度
-    getHeight: function(dom, pageWidth2, printMargin) {
+    getHeight: function (dom, pageWidth2, printMargin) {
       // console.log(dom)
+
       dom.style.width =
-        Math.floor(pageWidth2 - printMargin.left - printMargin.right - 12) +
-        'px' //获取纸张的宽度 求其内容的高度
-      // console.log(dom.style.width)
+        Math.floor(pageWidth2 - printMargin.left - printMargin.right) + 'px' //获取纸张的宽度 求其内容的高度
+      console.log(dom.style.width)
       // 避免页眉页脚不设的时候为0
       if (window.getComputedStyle(dom).height.indexOf('px') > -1) {
         return Number(window.getComputedStyle(dom).height.split('px')[0])
@@ -748,10 +766,10 @@ function directPrint(printParams) {
   // console.log(printParams)
   var dpi = methods.js_getDPI()
   var initMargin = {
-    top: methods.mmTopx(10, dpi),
-    bottom: methods.mmTopx(10, dpi),
-    left: methods.mmTopx(10, dpi),
-    right: methods.mmTopx(10, dpi)
+    top: methods.mmTopx(8, dpi),
+    bottom: methods.mmTopx(8, dpi),
+    left: methods.mmTopx(8, dpi),
+    right: methods.mmTopx(8, dpi)
   }
 
   // 打印参数   默认是A5纸
