@@ -611,7 +611,7 @@ var printRendering = function (type, dataObj, vue, fn, clinicSet) {
       "pageHeight": this.template.pageHeight,
       "pageWidth": this.template.pageWidth,
       "printMargin": this.template.pagePadding,
-      "printMode": cd003.length > 0 ? cd003[0].property_value : "1"
+      "printMode": cd003.length > 0 ? cd003[0].property_value : "0"
     }
 
     this.fn(settingOption)
