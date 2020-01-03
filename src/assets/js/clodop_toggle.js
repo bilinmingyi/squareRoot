@@ -752,7 +752,6 @@ function directPrint(printParams) {
 
       dom.style.width =
         Math.floor(pageWidth2 - printMargin.left - printMargin.right) + 'px' //获取纸张的宽度 求其内容的高度
-      console.log(dom.style.width)
       // 避免页眉页脚不设的时候为0
       if (window.getComputedStyle(dom).height.indexOf('px') > -1) {
         return Number(window.getComputedStyle(dom).height.split('px')[0])

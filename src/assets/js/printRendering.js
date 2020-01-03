@@ -176,8 +176,9 @@ var printRendering = function (type, dataObj, vue, fn, clinicSet) {
               med.num +
               med.unit +
               '</span></div>' +
-              '<div style="margin-left: 15px;">说明：</div>' +
+              '<div style="margin-left: 15px;">说明：' +
               med.remark +
+              '</div>' +
               '</div>' +
               '</div>'
             )
@@ -246,8 +247,10 @@ var printRendering = function (type, dataObj, vue, fn, clinicSet) {
 
         break;
       case 'treatRecipe':
+
         var itemList = JSON.parse(JSON.stringify(this.dataObj['$治疗项目列表']));
-        var itemStr = '<div style="width: 100%;height: auto;>';
+
+        var itemStr = '<div style="width: 100%;height: auto;">';
         itemList.forEach(function (med, index) {
           itemStr += (
             '<div style="line-height: 24px;">' +
@@ -265,6 +268,7 @@ var printRendering = function (type, dataObj, vue, fn, clinicSet) {
             '</div>'
           )
         })
+        itemStr += '</div>';
         this.dataObj['$治疗项目列表'] = itemStr
 
         var examination, examinatioStr = '';
@@ -286,7 +290,7 @@ var printRendering = function (type, dataObj, vue, fn, clinicSet) {
         break;
       case 'textRecipe':
         var itemList = JSON.parse(JSON.stringify(this.dataObj['$检验项目列表']))
-        var itemStr = '<div style="width: 100%;height: auto;>';
+        var itemStr = '<div style="width: 100%;height: auto;">';
         itemList.forEach(function (med, index) {
           itemStr += (
             '<div style="line-height: 24px;">' +
@@ -304,6 +308,8 @@ var printRendering = function (type, dataObj, vue, fn, clinicSet) {
             '</div>'
           )
         })
+
+        itemStr += '</div>';
         this.dataObj['$检验项目列表'] = itemStr
 
         var examination, examinatioStr = '';
@@ -325,7 +331,7 @@ var printRendering = function (type, dataObj, vue, fn, clinicSet) {
         break;
       case 'examineRecipe':
         var itemList = JSON.parse(JSON.stringify(this.dataObj['$检查项目列表']))
-        var itemStr = '<div style="width: 100%;height: auto;>';
+        var itemStr = '<div style="width: 100%;height: auto;">';
         itemList.forEach(function (med, index) {
           itemStr += (
             '<div style="line-height: 24px;">' +
@@ -343,6 +349,8 @@ var printRendering = function (type, dataObj, vue, fn, clinicSet) {
             '</div>'
           )
         });
+
+        itemStr += '</div>';
         this.dataObj['$检查项目列表'] = itemStr;
 
         var examination, examinatioStr = '';
