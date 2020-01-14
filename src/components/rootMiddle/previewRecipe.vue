@@ -44,7 +44,7 @@
                   <span class="pr4">{{med.name}}</span>
                   <span class="pr4">{{med.num}}{{med.unit}}</span>
                   <span class="pr4">{{med.usage}}</span>
-                  <span v-if="med.stock<=0" style="color: red">无库存</span>
+                  <span v-if="isStock(med)" style="color: red">无库存</span>
                 </div>
                 <div style="clear: both"></div>
                 <div class="preview_label">
@@ -56,13 +56,14 @@
               <div v-if="item.type===2">
                 <div v-for="med in item.data.items">
                   <span class="pr5">{{med.name}}</span>
+                  <!-- {{med}} -->
                   <span class="pr5">{{med.spec}}</span>
                   <span class="pr5">{{med.num}}{{med.unit}}</span>
                   <span class="pr5" v-if="med.usage!=''">用法：{{med.usage}}</span>
                   <span class="pr5">{{med.frequency}}</span>
                   <span class="pr5" v-if="med.days!=''">{{med.days}}天</span>
                   <span class="pr5" v-if="med.dose_once!=''">每次{{med.dose_once}}{{med.unit_dose}}</span>
-                  <span v-if="med.stock<=0" style="color: red">无库存</span>
+                  <span v-if="isStock(med)" style="color: red">无库存</span>
                 </div>
               </div>
               <div v-if="item.type===3">
@@ -71,7 +72,7 @@
                   <span class="pr5">{{med.spec}}</span>
                   <span class="pr5">{{med.num}}{{med.unit}}</span>
                   <span class="pr5">{{med.remark}}</span>
-                  <span v-if="med.stock<=0" style="color: red">无库存</span>
+                  <span v-if="isStock(med)" style="color: red">无库存</span>
                 </div>
               </div>
               <div v-if="item.type===4">
@@ -89,7 +90,7 @@
                   <span class="pr5">{{med.num}}{{med.unit}}</span>
                   <span class="pr5">{{med.spec}}</span>
                   <span class="pr5">{{med.remark}}</span>
-                  <span v-if="med.stock<=0" style="color: red">无库存</span>
+                  <span v-if="isStock(med)" style="color: red">无库存</span>
                 </div>
               </div>
             </section>
@@ -235,10 +236,16 @@ export default {
           })
         }
       })
-      console.log(res)
+      // console.log(res)
     })
   },
   methods: {
+    isStock(med) {
+      let actualUnit = med.unit_sale == med.unit ? Number(med.stock * med.stock_sale_ratio) : Number(med.stock)
+      // console.log(actualUnit)
+      // console.log(med.num)
+      return actualUnit < med.num
+    },
     returnToModify() {
       this.$emit('hidePreview')
     },

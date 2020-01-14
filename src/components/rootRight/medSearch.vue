@@ -3,7 +3,7 @@
     <div class="mb6 search-box">
       <div class="flexOne mr10">
         <Input @on-keydown="listenerKey($event)" @on-blur="curSelect=-1" tabindex="-1" @input="searchMedicine(1)" placeholder="药品名称/拼音简码"
-               v-model="searchName"/>
+          v-model="searchName" />
       </div>
       <div>
         <button @click="searchMedicine(1)" class="search-btn">搜索</button>
@@ -13,12 +13,8 @@
     <f-loader v-if="showLoading" :fixed="false"></f-loader>
 
     <div class="search-result">
-      <div
-        :class="[{'no-stock':item.stock<1 && isCloud!=1},{'herbal-result-li':recipeType===1},{'search-result-li':recipeType!=1}, {'select-box': curSelect === index}]"
-        v-for="(item,index) in searchList"
-        :key="index"
-        @click.stop="selectItem(item)"
-      >
+      <div v-for="(item,index) in searchList" :key="index" @click.stop="selectItem(item)"
+        :class="[{'no-stock':Number(item.stock)<=0 && isCloud!=1},{'herbal-result-li':recipeType===1},{'search-result-li':recipeType!=1}, {'select-box': curSelect === index}]">
         <div v-show="recipeType==1">
           <div v-if="isCloud == 1">
             {{item.alias_name || item.name}}
@@ -41,32 +37,21 @@
             ({{item.spec}})
           </div>
         </div>
-        <div
-          v-show="recipeType==4"
-        >{{item.alias_name||item.name}}&emsp;({{item.price||item.sale_price}}元/{{item.unit_sale||item.unit}})
+        <div v-show="recipeType==4">{{item.alias_name||item.name}}&emsp;({{item.price||item.sale_price}}元/{{item.unit_sale||item.unit}})
         </div>
-        <div
-          v-show="recipeType==6"
-        >{{item.clinic_alias_name||item.name}}&emsp;({{item.price||item.spec}})
+        <div v-show="recipeType==6">{{item.clinic_alias_name||item.name}}&emsp;({{item.price||item.spec}})
         </div>
       </div>
       <div class="mt10" style="text-align:center;font-size:1rem;" v-show="searchList.length<1">
         {{isFirst ? '请搜索药品' : '暂无药品'}}
       </div>
     </div>
-    <div class="clear" >
+    <div class="clear">
       <div class="t-h-btn-group pt15" v-show="!isFirst">
-        <button
-          :class="['t-h-btn', 't-h-btn-active', {'t-h-btn-disable':currPage <= 1}]"
-          :disabled="currPage <= 1"
-          @click.stop="changePage(0)"
-        >上一页
+        <button :class="['t-h-btn', 't-h-btn-active', {'t-h-btn-disable':currPage <= 1}]" :disabled="currPage <= 1" @click.stop="changePage(0)">上一页
         </button>
-        <button
-          :class="['t-h-btn', 't-h-btn-active', {'t-h-btn-disable':currPage >= page_num}]"
-          :disabled="currPage >= page_num"
-          @click.stop="changePage(1)"
-        >下一页
+        <button :class="['t-h-btn', 't-h-btn-active', {'t-h-btn-disable':currPage >= page_num}]" :disabled="currPage >= page_num"
+          @click.stop="changePage(1)">下一页
         </button>
       </div>
     </div>
@@ -74,9 +59,9 @@
 </template>
 
 <script>
-import {Input, Button} from "iview";
-import {mapGetters, mapActions} from "vuex";
-import {searchMed, searchRecentMed} from "@/fetch/api.js";
+import { Input, Button } from "iview";
+import { mapGetters, mapActions } from "vuex";
+import { searchMed, searchRecentMed } from "@/fetch/api.js";
 import fLoader from "@/components/fLoader";
 
 export default {
@@ -150,7 +135,7 @@ export default {
         return item.id === med.item_id;
       });
       if (filterList.length === 0) {
-        this.add_new_medicine({item: item, type: this.currRecipeData.type});
+        this.add_new_medicine({ item: item, type: this.currRecipeData.type });
         this.searchList = this.recentList;
         this.page_num = 1;
         this.currPage = 1;
@@ -226,11 +211,11 @@ export default {
       }
       Promise.all([
         searchMed(params, self.recipeType, self.isCloud),
-        searchRecentMed({category: self.category}, self.recipeType, self.isCloud)
+        searchRecentMed({ category: self.category }, self.recipeType, self.isCloud)
       ]).then(res => {
         if (res[0].code === 1000 && res[1].code === 1000) {
           self.showLoading = false
-          let isCombine = self.tabType == 5 ? 1: 0
+          let isCombine = self.tabType == 5 ? 1 : 0
           if (self.recipeType == 4) {
             var resultList = res[1].data.filter(item => {
               return item.is_combine == isCombine && item.type == self.therapyType
@@ -349,7 +334,7 @@ export default {
           break;
 
         case 5:
-          self.page_size =( window.screen.height > 960 || window.screen.width >= 1600) ? 10 : 8
+          self.page_size = (window.screen.height > 960 || window.screen.width >= 1600) ? 10 : 8
           params = {
             page: self.currPage,
             query: self.searchName,
@@ -444,59 +429,58 @@ export default {
 };
 </script>
 <style scoped>
-  .search-block {
-    position: relative;
-    height: 100%
-  }
+.search-block {
+  position: relative;
+  height: 100%;
+}
 
-  .search-result .herbal-result-li {
-    width: calc((100% - 1.5rem) / 3);
-    height: 3.125rem;
-    border: #5096e0 solid 1px;
-    border-radius: 0.25rem;
-    float: left;
-    display: flex;
-    margin-right: 0.25rem;
-    margin-bottom: 0.25rem;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    font-size: 0.8125rem;
-  }
+.search-result .herbal-result-li {
+  width: calc((100% - 1.5rem) / 3);
+  height: 3.125rem;
+  border: #5096e0 solid 1px;
+  border-radius: 0.25rem;
+  float: left;
+  display: flex;
+  margin-right: 0.25rem;
+  margin-bottom: 0.25rem;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.8125rem;
+}
 
-  .search-result .search-result-li {
-    width: 100%;
-    height: 2.5rem;
-    border: #5096e0 solid 1px;
-    border-radius: 0.25rem;
-    float: left;
-    margin-bottom: 0.25rem;
-    padding-right: 1%;
-    text-align: center;
-    justify-content: center;
-    display: flex;
-    align-items: center;
-    font-size: 0.875rem;
-    cursor: pointer;
-  }
+.search-result .search-result-li {
+  width: 100%;
+  height: 2.5rem;
+  border: #5096e0 solid 1px;
+  border-radius: 0.25rem;
+  float: left;
+  margin-bottom: 0.25rem;
+  padding-right: 1%;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
 
-  .search-result .no-stock {
-    border: 0;
-    background-color: #e1e1e1;
-    color: #5e5e5e;
-  }
+.search-result .no-stock {
+  border: 0;
+  background-color: #e1e1e1;
+  color: #5e5e5e;
+}
 
-  .select-box {
-    background: #5096e0 !important;
-    color: #fff !important;
-  }
+.select-box {
+  background: #5096e0 !important;
+  color: #fff !important;
+}
 
-  .search-box {
-    width: 100%;
-    display: flex;
-    height: 2rem;
-    font-size: 1rem;
-  }
-
+.search-box {
+  width: 100%;
+  display: flex;
+  height: 2rem;
+  font-size: 1rem;
+}
 </style>
